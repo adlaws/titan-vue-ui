@@ -8,7 +8,7 @@
                 <titan-window-content :window-context="context.windowContext">
                     {{ selectedObjects }}
                     <hr>
-                    Might Drag: {{ mightDrag }} Dragging: {{ isDragging }}
+                    {{ drag }}
                     <hr>
                     {{ mouseButtons }}
                     <hr>
@@ -65,8 +65,12 @@ export default {
                 {id:1, text:'Option B', disabled:false, tooltip:'B is for Banana'},
                 {id:2, text:'Option C', disabled:false, tooltip:'C is for Coconut'},
             ],
-            mightDrag: false,
-            isDragging: false,
+            drag:
+            {
+                mightDrag: false,
+                isDragging: false,
+                lastECEF: null,
+            }
         };
     },
     computed:
@@ -158,10 +162,8 @@ export default {
             {
                 // maybe starting a drag...?
                 // TODO: update selection if required
-                this.mightDrag = true;
-                $tWorldInterface.setOffsetStartPoint(worldPos);
-                $tWorldInterface.setMouseDragLocation(winXY);
-                $tWorldInterface.setDraggedEntityScreenLocation(winXY);
+                this.drag.mightDrag = true;
+                this.drag.lastECEF = worldPos;
             }
             else
             {
@@ -176,48 +178,36 @@ export default {
         },
         _handleMouseMove(evt)
         {
-            if(!this.isDragging && !this.mightDrag)
+            if(!this.drag.isDragging && !this.drag.mightDrag)
                 return;
 
-            if(this.mightDrag)
+            if(this.drag.mightDrag)
             {
-                this.isDragging = true;
-                this.mightDrag = false;
+                this.drag.isDragging = true;
+                this.drag.mightDrag = false;
 
                 // update selection if required to ensure that the item under the mouse is selected
-                // const uuid = $tWorldInterface.getObjectUUIDUnderMouse();
-                // const isSelected = TitanUtils.isSelected(uuid);
-                // if(!isSelected)
-                // {
-                //     this._doSelection();
-                // }
+                const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
+                $tWorldInterface.injectMousePosition(winXY, 15000);
+                const isSelected = $tWorldInterface.isObjectUnderMouseSelected();
+                if(!isSelected)
+                {
+                    this._doSelection();
+                }
             }
 
-            if(this.isDragging)
+            if(this.drag.isDragging)
             {
-                const lastMouseXY = $tWorldInterface.getMouseDragLocation();
-                const lastDraggedXY = $tWorldInterface.getDraggedEntityScreenLocation();
-
                 const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
-                const dX = winXY.x - lastMouseXY.x;
-                const dY = winXY.y - lastMouseXY.y;
-                const newScreenXY = {
-                    x: lastDraggedXY.x + dX,
-                    y: lastDraggedXY.y + dY
-                };
-                const newWorldPosition = $tWorldInterface.getWorldPosFromScreenPix(newScreenXY);
-
+                const ecef = $tWorldInterface.getWorldPosFromScreenPix(winXY);
                 // may be unable to query world position from screen (happens when move above horizon)
                 // so check before proceeding
-                if(TitanUtils.isValidWorldPos(newWorldPosition))
+                if(TitanUtils.isValidWorldPos(ecef))
                 {
-                    const vecOffset = MathUtils.vecSub(newWorldPosition, $tWorldInterface.getOffsetStartPoint());
+                    const vecOffset = MathUtils.vecSub(ecef, this.drag.lastECEF);
                     const activeScenario = $tWorldInterface.getActiveScenario();
-                    activeScenario.translateSelected(vecOffset, false);
-
-                    $tWorldInterface.setOffsetStartPoint(newWorldPosition);
-                    $tWorldInterface.setMouseDragLocation(winXY);
-                    $tWorldInterface.setDraggedEntityScreenLocation(newScreenXY);
+                    activeScenario.translateSelected(vecOffset, true);
+                    this.drag.lastECEF = ecef;
                 }
             }
         },
@@ -236,10 +226,12 @@ export default {
             if(TitanUtils.isValidWorldPos(worldPos))
                 $tWorldInterface.showGizmoAt(worldPos);
 
-            this.mightDrag = false;
-            if(this.isDragging)
+            // NOTE: we have to clear `mightDrag` here in case there was no
+            //       `mousemove` event to clear it
+            this.drag.mightDrag = false;
+            if(this.drag.isDragging)
             {
-                this.isDragging = false;
+                this.drag.isDragging = false;
             }
             else if($tWorldInterface.isSelectableObjectUnderMouse())
             {
