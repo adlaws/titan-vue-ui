@@ -33,11 +33,12 @@ Ideally _most_ of your GUI development time will happen in the browser, and you
 will only develop in Titan once you need to verify functionality which can only
 be provided by Titan itself.
 
-> **TIP**: using `TitanUtils.isInsideTitan()` you can also check if your
-JavaScript is currently being executed inside Titan (or a browser) and
-potentially provide "stub" implementations of Titan functionality in the browser
-to help mock out interfaces with dummy data and so on. See `titan-utils.js`
-below for more details.
+> **TIP**: using `TitanUtils.isInsideTitan()` (or `$isInsideTitan`) you can
+also check if your JavaScript is currently being executed inside Titan (or a
+browser) and potentially provide "stub" implementations of Titan functionality
+in the browser to help mock out interfaces with dummy data and so on.
+
+See `titan-utils.js` below for more details.
 
 #### Working in Titan
 
@@ -59,9 +60,38 @@ and maximize the effectiveness of your development time in Titan.
 
 #### `titan-utils.js`
 
-In `src/assets/js` there is a `titan-utils.js` file which provides a
+In `src/assets/js` there is a `titan-utils.js` file which exports a
 `TitanUtils` class with a number of `static` methods useful for working within
 Titan.
+
+It also exports a number of commonly used interfaces and so on which can (or
+indeed _should_) be used in preference to constantly obtaining them by other
+means. For example, rather than doing something like this all over the place...
+
+```
+const $tWorldInterface =  $query_interface('ti::js::WorldInterface.instance');
+const $tEventInterface =  $query_interface('ti::js::TitanEventInterface.instance');
+const $tMathInterface = $query_interface('ti::js::MathInterface.instance');
+```
+
+...you should instead do...
+```
+import { $tWorldInterface, $tEventInterface, $tMathInterface } from '@/assets/js/titan/titan-utils.js';
+```
+...at the top of your JavaScript and use these instead.
+
+Additionally there is a logging framework to provide a simple and consistent
+logging experience in both the browser and Outerra environments. For example:
+
+```
+import { $tLogger } from '@/assets/js/titan/titan-utils.js';
+
+$tLogger.error('something bad happened');
+$tLogger.warning('watch out!');
+$tLogger.info('log some stuff');
+$tLogger.debug('log some stuff');
+$tLogger.fading('fade away');
+```
 
 #### `titan.scss` and `titan-widgets.scss`
 

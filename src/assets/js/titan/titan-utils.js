@@ -387,6 +387,35 @@ export default class TitanUtils
     }
 
     /**
+     * Utility method to check if the object with the given UUID is selected
+     *
+     * NOTE: this seems like a very convoluted and resource hungry way to
+     *       determine if a particular entity is selected based on the UUID,
+     *       particularly since the data needs to be marshalled across the
+     *       C++/JavaScript boundary for the `getSelectedObjectsList()` call
+     *       and then iterated over just to check for the UUID. However the
+     *       existing API has no `isSelected(uuid)` method (or equivalent)
+     *       so this is what we are currently left with.
+     *
+     * @param {string} uuid the UUID of the object to be checked for selection
+     * @returns {boolean} true if the UUID is for a selected object, false otherwise
+     */
+    static isSelected(uuid)
+    {
+        const activeScenario = $tWorldInterface.getActiveScenario();
+        if(!activeScenario)
+            return false;
+        const selectedObjects = activeScenario.getSelectedObjectsList();
+        // const selectedObjectUUIDs = new Set(selectedObjects.map(obj => obj.GUID));
+        // return selectedObjectUUIDs.has(uuid);
+        for(let idx=0; idx<selectedObjects.length; idx++)
+        {
+            if(selectedObjects[idx].GUID === uuid)
+                return true;
+        }
+        return false;
+    }
+    /**
      * Helper to disable physics on objects in 'objs' list (typically selected objects)
      * in preparation for changing the transform. Without this physics continues to simulate
      * which can cause issues while attempting a drag-move operation

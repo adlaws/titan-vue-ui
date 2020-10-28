@@ -183,21 +183,14 @@ export default {
             {
                 this.isDragging = true;
                 this.mightDrag = false;
-                // update selection if required to ensure that the item under the mouse is selected
 
-                // TODO: this seems like a very convoluted way to determine if a particular entity
-                //       is selected based on the UUID...why is there no `isSelected(id)` method?
-                /*
-                const objectUuid = $tWorldInterface.getObjectUUIDUnderMouse();
-                const activeScenario = $tWorldInterface.getActiveScenario();
-                const selectedObjects = activeScenario.getSelectedObjectsList();
-                const selectedObjectUUIDs = new Set(selectedObjects.map(obj => obj.GUID));
-                const isSelected = selectedObjectUUIDs.has(objectUuid);
-                if(!isSelected)
-                {
-                    this._doSelection();
-                }
-                */
+                // update selection if required to ensure that the item under the mouse is selected
+                // const uuid = $tWorldInterface.getObjectUUIDUnderMouse();
+                // const isSelected = TitanUtils.isSelected(uuid);
+                // if(!isSelected)
+                // {
+                //     this._doSelection();
+                // }
             }
 
             if(this.isDragging)
