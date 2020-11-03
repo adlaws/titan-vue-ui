@@ -13,9 +13,9 @@ module.exports = {
     //                ^
     // ...so it can find the files.
     publicPath: '',
-    // don't produce JavaScript source map files for production, which
-    // would otherwise massively increase the size of the deployed
-    // resources. Since we are deploying into Titan, the map files are
-    // effectively of no use in any case.
-    productionSourceMap: false,
+    // do/don't produce JavaScript source map files for production, which
+    // would tend to massively increase the size of the deployed resources.
+    // Since we are deploying into Titan, the map files are effectively of
+    // no use in any case.
+    productionSourceMap: true,
 };
