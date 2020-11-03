@@ -12,14 +12,20 @@
                 name="window-icon"
                 :window-context="{size:iconSize, active:active}"
             >
+                <titan-icon
+                    v-if="icon"
+                    :icon="icon"
+                    class="icon"
+                />
                 <svg
+                    v-else
                     :width="iconSize.w"
                     :height="iconSize.h"
                 >
                     <polygon
                         points="1,1 31,1 31,31 1,31 1,1"
                         style="stroke-width:1;fill-rule:evenodd;"
-                        :style="`fill:${active?'#08f':'#048'};stroke:${active?'#04f':'#028'}`"
+                        :style="`fill:${active?'#FFF':'#08F'};stroke:${active?'#888':'#048'}`"
                     />
                 </svg>
             </template>
@@ -32,66 +38,45 @@
                 {{ title }}
             </span>
         </div>
-        <div
-            class="control-btn minify-btn"
-            @click="$emit('window-minimise')"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                :width="iconSize.w"
-                :height="iconSize.h"
-            >
-                <g fill="white">
-                    <path d="M0 12h16v4H0z" />
-                </g>
-            </svg>
+        <div @click="$emit('window-minimise')">
+            <titan-icon
+                icon="window-minimize"
+                class="icon control-btn"
+            />
         </div>
-        <div
-            class="control-btn toggle-maximise-btn"
-            @click="$emit('window-toggle-maximise')"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                :width="iconSize.w"
-                :height="iconSize.h"
-            >
-                <g fill="white">
-                    <path
-                        v-if="maximized===false"
-                        d="M0 0v16h16V0H2zm2 2h12v12H2z"
-                    />
-                    <path
-                        v-else
-                        d="M4 0v4H0v12h12v-4h4V0H6zm2 2h8v8h-2V4H6zM2 6h8v8H2z"
-                    />
-                </g>
-            </svg>
+        <div @click="$emit('window-toggle-maximise')">
+            <titan-icon
+                :icon="maximized===false?'window-maximize':'window-restore'"
+                class="icon control-btn"
+            />
         </div>
-        <div
-            class="control-btn close-btn"
-            @click="$emit('window-close')"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                :width="iconSize.w"
-                :height="iconSize.h"
-            >
-                <g fill="white">
-                    <path d="M1.778 0L0 1.778 6.222 8 0 14.222 1.778 16 8 9.778 14.222 16 16 14.222 9.778 8 16 1.778 14.222 0 8 6.222z" />
-                </g>
-            </svg>
+        <div @click="$emit('window-close')">
+            <titan-icon
+                icon="window-close"
+                class="icon control-btn"
+            />
         </div>
     </div>
 </template>
 
 <script>
+import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+
 export default {
     name: 'titan-title-bar',
+    components:
+    {
+        TitanIcon
+    },
     props:
     {
         title: {
             type: String,
             default: 'Window',
+        },
+        icon: {
+            type: String,
+            default: null,
         },
         active: {
             type: Boolean,
@@ -190,9 +175,11 @@ export default {
 
     .icon
     {
-        width: 16px;
-        height: 16px;
-        margin: 2px 4px;
+        width: 24px;
+        height: 24px;
+        font-size: 24px;
+        line-height: 24px;
+        margin: 2px;
     }
 
     .title
@@ -206,7 +193,6 @@ export default {
 
     .control-btn
     {
-        margin: 0 4px;
         cursor: pointer;
     }
 }

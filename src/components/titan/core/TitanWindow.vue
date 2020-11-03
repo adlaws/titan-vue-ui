@@ -9,6 +9,7 @@
     >
         <titan-title-bar
             :title="title"
+            :icon="icon"
             :x="status.x"
             :y="status.y"
             :active="active"
@@ -56,6 +57,10 @@ export default {
         title: {
             type: String,
             default: 'Window Title'
+        },
+        icon: {
+            type: String,
+            default: 'reorder-horizontal'
         },
         x: {
             type: Number,
@@ -139,7 +144,7 @@ export default {
         const windowDetails = {
             id: this.id,
             title: this.title,
-            icon: null,
+            icon: this.icon,
             instance: this,
         };
         this.$store.commit(STORE_MUTATION.REGISTER_WINDOW, windowDetails);
@@ -176,7 +181,10 @@ export default {
         {
             if(this.status.minimized)
                 return;
-            this.status.minimized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
+            if(this.status.maximized)
+                this.status.minimized = { ...this.status.maximized };
+            else
+                this.status.minimized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
             this.$store.commit(STORE_MUTATION.WINDOW_TO_BACK, {id: this.id});
         },
         toggleMinimize()
@@ -373,10 +381,7 @@ export default {
 .vue-os--window
 {
     position:absolute;
-    top:50px;
-    left:50px;
-    width:100px;
-    height:200px;
+
     background-color: #048;
     border: 1px solid #024;
 

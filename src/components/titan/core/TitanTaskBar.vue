@@ -7,7 +7,7 @@
             @click="showStartMenu=!showStartMenu"
         >
             <div class="start-button">
-                <span style="font-size:200%;" class="mdi mdi-camera-iris" />
+                <titan-icon style="font-size:200%;" icon="camera-iris" />
                 <span class="ml-1">Start</span>
             </div>
             <div
@@ -16,23 +16,23 @@
             >
                 <ul>
                     <li @click="startScenarioConstructor()">
-                        <span style="font-size:200%;" class="mdi mdi-map-marker-path" />
+                        <titan-icon style="font-size:200%;" icon="map-marker-path" />
                         <span class="ml-1">Scenario Constructor</span>
                     </li>
                     <li>
-                        <span style="font-size:200%;" class="mdi mdi-account-group-outline" />
+                        <titan-icon style="font-size:200%;" icon="account-group-outline" />
                         <span class="ml-1">Scenario Lobby</span>
                     </li>
                     <li>
-                        <span style="font-size:200%;" class="mdi mdi-clipboard-edit-outline" />
+                        <titan-icon style="font-size:200%;" icon="clipboard-edit-outline" />
                         <span class="ml-1">Scenario Debrief</span>
                     </li>
                     <li>
-                        <span style="font-size:200%;" class="mdi mdi-cogs" />
+                        <titan-icon style="font-size:200%;" icon="cogs" />
                         <span class="ml-1">Options</span>
                     </li>
                     <li @click="quitApplication()">
-                        <span style="font-size:200%;" class="mdi mdi-logout" />
+                        <titan-icon style="font-size:200%;" icon="logout" />
                         <span class="ml-1">Quit</span>
                     </li>
                 </ul>
@@ -48,9 +48,10 @@
             @click="focusWindow(window)"
             @dblclick="toggleWindow(window)"
         >
-            <div v-if="window.icon">
-                ICON
-            </div>
+            <titan-icon
+                v-if="window.icon"
+                :icon="window.icon"
+            />
             <div v-else>
                 {{ window.title.charAt(0).toUpperCase() }}
             </div>
@@ -67,8 +68,13 @@ import {STORE_MUTATION} from '@/assets/js/store/store.js';
 
 import TitanUtils, { SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 
+import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+
 export default {
     name: 'titan-task-bar',
+    components: {
+        TitanIcon
+    },
     props: {},
     data()
     {
@@ -111,6 +117,8 @@ export default {
         },
         focusWindow(window)
         {
+            if(window.instance.isMaximized())
+                window.instance.maximize();
             if(window.instance.isMinimized())
                 window.instance.restore();
             this.$store.commit(STORE_MUTATION.WINDOW_TO_FRONT, {id: window.id});

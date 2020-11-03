@@ -3,7 +3,12 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <titan-window title="Test 1">
+        <titan-window
+            title="Radios"
+            icon="radio-tower"
+            :x="50"
+            :y="50"
+        >
             <template #default="context">
                 <titan-window-content :window-context="context.windowContext">
                     <hr>
@@ -19,11 +24,12 @@
         </titan-window>
 
         <titan-window
-            title="Test 2"
-            :x="500"
-            :y="500"
-            :width="200"
-            :height="500"
+            title="Weather"
+            icon="weather-partly-cloudy"
+            :x="300"
+            :y="300"
+            :width="300"
+            :height="200"
         >
             <template #default="context">
                 <titan-window-content :window-context="context.windowContext">

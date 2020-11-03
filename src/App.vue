@@ -1,6 +1,6 @@
 <template>
     <titan-desktop
-        title="Main "
+        title=""
         titan-id="ui.calytrix.vue-in-titan"
         :icon="favicon"
         :size="{width:800,height:700}"
