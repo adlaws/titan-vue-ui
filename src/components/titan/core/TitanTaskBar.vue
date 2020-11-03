@@ -38,6 +38,23 @@
                 </ul>
             </div>
         </div>
+        <div class="spacer" style="max-width:24px;" />
+        <div
+            v-for="(window, idx) in windows"
+            :key="`win-${idx}`"
+            class="window-tile"
+            :class="{active:window.active}"
+            :title="window.title"
+            @click="focusWindow(window)"
+            @dblclick="toggleWindow(window)"
+        >
+            <div v-if="window.icon">
+                ICON
+            </div>
+            <div v-else>
+                {{ window.title.charAt(0).toUpperCase() }}
+            </div>
+        </div>
         <div class="spacer" />
         <div class="clock">
             {{ theTime }}
@@ -63,6 +80,7 @@ export default {
     computed:
     {
         currentSimMode() { return this.$store.getters.titanSimMode; },
+        windows() { return this.$store.getters.windows; },
     },
     mounted()
     {
@@ -90,7 +108,20 @@ export default {
         quitApplication()
         {
             TitanUtils.quitApplication();
-        }
+        },
+        focusWindow(window)
+        {
+            if(window.instance.isMinimized())
+                window.instance.restore();
+            this.$store.commit(STORE_MUTATION.WINDOW_TO_FRONT, {id: window.id});
+        },
+        toggleWindow(window)
+        {
+            if(window.instance.isMinimized())
+                this.focusWindow(window);
+            else
+                window.instance.minimize();
+        },
     },
 };
 </script>
@@ -166,6 +197,45 @@ export default {
                         background-color: rgba(0,64,128,0.9);
                     }
                 }
+            }
+        }
+    }
+    .window-tile
+    {
+        width: 48px;
+        height: 48px;
+        font-size:40px;
+        line-height:40px;
+
+        margin: 0;
+        padding: 0;
+
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+
+        background-color: rgba(0,16,32,1.0);
+        border:1px solid rgba(0,32,64,1.0);
+        border-radius:4px;
+        margin-right:8px;
+        cursor: pointer;
+        &:hover
+        {
+            border:1px solid rgba(0,32,64,1.0);
+            background-color: rgba(0,32,64,1.0);
+            box-shadow: 0 0 8px rgba(0,16,32,1.0);
+        }
+        &.active
+        {
+            border:1px solid rgba(0,48,96,1.0);
+            background-color: rgba(0,48,96,1.0);
+            box-shadow: 0 0 8px rgba(0,32,64,1.0);
+            &:hover
+            {
+                border:1px solid rgba(0,64,128,1.0);
+                background-color: rgba(0,64,128,1.0);
+                box-shadow: 0 0 8px rgba(0,48,96,1.0);
             }
         }
     }

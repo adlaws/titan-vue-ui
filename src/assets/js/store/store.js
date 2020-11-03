@@ -10,15 +10,16 @@ export const STORE_MUTATION = {
     REGISTER_WINDOW:'registerWindow',
     CLOSE_WINDOW:'closeWindow',
     WINDOW_TO_FRONT:'windowToFront',
+    WINDOW_TO_BACK:'windowToBack',
     // TITAN STATE MANAGEMENT
     CHANGE_SIM_MODE:'changeSimMode',
     UPDATE_MOUSE_BUTTON_STATE:'updateMouseButtonState',
     UPDATE_MODIFIER_KEY_STATE:'updateModifierKeyState',
 };
-
 const ApplicationState = new Vuex.Store({
     state: {
         windows: {},
+        windowOdometer:0, // incremented each time a window is registered, tracks basic creation order
         maxZ: 0,
         titan:
         {
@@ -62,7 +63,7 @@ const ApplicationState = new Vuex.Store({
             const registeredWindow = state.windows[id];
             return registeredWindow ? registeredWindow.active : false;
         },
-
+        windows: (state) => state.windows,
         // --------------------------------------------------------------------
         // TITAN STATE MANAGEMENT
         // --------------------------------------------------------------------
@@ -86,7 +87,20 @@ const ApplicationState = new Vuex.Store({
                 w.active = false;
             }
             state.maxZ++;
-            Vue.set(windows, payload.id, { active: true, zIndex: state.maxZ });
+            state.windowOdometer++;
+            Vue.set(
+                windows,
+                payload.id,
+                {
+                    id: payload.id,
+                    active: true,
+                    zIndex: state.maxZ,
+                    odometer: state.windowOdometer,
+                    title: payload.title,
+                    icon: payload.icon,
+                    instance: payload.instance
+                }
+            );
         },
         [STORE_MUTATION.WINDOW_TO_FRONT](state, payload)
         {
@@ -97,11 +111,27 @@ const ApplicationState = new Vuex.Store({
             for(const id in state.windows)
             {
                 const w = state.windows[id];
-                w.active = id === payload.id;
+                w.active = (id === payload.id);
                 if(w.zIndex > currentZindex)
                     w.zIndex--;
             }
             window.zIndex = state.maxZ;
+        },
+        [STORE_MUTATION.WINDOW_TO_BACK](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return;
+            const currentZindex = window.zIndex;
+            window.active = false;
+            window.zIndex = 0;
+            for(const id in state.windows)
+            {
+                const w = state.windows[id];
+                if(w.zIndex < currentZindex)
+                    w.zIndex++;
+                w.active = w.zIndex === state.maxZ;
+            }
         },
         [STORE_MUTATION.CLOSE_WINDOW](/*state, payload*/)
         {

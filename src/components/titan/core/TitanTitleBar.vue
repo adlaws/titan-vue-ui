@@ -110,7 +110,7 @@ export default {
             default: false
         },
         minimized: {
-            type: Boolean,
+            type: [Boolean, Object],
             default: false
         },
     },

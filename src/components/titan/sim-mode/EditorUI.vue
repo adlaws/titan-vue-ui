@@ -6,7 +6,6 @@
         <titan-window title="Test 1">
             <template #default="context">
                 <titan-window-content :window-context="context.windowContext">
-                    {{ selectedObjects }}
                     <hr>
                     {{ drag }}
                     <hr>

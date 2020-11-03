@@ -1,10 +1,11 @@
 <template>
     <div
+        v-show="!status.minimized"
         ref="container"
         class="vue-os--window"
-        @mousemove="onMouseMove"
-        @mousedown="handleResizeStart"
-        @click="handleFocus"
+        @mousemove="_onMouseMove"
+        @mousedown="_handleResizeStart"
+        @mouseup="_handleFocus"
     >
         <titan-title-bar
             :title="title"
@@ -14,13 +15,13 @@
             :maximized="status.maximized"
             :minimized="status.minimized"
             @window-updateXY="updateXY"
-            @window-minimise="minimise"
-            @window-toggle-maximise="toggleMaximise"
+            @window-minimise="minimize"
+            @window-toggle-maximise="toggleMaximize"
             @window-close="close"
         />
         <slot
             name="default"
-            :window-context="{title,status,active}"
+            :window-context="{title,status,active,zIndex}"
         >
             <div
                 class="content"
@@ -29,7 +30,7 @@
                 <br>
                 Active?: {{ active }}
                 <br>
-                {{ zIndex }}
+                Z-index: {{ zIndex }}
                 <br>
                 {{ status }}
                 <br>
@@ -126,16 +127,22 @@ export default {
     },
     created()
     {
-        window.addEventListener('resize', this.handleBrowserResize);
+        window.addEventListener('resize', this._handleBrowserResize);
     },
     destroyed()
     {
-        window.removeEventListener('resize', this.handleBrowserResize);
+        window.removeEventListener('resize', this._handleBrowserResize);
     },
     beforeMount()
     {
         this.id = CryptoUtils.simpleUUID();
-        this.$store.commit(STORE_MUTATION.REGISTER_WINDOW, { id: this.id });
+        const windowDetails = {
+            id: this.id,
+            title: this.title,
+            icon: null,
+            instance: this,
+        };
+        this.$store.commit(STORE_MUTATION.REGISTER_WINDOW, windowDetails);
     },
     mounted()
     {
@@ -152,7 +159,74 @@ export default {
     },
     methods:
     {
-        onMouseMove(evt)
+        updateXY(xy)
+        {
+            this.status.x = xy.x;
+            this.status.y = xy.y;
+        },
+        isMinimized()
+        {
+            return this.status.minimized !== false;
+        },
+        isMaximized()
+        {
+            return this.status.maximized !== false;
+        },
+        minimize()
+        {
+            if(this.status.minimized)
+                return;
+            this.status.minimized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
+            this.$store.commit(STORE_MUTATION.WINDOW_TO_BACK, {id: this.id});
+        },
+        toggleMinimize()
+        {
+            if(this.status.minimized)
+                this.restore();
+            else
+                this.minimise();
+        },
+        maximize()
+        {
+            if(this.status.maximized)
+                return;
+            this.status.maximized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
+            this.status.x = 0;
+            this.status.y = 0;
+            this.status.w = this.$parent.$el.clientWidth;
+            this.status.h = this.$parent.$el.clientHeight - 64;
+        },
+        toggleMaximize()
+        {
+            if(this.status.maximized)
+                this.restore();
+            else
+                this.maximize();
+        },
+        restore()
+        {
+            if(this.status.maximized)
+            {
+                this.status.x = this.status.maximized.x;
+                this.status.y = this.status.maximized.y;
+                this.status.w = this.status.maximized.w;
+                this.status.h = this.status.maximized.h;
+                this.status.maximized = false;
+            }
+            else if(this.status.minimized)
+            {
+                this.status.x = this.status.minimized.x;
+                this.status.y = this.status.minimized.y;
+                this.status.w = this.status.minimized.w;
+                this.status.h = this.status.minimized.h;
+                this.status.minimized = false;
+            }
+        },
+        close()
+        {
+            console.log('CLOSE WINDOW');
+        },
+        _onMouseMove(evt)
         {
             if(this.resizing.active)
                 return;
@@ -192,9 +266,9 @@ export default {
             container.style.cursor = cursor;
             this.resizing.type = resizeType;
         },
-        handleResizeStart(evt)
+        _handleResizeStart(evt)
         {
-            this.handleFocus(evt);
+            this._handleFocus(evt);
 
             evt.preventDefault();
 
@@ -212,14 +286,16 @@ export default {
             this.resizing.edge.x = this.resizing.type.w ? bounds.x : (this.resizing.type.e ? bounds.width : null);
             this.resizing.edge.y = this.resizing.type.n ? bounds.y : (this.resizing.type.s ? bounds.height : null);
 
-            document.onmousemove = this.handleDrag;
-            document.onmouseup = this.handleDragEnd;
+            console.log('_handleResizeStart', this.resizing.active, this.status.maximized, this.status.minimized);
+
+            document.onmousemove = this._handleDrag;
+            document.onmouseup = this._handleDragEnd;
         },
-        handleDrag(evt)
+        _handleDrag(evt)
         {
             evt.preventDefault();
 
-            if(this.status.maximized !== false)
+            if(this.status.maximized !== false || this.status.minimized !== false)
                 return;
 
             if(!this.resizing.active)
@@ -266,7 +342,7 @@ export default {
                 this.status.h = h;
             }
         },
-        handleDragEnd(/*evt*/)
+        _handleDragEnd(/*evt*/)
         {
             document.onmouseup = null;
             document.onmousemove = null;
@@ -277,49 +353,17 @@ export default {
             this.resizing.edge.x = 0;
             this.resizing.edge.y = 0;
         },
-        handleFocus(/*evt*/)
+        _handleFocus(/*evt*/)
         {
-            this.$store.commit(STORE_MUTATION.WINDOW_TO_FRONT, { id: this.id });
+            this.$store.commit(STORE_MUTATION.WINDOW_TO_FRONT, {id: this.id} );
         },
-        handleBrowserResize(/*evt*/)
+        _handleBrowserResize(/*evt*/)
         {
             if(this.status.maximized)
             {
                 this.status.w = this.$parent.$el.clientWidth;
                 this.status.h = this.$parent.$el.clientHeight - 64; // 64px is the height of the taskbar along the bottom of the desktop
             }
-        },
-        updateXY(xy)
-        {
-            this.status.x = xy.x;
-            this.status.y = xy.y;
-        },
-        minimise()
-        {
-            console.log('MINIMISE WINDOW');
-        },
-        toggleMaximise()
-        {
-            if(this.status.maximized)
-            {
-                this.status.x = this.status.maximized.x;
-                this.status.y = this.status.maximized.y;
-                this.status.w = this.status.maximized.w;
-                this.status.h = this.status.maximized.h;
-                this.status.maximized = false;
-            }
-            else
-            {
-                this.status.maximized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
-                this.status.x = 0;
-                this.status.y = 0;
-                this.status.w = this.$parent.$el.clientWidth;
-                this.status.h = this.$parent.$el.clientHeight - 64;
-            }
-        },
-        close()
-        {
-            console.log('CLOSE WINDOW');
         },
     }
 };
