@@ -199,6 +199,8 @@ export default class EventUtils
      * Utility function to check if an event occurred on an form field element
      * (i.e., <input>, <textarea>, <button>, <select> etc)
      *
+     * See also FORMFIELD_TAGS definition
+     *
      * @param evt the event
      * @returns true if the target of the event is a form field element
      */
@@ -206,8 +208,10 @@ export default class EventUtils
     {
         if(!evt)
             return false;
-        const tagName = (evt.targetElm && evt.targetElm.tagName) || (evt.target && evt.target.tagName);
-        console.log(tagName);
+        // need to check both `target` and  `targetElm` to cover our bases in both Outerra and
+        // browser environments. Check `target` first as that is the Outerra environment one
+        const tagName = (evt.target && evt.target.tagName) ||
+                        (evt.targetElm && evt.targetElm.tagName);
         return FORMFIELD_TAGS.has(tagName);
     }
 

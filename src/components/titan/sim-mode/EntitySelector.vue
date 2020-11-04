@@ -29,7 +29,7 @@
                     <tr
                         v-for="(entityDescriptor,idx) in pageItems"
                         :key="`entity-${idx}`"
-                        :class="{selected:entityDescriptor.entityName===selected.entityName}"
+                        :class="{selected:selected && entityDescriptor.entityName===selected.entityName}"
                         @click="selectEntity(entityDescriptor)"
                     >
                         <td class="name">
@@ -66,7 +66,8 @@
 </template>
 
 <script>
-// import { $tLogger } from '@/assets/js/titan/titan-utils.js';
+import {STORE_MUTATION} from '@/assets/js/store/store.js';
+
 import UiUtils from '@/assets/js/utils/ui-utils.js';
 
 import TitanWindow from '@/components/titan/core/TitanWindow.vue';
@@ -96,7 +97,6 @@ export default {
         return {
             page:0,
             itemsPerPage:10,
-            selected: {},
             filterText: '',
             filteredEntities:[],
             tableRows:[],
@@ -125,6 +125,7 @@ export default {
         {
             return this.page < this.pageCount-1;
         },
+        selected() { return this.$store.getters.getEntitySelectorSelection; },
     },
     mounted()
     {
@@ -132,12 +133,13 @@ export default {
     },
     beforeDestroy()
     {
+        this.$store.commit(STORE_MUTATION.ENTITY_SELECTOR_CLEAR_SELECTION);
     },
     methods:
     {
         selectEntity(selected)
         {
-            this.selected = selected;
+            this.$store.commit(STORE_MUTATION.ENTITY_SELECTOR_SET_SELECTION, selected);
         },
         previousPage()
         {

@@ -16,6 +16,9 @@ export const STORE_MUTATION = {
     CHANGE_SIM_MODE:'changeSimMode',
     UPDATE_MOUSE_BUTTON_STATE:'updateMouseButtonState',
     UPDATE_MODIFIER_KEY_STATE:'updateModifierKeyState',
+    // WINDOWS
+    ENTITY_SELECTOR_SET_SELECTION:'entitySelector::setSelection',
+    ENTITY_SELECTOR_CLEAR_SELECTION:'entitySelector::clearSelection',
 };
 
 const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
@@ -63,7 +66,12 @@ const ApplicationState = new Vuex.Store({
                         meta: false, // true if any META key is down, false otherwise
                     }
                 },
-            }
+            },
+            // windows - TODO: make separate store modules...? https://vuex.vuejs.org/guide/modules.html
+            entitySelector:
+            {
+                selected: null,
+            },
         }
     },
     getters: {
@@ -90,6 +98,10 @@ const ApplicationState = new Vuex.Store({
         modifierKeys: (state) => state.titan.inputState.key.modifiers,
         mouseButtons: (state) => state.titan.inputState.mouse.buttons,
         mousePress: (state) => state.titan.inputState.mouse.press,
+        // --------------------------------------------------------------------
+        // ENTITY SELECTOR WINDOW
+        // --------------------------------------------------------------------
+        getEntitySelectorSelection: (state) => state.titan.entitySelector.selected,
     },
     mutations: {
         // --------------------------------------------------------------------
@@ -308,7 +320,30 @@ const ApplicationState = new Vuex.Store({
             modifierKeyStates.alt = domEvent.altKey || false;
             modifierKeyStates.meta = domEvent.metaKey || false;
         },
-
+        // --------------------------------------------------------------------
+        // ENTITY SELECTOR WINDOW
+        // --------------------------------------------------------------------
+        /**
+         * Updates the currently selected entity from the entity selection
+         * window.
+         *
+         * @param {object} state the store state object
+         * @param {object} entity the selected entity
+         */
+        [STORE_MUTATION.ENTITY_SELECTOR_SET_SELECTION](state, entity)
+        {
+            state.titan.entitySelector.selected = entity;
+        },
+        /**
+         * Clears the selection state of the selection window (i.e, nothing is
+         * selected).
+         *
+         * @param {object} state the store state object
+         */
+        [STORE_MUTATION.ENTITY_SELECTOR_CLEAR_SELECTION](state)
+        {
+            state.titan.entitySelector.selected = null;
+        },
     },
     actions: {},
     modules: {}

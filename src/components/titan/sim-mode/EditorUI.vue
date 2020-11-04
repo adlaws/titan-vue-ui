@@ -336,8 +336,13 @@ export default {
             {
                 // force clear any selection (unless CTRL is pressed)
                 this._clearSelection(true);
-                // create an entity at the location
-                TitanUtils.createEntity('abrams_m1a1', worldPos);
+
+                const selectedEntity = this.$store.getters.getEntitySelectorSelection;
+                if(selectedEntity)
+                {
+                    // create an entity at the location
+                    TitanUtils.createEntity(selectedEntity.entityName, worldPos);
+                }
             }
         },
         /**
