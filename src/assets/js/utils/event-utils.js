@@ -204,7 +204,10 @@ export default class EventUtils
      */
     static isInFormField(evt)
     {
-        const tagName = evt && evt.targetElm && evt.targetElm.tagName;
+        if(!evt)
+            return false;
+        const tagName = (evt.targetElm && evt.targetElm.tagName) || (evt.target && evt.target.tagName);
+        console.log(tagName);
         return FORMFIELD_TAGS.has(tagName);
     }
 

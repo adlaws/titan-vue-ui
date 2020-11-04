@@ -38,6 +38,8 @@
                 </titan-window-content>
             </template>
         </titan-window>
+
+        <entity-selector />
     </div>
 </template>
 
@@ -50,6 +52,8 @@ import TitanWindowContent from '@/components/titan/core/TitanWindowContent.vue';
 import TButton from '@/components/titan/forms/TButton.vue';
 import TSelect from '@/components/titan/forms/fields/basic/TSelect.vue';
 
+import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
+
 const HANDLED_MOUSE_EVENTS = new Set([
     'mousedown', 'mousemove', 'mouseup',
     'click', 'dblclick',
@@ -61,6 +65,7 @@ export default {
     {
         TitanWindow, TitanWindowContent,
         TButton, TSelect,
+        EntitySelector,
     },
     data()
     {

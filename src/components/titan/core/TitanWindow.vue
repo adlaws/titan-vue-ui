@@ -278,8 +278,6 @@ export default {
         {
             this._handleFocus(evt);
 
-            evt.preventDefault();
-
             if(!this.resizing.type)
                 return;
 
@@ -293,8 +291,6 @@ export default {
 
             this.resizing.edge.x = this.resizing.type.w ? bounds.x : (this.resizing.type.e ? bounds.width : null);
             this.resizing.edge.y = this.resizing.type.n ? bounds.y : (this.resizing.type.s ? bounds.height : null);
-
-            console.log('_handleResizeStart', this.resizing.active, this.status.maximized, this.status.minimized);
 
             document.onmousemove = this._handleDrag;
             document.onmouseup = this._handleDragEnd;

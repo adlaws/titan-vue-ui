@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import TitanUtils, { SIM_MODE, SIM_MODES, $eview, $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
+import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-dev.js';
 
 Vue.use(Vuex);
 
@@ -16,6 +17,22 @@ export const STORE_MUTATION = {
     UPDATE_MOUSE_BUTTON_STATE:'updateMouseButtonState',
     UPDATE_MODIFIER_KEY_STATE:'updateModifierKeyState',
 };
+
+const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
+    .map(e=>
+    {
+        // the `Blueprint` field value is a comma delimited string, which is not particularly useful,
+        // so convert the string into an array, and additional `Set` to make life simpler
+        const blueprintArray = e.Blueprint.split(',').map(x=>x.trim());
+        e.Blueprint = blueprintArray.join(',');
+        e.BlueprintArr = blueprintArray;
+        e.BlueprintSet = new Set(blueprintArray.filter(x=> x.length > 0 && x !== 'null'));
+
+        // remove unnecessary fields form descriptor - not needed for the UI
+        ['ClassName', 'Tags', 'Filter', 'draggableLive', 'legacyInitialize', 'visible', 'colliding'].forEach(k => delete e[k]);
+
+        return e;
+    });
 const ApplicationState = new Vuex.Store({
     state: {
         windows: {},
@@ -24,7 +41,7 @@ const ApplicationState = new Vuex.Store({
         titan:
         {
             simMode: null,
-            entityDescriptors: $isInsideTitan?$tWorldInterface.getEntityDescriptionList():[],
+            entityDescriptors: ENTITY_DESCRIPTORS,
             inputState: {
                 // Outerra events are not reliable in isolation to gather mouse button and modifier
                 // key state, so we keep track of it here

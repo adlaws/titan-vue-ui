@@ -25,7 +25,7 @@
  *
  *      <t-input v-model="someText" />
  */
-import TitanUtils from '@/assets/js/titan/titan-utils.js';
+import { $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
 import CryptoUtils from '@/assets/js/utils/crypto-utils.js';
 
 export default {
@@ -72,11 +72,11 @@ export default {
     {
         handleFocus()
         {
-            if(!TitanUtils.isInsideTitan())
-                return;
+            if($isInsideTitan)
+                return false;
 
             // special handling for Titan key focus etc
-            TitanUtils.deactivateUndoRedoKeyMonitoring();
+            // TitanUtils.deactivateUndoRedoKeyMonitoring();
             window.onkeydown = () => true;
             window.onkeyup = () => true;
             return true;

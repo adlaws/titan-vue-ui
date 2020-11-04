@@ -32,7 +32,11 @@ export const _GLOBAL = Function('return this')();
 export const window = _GLOBAL.window;
 export const $got = _GLOBAL.$got || {}; // NOTE: not currently used
 
+// Determine if we are running in a production environment (as opposed to development)
+export const $isProduction = process.env.NODE_ENV === 'production';
+// Determine if we are running in Titan
 export const $isInsideTitan = window.$eview !== undefined;
+// Determine if we are running in Outerra
 export const $isInsideOuterra = /Outerra\/c4e/g.test(window.navigator.userAgent); // true if inside OUTERRA
 
 // take $eview from the window, otherwise make up dummy implementation

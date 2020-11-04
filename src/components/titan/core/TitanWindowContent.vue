@@ -4,7 +4,7 @@
         class="titan--window-content"
         :class="{active: windowContext.active}"
     >
-        Active Window: {{ windowContext }}
+        <!-- Active Window: {{ windowContext }} -->
         <slot />
     </div>
 </template>
