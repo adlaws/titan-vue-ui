@@ -19,7 +19,7 @@
                         <titan-icon style="font-size:200%;" icon="map-marker-path" />
                         <span class="ml-1">Scenario Constructor</span>
                     </li>
-                    <li>
+                    <li @click="startLobby()">
                         <titan-icon style="font-size:200%;" icon="account-group-outline" />
                         <span class="ml-1">Scenario Lobby</span>
                     </li>
@@ -110,6 +110,10 @@ export default {
         startScenarioConstructor()
         {
             this.$store.commit(STORE_MUTATION.CHANGE_SIM_MODE, SIM_MODE.EDITOR);
+        },
+        startLobby()
+        {
+            this.$store.commit(STORE_MUTATION.CHANGE_SIM_MODE, SIM_MODE.ADMIN);
         },
         quitApplication()
         {

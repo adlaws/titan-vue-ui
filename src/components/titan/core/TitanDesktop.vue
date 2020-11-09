@@ -3,26 +3,28 @@
         class="titan--desktop pass-through"
     >
         <editor-ui v-if="currentSimMode===SIM_MODE.EDITOR" />
+        <lobby-ui v-if="currentSimMode===SIM_MODE.ADMIN" />
 
         <titan-task-bar />
     </div>
 </template>
 
 <script>
-import {STORE_MUTATION} from '@/assets/js/store/store.js';
+import { STORE_MUTATION, STORE_ACTION } from '@/assets/js/store/store.js';
 
 import EventUtils from '@/assets/js/utils/event-utils.js';
 import TitanUtils, { $eview, SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 
 import TitanTaskBar from '@/components/titan/core/TitanTaskBar.vue';
 import EditorUi from '@/components/titan/sim-mode/EditorUI.vue';
+import LobbyUi from '@/components/titan/sim-mode/LobbyUI.vue';
 
 export default {
     name: 'titan-desktop',
     components:
     {
         TitanTaskBar,
-        EditorUi
+        EditorUi, LobbyUi,
     },
     data()
     {
@@ -36,6 +38,11 @@ export default {
     computed:
     {
         currentSimMode() { return this.$store.getters.titanSimMode; },
+    },
+    created()
+    {
+        // here we read in and initialize the plugin configuration
+        this.$store.dispatch(STORE_ACTION.INIT_PLUGIN_CONFIG);
     },
     mounted()
     {

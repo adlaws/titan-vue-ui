@@ -1,0 +1,10 @@
+{
+    "SimMode_Admin":
+    {
+        "windows":[
+            {"component":"Howdy"},
+            {"component":"Doody"}
+        ],
+        "taskbar":[]
+    }
+}

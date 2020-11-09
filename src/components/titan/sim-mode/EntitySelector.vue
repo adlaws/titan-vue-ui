@@ -68,20 +68,16 @@
 <script>
 import {STORE_MUTATION} from '@/assets/js/store/store.js';
 
+import { PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
 import UiUtils from '@/assets/js/utils/ui-utils.js';
 
 import TitanWindow from '@/components/titan/core/TitanWindow.vue';
 import TitanWindowContent from '@/components/titan/core/TitanWindowContent.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
-
 import TInput from '@/components/titan/forms/fields/basic/TInput.vue';
-
 import ImgFallback from '@/components/titan/core/ImgFallback.vue';
 
 import '@/assets/img/datasource.png';
-
-const PACKAGES_PATH = '../../../../packages/';
-const DATA_PATH = '../../data/';
 
 export default {
     name: 'editor-ui',
@@ -101,7 +97,6 @@ export default {
             filteredEntities:[],
             tableRows:[],
             PACKAGES_PATH,
-            DATA_PATH,
         };
     },
     computed:
