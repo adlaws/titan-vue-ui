@@ -48,8 +48,14 @@ for deployment in Titan.
 Place the contents of the generated `dist` folder into a location accessible by
 Titan, and update the required references in the other Titan source files.
 
+> NOTE: in development, this project was in the following folder: `(titan-root)\gui\adlaws\titan-gui-js`, so some paths may need to be adjusted if it is
+deployed elsewhere. Check `titan-utils.js`, where commonly referenced paths,
+functions, and environmental variables are initialised, and update them as
+required.
+
 During development you may wish to develop "in place", so that `npm run build`
-is placing the `dist` folder in the location Titan is refrerring to, rather than requiring the additional copying step.
+is placing the `dist` folder in the location Titan is refrerring to, rather
+than requiring the additional copying step.
 
 Depending on where in Titan you are using the web app, it may be sufficient to
 simply re-trigger the display of the app to see any changes made. In other

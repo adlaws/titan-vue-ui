@@ -28,6 +28,10 @@ import KEY_CODE from '@/assets/js/utils/event-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 import UIUtils from '@/assets/js/utils/ui-utils.js';
 
+export const TITAN_ROOT_PATH = '../../../../';
+export const PACKAGES_PATH = `${TITAN_ROOT_PATH}packages/`;
+export const DATA_PATH = `${TITAN_ROOT_PATH}data/`;
+
 export const _GLOBAL = Function('return this')();
 export const window = _GLOBAL.window;
 export const $got = _GLOBAL.$got || {}; // NOTE: not currently used
@@ -122,10 +126,6 @@ export const $tLogger = {
         }
     },
 };
-
-export const TITAN_ROOT_PATH = '../../../../';
-export const PACKAGES_PATH = `${TITAN_ROOT_PATH}packages/`;
-export const DATA_PATH = `${TITAN_ROOT_PATH}data/`;
 
 // ref titan-git\src\titan_core\core\types\SimulationMode.h
 export const SIM_MODE = {
