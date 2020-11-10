@@ -137,6 +137,7 @@ export default {
     destroyed()
     {
         window.removeEventListener('resize', this._handleBrowserResize);
+        this.$store.commit(STORE_MUTATION.DEREGISTER_WINDOW, {id: this.id});
     },
     beforeMount()
     {

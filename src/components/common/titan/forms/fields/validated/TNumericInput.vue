@@ -1,6 +1,6 @@
 <template>
     <div>
-        <t-input
+        <titan-input
             v-model.trim="$v.strValue.$model"
             :value="strValue"
             type="number"
@@ -19,7 +19,7 @@
             <template #append>
                 <slot name="append" />
             </template>
-        </t-input>
+        </titan-input>
         <template v-if="$v.strValue.$error">
             <slot name="user-hint" v-bind="self">
                 <span>{{ errorText }}</span>
@@ -63,12 +63,12 @@
 import { validationMixin } from 'vuelidate';
 import { required, integer } from 'vuelidate/lib/validators';
 
-import TInput from '@/components/common/titan/forms/fields/basic/TInput.vue';
+import TitanInput from '@/components/common/titan/forms/fields/basic/TitanInput.vue';
 
 export default {
     name: 't-numeric-input',
     components: {
-        TInput,
+        TitanInput,
     },
     mixins: [validationMixin],
     props: {

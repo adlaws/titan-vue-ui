@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import TitanUtils, { SIM_MODE, SIM_MODES, $eview, $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { SIM_MODE, SIM_MODES, $eview, $isInsideTitan, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
 import FetchUtils from '@/assets/js/utils/fetch-utils.js';
 import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-dev.js';
 
@@ -10,6 +10,7 @@ Vue.use(Vuex);
 export const STORE_MUTATION = {
     // WINDOW MANAGEMENT
     REGISTER_WINDOW:'registerWindow',
+    DEREGISTER_WINDOW:'deregisterWindow',
     CLOSE_WINDOW:'closeWindow',
     WINDOW_TO_FRONT:'windowToFront',
     WINDOW_TO_BACK:'windowToBack',
@@ -142,6 +143,17 @@ const ApplicationState = new Vuex.Store({
                 }
             );
         },
+        [STORE_MUTATION.DEREGISTER_WINDOW](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return;
+            const windows = state.windows;
+            Vue.delete(
+                windows,
+                payload.id,
+            );
+        },
         [STORE_MUTATION.WINDOW_TO_FRONT](state, payload)
         {
             const window = state.windows[payload.id];
@@ -228,7 +240,7 @@ const ApplicationState = new Vuex.Store({
             if(!evtType)
                 return;
 
-            const now = new Date().getTime();
+            const now = Date.now();
 
             const mouseStates = state.titan.inputState.mouse;
             const buttonStates = mouseStates.buttons;
@@ -374,23 +386,36 @@ const ApplicationState = new Vuex.Store({
     actions: {
         [STORE_ACTION.INIT_PLUGIN_CONFIG]: ({commit}) =>
         {
-            (async function()
+            const pluginsConfigFile = '/plugins/config.json';
+            if($isInsideTitan)
             {
-                let json = {};
-                try
-                {
-                    const response = await FetchUtils.doGET('/plugins/config.json');
-                    if(response.ok)
-                        json = await response.json();
-                }
-                catch(e)
-                {
-                    // ignore
-                }
-                // deliberately hard coded string here - don't want to expose
-                // the mutation for external use
+                const cachedPath = $tFileInterface.getCurrentDir();
+                $tFileInterface.switchProgramPath();
+                $tFileInterface.changeDir('./gui/adlaws/titan-gui-js/dist/plugins');
+                const json = $tWorldInterface.readJsonData($tFileInterface.getCurrentDir()+'\\config.json');
+                $tFileInterface.changeDir(cachedPath);
                 commit('_initializePluginConfig', json);
-            })();
+            }
+            else
+            {
+                (async function()
+                {
+                    let json = {};
+                    try
+                    {
+                        const response = await FetchUtils.doGET(pluginsConfigFile);
+                        if(response.ok)
+                            json = await response.json();
+                    }
+                    catch(e)
+                    {
+                        // ignore
+                    }
+                    // deliberately hard coded string here - don't want to expose
+                    // the mutation for external use
+                    commit('_initializePluginConfig', json);
+                })();
+            }
         }
     },
     modules: {}

@@ -423,37 +423,6 @@ export default class TitanUtils
         }
         return false;
     }
-    /**
-     * Helper to disable physics on objects in 'objs' list (typically selected objects)
-     * in preparation for changing the transform. Without this physics continues to simulate
-     * which can cause issues while attempting a drag-move operation
-     */
-    // TODO: not used...?
-    static disablePhysicsForTransformEdit(objs)
-    {
-        const activeScenario = $tWorldInterface.getActiveScenario();
-        for (let key in objs)
-        {
-            const objTypeName = objs[key].typeName;
-
-            const entity = activeScenario.getEntity(objs[key]);
-            if (objTypeName === OBJECT_TYPE.GROUP_ENTITY)
-            {
-                entity.setEditDragActive(true);
-            }
-            else if(objTypeName === OBJECT_TYPE.ENTITY)
-            {
-                const entityTypeName = entity.getTypeName();
-                if (entityTypeName === OBJECT_TYPE.GROUND_VEHICLE ||
-                    entityTypeName === OBJECT_TYPE.CHARACTER ||
-                    entityTypeName === OBJECT_TYPE.HELICOPTER ||
-                    entityTypeName === OBJECT_TYPE.AEROPLANE)
-                {
-                    entity.setEditDragActive(true);
-                }
-            }
-        }
-    }
 
     /**
      * For debugging - converts the properties/values of Outerra mouse/key events to a

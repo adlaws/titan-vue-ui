@@ -1,6 +1,6 @@
 <template>
     <div>
-        <t-input
+        <titan-input
             v-model.trim="$v.strValue.$model"
             :value="strValue"
             :label="label"
@@ -54,12 +54,12 @@
 import { validationMixin } from 'vuelidate';
 import { required, integer } from 'vuelidate/lib/validators';
 
-import TInput from '@/components/common/titan/forms/fields/basic/TInput.vue';
+import TitanInput from '@/components/common/titan/forms/fields/basic/TitanInput.vue';
 
 export default {
     name: 't-integer-input',
     components: {
-        TInput,
+        TitanInput,
     },
     mixins: [validationMixin],
     props: {

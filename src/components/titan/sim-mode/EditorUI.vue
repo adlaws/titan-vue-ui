@@ -34,23 +34,26 @@
             <template #default="context">
                 <titan-window-content :window-context="context.windowContext">
                     <titan-button label="A Button" />
-                    <t-select :options="testOptions" />
+                    <titan-select :options="testOptions" />
                 </titan-window-content>
             </template>
         </titan-window>
 
         <entity-selector />
+
+        <div
+            v-for="(pluginWindow, idx) in pluginWindows"
+            :key="`pluginWindow${idx}`"
+        >
+            <component :is="pluginWindow" />
+        </div>
     </div>
 </template>
 
 <script>
 import TitanUtils, { $isInsideTitan, $tWorldInterface, SIM_MODE } from '@/assets/js/titan/titan-utils.js';
+import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
-
-import TitanWindow from '@/components/titan/core/TitanWindow.vue';
-import TitanWindowContent from '@/components/titan/core/TitanWindowContent.vue';
-import TitanButton from '@/components/common/titan/forms/TitanButton.vue';
-import TSelect from '@/components/common/titan/forms/fields/basic/TSelect.vue';
 
 import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
 
@@ -63,8 +66,6 @@ export default {
     name: 'editor-ui',
     components:
     {
-        TitanWindow, TitanWindowContent,
-        TitanButton, TSelect,
         EntitySelector,
     },
     data()
@@ -75,6 +76,7 @@ export default {
                 {id:1, text:'Option B', disabled:false, tooltip:'B is for Banana'},
                 {id:2, text:'Option C', disabled:false, tooltip:'C is for Coconut'},
             ],
+            // mouse drag interaction state
             drag:
             {
                 mightDrag: false,
@@ -82,17 +84,21 @@ export default {
                 isRubberBandSelecting: false,
                 lastWinXY: null,
                 lastECEF: null,
-            }
+            },
+            // plugins
+            pluginWindows: [],
         };
     },
     computed:
     {
         currentSimMode() { return this.$store.getters.titanSimMode; },
-        // entityDescriptors() { return this.$store.getters.titanEntityDescriptors; }
-        entityDescriptors() { return []; },
         modifierKeys() { return this.$store.getters.modifierKeys; },
         mouseButtons() { return this.$store.getters.mouseButtons; },
         mousePress() { return this.$store.getters.mousePress; },
+        // plugins
+        plugins() { return this.$store.getters.plugins; },
+        editPlugins() { return this.plugins.SimMode_Edit || {}; },
+        editWindowConfigs() { return this.editPlugins.windows || []; },
     },
     mounted()
     {
@@ -101,6 +107,21 @@ export default {
         // achieve the same thing - not sure which (if either) is a
         // better choice here
         HANDLED_MOUSE_EVENTS.forEach((evtType) => document.addEventListener(evtType, this.handleMouseEvent) );
+
+        // inject plugin windows etc
+        const pluginWindows = [];
+        this.editWindowConfigs.forEach((pwc) =>
+        {
+            const component = pwc.component;
+            const type = pwc.type;
+            const extension = type === 'vue' ? '.umd.min.js' : '.js';
+            const componentURL = `plugins/components/${component}/${component}${extension}`;
+            if(type === 'vue')
+                pluginWindows.push( () => VueUtils.externalComponent(componentURL) );
+            else
+                VueUtils.injectScript(componentURL);
+        });
+        this.pluginWindows = pluginWindows;
     },
     beforeDestroy()
     {

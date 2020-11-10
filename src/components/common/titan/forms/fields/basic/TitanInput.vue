@@ -23,13 +23,13 @@
 /**
  * Example usage:
  *
- *      <t-input v-model="someText" />
+ *      <titan-input v-model="someText" />
  */
 import { $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
 import CryptoUtils from '@/assets/js/utils/crypto-utils.js';
 
 export default {
-    name: 't-input',
+    name: 'titan-input',
     props: {
         id:{
             type:String,

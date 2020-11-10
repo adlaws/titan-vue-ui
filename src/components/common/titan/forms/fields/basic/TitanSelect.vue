@@ -36,20 +36,20 @@
  * Example usages:
  *
  * Single Select:
- *      <t-select
+ *      <titan-select
  *          v-model="selection"
  *          :options="options"
  *      />
  *
  * Multiple Select:
- *      <t-select
+ *      <titan-select
  *          v-model="selections"
  *          :options="options"
  *          multiple
  *      />
  *
  * Default text:
- *      <t-select
+ *      <titan-select
  *          v-model="selection"
  *          :options="options"
  *          default-text="Choose something..."
@@ -59,7 +59,7 @@ import { $isInsideTitan } from '@/assets/js/titan/titan-utils';
 import CryptoUtils from '@/assets/js/utils/crypto-utils';
 
 export default {
-    name: 't-select',
+    name: 'titan-select',
     props: {
         id:{type:String, default:()=>CryptoUtils.simpleUUID()},
         name:{type:String, default:()=>CryptoUtils.simpleUUID()},

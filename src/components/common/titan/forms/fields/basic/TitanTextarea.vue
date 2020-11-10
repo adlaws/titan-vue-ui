@@ -16,13 +16,13 @@
 /**
  * Example usage:
  *
- *      <t-textarea v-model="someText" />
+ *      <titan-textarea v-model="someText" />
  */
 import TitanUtils from '@/assets/js/titan/titan-utils';
 import CryptoUtils from '@/assets/js/utils/crypto-utils.js';
 
 export default {
-    name: 't-textarea',
+    name: 'titan-textarea',
     props: {
         id:{
             type:String,

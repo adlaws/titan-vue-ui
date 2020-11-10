@@ -26,4 +26,12 @@ export default class VueUtils
 
         return window[name];
     }
+
+    static async injectScript(url)
+    {
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = url;
+        document.head.appendChild(script);
+    }
 }

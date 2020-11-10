@@ -15,7 +15,6 @@ import VueUtils from '@/assets/js/utils/vue-utils.js';
 export default {
     name: "lobby-ui",
     data: () => ({
-        dynamic: null,
         pluginWindows: []
     }),
     computed:
@@ -26,13 +25,23 @@ export default {
     },
     mounted()
     {
-        this.dynamic = () => VueUtils.externalComponent('plugins/components/Howdy/Howdy.umd.min.js');
-        this.pluginWindows = this.adminWindowConfigs.map((pwc) =>
+        const pluginWindows = [];
+        this.adminWindowConfigs.forEach((pwc) =>
         {
             const component = pwc.component;
-            const componentURL = `plugins/components/${component}/${component}.umd.min.js`;
-            return () => VueUtils.externalComponent(componentURL);
+            const type = pwc.type;
+            const extension = type === 'vue' ? '.umd.min.js' : '.js';
+            const componentURL = `plugins/components/${component}/${component}${extension}`;
+            if(type === 'vue')
+            {
+                pluginWindows.push( () => VueUtils.externalComponent(componentURL) );
+            }
+            else
+            {
+                VueUtils.injectScript(componentURL);
+            }
         });
+        this.pluginWindows = pluginWindows;
     },
     methods: {
         change()

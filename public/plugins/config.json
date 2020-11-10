@@ -1,9 +1,18 @@
 {
+    "SimMode_Edit":
+    {
+        "windows":[
+            {"component":"Simple", "type":"vue"}
+        ],
+        "taskbar":[]
+    },
     "SimMode_Admin":
     {
         "windows":[
-            {"component":"Howdy"},
-            {"component":"Doody"}
+            {"component":"HelloWorld", "type":"vue"},
+            {"component":"HelloWorld2", "type":"vue"},
+            {"component":"VirtualCameras", "type":"vue"},
+            {"component":"JavaScriptOnly", "type":"js"}
         ],
         "taskbar":[]
     }

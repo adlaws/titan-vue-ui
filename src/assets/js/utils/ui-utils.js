@@ -178,7 +178,7 @@ export default class UiUtils
      */
     static _now()
     {
-        return new Date().getTime();
+        return Date.now();
     }
 }
 
