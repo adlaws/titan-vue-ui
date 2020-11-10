@@ -33,7 +33,7 @@
         >
             <template #default="context">
                 <titan-window-content :window-context="context.windowContext">
-                    <t-button label="A Button" />
+                    <titan-button label="A Button" />
                     <t-select :options="testOptions" />
                 </titan-window-content>
             </template>
@@ -49,8 +49,8 @@ import MathUtils from '@/assets/js/utils/math-utils.js';
 
 import TitanWindow from '@/components/titan/core/TitanWindow.vue';
 import TitanWindowContent from '@/components/titan/core/TitanWindowContent.vue';
-import TButton from '@/components/titan/forms/TButton.vue';
-import TSelect from '@/components/titan/forms/fields/basic/TSelect.vue';
+import TitanButton from '@/components/common/titan/forms/TitanButton.vue';
+import TSelect from '@/components/common/titan/forms/fields/basic/TSelect.vue';
 
 import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
 
@@ -64,7 +64,7 @@ export default {
     components:
     {
         TitanWindow, TitanWindowContent,
-        TButton, TSelect,
+        TitanButton, TSelect,
         EntitySelector,
     },
     data()

@@ -1,6 +1,6 @@
 <template>
     <button
-        class="t-button"
+        class="titan-button"
         :disabled="isDisabled"
         :title="tooltip"
         @click="handleClick"
@@ -19,17 +19,17 @@
  * Example usages:
  *
  * Basic usage:
- *      <t-button label="Push This" @click="doSomething" />
+ *      <titan-button label="Push This" @click="doSomething" />
  * Disabled:
- *      <t-button label="Push This" @click="doSomething" disabled />
+ *      <titan-button label="Push This" @click="doSomething" disabled />
  * Custom content:
- *      <t-button @click="doSomething" />
+ *      <titan-button @click="doSomething" />
  *          <p>Push This</p>
  *          <p>To Win!</p>
- *      </t-button>
+ *      </titan-button>
  */
 export default {
-    name: 't-button',
+    name: 'titan-button',
     props:
     {
         label:{
@@ -80,7 +80,7 @@ export default {
 
 <style lang="scss">
 /*
-button.t-button {
+button.titan-button {
     $bgColor:         #2f3d47;
     $highlightColor:  #40c4eb;
     $disabledColor:   #BBB;

@@ -6,7 +6,7 @@
             class="start"
             @click="showStartMenu=!showStartMenu"
         >
-            <div class="start-button">
+            <div class="startitan-button">
                 <titan-icon style="font-size:200%;" icon="camera-iris" />
                 <span class="ml-1">Start</span>
             </div>
@@ -165,7 +165,7 @@ export default {
     {
         margin-left: 24px;
 
-        .start-button
+        .startitan-button
         {
             display: flex;
             flex-wrap: nowrap;
