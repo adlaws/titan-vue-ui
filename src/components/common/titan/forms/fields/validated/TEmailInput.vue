@@ -26,7 +26,7 @@
 import { validationMixin } from 'vuelidate';
 import { required, email } from 'vuelidate/lib/validators';
 
-import TInput from '@/components/titan/forms/fields/basic/TInput.vue';
+import TInput from '@/components/common/titan/forms/fields/basic/TInput.vue';
 
 export default {
     name: 't-email-input',

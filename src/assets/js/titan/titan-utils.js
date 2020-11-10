@@ -123,6 +123,10 @@ export const $tLogger = {
     },
 };
 
+export const TITAN_ROOT_PATH = '../../../../';
+export const PACKAGES_PATH = `${TITAN_ROOT_PATH}packages/`;
+export const DATA_PATH = `${TITAN_ROOT_PATH}data/`;
+
 // ref titan-git\src\titan_core\core\types\SimulationMode.h
 export const SIM_MODE = {
     NONE: 'SimMode_None',

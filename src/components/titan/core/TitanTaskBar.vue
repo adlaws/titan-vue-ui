@@ -6,7 +6,7 @@
             class="start"
             @click="showStartMenu=!showStartMenu"
         >
-            <div class="start-button">
+            <div class="startitan-button">
                 <titan-icon style="font-size:200%;" icon="camera-iris" />
                 <span class="ml-1">Start</span>
             </div>
@@ -19,7 +19,7 @@
                         <titan-icon style="font-size:200%;" icon="map-marker-path" />
                         <span class="ml-1">Scenario Constructor</span>
                     </li>
-                    <li>
+                    <li @click="startLobby()">
                         <titan-icon style="font-size:200%;" icon="account-group-outline" />
                         <span class="ml-1">Scenario Lobby</span>
                     </li>
@@ -111,6 +111,10 @@ export default {
         {
             this.$store.commit(STORE_MUTATION.CHANGE_SIM_MODE, SIM_MODE.EDITOR);
         },
+        startLobby()
+        {
+            this.$store.commit(STORE_MUTATION.CHANGE_SIM_MODE, SIM_MODE.ADMIN);
+        },
         quitApplication()
         {
             TitanUtils.quitApplication();
@@ -161,7 +165,7 @@ export default {
     {
         margin-left: 24px;
 
-        .start-button
+        .startitan-button
         {
             display: flex;
             flex-wrap: nowrap;

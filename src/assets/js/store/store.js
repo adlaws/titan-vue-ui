@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import TitanUtils, { SIM_MODE, SIM_MODES, $eview, $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
+import FetchUtils from '@/assets/js/utils/fetch-utils.js';
 import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-dev.js';
 
 Vue.use(Vuex);
@@ -20,6 +21,9 @@ export const STORE_MUTATION = {
     ENTITY_SELECTOR_SET_SELECTION:'entitySelector::setSelection',
     ENTITY_SELECTOR_CLEAR_SELECTION:'entitySelector::clearSelection',
 };
+export const STORE_ACTION = {
+    INIT_PLUGIN_CONFIG:'initPluginConfig',
+};
 
 const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
     .map(e=>
@@ -36,6 +40,8 @@ const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescription
 
         return e;
     });
+
+
 const ApplicationState = new Vuex.Store({
     state: {
         windows: {},
@@ -72,7 +78,8 @@ const ApplicationState = new Vuex.Store({
             {
                 selected: null,
             },
-        }
+        },
+        plugins: {},
     },
     getters: {
         // --------------------------------------------------------------------
@@ -89,6 +96,10 @@ const ApplicationState = new Vuex.Store({
             return registeredWindow ? registeredWindow.active : false;
         },
         windows: (state) => state.windows,
+        // --------------------------------------------------------------------
+        // PLUGIN MANAGEMENT
+        // --------------------------------------------------------------------
+        plugins: (state) => state.plugins,
         // --------------------------------------------------------------------
         // TITAN STATE MANAGEMENT
         // --------------------------------------------------------------------
@@ -344,8 +355,44 @@ const ApplicationState = new Vuex.Store({
         {
             state.titan.entitySelector.selected = null;
         },
+
+
+        /**
+         * NOTE: INTERNAL USE ONLY - do not expose via STORE_MUTATION
+         * NOTE: See also actions: STORE_ACTION.INIT_PLUGIN_CONFIG
+         *
+         * Initializes the plugin configuration
+         *
+         * @param {object} state the store state object
+         * @param {object} plugins the plugins payload
+         */
+        _initializePluginConfig: (state, plugins) =>
+        {
+            state.plugins = plugins;
+        }
     },
-    actions: {},
+    actions: {
+        [STORE_ACTION.INIT_PLUGIN_CONFIG]: ({commit}) =>
+        {
+            (async function()
+            {
+                let json = {};
+                try
+                {
+                    const response = await FetchUtils.doGET('/plugins/config.json');
+                    if(response.ok)
+                        json = await response.json();
+                }
+                catch(e)
+                {
+                    // ignore
+                }
+                // deliberately hard coded string here - don't want to expose
+                // the mutation for external use
+                commit('_initializePluginConfig', json);
+            })();
+        }
+    },
     modules: {}
 });
 

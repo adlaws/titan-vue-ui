@@ -15,7 +15,7 @@
             </template>
             <template #footer>
                 <div class="button-bar m-1" :style="isOkOnly?'justify-content:flex-end;':''">
-                    <t-button
+                    <titan-button
                         v-if="!isOkOnly"
                         class="inputButton"
                         @click="_doCancel"
@@ -23,15 +23,15 @@
                         <slot name="modal-cancel" v-bind="theContext">
                             {{ theCancelText }}
                         </slot>
-                    </t-button>
-                    <t-button
+                    </titan-button>
+                    <titan-button
                         class="inputButton"
                         @click="_doConfirm"
                     >
                         <slot name="modal-ok" v-bind="theContext">
                             {{ theOkText }}
                         </slot>
-                    </t-button>
+                    </titan-button>
                 </div>
             </template>
         </easy-modal-content>
@@ -41,13 +41,13 @@
 <script>
 import ModalContainer from './ModalContainer.vue';
 import EasyModalContent from './EasyModalContent.vue';
-import TButton from '@/components/titan/forms/TButton.vue';
+import TitanButton from '@/components/common/titan/forms/TitanButton.vue';
 
 export default {
     name: 'basic-modal-dialog',
     components:
     {
-        ModalContainer, EasyModalContent, TButton
+        ModalContainer, EasyModalContent, TitanButton
     },
     props:
     {
