@@ -391,8 +391,10 @@ const ApplicationState = new Vuex.Store({
             {
                 const cachedPath = $tFileInterface.getCurrentDir();
                 $tFileInterface.switchProgramPath();
-                $tFileInterface.changeDir('./gui/adlaws/titan-gui-js/dist/plugins');
-                const json = $tWorldInterface.readJsonData($tFileInterface.getCurrentDir()+'\\config.json');
+                $tFileInterface.changeDir('./gui/adlaws/titan-gui-js/dist/');
+                const currentDir = $tFileInterface.getCurrentDir();
+
+                const json = $tWorldInterface.readJsonData(`${currentDir}${pluginsConfigFile}`);
                 $tFileInterface.changeDir(cachedPath);
                 commit('_initializePluginConfig', json);
             }

@@ -1,3 +1,7 @@
+import { $isInsideTitan, $tFileInterface } from '../titan/titan-utils.js';
+
+const PLUGIN_FOLDER = './gui/adlaws/titan-gui-js/dist/';
+
 export default class VueUtils
 {
     static async externalComponent(url)
@@ -30,8 +34,30 @@ export default class VueUtils
     static async injectScript(url)
     {
         const script = document.createElement('script');
-        script.type = 'module';
-        script.src = url;
+        if($isInsideTitan)
+        {
+            // in Titan we need to read source from file system
+            // TODO: can we read from the Node.js server or something instead...?
+            const pluginPathParts = url.split('/');
+            const pluginComponentPath = pluginPathParts.slice(0,-1).join('/');
+            const pluginComponentFile = pluginPathParts.slice(-1);
+            const targetFolder = `${PLUGIN_FOLDER}${pluginComponentPath}`;
+
+            // cache original filesystem path
+            const cachedPath = $tFileInterface.getCurrentDir();
+            $tFileInterface.switchProgramPath();
+            $tFileInterface.changeDir(targetFolder);
+            const javascriptSrc = $tFileInterface.readTextFile(pluginComponentFile);
+            // restore original filesystem path
+            $tFileInterface.changeDir(cachedPath);
+
+            script.textContent = javascriptSrc;
+        }
+        else
+        {
+            // in browser can just request from server
+            script.src = url;
+        }
         document.head.appendChild(script);
     }
 }

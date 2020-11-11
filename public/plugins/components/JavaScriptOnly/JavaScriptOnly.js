@@ -1,6 +1,5 @@
-import { simpleUUID, addComponent } from './titan-utils.js';
 
-const componentID = simpleUUID();
+const componentID = 'javascript-only-component';
 
 const html = ''
 +'<h1>'
@@ -23,7 +22,18 @@ const css = ''
 +'  z-index: 100;'
 +'}';
 
-const componentElement = addComponent( {id: componentID, html: html, css: css} );
+// create CSS style rules
+const styleElement = document.createElement('style');
+styleElement.textContent = css;
+
+// create component
+const componentElement = document.createElement('div');
+componentElement.id = componentID;
+componentElement.innerHTML = html;
+
+// add styles and component
+document.body.appendChild(styleElement);
+document.body.appendChild(componentElement);
 
 // add event handlers
 componentElement.addEventListener('click', () => document.body.removeChild(componentElement));
