@@ -42,14 +42,16 @@ const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescription
         return e;
     });
 
-
 const ApplicationState = new Vuex.Store({
     state: {
         windows: {},
-        windowOdometer:0, // incremented each time a window is registered, tracks basic creation order
         maxZ: 0,
         titan:
         {
+            window:{
+                width: window.screen.availWidth,
+                height: window.screen.availHeight,
+            },
             simMode: null,
             entityDescriptors: ENTITY_DESCRIPTORS,
             inputState: {
@@ -104,6 +106,7 @@ const ApplicationState = new Vuex.Store({
         // --------------------------------------------------------------------
         // TITAN STATE MANAGEMENT
         // --------------------------------------------------------------------
+        titanWindow: (state) => state.titan.window,
         titanSimMode: (state) => state.titan.simMode,
         titanEntityDescriptors: (state) => state.titan.entityDescriptors,
         // INPUT STATE
@@ -128,7 +131,6 @@ const ApplicationState = new Vuex.Store({
                 w.active = false;
             }
             state.maxZ++;
-            state.windowOdometer++;
             Vue.set(
                 windows,
                 payload.id,
@@ -136,7 +138,6 @@ const ApplicationState = new Vuex.Store({
                     id: payload.id,
                     active: true,
                     zIndex: state.maxZ,
-                    odometer: state.windowOdometer,
                     title: payload.title,
                     icon: payload.icon,
                     instance: payload.instance

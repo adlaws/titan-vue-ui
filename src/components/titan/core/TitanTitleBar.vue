@@ -1,7 +1,7 @@
 <template>
     <div
         class="vue-os--title-bar"
-        :class="{active, maximized}"
+        :class="{active, maximized, nodrag:!draggable}"
         @mousedown="handleDragStart"
         @dblclick="$emit('window-toggle-maximise')"
     >
@@ -38,19 +38,28 @@
                 {{ title }}
             </span>
         </div>
-        <div @click="$emit('window-minimise')">
+        <div
+            v-if="minimizable"
+            @click="$emit('window-minimise')"
+        >
             <titan-icon
                 icon="window-minimize"
                 class="icon control-btn"
             />
         </div>
-        <div @click="$emit('window-toggle-maximise')">
+        <div
+            v-if="maximizable"
+            @click="$emit('window-toggle-maximise')"
+        >
             <titan-icon
                 :icon="maximized===false?'window-maximize':'window-restore'"
                 class="icon control-btn"
             />
         </div>
-        <div @click="$emit('window-close')">
+        <div
+            v-if="closable"
+            @click="$emit('window-close')"
+        >
             <titan-icon
                 icon="window-close"
                 class="icon control-btn"
@@ -98,6 +107,26 @@ export default {
             type: [Boolean, Object],
             default: false
         },
+        // can the window be moved?
+        draggable: {
+            type: Boolean,
+            default: true
+        },
+        // can the window be closed/dismissed?
+        closable: {
+            type: Boolean,
+            default: true
+        },
+        // can the window be minimized (to the taskbar)?
+        minimizable: {
+            type: Boolean,
+            default: true
+        },
+        // can the window be maximized (to cover the entire desktop)?
+        maximizable: {
+            type: Boolean,
+            default: true
+        },
     },
     data()
     {
@@ -112,7 +141,7 @@ export default {
         {
             event.preventDefault();
 
-            if(this.maximized !== false)
+            if(!this.draggable || this.maximized !== false)
                 return;
 
             if(evt.target.classList.contains('control-btn'))
@@ -155,7 +184,7 @@ export default {
     align-items: center;
 
     cursor: move;
-    &.maximized
+    &.maximized, &.nodrag
     {
         cursor: default;
     }

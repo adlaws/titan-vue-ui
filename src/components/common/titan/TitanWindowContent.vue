@@ -17,7 +17,19 @@ export default {
         windowContext: {
             type: Object,
             default: () => {},
-        }
+        },
+        // decides what to do if the content overflows the bounds on the content box
+        // valid values are standard CSS property values for `overflow`:
+        // visible|hidden|scroll|auto|initial|inherit
+        overflow:
+        {
+            type: String,
+            default: 'auto',
+        },
+    },
+    mounted()
+    {
+        this.$refs.container.style.overflow = this.overflow || 'auto';
     }
 };
 </script>
@@ -28,7 +40,7 @@ export default {
     height: 100%;
     overflow: scroll;
     padding: 8px;
-    margin: 2px;
+    margin: 0px;
     margin-top: 0;
     border-radius: 2px;
 

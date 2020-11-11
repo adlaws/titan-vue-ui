@@ -12,6 +12,10 @@
             :icon="icon"
             :x="status.x"
             :y="status.y"
+            :closable="closable"
+            :minimizable="minimizable"
+            :maximizable="maximizable"
+            :draggable="draggable"
             :active="active"
             :maximized="status.maximized"
             :minimized="status.minimized"
@@ -23,21 +27,7 @@
         <slot
             name="default"
             :window-context="{title,status,active,zIndex}"
-        >
-            <div
-                class="content"
-            >
-                {{ id }}
-                <br>
-                Active?: {{ active }}
-                <br>
-                Z-index: {{ zIndex }}
-                <br>
-                {{ status }}
-                <br>
-                {{ resizing }}
-            </div>
-        </slot>
+        />
     </div>
 </template>
 
@@ -54,46 +44,87 @@ export default {
     },
     props:
     {
+        // title for the window
         title: {
             type: String,
             default: 'Window Title'
         },
+        // icon for the the window
+        // refer to: https://cdn.materialdesignicons.com/5.6.55/
         icon: {
             type: String,
             default: 'reorder-horizontal'
         },
+        // x position of the window (left is 0)
         x: {
             type: Number,
             default: 0,
         },
+        // y position of the window (top is 0)
         y: {
             type: Number,
             default: 0,
         },
+        // width of window (pixels)
         width: {
             type: Number,
             default: 200
         },
+        // height of window (pixels)
         height: {
             type: Number,
             default: 100
         },
+        // minimum width of window (pixels)
         minWidth: {
             type: Number,
             default: 128
         },
+        // minimum height of window (pixels)
         minHeight: {
             type: Number,
             default: 128
         },
+        // maximum width of window (pixels)
         maxWidth: {
             type: Number,
             default: -1
         },
+        // maximum height of window (pixels)
         maxHeight: {
             type: Number,
             default: -1
-        }
+        },
+        // can the window be resized?
+        resizable: {
+            type: Boolean,
+            default: true
+        },
+        // can the window be moved?
+        draggable: {
+            type: Boolean,
+            default: true
+        },
+        // can the window be closed/dismissed?
+        closable: {
+            type: Boolean,
+            default: true
+        },
+        // can the window be minimized (to the taskbar)?
+        minimizable: {
+            type: Boolean,
+            default: true
+        },
+        // can the window be maximized (to cover the entire desktop)?
+        maximizable: {
+            type: Boolean,
+            default: true
+        },
+        // can the window be made to occupy the entire screen (no task bar visible)
+        fullScreenable: {
+            type: Boolean,
+            default: false
+        },
     },
     data()
     {
@@ -134,11 +165,6 @@ export default {
     {
         window.addEventListener('resize', this._handleBrowserResize);
     },
-    destroyed()
-    {
-        window.removeEventListener('resize', this._handleBrowserResize);
-        this.$store.commit(STORE_MUTATION.DEREGISTER_WINDOW, {id: this.id});
-    },
     beforeMount()
     {
         this.id = CryptoUtils.simpleUUID();
@@ -163,6 +189,11 @@ export default {
         style.width = status.width + 'px';
         style.height = status.height + 'px';
     },
+    beforeDestroy()
+    {
+        window.removeEventListener('resize', this._handleBrowserResize);
+        this.$store.commit(STORE_MUTATION.DEREGISTER_WINDOW, {id: this.id});
+    },
     methods:
     {
         updateXY(xy)
@@ -180,7 +211,7 @@ export default {
         },
         minimize()
         {
-            if(this.status.minimized)
+            if(this.status.minimized || !this.minimizable)
                 return;
             if(this.status.maximized)
                 this.status.minimized = { ...this.status.maximized };
@@ -197,13 +228,14 @@ export default {
         },
         maximize()
         {
-            if(this.status.maximized)
+            if(this.status.maximized || !this.maximizable)
                 return;
+
             this.status.maximized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
             this.status.x = 0;
             this.status.y = 0;
-            this.status.w = this.$parent.$el.clientWidth;
-            this.status.h = this.$parent.$el.clientHeight - 64;
+            this.status.w = document.body.clientWidth;
+            this.status.h = document.body.clientHeight - 64; // 64px is the height of the taskbar along the bottom of the desktop
         },
         toggleMaximize()
         {
@@ -233,11 +265,13 @@ export default {
         },
         close()
         {
-            console.log('CLOSE WINDOW');
+            this.$destroy();
+            // remove the element from the DOM
+            this.$el.parentNode.removeChild(this.$el);
         },
         _onMouseMove(evt)
         {
-            if(this.resizing.active)
+            if(this.resizing.active || !this.resizable)
                 return;
 
             const mouseX = evt.clientX;
@@ -366,8 +400,8 @@ export default {
         {
             if(this.status.maximized)
             {
-                this.status.w = this.$parent.$el.clientWidth;
-                this.status.h = this.$parent.$el.clientHeight - 64; // 64px is the height of the taskbar along the bottom of the desktop
+                this.status.w = document.body.clientWidth;
+                this.status.h = document.body.clientHeight - 64; // 64px is the height of the taskbar along the bottom of the desktop
             }
         },
     }
@@ -379,8 +413,8 @@ export default {
 {
     position:absolute;
 
-    background-color: #048;
-    border: 1px solid #024;
+    background-color: rgba(0,0,0,0);
+    border: 2px solid #024;
 
     padding: 0;
     margin: 0;

@@ -10,16 +10,7 @@
             :y="50"
         >
             <template #default="context">
-                <titan-window-content :window-context="context.windowContext">
-                    <hr>
-                    {{ drag }}
-                    <hr>
-                    {{ mouseButtons }}
-                    <hr>
-                    {{ mousePress }}
-                    <hr>
-                    {{ modifierKeys }}
-                </titan-window-content>
+                {{ context }}
             </template>
         </titan-window>
 

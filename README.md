@@ -179,7 +179,8 @@ npx vue-cli-service build --target lib --formats umd-min --no-clean --dest publi
                 MyComponentA.umd.min.js <<<<<<<<=== Built component
 ```
 
-> NOTE: We could just create a script or utility which would recursively trawl through the components sub-folders and automatically do this for all *.vue files.
+> NOTE: We could just create a script or utility which would recursively trawl through the components sub-folders and
+ automatically do this for all *.vue files.
 
 Next we need to add the component to the config.json file so that the UI knows what/where/when to inject it:
 

@@ -51,7 +51,7 @@ export default {
         $eview.show_window(true);
 
         self.moveTo(0, 0);
-        self.resizeTo(screen.availWidth*0.75, screen.availHeight*0.75);
+        self.resizeTo(screen.availWidth, screen.availHeight);
 
         document.querySelectorAll('select').forEach((sel) => TitanUtils.outerraDropdownHack(sel));
 
