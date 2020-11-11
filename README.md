@@ -182,6 +182,11 @@ npx vue-cli-service build --target lib --formats umd-min --no-clean --dest publi
 > NOTE: We could just create a script or utility which would recursively trawl through the components sub-folders and
  automatically do this for all *.vue files.
 
+```bash
+set COMP=MyComponentA
+npx vue-cli-service build --target lib --formats umd-min --no-clean --dest public\plugins\components\%COMP% --name "%COMP%" public\plugins\components\%COMP%\%COMP%.vue
+```
+
 Next we need to add the component to the config.json file so that the UI knows what/where/when to inject it:
 
 > NOTE: Format, content etc of `config.json` is yet to be finalized

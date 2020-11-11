@@ -10,7 +10,9 @@
             :y="50"
         >
             <template #default="context">
-                {{ context }}
+                <titan-window-content :titan-window="context.titanWindow">
+                    {{ context }}
+                </titan-window-content>
             </template>
         </titan-window>
 
@@ -23,7 +25,7 @@
             :height="200"
         >
             <template #default="context">
-                <titan-window-content :window-context="context.windowContext">
+                <titan-window-content :titan-window="context.titanWindow">
                     <titan-button label="A Button" />
                     <titan-select :options="testOptions" />
                 </titan-window-content>
@@ -31,6 +33,7 @@
         </titan-window>
 
         <entity-selector />
+        <fullscreen-test />
 
         <div
             v-for="(pluginWindow, idx) in pluginWindows"
@@ -47,6 +50,8 @@ import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
 import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
+import FullscreenTest from '@/components/titan/sim-mode/FullscreenTest.vue';
+import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 const HANDLED_MOUSE_EVENTS = new Set([
     'mousedown', 'mousemove', 'mouseup',
@@ -57,7 +62,8 @@ export default {
     name: 'editor-ui',
     components:
     {
-        EntitySelector,
+        EntitySelector, FullscreenTest,
+        TitanIcon
     },
     data()
     {

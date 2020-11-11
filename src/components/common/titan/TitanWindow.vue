@@ -8,6 +8,7 @@
         @mouseup="_handleFocus"
     >
         <titan-title-bar
+            v-if="!(undecorated || noTitleBar || isFullscreen)"
             :title="title"
             :icon="icon"
             :x="status.x"
@@ -16,7 +17,8 @@
             :minimizable="minimizable"
             :maximizable="maximizable"
             :draggable="draggable"
-            :active="active"
+            :active="isActive"
+            :fullscreen="isFullscreen"
             :maximized="status.maximized"
             :minimized="status.minimized"
             @window-updateXY="updateXY"
@@ -26,7 +28,8 @@
         />
         <slot
             name="default"
-            :window-context="{title,status,active,zIndex}"
+            :titan-window="{id,title,status,isActive,isFullscreen,zIndex}"
+            :fullscreen-handler="() => toggleFullscreen()"
         />
     </div>
 </template>
@@ -123,7 +126,17 @@ export default {
         // can the window be made to occupy the entire screen (no task bar visible)
         fullScreenable: {
             type: Boolean,
-            default: false
+            default: true
+        },
+        // does the window have a title bar?
+        noTitleBar: {
+            type: Boolean,
+            default: false,
+        },
+        // is the window undecorated (no title bar, border, etc etc etc)
+        undecorated: {
+            type: Boolean,
+            default: false,
         },
     },
     data()
@@ -138,6 +151,7 @@ export default {
                 h: 64,
                 maximized: false,
                 minimized: false,
+                fullscreen: false,
             },
             resizing:
             {
@@ -151,7 +165,8 @@ export default {
     computed:
     {
         zIndex() { return this.$store.getters.getWindowZindex(this.id); },
-        active() { return this.$store.getters.isWindowActive(this.id); },
+        isActive() { return this.$store.getters.isWindowActive(this.id); },
+        isFullscreen() { return this.$store.getters.isWindowFullscreen(this.id); },
     },
     watch:
     {
@@ -188,6 +203,13 @@ export default {
         style.top = status.y + 'px';
         style.width = status.width + 'px';
         style.height = status.height + 'px';
+
+        if(this.undecorated)
+        {
+            style.borderRadius = '0px';
+            style.border = '0px solid black';
+            style.boxShadow = 'none';
+        }
     },
     beforeDestroy()
     {
@@ -262,6 +284,37 @@ export default {
                 this.status.h = this.status.minimized.h;
                 this.status.minimized = false;
             }
+            else if(this.status.fullscreen)
+            {
+                this.status.x = this.status.fullscreen.x;
+                this.status.y = this.status.fullscreen.y;
+                this.status.w = this.status.fullscreen.w;
+                this.status.h = this.status.fullscreen.h;
+                this.status.fullscreen = false;
+            }
+        },
+        toggleFullscreen()
+        {
+            if(this.status.fullscreen)
+            {
+                this.restore();
+                return false;
+            }
+            else
+                return this.fullscreen();
+        },
+        fullscreen()
+        {
+            if(this.status.fullscreen || !this.fullScreenable)
+                return false;
+
+            this.status.fullscreen = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
+            this.status.x = 0;
+            this.status.y = 0;
+            this.status.w = document.body.clientWidth;
+            this.status.h = document.body.clientHeight;
+
+            return true;
         },
         close()
         {

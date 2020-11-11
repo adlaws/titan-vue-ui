@@ -14,6 +14,7 @@ export const STORE_MUTATION = {
     CLOSE_WINDOW:'closeWindow',
     WINDOW_TO_FRONT:'windowToFront',
     WINDOW_TO_BACK:'windowToBack',
+    WINDOW_TO_FULLSCREEN:'windowToFullscreen',
     // TITAN STATE MANAGEMENT
     CHANGE_SIM_MODE:'changeSimMode',
     UPDATE_MOUSE_BUTTON_STATE:'updateMouseButtonState',
@@ -98,6 +99,15 @@ const ApplicationState = new Vuex.Store({
             const registeredWindow = state.windows[id];
             return registeredWindow ? registeredWindow.active : false;
         },
+        isWindowFullscreen: (state) => (id) =>
+        {
+            const registeredWindow = state.windows[id];
+            return registeredWindow ? registeredWindow.fullscreen : false;
+        },
+        isAnyWindowFullscreen: (state) =>
+        {
+            return Object.values(state.windows).filter((w) => w.fullscreen === true ).length > 0;
+        },
         windows: (state) => state.windows,
         // --------------------------------------------------------------------
         // PLUGIN MANAGEMENT
@@ -122,44 +132,102 @@ const ApplicationState = new Vuex.Store({
         // --------------------------------------------------------------------
         // WINDOW MANAGEMENT
         // --------------------------------------------------------------------
+        /**
+         * Registers a new window
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID, title:TITLE, icon:ICON, instance:INSTANCE}
+         * ...where ID is the unique ID of the window, TITLE is the (string)
+         * title displayed in the window, ICON is the icon for the window, and
+         * INSTANCE is the component instance itself.
+         */
         [STORE_MUTATION.REGISTER_WINDOW](state, payload)
         {
             const windows = state.windows;
-            for(const id in state.windows)
+            // deactivate all other windows
+            for(const id in windows)
             {
-                const w = state.windows[id];
+                const w = windows[id];
                 w.active = false;
             }
+            // new window is on top of all others
             state.maxZ++;
+            // record salient details of the window's state
             Vue.set(
                 windows,
                 payload.id,
                 {
                     id: payload.id,
-                    active: true,
-                    zIndex: state.maxZ,
                     title: payload.title,
                     icon: payload.icon,
-                    instance: payload.instance
+                    instance: payload.instance,
+                    zIndex: state.maxZ,
+                    active: true,
+                    fullscreen: false,
                 }
             );
         },
+        /**
+         * Deregisters a window (when closing the window forever)
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID}
+         * ...where ID is the unique ID of the window.
+         */
         [STORE_MUTATION.DEREGISTER_WINDOW](state, payload)
         {
             const window = state.windows[payload.id];
             if(!window)
-                return;
+                return; // no such window
+
+            // remove the record of the window
             const windows = state.windows;
             Vue.delete(
                 windows,
                 payload.id,
             );
+
+            // adjust the Z-indices of the remaining windows and (if the
+            // de-registered window was active) activate the top level
+            // window now
+            const currentZindex = window.zIndex;
+            const wasActive = window.active;
+            let maxZ = 0;
+            let maxZWin = null;
+            for(const id in windows)
+            {
+                const w = windows[id];
+                if(w.zIndex > currentZindex)
+                    w.zIndex--;
+                if(w.zIndex > maxZ)
+                {
+                    maxZ = w.zIndex;
+                    maxZWin = w;
+                }
+            }
+            if(wasActive && maxZWin)
+                maxZWin.active = true;
+
+            state.maxZ--;
         },
+        /**
+         * Bring a window to the "front"
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID}
+         * ...where ID is the unique ID of the window.
+         */
         [STORE_MUTATION.WINDOW_TO_FRONT](state, payload)
         {
             const window = state.windows[payload.id];
             if(!window)
-                return;
+                return; // no such window
+
+            // adjust the Z-indices of all windows currently
+            // in front of the window 'down' by one
             const currentZindex = window.zIndex;
             for(const id in state.windows)
             {
@@ -168,16 +236,31 @@ const ApplicationState = new Vuex.Store({
                 if(w.zIndex > currentZindex)
                     w.zIndex--;
             }
+            // make the Z-index of the target window the maximum
             window.zIndex = state.maxZ;
         },
+        /**
+         * Bring a window to the "back"
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID}
+         * ...where ID is the unique ID of the window.
+         */
         [STORE_MUTATION.WINDOW_TO_BACK](state, payload)
         {
             const window = state.windows[payload.id];
             if(!window)
-                return;
+                return; // no such window
+
+            // cache Z-index of the target window
             const currentZindex = window.zIndex;
+            // deactivate and make the Z-index 0 (send to back)
             window.active = false;
             window.zIndex = 0;
+            // adjust the Z-indices of all windows currently
+            // in below the window 'up' by one, activate the
+            // 'top' one
             for(const id in state.windows)
             {
                 const w = state.windows[id];
@@ -186,7 +269,7 @@ const ApplicationState = new Vuex.Store({
                 w.active = w.zIndex === state.maxZ;
             }
         },
-        [STORE_MUTATION.CLOSE_WINDOW](/*state, payload*/)
+        [STORE_MUTATION.WINDOW_TO_FULLSCREEN]()
         {
             // TODO
         },
