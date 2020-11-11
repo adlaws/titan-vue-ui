@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import { STORE_MUTATION, STORE_ACTION } from '@/assets/js/store/store.js';
+import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
+import { TITAN_ACTION } from '@/assets/js/store/titan-manager.js';
 
 import EventUtils from '@/assets/js/utils/event-utils.js';
 import TitanUtils, { $eview, SIM_MODE } from '@/assets/js/titan/titan-utils.js';
@@ -42,7 +43,7 @@ export default {
     created()
     {
         // here we read in and initialize the plugin configuration
-        this.$store.dispatch(STORE_ACTION.INIT_PLUGIN_CONFIG);
+        this.$store.dispatch(TITAN_ACTION.INIT_PLUGIN_CONFIG);
     },
     mounted()
     {
@@ -110,7 +111,7 @@ export default {
         // general key event handler
         handleKeyEvent(evt)
         {
-            this.$store.commit(STORE_MUTATION.UPDATE_MODIFIER_KEY_STATE, evt);
+            this.$store.commit(DESKTOP_MUTATION.UPDATE_MODIFIER_KEY_STATE, evt);
 
             if(EventUtils.isNotInFormField(evt))
             {
@@ -126,7 +127,7 @@ export default {
         // general mouse event handler
         handleMouseEvent(evt)
         {
-            this.$store.commit(STORE_MUTATION.UPDATE_MOUSE_BUTTON_STATE, evt);
+            this.$store.commit(DESKTOP_MUTATION.UPDATE_MOUSE_BUTTON_STATE, evt);
 
             const passThrough = this.isPassThrough(evt);
             if(passThrough)

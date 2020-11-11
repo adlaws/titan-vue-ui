@@ -3,35 +3,6 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <titan-window
-            title="Radios"
-            icon="radio-tower"
-            :x="50"
-            :y="50"
-        >
-            <template #default="context">
-                <titan-window-content :titan-window="context.titanWindow">
-                    {{ context }}
-                </titan-window-content>
-            </template>
-        </titan-window>
-
-        <titan-window
-            title="Weather"
-            icon="weather-partly-cloudy"
-            :x="300"
-            :y="300"
-            :width="300"
-            :height="200"
-        >
-            <template #default="context">
-                <titan-window-content :titan-window="context.titanWindow">
-                    <titan-button label="A Button" />
-                    <titan-select :options="testOptions" />
-                </titan-window-content>
-            </template>
-        </titan-window>
-
         <entity-selector />
         <fullscreen-test />
 

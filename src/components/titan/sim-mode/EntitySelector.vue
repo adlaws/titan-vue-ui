@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import {STORE_MUTATION} from '@/assets/js/store/store.js';
+import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
 
 import { PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
 import UiUtils from '@/assets/js/utils/ui-utils.js';
@@ -128,13 +128,13 @@ export default {
     },
     beforeDestroy()
     {
-        this.$store.commit(STORE_MUTATION.ENTITY_SELECTOR_CLEAR_SELECTION);
+        this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_CLEAR_SELECTION);
     },
     methods:
     {
         selectEntity(selected)
         {
-            this.$store.commit(STORE_MUTATION.ENTITY_SELECTOR_SET_SELECTION, selected);
+            this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_SET_SELECTION, selected);
         },
         previousPage()
         {

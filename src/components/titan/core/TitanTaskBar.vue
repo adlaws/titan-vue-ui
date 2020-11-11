@@ -64,7 +64,8 @@
 </template>
 
 <script>
-import {STORE_MUTATION} from '@/assets/js/store/store.js';
+import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
+import { TITAN_MUTATION } from '@/assets/js/store/titan-manager.js';
 
 import TitanUtils, { SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 
@@ -109,11 +110,11 @@ export default {
         },
         startScenarioConstructor()
         {
-            this.$store.commit(STORE_MUTATION.CHANGE_SIM_MODE, SIM_MODE.EDITOR);
+            this.$store.commit(TITAN_MUTATION.CHANGE_SIM_MODE, SIM_MODE.EDITOR);
         },
         startLobby()
         {
-            this.$store.commit(STORE_MUTATION.CHANGE_SIM_MODE, SIM_MODE.ADMIN);
+            this.$store.commit(TITAN_MUTATION.CHANGE_SIM_MODE, SIM_MODE.ADMIN);
         },
         quitApplication()
         {
@@ -125,7 +126,7 @@ export default {
                 window.instance.maximize();
             if(window.instance.isMinimized())
                 window.instance.restore();
-            this.$store.commit(STORE_MUTATION.WINDOW_TO_FRONT, {id: window.id});
+            this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_FRONT, {id: window.id});
         },
         toggleWindow(window)
         {

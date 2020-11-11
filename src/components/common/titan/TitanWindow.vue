@@ -37,8 +37,9 @@
 <script>
 import CryptoUtils from '@/assets/js/utils/crypto-utils.js';
 
+import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
+
 import TitanTitleBar from '@/components/titan/core/TitanTitleBar.vue';
-import {STORE_MUTATION} from '@/assets/js/store/store.js';
 
 export default {
     name: 'titan-window',
@@ -175,6 +176,8 @@ export default {
         'status.w': function(newValue, /*oldValue*/) { this.$refs.container.style.width = newValue + 'px'; },
         'status.h': function(newValue, /*oldValue*/) { this.$refs.container.style.height = newValue + 'px'; },
         zIndex: function(newValue, /*oldValue*/) { this.$refs.container.style.zIndex = newValue; },
+        icon: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, icon:newValue}); },
+        title: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, title:newValue}); },
     },
     created()
     {
@@ -189,7 +192,7 @@ export default {
             icon: this.icon,
             instance: this,
         };
-        this.$store.commit(STORE_MUTATION.REGISTER_WINDOW, windowDetails);
+        this.$store.commit(DESKTOP_MUTATION.REGISTER_WINDOW, windowDetails);
     },
     mounted()
     {
@@ -214,7 +217,7 @@ export default {
     beforeDestroy()
     {
         window.removeEventListener('resize', this._handleBrowserResize);
-        this.$store.commit(STORE_MUTATION.DEREGISTER_WINDOW, {id: this.id});
+        this.$store.commit(DESKTOP_MUTATION.DEREGISTER_WINDOW, {id: this.id});
     },
     methods:
     {
@@ -239,7 +242,7 @@ export default {
                 this.status.minimized = { ...this.status.maximized };
             else
                 this.status.minimized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
-            this.$store.commit(STORE_MUTATION.WINDOW_TO_BACK, {id: this.id});
+            this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_BACK, {id: this.id});
         },
         toggleMinimize()
         {
@@ -447,7 +450,7 @@ export default {
         },
         _handleFocus(/*evt*/)
         {
-            this.$store.commit(STORE_MUTATION.WINDOW_TO_FRONT, {id: this.id} );
+            this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_FRONT, {id: this.id} );
         },
         _handleBrowserResize(/*evt*/)
         {

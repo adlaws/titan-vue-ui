@@ -1,0 +1,363 @@
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+import { $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
+
+Vue.use(Vuex);
+
+export const DESKTOP_MUTATION = {
+    // INPUT STATE TRACKING
+    UPDATE_MOUSE_BUTTON_STATE:'desktop::updateMouseButtonState',
+    UPDATE_MODIFIER_KEY_STATE:'desktop::updateModifierKeyState',
+    // WINDOW MANAGEMENT
+    REGISTER_WINDOW:'desktop::registerWindow',
+    UPDATE_WINDOW:'desktop::updateWindow',
+    DEREGISTER_WINDOW:'desktop::deregisterWindow',
+    CLOSE_WINDOW:'desktop::closeWindow',
+    WINDOW_TO_FRONT:'desktop::windowToFront',
+    WINDOW_TO_BACK:'desktop::windowToBack',
+    WINDOW_TO_FULLSCREEN:'desktop::windowToFullscreen',
+};
+
+const DesktopManager =
+{
+    state: () => ({
+        windows: {},
+        maxZ: 0,
+        inputState: {
+            // Outerra events are not reliable in isolation to gather mouse button and modifier
+            // key state, so we keep track of it here
+            mouse: {
+                buttons: {left:false, right:false, middle:false}, // true if corresponding button is currently down, false otherwise
+                press: {
+                    lastDown: {time: -1, x: -1, y:- 1},
+                    lastUp: {time: -1, x: -1, y: -1},
+                    delta: {time: 0, x: 0, y: 0, dist:0},
+                    button: {left:false, right:false, middle:false}, // true if corresponding button was part of the last press, false otherwise
+                }
+            },
+            key: {
+                modifiers:
+                {
+                    shift: false, // true if any SHIFT key is down, false otherwise
+                    ctrl: false, // true if any CTRL key is down, false otherwise
+                    alt: false, // true if any ALT key is down, false otherwise
+                    meta: false, // true if any META key is down, false otherwise
+                }
+            },
+        },
+    }),
+    getters: {
+        // --------------------------------------------------------------------
+        // WINDOW MANAGEMENT
+        // --------------------------------------------------------------------
+        windows: (state) => state.windows || {},
+        getWindow: (state, getters) => (id) => getters.windows[id] || {},
+        getWindowZindex: (state, getters) => (id) => getters.getWindow(id).zIndex || 0,
+        isWindowActive: (state, getters) => (id) => getters.getWindow(id).active || false,
+        isWindowFullscreen: (state, getters) => (id) => getters.getWindow(id).fullscreen || false,
+        isAnyWindowFullscreen: (state) =>
+        {
+            return Object.values(state.windows).filter((w) => w.fullscreen === true ).length > 0;
+        },
+        // --------------------------------------------------------------------
+        // INPUT STATE
+        // --------------------------------------------------------------------
+        modifierKeys: (state) => state.inputState.key.modifiers,
+        mouseButtons: (state) => state.inputState.mouse.buttons,
+        mousePress: (state) => state.inputState.mouse.press,
+    },
+    mutations: {
+        // --------------------------------------------------------------------
+        // WINDOW MANAGEMENT
+        // --------------------------------------------------------------------
+        /**
+         * Registers a new window
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID, title:TITLE, icon:ICON, instance:INSTANCE}
+         * ...where ID is the unique ID of the window, TITLE is the (string)
+         * title displayed in the window, ICON is the icon for the window, and
+         * INSTANCE is the component instance itself.
+         */
+        [DESKTOP_MUTATION.REGISTER_WINDOW](state, payload)
+        {
+            const windows = state.windows;
+            // deactivate all other windows
+            for(const id in windows)
+            {
+                windows[id].active = false;
+            }
+            // new window is on top of all others
+            state.maxZ++;
+            // record salient details of the window's state
+            Vue.set(
+                windows,
+                payload.id,
+                {
+                    id: payload.id,
+                    title: payload.title,
+                    icon: payload.icon,
+                    instance: payload.instance,
+                    zIndex: state.maxZ,
+                    active: true,
+                    fullscreen: false,
+                }
+            );
+        },
+        /**
+         * Update the details of an existing window
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID, ...}
+         * ...where ID is the unique ID of the window, and any remaining
+         * key/value pairs are the properties to be updated
+         */
+        [DESKTOP_MUTATION.UPDATE_WINDOW](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return; // no such window
+
+            for(const key in payload)
+            {
+                if(key === 'id')
+                    continue;
+                if(window[key] !== undefined)
+                    window[key] = payload[key];
+            }
+        },
+        /**
+         * Deregisters a window (when closing the window forever)
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID}
+         * ...where ID is the unique ID of the window.
+         */
+        [DESKTOP_MUTATION.DEREGISTER_WINDOW](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return; // no such window
+
+            // remove the record of the window
+            const windows = state.windows;
+            Vue.delete(
+                windows,
+                payload.id,
+            );
+
+            // adjust the Z-indices of the remaining windows and (if the
+            // de-registered window was active) activate the top level
+            // window now
+            const currentZindex = window.zIndex;
+            const wasActive = window.active;
+            let maxZ = 0;
+            let maxZWin = null;
+            for(const id in windows)
+            {
+                const w = windows[id];
+                if(w.zIndex > currentZindex)
+                    w.zIndex--;
+                if(w.zIndex > maxZ)
+                {
+                    maxZ = w.zIndex;
+                    maxZWin = w;
+                }
+            }
+            if(wasActive && maxZWin)
+                maxZWin.active = true;
+
+            state.maxZ--;
+        },
+        /**
+         * Bring a window to the "front"
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID}
+         * ...where ID is the unique ID of the window.
+         */
+        [DESKTOP_MUTATION.WINDOW_TO_FRONT](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return; // no such window
+
+            // adjust the Z-indices of all windows currently
+            // in front of the window 'down' by one
+            const currentZindex = window.zIndex;
+            for(const id in state.windows)
+            {
+                const w = state.windows[id];
+                w.active = (id === payload.id);
+                if(w.zIndex > currentZindex)
+                    w.zIndex--;
+            }
+            // make the Z-index of the target window the maximum
+            window.zIndex = state.maxZ;
+        },
+        /**
+         * Bring a window to the "back"
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID}
+         * ...where ID is the unique ID of the window.
+         */
+        [DESKTOP_MUTATION.WINDOW_TO_BACK](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return; // no such window
+
+            // cache Z-index of the target window
+            const currentZindex = window.zIndex;
+            // deactivate and make the Z-index 0 (send to back)
+            window.active = false;
+            window.zIndex = 0;
+            // adjust the Z-indices of all windows currently
+            // in below the window 'up' by one, activate the
+            // 'top' one
+            for(const id in state.windows)
+            {
+                const w = state.windows[id];
+                if(w.zIndex < currentZindex)
+                    w.zIndex++;
+                w.active = w.zIndex === state.maxZ;
+            }
+        },
+        [DESKTOP_MUTATION.WINDOW_TO_FULLSCREEN]()
+        {
+            // TODO
+        },
+        /**
+         * Updates the current state of the mouse buttons based on a DOM mouse
+         * event.
+         *
+         * This is necessary because the DOM mouse events in Outerra do not
+         * consistently populate the `button` or `buttons` properties associated
+         * with those events.
+         *
+         * @param {object} state the store state object
+         * @param {object} domEvent the DOM key event
+         */
+        [DESKTOP_MUTATION.UPDATE_MOUSE_BUTTON_STATE](state, domEvent)
+        {
+            if(!domEvent)
+                return;
+            const evtType = domEvent.type;
+            if(!evtType)
+                return;
+
+            const now = Date.now();
+
+            const mouseStates = state.inputState.mouse;
+            const buttonStates = mouseStates.buttons;
+            const buttonPress = mouseStates.press;
+
+            const isMouseDown = evtType === 'mousedown';
+            let isMouseUp = !isMouseDown && evtType === 'mouseup';
+
+            if($isInsideTitan && (!(isMouseDown || isMouseUp)) && evtType === 'mousemove')
+            {
+                // A bit of a nasty workaround to address the fact that a
+                // `mousedown` event which is marked as unhandled with
+                // `$eview.mark_unhandled()` prevents the expected `mouseup`
+                // from being fired; without this event we can't tell when the
+                // button is released.
+                // Currently this only really affects right mouse clicks, which
+                // are marked unhandled to allow camera panning to be handled
+                // by Outerra.
+                // To get around this, we check `mousemove` events as well, and
+                // if a button which is currently thought to be "down" is not
+                // down according to the mouse move event, treat it as if a
+                // `mouseup` event occurred.
+                // Note that this is not perfect because it relies heavily on
+                // the assumption that the user will be moving the mouse almost
+                // immediately after releasing the button.
+                const leftReleased = buttonStates.left && (domEvent.buttons & 1) === 0;
+                const rightReleased = buttonStates.right && (domEvent.buttons & 2) === 0;
+                const middleReleased = buttonStates.middle && (domEvent.buttons & 4) === 0;
+
+                isMouseUp = (leftReleased || rightReleased || middleReleased);
+            }
+
+            if(isMouseDown || isMouseUp)
+            {
+                if(isMouseDown)
+                {
+                    buttonPress.delta.time = -1;
+                    buttonPress.delta.x = 0;
+                    buttonPress.delta.y = 0;
+                    buttonPress.lastUp.time = -1;
+                    buttonPress.lastUp.x = -1;
+                    buttonPress.lastUp.y = -1;
+
+                    buttonPress.lastDown.time = now;
+                    buttonPress.lastDown.x = domEvent.clientX;
+                    buttonPress.lastDown.y = domEvent.clientY;
+                    buttonStates.left = domEvent.button === 0;
+                    buttonStates.right = domEvent.button === 2;
+                    buttonStates.middle = domEvent.button === 1;
+                }
+                else if(isMouseUp)
+                {
+                    buttonPress.lastUp.time = now;
+                    buttonPress.lastUp.x = domEvent.clientX;
+                    buttonPress.lastUp.y = domEvent.clientY;
+
+                    // statistics on press - duration and mouse movement
+                    buttonPress.delta.time = now - buttonPress.lastDown.time;
+                    const dX = domEvent.clientX - buttonPress.lastDown.x;
+                    const dY = domEvent.clientY - buttonPress.lastDown.y;
+                    buttonPress.delta.x = dX;
+                    buttonPress.delta.y = dY;
+                    buttonPress.delta.dist = Math.sqrt(dX * dX + dY * dY);
+                    // statistics on press - button(s) involved
+                    buttonPress.button.left = buttonStates.left;
+                    buttonPress.button.right = buttonStates.right;
+                    buttonPress.button.middle = buttonStates.middle;
+
+                    // from the event we can't tell which button was released,
+                    // so we have to assume that all mouse buttons are up now
+                    buttonStates.left = false;
+                    buttonStates.right = false;
+                    buttonStates.middle = false;
+                }
+            }
+        },
+        /**
+         * Updates the current state of the SHIFT, CTRL, ALT and META keys based
+         * on a DOM key event.
+         *
+         * This is necessary because the DOM mouse events in Outerra do not
+         * populate the key modifier properties associated with those events.
+         * In other words the mouse events *always* have modifier key properties
+         * such as `shiftKey`, `ctrlKey` etc as `false`.
+         *
+         * @param {object} state the store state object
+         * @param {object} domEvent the DOM key event
+         */
+        [DESKTOP_MUTATION.UPDATE_MODIFIER_KEY_STATE](state, domEvent)
+        {
+            if(!domEvent)
+                return;
+            const evtType = domEvent.type;
+            if(!evtType)
+                return;
+
+            const modifierKeyStates = state.inputState.key.modifiers;
+            modifierKeyStates.shift = domEvent.shiftKey || false;
+            modifierKeyStates.ctrl = domEvent.ctrlKey || false;
+            modifierKeyStates.alt = domEvent.altKey || false;
+            modifierKeyStates.meta = domEvent.metaKey || false;
+        },
+    },
+    actions: {},
+};
+
+export default DesktopManager;

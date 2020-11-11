@@ -1,10 +1,10 @@
 <template>
     <titan-window
-        title="Full Screen Test"
+        :title="`Full Screen Test - ${isFullscreen}`"
         :icon="isFullscreen?'fullscreen':'fullscreen-exit'"
         :x="150"
         :y="150"
-        :width="200"
+        :width="350"
         :height="200"
     >
         <template #default="context">
