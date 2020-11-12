@@ -1,13 +1,15 @@
 <template>
     <div
-        v-show="!status.minimized"
+        v-show="isShown && !status.minimized"
         ref="container"
         class="vue-os--window"
+        :class="{fullscreen: isFullscreen}"
         @mousemove="_onMouseMove"
         @mousedown="_handleResizeStart"
         @mouseup="_handleFocus"
     >
         <titan-title-bar
+            v-if="!(undecorated || noTitleBar || isFullscreen)"
             :title="title"
             :icon="icon"
             :x="status.x"
@@ -16,7 +18,8 @@
             :minimizable="minimizable"
             :maximizable="maximizable"
             :draggable="draggable"
-            :active="active"
+            :active="isActive"
+            :fullscreen="isFullscreen"
             :maximized="status.maximized"
             :minimized="status.minimized"
             @window-updateXY="updateXY"
@@ -26,7 +29,7 @@
         />
         <slot
             name="default"
-            :window-context="{title,status,active,zIndex}"
+            :titan-window="{id,title,status,isActive,isFullscreen,zIndex}"
         />
     </div>
 </template>
@@ -34,8 +37,9 @@
 <script>
 import CryptoUtils from '@/assets/js/utils/crypto-utils.js';
 
+import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
+
 import TitanTitleBar from '@/components/titan/core/TitanTitleBar.vue';
-import {STORE_MUTATION} from '@/assets/js/store/store.js';
 
 export default {
     name: 'titan-window',
@@ -120,10 +124,15 @@ export default {
             type: Boolean,
             default: true
         },
-        // can the window be made to occupy the entire screen (no task bar visible)
-        fullScreenable: {
+        // does the window have a title bar?
+        noTitleBar: {
             type: Boolean,
-            default: false
+            default: false,
+        },
+        // is the window undecorated (no title bar, border, etc etc etc)
+        undecorated: {
+            type: Boolean,
+            default: false,
         },
     },
     data()
@@ -138,6 +147,7 @@ export default {
                 h: 64,
                 maximized: false,
                 minimized: false,
+                fullscreen: false,
             },
             resizing:
             {
@@ -151,7 +161,10 @@ export default {
     computed:
     {
         zIndex() { return this.$store.getters.getWindowZindex(this.id); },
-        active() { return this.$store.getters.isWindowActive(this.id); },
+        isActive() { return this.$store.getters.isWindowActive(this.id); },
+        isShown() { return this.$store.getters.isWindowShown(this.id); },
+        isFullscreen() { return this.$store.getters.isWindowFullscreen(this.id); },
+        desktopBounds() { return this.$store.getters.desktopBounds;}
     },
     watch:
     {
@@ -160,10 +173,10 @@ export default {
         'status.w': function(newValue, /*oldValue*/) { this.$refs.container.style.width = newValue + 'px'; },
         'status.h': function(newValue, /*oldValue*/) { this.$refs.container.style.height = newValue + 'px'; },
         zIndex: function(newValue, /*oldValue*/) { this.$refs.container.style.zIndex = newValue; },
-    },
-    created()
-    {
-        window.addEventListener('resize', this._handleBrowserResize);
+        icon: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, icon:newValue}); },
+        title: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, title:newValue}); },
+        desktopBounds: function(/*newValue, oldValue*/) { this._handleScreenSizeChange(); },
+        isFullscreen: function(newValue, /*oldValue*/) { this._handleFullScreenChange(newValue); },
     },
     beforeMount()
     {
@@ -174,7 +187,7 @@ export default {
             icon: this.icon,
             instance: this,
         };
-        this.$store.commit(STORE_MUTATION.REGISTER_WINDOW, windowDetails);
+        this.$store.commit(DESKTOP_MUTATION.REGISTER_WINDOW, windowDetails);
     },
     mounted()
     {
@@ -188,11 +201,18 @@ export default {
         style.top = status.y + 'px';
         style.width = status.width + 'px';
         style.height = status.height + 'px';
+
+        if(this.undecorated)
+        {
+            style.borderRadius = '0px';
+            style.border = '0px solid black';
+            style.boxShadow = 'none';
+        }
     },
     beforeDestroy()
     {
-        window.removeEventListener('resize', this._handleBrowserResize);
-        this.$store.commit(STORE_MUTATION.DEREGISTER_WINDOW, {id: this.id});
+        window.removeEventListener('resize', this._handleScreenSizeChange);
+        this.$store.commit(DESKTOP_MUTATION.DEREGISTER_WINDOW, {id: this.id});
     },
     methods:
     {
@@ -217,7 +237,7 @@ export default {
                 this.status.minimized = { ...this.status.maximized };
             else
                 this.status.minimized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
-            this.$store.commit(STORE_MUTATION.WINDOW_TO_BACK, {id: this.id});
+            this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_BACK, {id: this.id});
         },
         toggleMinimize()
         {
@@ -232,10 +252,10 @@ export default {
                 return;
 
             this.status.maximized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
-            this.status.x = 0;
-            this.status.y = 0;
-            this.status.w = document.body.clientWidth;
-            this.status.h = document.body.clientHeight - 64; // 64px is the height of the taskbar along the bottom of the desktop
+            this.status.x = this.desktopBounds.x;
+            this.status.y = this.desktopBounds.y;
+            this.status.w = this.desktopBounds.w;
+            this.status.h = this.desktopBounds.h;
         },
         toggleMaximize()
         {
@@ -246,6 +266,14 @@ export default {
         },
         restore()
         {
+            if(this.status.fullscreen)
+            {
+                this.status.x = this.status.fullscreen.x;
+                this.status.y = this.status.fullscreen.y;
+                this.status.w = this.status.fullscreen.w;
+                this.status.h = this.status.fullscreen.h;
+                this.status.fullscreen = false;
+            }
             if(this.status.maximized)
             {
                 this.status.x = this.status.maximized.x;
@@ -254,7 +282,7 @@ export default {
                 this.status.h = this.status.maximized.h;
                 this.status.maximized = false;
             }
-            else if(this.status.minimized)
+            if(this.status.minimized)
             {
                 this.status.x = this.status.minimized.x;
                 this.status.y = this.status.minimized.y;
@@ -262,6 +290,32 @@ export default {
                 this.status.h = this.status.minimized.h;
                 this.status.minimized = false;
             }
+        },
+        _handleFullScreenChange(isFullscreen)
+        {
+            if(this.status.fullscreen === isFullscreen)
+                return;
+
+            if(isFullscreen)
+            {
+                this.status.fullscreen = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
+                this.status.x = this.desktopBounds.x;
+                this.status.y = this.desktopBounds.y;
+                this.status.w = this.desktopBounds.w;
+                this.status.h = this.desktopBounds.h;
+            }
+            else
+            {
+                this.restore();
+            }
+        },
+        fullscreen()
+        {
+            if(this.status.fullscreen || !this.fullScreenable)
+                return false;
+
+
+            return true;
         },
         close()
         {
@@ -394,15 +448,17 @@ export default {
         },
         _handleFocus(/*evt*/)
         {
-            this.$store.commit(STORE_MUTATION.WINDOW_TO_FRONT, {id: this.id} );
+            this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_FRONT, {id: this.id} );
         },
-        _handleBrowserResize(/*evt*/)
+        _handleScreenSizeChange(/*evt*/)
         {
-            if(this.status.maximized)
-            {
-                this.status.w = document.body.clientWidth;
-                this.status.h = document.body.clientHeight - 64; // 64px is the height of the taskbar along the bottom of the desktop
-            }
+            if(!this.status.maximized)
+                return;
+
+            this.status.x = this.desktopBounds.x;
+            this.status.y = this.desktopBounds.y;
+            this.status.w = this.desktopBounds.w;
+            this.status.h = this.desktopBounds.h; // 64px is the height of the taskbar along the bottom of the desktop
         },
     }
 };
@@ -413,12 +469,8 @@ export default {
 {
     position:absolute;
 
-    background-color: rgba(0,0,0,0);
-    border: 2px solid #024;
-
     padding: 0;
     margin: 0;
-    border-radius: 4px;
 
     display: flex;
     flex-direction: column;
@@ -426,7 +478,16 @@ export default {
     justify-content: flex-start;
     align-content: stretch;
 
+    background-color: rgba(0,0,0,0);
+    border: 2px solid #024;
+    border-radius: 4px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.6666);
+
+    &.fullscreen{
+        border: 0px solid rgba(0,0,0,0);
+        border-radius: 0;
+        box-shadow: none;
+    }
 
     .content
     {

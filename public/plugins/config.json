@@ -1,14 +1,13 @@
 {
     "SimMode_Edit":
     {
-        "windows":[
-            {"component":"Simple", "type":"vue"}
-        ],
+        "windows":[],
         "taskbar":[]
     },
     "SimMode_Admin":
     {
         "windows":[
+            {"component":"Simple", "type":"vue"},
             {"component":"HelloWorld", "type":"vue"},
             {"component":"HelloWorld2", "type":"vue"},
             {"component":"VirtualCameras", "type":"vue"},

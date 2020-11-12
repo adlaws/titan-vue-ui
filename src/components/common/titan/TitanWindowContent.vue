@@ -2,7 +2,7 @@
     <div
         ref="container"
         class="titan--window-content"
-        :class="{active: windowContext.active}"
+        :class="{active: titanWindow.active}"
     >
         <!-- Active Window: {{ windowContext }} -->
         <slot />
@@ -14,7 +14,7 @@ export default {
     name: 'titan-window-content',
     props:
     {
-        windowContext: {
+        titanWindow: {
             type: Object,
             default: () => {},
         },

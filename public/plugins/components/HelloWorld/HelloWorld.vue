@@ -8,7 +8,7 @@
         :height="160"
     >
         <template #default="context">
-            <titan-window-content :window-context="context.windowContext">
+            <titan-window-content :titan-window="context.titanWindow">
                 <h1>Hello World</h1>
             </titan-window-content>
         </template>
