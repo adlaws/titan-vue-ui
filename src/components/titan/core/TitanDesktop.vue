@@ -5,7 +5,7 @@
         <editor-ui v-if="currentSimMode===SIM_MODE.EDITOR" />
         <lobby-ui v-if="currentSimMode===SIM_MODE.ADMIN" />
 
-        <titan-task-bar />
+        <titan-task-bar v-if="taskbarVisible" />
     </div>
 </template>
 
@@ -13,8 +13,9 @@
 import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
 import { TITAN_ACTION } from '@/assets/js/store/titan-manager.js';
 
+import UiUtils from '@/assets/js/utils/ui-utils.js';
 import EventUtils from '@/assets/js/utils/event-utils.js';
-import TitanUtils, { $eview, SIM_MODE } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $eview, $isInsideTitan, SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 
 import TitanTaskBar from '@/components/titan/core/TitanTaskBar.vue';
 import EditorUi from '@/components/titan/sim-mode/EditorUI.vue';
@@ -39,11 +40,14 @@ export default {
     computed:
     {
         currentSimMode() { return this.$store.getters.titanSimMode; },
+        taskbarVisible() { return this.$store.getters.isTaskbarVisible; },
     },
     created()
     {
         // here we read in and initialize the plugin configuration
         this.$store.dispatch(TITAN_ACTION.INIT_PLUGIN_CONFIG);
+        if(!$isInsideTitan)
+            window.addEventListener('resize', this._browserResizeHandler);
     },
     mounted()
     {
@@ -147,6 +151,11 @@ export default {
                 return;
             }
         },
+        _browserResizeHandler: UiUtils.debounce(function()
+        {
+            const screenSize = {w: document.body.clientWidth, h:document.body.clientHeight};
+            this.$store.commit(DESKTOP_MUTATION.UPDATE_SCREEN_SIZE, screenSize);
+        }, 100, {onLeadIn: true, onTrailOut: true}),
     }
 };
 </script>

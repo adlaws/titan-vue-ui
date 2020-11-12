@@ -1,6 +1,8 @@
 <template>
     <div
+        ref="container"
         class="titan--task-bar"
+        :class="{vertical}"
     >
         <div
             class="start"
@@ -38,12 +40,12 @@
                 </ul>
             </div>
         </div>
-        <div class="spacer" style="max-width:24px;" />
+        <div class="spacer" style="vertical?'max-width':'max-height'+':24px;'" />
         <div
             v-for="(window, idx) in windows"
             :key="`win-${idx}`"
             class="window-tile"
-            :class="{active:window.active}"
+            :class="{active:window.managed.active}"
             :title="window.title"
             @click="focusWindow(window)"
             @dblclick="toggleWindow(window)"
@@ -57,7 +59,7 @@
             </div>
         </div>
         <div class="spacer" />
-        <div class="clock">
+        <div class="clock" @click="hideTaskbar">
             {{ theTime }}
         </div>
     </div>
@@ -81,20 +83,35 @@ export default {
     {
         return {
             showStartMenu: false,
+            vertical: false,
             theTime: '00:00am',
         };
     },
     computed:
     {
-        currentSimMode() { return this.$store.getters.titanSimMode; },
         windows() { return this.$store.getters.windows; },
+        bounds() { return this.$store.getters.taskbarBounds; },
+        desktopBounds() { return this.$store.getters.desktopBounds; },
+        screenSize() { return this.$store.getters.screenSize; },
     },
     mounted()
     {
         this.updateTheTime();
+        this.updateAlignment();
     },
     methods:
     {
+        updateAlignment()
+        {
+            const container = this.$refs.container;
+            container.style.top = this.bounds.top;
+            container.style.bottom = this.bounds.bottom;
+            container.style.left = this.bounds.left;
+            container.style.right = this.bounds.right;
+            container.style.width = this.bounds.width;
+            container.style.height = this.bounds.height;
+            this.vertical = this.bounds.vertical || false;
+        },
         updateTheTime()
         {
             const now = new Date();
@@ -122,10 +139,11 @@ export default {
         },
         focusWindow(window)
         {
-            if(window.instance.isMaximized())
-                window.instance.maximize();
-            if(window.instance.isMinimized())
-                window.instance.restore();
+            const winInstance = window.managed.instance;
+            if(winInstance.isMaximized())
+                winInstance.maximize();
+            if(winInstance.isMinimized())
+                winInstance.restore();
             this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_FRONT, {id: window.id});
         },
         toggleWindow(window)
@@ -135,6 +153,14 @@ export default {
             else
                 window.instance.minimize();
         },
+        hideTaskbar()
+        {
+            this.$store.commit(DESKTOP_MUTATION.SET_TASKBAR_VISIBLE, false);
+            setTimeout(()=>
+            {
+                this.$store.commit(DESKTOP_MUTATION.SET_TASKBAR_VISIBLE, true);
+            },1000);
+        }
     },
 };
 </script>
@@ -142,8 +168,13 @@ export default {
 <style lang="scss">
 .titan--task-bar
 {
+    position: absolute;
+    bottom:0;
+    left:0;
+    right:0;
     width:100vw;
     height:64px;
+
     background-color: rgba(0,16,32,0.9);
     backdrop-filter: blur(10px);
     color:#CCC;
@@ -151,11 +182,6 @@ export default {
 
     z-index: 1024;
     user-select: none;
-
-    position: absolute;
-    bottom:0;
-    left:0;
-    right:0;
 
     display: flex;
     flex-wrap: nowrap;
@@ -179,6 +205,7 @@ export default {
                 text-shadow:0 0 10px rgba(255,255,255,0.25);
             }
         }
+
         .menu
         {
             z-index: 1025;
@@ -213,6 +240,7 @@ export default {
             }
         }
     }
+
     .window-tile
     {
         width: 48px;
@@ -252,10 +280,12 @@ export default {
             }
         }
     }
+
     .spacer
     {
         flex-grow: 1;
     }
+
     .clock
     {
         margin-right: 24px;

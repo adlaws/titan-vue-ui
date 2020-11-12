@@ -9,26 +9,40 @@ export const DESKTOP_MUTATION = {
     // INPUT STATE TRACKING
     UPDATE_MOUSE_BUTTON_STATE:'desktop::updateMouseButtonState',
     UPDATE_MODIFIER_KEY_STATE:'desktop::updateModifierKeyState',
+    // SCREEN UPDATES
+    UPDATE_SCREEN_SIZE:'desktop::updateScreenSize',
     // WINDOW MANAGEMENT
+    SET_TASKBAR_VISIBLE:'desktop::setTaskbarVisible',
     REGISTER_WINDOW:'desktop::registerWindow',
     UPDATE_WINDOW:'desktop::updateWindow',
     DEREGISTER_WINDOW:'desktop::deregisterWindow',
     CLOSE_WINDOW:'desktop::closeWindow',
     WINDOW_TO_FRONT:'desktop::windowToFront',
     WINDOW_TO_BACK:'desktop::windowToBack',
-    WINDOW_TO_FULLSCREEN:'desktop::windowToFullscreen',
+    FULLSCREEN_WINDOW:'desktop::windowToFullscreen',
+    DEFULLSCREEN_WINDOW:'desktop::windowToFullscreen',
 };
 
 const DesktopManager =
 {
     state: () => ({
-        windows: {},
-        maxZ: 0,
+        // entire available screen - in reality this is the width and height of the space
+        // available to the browser
+        screen: {
+            size:{
+                w: $isInsideTitan ? screen.availWidth : document.body.clientWidth,
+                h: $isInsideTitan ? screen.availHeight : document.body.clientHeight,
+            }
+        },
+        // Outerra events are not reliable in isolation to gather mouse button and modifier
+        // key state, so we keep track of it here
         inputState: {
-            // Outerra events are not reliable in isolation to gather mouse button and modifier
-            // key state, so we keep track of it here
             mouse: {
-                buttons: {left:false, right:false, middle:false}, // true if corresponding button is currently down, false otherwise
+                buttons: {
+                    left:false,
+                    right:false,
+                    middle:false
+                }, // true if corresponding button is currently down, false otherwise
                 press: {
                     lastDown: {time: -1, x: -1, y:- 1},
                     lastUp: {time: -1, x: -1, y: -1},
@@ -39,200 +53,116 @@ const DesktopManager =
             key: {
                 modifiers:
                 {
-                    shift: false, // true if any SHIFT key is down, false otherwise
-                    ctrl: false, // true if any CTRL key is down, false otherwise
-                    alt: false, // true if any ALT key is down, false otherwise
-                    meta: false, // true if any META key is down, false otherwise
+                    shift: false, // true if either SHIFT key is down, false otherwise
+                    ctrl: false, // true if either CTRL key is down, false otherwise
+                    alt: false, // true if either ALT key is down, false otherwise
+                    meta: false, // true if either META key is down, false otherwise
                 }
             },
         },
+        // the size, visiblity and position of the taskbar, can be 'docked' to north, south,
+        // east or west edges
+        taskbar: {
+            size: 64, // in pixels
+            show: true,
+            dock: 's', // n,s,e,w
+        },
+        // window registry and management
+        windows: {},
+        maxZ: 0,
     }),
     getters: {
-        // --------------------------------------------------------------------
-        // WINDOW MANAGEMENT
-        // --------------------------------------------------------------------
-        windows: (state) => state.windows || {},
-        getWindow: (state, getters) => (id) => getters.windows[id] || {},
-        getWindowZindex: (state, getters) => (id) => getters.getWindow(id).zIndex || 0,
-        isWindowActive: (state, getters) => (id) => getters.getWindow(id).active || false,
-        isWindowFullscreen: (state, getters) => (id) => getters.getWindow(id).fullscreen || false,
-        isAnyWindowFullscreen: (state) =>
-        {
-            return Object.values(state.windows).filter((w) => w.fullscreen === true ).length > 0;
-        },
         // --------------------------------------------------------------------
         // INPUT STATE
         // --------------------------------------------------------------------
         modifierKeys: (state) => state.inputState.key.modifiers,
         mouseButtons: (state) => state.inputState.mouse.buttons,
         mousePress: (state) => state.inputState.mouse.press,
+        // --------------------------------------------------------------------
+        // DESKTOP MANAGEMENT
+        // --------------------------------------------------------------------
+        screenSize: (state) => state.screen.size,
+        isTaskbarVisible: (state) => state.taskbar.show,
+        taskbarSize: (state) => state.taskbar.size,
+        taskbarDock: (state) => state.taskbar.dock,
+        taskbarBounds: (state, getters) =>
+        {
+            const size = getters.taskbarSize;
+            const dock = getters.taskbarDock;
+
+            const east = dock === 'e';
+            const west = dock === 'w';
+            const north = dock === 'n';
+            const south = !(east || west || north);
+
+            if(east || west)
+            {
+                return {
+                    vertical: true,
+                    left:west?0:'auto', right:east?0:'auto',
+                    top:0, bottom:0,
+                    width:`${size}px`, height:'100vh',
+                };
+            }
+
+            return {
+                top:north?0:'auto', bottom:south?0:'auto',
+                left:0, right:0,
+                width:'100vw', height:`${size}px`,
+            };
+        },
+        desktopBounds: (state, getters) =>
+        {
+            const screenSize = getters.screenSize;
+            const bounds = {
+                x: 0, y: 0,
+                w: screenSize.w, h: screenSize.h
+            };
+            if(getters.isTaskbarVisible)
+            {
+                const size = getters.taskbarSize;
+                const dock = getters.taskbarDock;
+
+                const east = dock === 'e';
+                const west = dock === 'w';
+                const north = dock === 'n';
+
+                if(east || west)
+                {
+                    bounds.w -= size;
+                    bounds.x += west?size:0;
+                }
+                else
+                {
+                    bounds.h -= size;
+                    bounds.y += north?size:0;
+                }
+            }
+            return bounds;
+        },
+        windows: (state) => state.windows || {},
+        getWindow: (state, getters) => (id) => getters.windows[id] || {},
+        getWindowManagedProps: (state, getters) => (id) => getters.getWindow(id).managed || {},
+        getWindowZindex: (state, getters) => (id) => getters.getWindowManagedProps(id).zIndex || 0,
+        isWindowActive: (state, getters) => (id) => getters.getWindowManagedProps(id).active || false,
+        isWindowFullscreen: (state, getters) => (id) => getters.getWindowManagedProps(id).fullscreen || false,
+        isAnyWindowFullscreen: (state, getters) =>
+        {
+            return Object.keys(state.windows).filter((id) => getters.isWindowFullscreen(id) ).length > 0;
+        },
     },
     mutations: {
-        // --------------------------------------------------------------------
-        // WINDOW MANAGEMENT
-        // --------------------------------------------------------------------
         /**
-         * Registers a new window
+         * Updates the current screen size - should only happen in a browser, Titan window remains
+         * the same size for the current execution cycle
          *
          * @param {object} state the store state object
-         * @param {object} payload an object of the form...
-         *     {id:ID, title:TITLE, icon:ICON, instance:INSTANCE}
-         * ...where ID is the unique ID of the window, TITLE is the (string)
-         * title displayed in the window, ICON is the icon for the window, and
-         * INSTANCE is the component instance itself.
          */
-        [DESKTOP_MUTATION.REGISTER_WINDOW](state, payload)
+        [DESKTOP_MUTATION.UPDATE_SCREEN_SIZE](state, payload)
         {
-            const windows = state.windows;
-            // deactivate all other windows
-            for(const id in windows)
-            {
-                windows[id].active = false;
-            }
-            // new window is on top of all others
-            state.maxZ++;
-            // record salient details of the window's state
-            Vue.set(
-                windows,
-                payload.id,
-                {
-                    id: payload.id,
-                    title: payload.title,
-                    icon: payload.icon,
-                    instance: payload.instance,
-                    zIndex: state.maxZ,
-                    active: true,
-                    fullscreen: false,
-                }
-            );
-        },
-        /**
-         * Update the details of an existing window
-         *
-         * @param {object} state the store state object
-         * @param {object} payload an object of the form...
-         *     {id:ID, ...}
-         * ...where ID is the unique ID of the window, and any remaining
-         * key/value pairs are the properties to be updated
-         */
-        [DESKTOP_MUTATION.UPDATE_WINDOW](state, payload)
-        {
-            const window = state.windows[payload.id];
-            if(!window)
-                return; // no such window
-
-            for(const key in payload)
-            {
-                if(key === 'id')
-                    continue;
-                if(window[key] !== undefined)
-                    window[key] = payload[key];
-            }
-        },
-        /**
-         * Deregisters a window (when closing the window forever)
-         *
-         * @param {object} state the store state object
-         * @param {object} payload an object of the form...
-         *     {id:ID}
-         * ...where ID is the unique ID of the window.
-         */
-        [DESKTOP_MUTATION.DEREGISTER_WINDOW](state, payload)
-        {
-            const window = state.windows[payload.id];
-            if(!window)
-                return; // no such window
-
-            // remove the record of the window
-            const windows = state.windows;
-            Vue.delete(
-                windows,
-                payload.id,
-            );
-
-            // adjust the Z-indices of the remaining windows and (if the
-            // de-registered window was active) activate the top level
-            // window now
-            const currentZindex = window.zIndex;
-            const wasActive = window.active;
-            let maxZ = 0;
-            let maxZWin = null;
-            for(const id in windows)
-            {
-                const w = windows[id];
-                if(w.zIndex > currentZindex)
-                    w.zIndex--;
-                if(w.zIndex > maxZ)
-                {
-                    maxZ = w.zIndex;
-                    maxZWin = w;
-                }
-            }
-            if(wasActive && maxZWin)
-                maxZWin.active = true;
-
-            state.maxZ--;
-        },
-        /**
-         * Bring a window to the "front"
-         *
-         * @param {object} state the store state object
-         * @param {object} payload an object of the form...
-         *     {id:ID}
-         * ...where ID is the unique ID of the window.
-         */
-        [DESKTOP_MUTATION.WINDOW_TO_FRONT](state, payload)
-        {
-            const window = state.windows[payload.id];
-            if(!window)
-                return; // no such window
-
-            // adjust the Z-indices of all windows currently
-            // in front of the window 'down' by one
-            const currentZindex = window.zIndex;
-            for(const id in state.windows)
-            {
-                const w = state.windows[id];
-                w.active = (id === payload.id);
-                if(w.zIndex > currentZindex)
-                    w.zIndex--;
-            }
-            // make the Z-index of the target window the maximum
-            window.zIndex = state.maxZ;
-        },
-        /**
-         * Bring a window to the "back"
-         *
-         * @param {object} state the store state object
-         * @param {object} payload an object of the form...
-         *     {id:ID}
-         * ...where ID is the unique ID of the window.
-         */
-        [DESKTOP_MUTATION.WINDOW_TO_BACK](state, payload)
-        {
-            const window = state.windows[payload.id];
-            if(!window)
-                return; // no such window
-
-            // cache Z-index of the target window
-            const currentZindex = window.zIndex;
-            // deactivate and make the Z-index 0 (send to back)
-            window.active = false;
-            window.zIndex = 0;
-            // adjust the Z-indices of all windows currently
-            // in below the window 'up' by one, activate the
-            // 'top' one
-            for(const id in state.windows)
-            {
-                const w = state.windows[id];
-                if(w.zIndex < currentZindex)
-                    w.zIndex++;
-                w.active = w.zIndex === state.maxZ;
-            }
-        },
-        [DESKTOP_MUTATION.WINDOW_TO_FULLSCREEN]()
-        {
-            // TODO
+            const screenSize = state.screen.size;
+            screenSize.w = payload.w;
+            screenSize.h = payload.h;
         },
         /**
          * Updates the current state of the mouse buttons based on a DOM mouse
@@ -356,8 +286,200 @@ const DesktopManager =
             modifierKeyStates.alt = domEvent.altKey || false;
             modifierKeyStates.meta = domEvent.metaKey || false;
         },
+        // --------------------------------------------------------------------
+        // WINDOW MANAGEMENT
+        // --------------------------------------------------------------------
+        [DESKTOP_MUTATION.SET_TASKBAR_VISIBLE](state, isVisible=true)
+        {
+            state.taskbar.show = isVisible;
+        },
+        /**
+         * Registers a new window
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID, title:TITLE, icon:ICON, instance:INSTANCE}
+         * ...where ID is the unique ID of the window, TITLE is the (string)
+         * title displayed in the window, ICON is the icon for the window, and
+         * INSTANCE is the component instance itself.
+         */
+        [DESKTOP_MUTATION.REGISTER_WINDOW](state, payload)
+        {
+            const windows = state.windows;
+            // deactivate all other windows
+            for(const id in windows)
+            {
+                windows[id].active = false;
+            }
+            // new window is on top of all others
+            state.maxZ++;
+            // record salient details of the window's details
+            Vue.set(
+                windows,
+                payload.id,
+                {
+                    id: payload.id,
+                    title: payload.title,
+                    icon: payload.icon,
+                    managed:
+                    {
+                        active: true,
+                        fullscreen: false,
+                        zIndex: state.maxZ,
+                        instance: payload.instance, // window instance
+                    }
+                }
+            );
+        },
+        /**
+         * Update the details of an existing window
+         *
+         * NOTE: not all properies may be updated - only non-managed properties
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID, ...}
+         * ...where ID is the unique ID of the window, and any remaining
+         * key/value pairs are the properties to be updated
+         */
+        [DESKTOP_MUTATION.UPDATE_WINDOW](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return; // no such window
+
+            for(const key in payload)
+            {
+                // only allow updates of non-managed details
+                if(key === 'id' || key === 'managed')
+                    continue; // we don't allow a change of window ID or managed properties
+
+                if(window[key] !== undefined)
+                    window[key] = payload[key];
+                {
+                    window[key] = payload[key];
+                }
+            }
+        },
+        /**
+         * Deregisters a window (when closing the window forever)
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID}
+         * ...where ID is the unique ID of the window.
+         */
+        [DESKTOP_MUTATION.DEREGISTER_WINDOW](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return; // no such window
+
+            // remove the record of the window
+            const windows = state.windows;
+            Vue.delete(
+                windows,
+                payload.id,
+            );
+
+            // adjust the Z-indices of the remaining windows and (if the
+            // de-registered window was active) activate the top level
+            // window now
+            const currentZindex = window.zIndex;
+            const wasActive = window.active;
+            let maxZ = 0;
+            let maxZWin = null;
+            for(const id in windows)
+            {
+                const w = windows[id];
+                const managed = w.managed;
+                if(managed.zIndex > currentZindex)
+                    managed.zIndex--;
+                if(managed.zIndex > maxZ)
+                {
+                    maxZ = w.zIndex;
+                    maxZWin = w;
+                }
+            }
+            if(wasActive && maxZWin)
+                maxZWin.active = true;
+
+            state.maxZ--;
+        },
+        /**
+         * Bring a window to the "front"
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID}
+         * ...where ID is the unique ID of the window.
+         */
+        [DESKTOP_MUTATION.WINDOW_TO_FRONT](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return; // no such window
+
+            // adjust the Z-indices of all windows currently
+            // in front of the window 'down' by one
+            const managed = window.managed;
+            const currentZindex = managed.zIndex;
+            for(const id in state.windows)
+            {
+                const w = state.windows[id];
+                const wManaged = w.managed;
+                wManaged.active = (id === payload.id);
+                if(wManaged.zIndex > currentZindex)
+                    wManaged.zIndex--;
+            }
+            // make the Z-index of the target window the maximum
+            managed.zIndex = state.maxZ;
+        },
+        /**
+         * Bring a window to the "back"
+         *
+         * @param {object} state the store state object
+         * @param {object} payload an object of the form...
+         *     {id:ID}
+         * ...where ID is the unique ID of the window.
+         */
+        [DESKTOP_MUTATION.WINDOW_TO_BACK](state, payload)
+        {
+            const window = state.windows[payload.id];
+            if(!window)
+                return; // no such window
+
+            const managed = window.managed;
+            // cache Z-index of the target window
+            const currentZindex = managed.zIndex;
+            // deactivate and make the Z-index 0 (send to back)
+            managed.active = false;
+            managed.zIndex = 0;
+            // adjust the Z-indices of all windows currently
+            // in below the window 'up' by one, activate the
+            // 'top' one
+            for(const id in state.windows)
+            {
+                const w = state.windows[id];
+                const wManaged = w.managed;
+                if(wManaged.zIndex < currentZindex)
+                    wManaged.zIndex++;
+                wManaged.active = wManaged.zIndex === state.maxZ;
+            }
+        },
+        [DESKTOP_MUTATION.FULLSCREEN_WINDOW]()
+        {
+            // TODO
+        },
+        [DESKTOP_MUTATION.DEFULLSCREEN_WINDOW]()
+        {
+            // TODO
+        },
+
     },
-    actions: {},
+    actions: {
+
+    },
 };
 
 export default DesktopManager;

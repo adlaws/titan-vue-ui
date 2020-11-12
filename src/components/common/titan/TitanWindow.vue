@@ -168,6 +168,7 @@ export default {
         zIndex() { return this.$store.getters.getWindowZindex(this.id); },
         isActive() { return this.$store.getters.isWindowActive(this.id); },
         isFullscreen() { return this.$store.getters.isWindowFullscreen(this.id); },
+        desktopBounds() { return this.$store.getters.desktopBounds;}
     },
     watch:
     {
@@ -178,10 +179,7 @@ export default {
         zIndex: function(newValue, /*oldValue*/) { this.$refs.container.style.zIndex = newValue; },
         icon: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, icon:newValue}); },
         title: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, title:newValue}); },
-    },
-    created()
-    {
-        window.addEventListener('resize', this._handleBrowserResize);
+        desktopBounds: function(/*newValue, oldValue*/) { this._handleScreenSizeChange(); },
     },
     beforeMount()
     {
@@ -216,7 +214,7 @@ export default {
     },
     beforeDestroy()
     {
-        window.removeEventListener('resize', this._handleBrowserResize);
+        window.removeEventListener('resize', this._handleScreenSizeChange);
         this.$store.commit(DESKTOP_MUTATION.DEREGISTER_WINDOW, {id: this.id});
     },
     methods:
@@ -257,10 +255,10 @@ export default {
                 return;
 
             this.status.maximized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
-            this.status.x = 0;
-            this.status.y = 0;
-            this.status.w = document.body.clientWidth;
-            this.status.h = document.body.clientHeight - 64; // 64px is the height of the taskbar along the bottom of the desktop
+            this.status.x = this.desktopBounds.x;
+            this.status.y = this.desktopBounds.y;
+            this.status.w = this.desktopBounds.w;
+            this.status.h = this.desktopBounds.h; // 64px is the height of the taskbar along the bottom of the desktop
         },
         toggleMaximize()
         {
@@ -452,13 +450,15 @@ export default {
         {
             this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_FRONT, {id: this.id} );
         },
-        _handleBrowserResize(/*evt*/)
+        _handleScreenSizeChange(/*evt*/)
         {
-            if(this.status.maximized)
-            {
-                this.status.w = document.body.clientWidth;
-                this.status.h = document.body.clientHeight - 64; // 64px is the height of the taskbar along the bottom of the desktop
-            }
+            if(!this.status.maximized)
+                return;
+
+            this.status.x = this.desktopBounds.x;
+            this.status.y = this.desktopBounds.y;
+            this.status.w = this.desktopBounds.w;
+            this.status.h = this.desktopBounds.h; // 64px is the height of the taskbar along the bottom of the desktop
         },
     }
 };
