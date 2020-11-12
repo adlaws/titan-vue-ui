@@ -309,7 +309,8 @@ const DesktopManager =
             // deactivate all other windows
             for(const id in windows)
             {
-                windows[id].active = false;
+                const managed = windows[id].managed;
+                managed.active = false;
             }
             // new window is on top of all others
             state.maxZ++;

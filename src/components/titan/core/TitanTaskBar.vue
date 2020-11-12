@@ -9,11 +9,14 @@
             @click="showStartMenu=!showStartMenu"
         >
             <div class="startitan-button">
-                <titan-icon style="font-size:200%;" icon="camera-iris" />
-                <span class="ml-1">Start</span>
+                <titan-icon
+                    :style="`font-size:${taskbarSize*0.666}px;`"
+                    icon="camera-iris"
+                />
             </div>
             <div
-                v-if="showStartMenu"
+                v-show="showStartMenu"
+                :style="`bottom:${taskbarSize}px;`"
                 class="menu"
             >
                 <ul>
@@ -34,32 +37,33 @@
                         <span class="ml-1">Options</span>
                     </li>
                     <li @click="quitApplication()">
-                        <titan-icon style="font-size:200%;" icon="logout" />
+                        <titan-icon
+                            style="font-size:200%;"
+                            icon="logout"
+                        />
                         <span class="ml-1">Quit</span>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="spacer" style="vertical?'max-width':'max-height'+':24px;'" />
         <div
+            class="spacer"
+            :style="`max-${vertical?'height':'width'}:${taskbarSize*0.25}px;`"
+        />
+        <titan-taskbar-window-tile
             v-for="(window, idx) in windows"
             :key="`win-${idx}`"
-            class="window-tile"
-            :class="{active:window.managed.active}"
-            :title="window.title"
-            @click="focusWindow(window)"
-            @dblclick="toggleWindow(window)"
+            :window="window"
+            @click.native="focusWindow(window)"
+            @dblclick.native="toggleWindow(window)"
+        />
+        <div
+            class="spacer"
+        />
+        <div
+            class="clock"
+            :style="`font-size:${taskbarSize*0.25}px;`"
         >
-            <titan-icon
-                v-if="window.icon"
-                :icon="window.icon"
-            />
-            <div v-else>
-                {{ window.title.charAt(0).toUpperCase() }}
-            </div>
-        </div>
-        <div class="spacer" />
-        <div class="clock" @click="hideTaskbar">
             {{ theTime }}
         </div>
     </div>
@@ -71,12 +75,13 @@ import { TITAN_MUTATION } from '@/assets/js/store/titan-manager.js';
 
 import TitanUtils, { SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 
+import TitanTaskbarWindowTile from '@/components/titan/core/TitanTaskbarWindowTile.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 export default {
     name: 'titan-task-bar',
     components: {
-        TitanIcon
+        TitanTaskbarWindowTile, TitanIcon
     },
     props: {},
     data()
@@ -90,7 +95,8 @@ export default {
     computed:
     {
         windows() { return this.$store.getters.windows; },
-        bounds() { return this.$store.getters.taskbarBounds; },
+        taskbarSize() { return this.$store.getters.taskbarSize; },
+        taskbarBounds() { return this.$store.getters.taskbarBounds; },
         desktopBounds() { return this.$store.getters.desktopBounds; },
         screenSize() { return this.$store.getters.screenSize; },
     },
@@ -104,19 +110,21 @@ export default {
         updateAlignment()
         {
             const container = this.$refs.container;
-            container.style.top = this.bounds.top;
-            container.style.bottom = this.bounds.bottom;
-            container.style.left = this.bounds.left;
-            container.style.right = this.bounds.right;
-            container.style.width = this.bounds.width;
-            container.style.height = this.bounds.height;
-            this.vertical = this.bounds.vertical || false;
+
+            container.style.top = this.taskbarBounds.top;
+            container.style.bottom = this.taskbarBounds.bottom;
+            container.style.left = this.taskbarBounds.left;
+            container.style.right = this.taskbarBounds.right;
+            container.style.width = this.taskbarBounds.width;
+            container.style.height = this.taskbarBounds.height;
+
+            this.vertical = this.taskbarBounds.vertical || false;
         },
         updateTheTime()
         {
             const now = new Date();
             let hours = now.getHours();
-            const ampm = hours > 12 ? 'PM' : 'AM';
+            const ampm = hours >= 12 ? 'PM' : 'AM';
             hours = hours > 12 ? hours - 12 : hours;
             hours = (hours < 10 ? '0' : '') + hours;
             let minutes = now.getMinutes();
@@ -140,27 +148,23 @@ export default {
         focusWindow(window)
         {
             const winInstance = window.managed.instance;
+
             if(winInstance.isMaximized())
                 winInstance.maximize();
-            if(winInstance.isMinimized())
+            else if(winInstance.isMinimized())
                 winInstance.restore();
+
             this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_FRONT, {id: window.id});
         },
         toggleWindow(window)
         {
-            if(window.instance.isMinimized())
+            const winInstance = window.managed.instance;
+
+            if(winInstance.isMinimized())
                 this.focusWindow(window);
             else
-                window.instance.minimize();
+                winInstance.minimize();
         },
-        hideTaskbar()
-        {
-            this.$store.commit(DESKTOP_MUTATION.SET_TASKBAR_VISIBLE, false);
-            setTimeout(()=>
-            {
-                this.$store.commit(DESKTOP_MUTATION.SET_TASKBAR_VISIBLE, true);
-            },1000);
-        }
     },
 };
 </script>
@@ -241,45 +245,6 @@ export default {
         }
     }
 
-    .window-tile
-    {
-        width: 48px;
-        height: 48px;
-        font-size:40px;
-        line-height:40px;
-
-        margin: 0;
-        padding: 0;
-
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: center;
-        align-items: center;
-
-        background-color: rgba(0,16,32,1.0);
-        border:1px solid rgba(0,32,64,1.0);
-        border-radius:4px;
-        margin-right:8px;
-        cursor: pointer;
-        &:hover
-        {
-            border:1px solid rgba(0,32,64,1.0);
-            background-color: rgba(0,32,64,1.0);
-            box-shadow: 0 0 8px rgba(0,16,32,1.0);
-        }
-        &.active
-        {
-            border:1px solid rgba(0,48,96,1.0);
-            background-color: rgba(0,48,96,1.0);
-            box-shadow: 0 0 8px rgba(0,32,64,1.0);
-            &:hover
-            {
-                border:1px solid rgba(0,64,128,1.0);
-                background-color: rgba(0,64,128,1.0);
-                box-shadow: 0 0 8px rgba(0,48,96,1.0);
-            }
-        }
-    }
 
     .spacer
     {
