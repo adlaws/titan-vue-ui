@@ -19,8 +19,8 @@ export const DESKTOP_MUTATION = {
     CLOSE_WINDOW:'desktop::closeWindow',
     WINDOW_TO_FRONT:'desktop::windowToFront',
     WINDOW_TO_BACK:'desktop::windowToBack',
-    FULLSCREEN_WINDOW:'desktop::windowToFullscreen',
-    DEFULLSCREEN_WINDOW:'desktop::windowToFullscreen',
+    FULLSCREEN_ENTER:'desktop::enterFullscreen',
+    FULLSCREEN_EXIT:'desktop::exitFullscreen',
 };
 
 const DesktopManager =
@@ -145,6 +145,7 @@ const DesktopManager =
         getWindowManagedProps: (state, getters) => (id) => getters.getWindow(id).managed || {},
         getWindowZindex: (state, getters) => (id) => getters.getWindowManagedProps(id).zIndex || 0,
         isWindowActive: (state, getters) => (id) => getters.getWindowManagedProps(id).active || false,
+        isWindowShown: (state, getters) => (id) => getters.getWindowManagedProps(id).show || false,
         isWindowFullscreen: (state, getters) => (id) => getters.getWindowManagedProps(id).fullscreen || false,
         isAnyWindowFullscreen: (state, getters) =>
         {
@@ -325,6 +326,7 @@ const DesktopManager =
                     managed:
                     {
                         active: true,
+                        show: true,
                         fullscreen: false,
                         zIndex: state.maxZ,
                         instance: payload.instance, // window instance
@@ -468,19 +470,51 @@ const DesktopManager =
                 wManaged.active = wManaged.zIndex === state.maxZ;
             }
         },
-        [DESKTOP_MUTATION.FULLSCREEN_WINDOW]()
+        [DESKTOP_MUTATION.FULLSCREEN_ENTER](state, payload)
         {
-            // TODO
+            console.log(payload);
+            const window = state.windows[payload.id];
+            if(!window)
+                return; // no such window to fullscreen
+
+            // hide all other windows
+            for(const id in state.windows)
+            {
+                if(id !== payload.id)
+                {
+                    const w = state.windows[id];
+                    const wManaged = w.managed;
+                    wManaged.show = false;
+                    // only one item may be fullscreen at any time
+                    wManaged.fullscreen = false;
+                }
+            }
+
+            // hide taskbar
+            const taskbar = state.taskbar;
+            taskbar.show = false;
+
+            // target window to full screen
+            const managed = window.managed;
+            managed.fullscreen = true;
         },
-        [DESKTOP_MUTATION.DEFULLSCREEN_WINDOW]()
+        [DESKTOP_MUTATION.FULLSCREEN_EXIT](state)
         {
-            // TODO
+            // show taskbar
+            const taskbar = state.taskbar;
+            taskbar.show = true;
+
+            // restore all windows
+            for(const id in state.windows)
+            {
+                const w = state.windows[id];
+                const wManaged = w.managed;
+                wManaged.fullscreen = false;
+                wManaged.show = true;
+            }
         },
-
     },
-    actions: {
-
-    },
+    actions: {},
 };
 
 export default DesktopManager;

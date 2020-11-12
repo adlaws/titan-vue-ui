@@ -1,8 +1,9 @@
 <template>
     <div
-        v-show="!status.minimized"
+        v-show="isShown && !status.minimized"
         ref="container"
         class="vue-os--window"
+        :class="{fullscreen: isFullscreen}"
         @mousemove="_onMouseMove"
         @mousedown="_handleResizeStart"
         @mouseup="_handleFocus"
@@ -29,7 +30,6 @@
         <slot
             name="default"
             :titan-window="{id,title,status,isActive,isFullscreen,zIndex}"
-            :fullscreen-handler="() => toggleFullscreen()"
         />
     </div>
 </template>
@@ -124,11 +124,6 @@ export default {
             type: Boolean,
             default: true
         },
-        // can the window be made to occupy the entire screen (no task bar visible)
-        fullScreenable: {
-            type: Boolean,
-            default: true
-        },
         // does the window have a title bar?
         noTitleBar: {
             type: Boolean,
@@ -167,6 +162,7 @@ export default {
     {
         zIndex() { return this.$store.getters.getWindowZindex(this.id); },
         isActive() { return this.$store.getters.isWindowActive(this.id); },
+        isShown() { return this.$store.getters.isWindowShown(this.id); },
         isFullscreen() { return this.$store.getters.isWindowFullscreen(this.id); },
         desktopBounds() { return this.$store.getters.desktopBounds;}
     },
@@ -180,6 +176,7 @@ export default {
         icon: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, icon:newValue}); },
         title: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, title:newValue}); },
         desktopBounds: function(/*newValue, oldValue*/) { this._handleScreenSizeChange(); },
+        isFullscreen: function(newValue, /*oldValue*/) { this._handleFullScreenChange(newValue); },
     },
     beforeMount()
     {
@@ -258,7 +255,7 @@ export default {
             this.status.x = this.desktopBounds.x;
             this.status.y = this.desktopBounds.y;
             this.status.w = this.desktopBounds.w;
-            this.status.h = this.desktopBounds.h; // 64px is the height of the taskbar along the bottom of the desktop
+            this.status.h = this.desktopBounds.h;
         },
         toggleMaximize()
         {
@@ -269,6 +266,14 @@ export default {
         },
         restore()
         {
+            if(this.status.fullscreen)
+            {
+                this.status.x = this.status.fullscreen.x;
+                this.status.y = this.status.fullscreen.y;
+                this.status.w = this.status.fullscreen.w;
+                this.status.h = this.status.fullscreen.h;
+                this.status.fullscreen = false;
+            }
             if(this.status.maximized)
             {
                 this.status.x = this.status.maximized.x;
@@ -277,7 +282,7 @@ export default {
                 this.status.h = this.status.maximized.h;
                 this.status.maximized = false;
             }
-            else if(this.status.minimized)
+            if(this.status.minimized)
             {
                 this.status.x = this.status.minimized.x;
                 this.status.y = this.status.minimized.y;
@@ -285,35 +290,30 @@ export default {
                 this.status.h = this.status.minimized.h;
                 this.status.minimized = false;
             }
-            else if(this.status.fullscreen)
-            {
-                this.status.x = this.status.fullscreen.x;
-                this.status.y = this.status.fullscreen.y;
-                this.status.w = this.status.fullscreen.w;
-                this.status.h = this.status.fullscreen.h;
-                this.status.fullscreen = false;
-            }
         },
-        toggleFullscreen()
+        _handleFullScreenChange(isFullscreen)
         {
-            if(this.status.fullscreen)
+            if(this.status.fullscreen === isFullscreen)
+                return;
+
+            if(isFullscreen)
             {
-                this.restore();
-                return false;
+                this.status.fullscreen = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
+                this.status.x = this.desktopBounds.x;
+                this.status.y = this.desktopBounds.y;
+                this.status.w = this.desktopBounds.w;
+                this.status.h = this.desktopBounds.h;
             }
             else
-                return this.fullscreen();
+            {
+                this.restore();
+            }
         },
         fullscreen()
         {
             if(this.status.fullscreen || !this.fullScreenable)
                 return false;
 
-            this.status.fullscreen = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
-            this.status.x = 0;
-            this.status.y = 0;
-            this.status.w = document.body.clientWidth;
-            this.status.h = document.body.clientHeight;
 
             return true;
         },
@@ -469,12 +469,8 @@ export default {
 {
     position:absolute;
 
-    background-color: rgba(0,0,0,0);
-    border: 2px solid #024;
-
     padding: 0;
     margin: 0;
-    border-radius: 4px;
 
     display: flex;
     flex-direction: column;
@@ -482,7 +478,16 @@ export default {
     justify-content: flex-start;
     align-content: stretch;
 
+    background-color: rgba(0,0,0,0);
+    border: 2px solid #024;
+    border-radius: 4px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.6666);
+
+    &.fullscreen{
+        border: 0px solid rgba(0,0,0,0);
+        border-radius: 0;
+        box-shadow: none;
+    }
 
     .content
     {

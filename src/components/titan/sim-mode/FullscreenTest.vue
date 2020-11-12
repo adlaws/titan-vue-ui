@@ -10,7 +10,7 @@
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
                 <button
-                    @click="toggleFullscreen(context.fullscreenHandler)"
+                    @click="toggleFullscreen(context.titanWindow)"
                 >
                     <titan-icon icon="fullscreen" />
                 </button>
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
+
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 export default {
@@ -40,11 +42,14 @@ export default {
     },
     methods:
     {
-        toggleFullscreen(func)
+        toggleFullscreen(window)
         {
-            // TODO
-            console.log('fullscreen', func);
-            this.isFullscreen = func();
+            if(this.isFullscreen)
+                this.$store.commit(DESKTOP_MUTATION.FULLSCREEN_EXIT);
+            else
+                this.$store.commit(DESKTOP_MUTATION.FULLSCREEN_ENTER, {id: window.id});
+
+            this.isFullscreen = !this.isFullscreen;
         }
     }
 };
