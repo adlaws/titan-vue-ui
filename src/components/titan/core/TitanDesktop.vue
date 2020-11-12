@@ -171,7 +171,7 @@ export default {
     left:0px;
     width:100vw;
     height:100vh;
-    background-color: rgba(0,255,0,0.125);
+    background-color: rgba(0,0,0,0);
 }
 .blue-area
 {

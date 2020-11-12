@@ -519,10 +519,29 @@ export default class TitanUtils
      * @param {Function} loggerFunc a logging function which accepts a string as a parameter. If
      *        unspecified, `TitanUtils.log.error` is used.
      */
-    static logProps(obj, loggerFunc=TitanUtils.log.error)
+    static logProps(obj, loggerFunc=$tLogger.error)
     {
-        let logContent = '{'+Object.getOwnPropertyNames(obj).map(p=>`'${p}': '${typeof(p)}'`).join(', ')+'}';
-        loggerFunc( logContent );
+        if(obj === null)
+        {
+            loggerFunc( 'null' );
+        }
+        else if(obj === undefined)
+        {
+            loggerFunc( 'undefined' );
+        }
+        else
+        {
+            const objType = typeof obj;
+            if(objType !== 'object')
+            {
+                loggerFunc( objType );
+            }
+            else
+            {
+                const logContent = '{'+Object.getOwnPropertyNames(obj).map(p=>`'${p}': '${typeof(p)}'`).join(', ')+'}';
+                loggerFunc( logContent );
+            }
+        }
     }
 
     /**
