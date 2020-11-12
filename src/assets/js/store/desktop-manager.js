@@ -388,24 +388,25 @@ const DesktopManager =
             // adjust the Z-indices of the remaining windows and (if the
             // de-registered window was active) activate the top level
             // window now
-            const currentZindex = window.zIndex;
-            const wasActive = window.active;
+            const managed = window.managed;
+            const currentZindex = managed.zIndex;
+            const wasActive = managed.active;
             let maxZ = 0;
-            let maxZWin = null;
+            let topWindow = null;
             for(const id in windows)
             {
                 const w = windows[id];
-                const managed = w.managed;
-                if(managed.zIndex > currentZindex)
-                    managed.zIndex--;
-                if(managed.zIndex > maxZ)
+                const wManaged = w.managed;
+                if(wManaged.zIndex >= currentZindex)
+                    wManaged.zIndex--;
+                if(wManaged.zIndex >= maxZ)
                 {
                     maxZ = w.zIndex;
-                    maxZWin = w;
+                    topWindow = w;
                 }
             }
-            if(wasActive && maxZWin)
-                maxZWin.active = true;
+            if(wasActive && topWindow)
+                topWindow.active = true;
 
             state.maxZ--;
         },
@@ -432,7 +433,7 @@ const DesktopManager =
                 const w = state.windows[id];
                 const wManaged = w.managed;
                 wManaged.active = (id === payload.id);
-                if(wManaged.zIndex > currentZindex)
+                if(wManaged.zIndex >= currentZindex)
                     wManaged.zIndex--;
             }
             // make the Z-index of the target window the maximum
@@ -455,9 +456,9 @@ const DesktopManager =
             const managed = window.managed;
             // cache Z-index of the target window
             const currentZindex = managed.zIndex;
-            // deactivate and make the Z-index 0 (send to back)
+            // deactivate and make the Z-index 1 (send to back)
             managed.active = false;
-            managed.zIndex = 0;
+            managed.zIndex = 1;
             // adjust the Z-indices of all windows currently
             // in below the window 'up' by one, activate the
             // 'top' one
@@ -472,7 +473,6 @@ const DesktopManager =
         },
         [DESKTOP_MUTATION.FULLSCREEN_ENTER](state, payload)
         {
-            console.log(payload);
             const window = state.windows[payload.id];
             if(!window)
                 return; // no such window to fullscreen

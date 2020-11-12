@@ -60,12 +60,7 @@
         <div
             class="spacer"
         />
-        <div
-            class="clock"
-            :style="`font-size:${taskbarSize*0.25}px;`"
-        >
-            {{ theTime }}
-        </div>
+        <titan-clock />
     </div>
 </template>
 
@@ -76,12 +71,13 @@ import { TITAN_MUTATION } from '@/assets/js/store/titan-manager.js';
 import TitanUtils, { SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 
 import TitanTaskbarWindowTile from '@/components/titan/core/TitanTaskbarWindowTile.vue';
+import TitanClock from '@/components/titan/core/TitanClock.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 export default {
     name: 'titan-task-bar',
     components: {
-        TitanTaskbarWindowTile, TitanIcon
+        TitanTaskbarWindowTile, TitanClock, TitanIcon
     },
     props: {},
     data()
@@ -249,11 +245,6 @@ export default {
     .spacer
     {
         flex-grow: 1;
-    }
-
-    .clock
-    {
-        margin-right: 24px;
     }
 }
 </style>

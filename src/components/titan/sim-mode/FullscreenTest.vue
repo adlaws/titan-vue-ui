@@ -1,21 +1,33 @@
 <template>
     <titan-window
-        :title="`Full Screen Test - ${isFullscreen}`"
-        :icon="isFullscreen?'fullscreen':'fullscreen-exit'"
+        title="Full Screen Test"
+        :icon="`fullscreen${isFullscreen?'-exit':''}`"
         :x="150"
         :y="150"
         :width="350"
         :height="200"
     >
         <template #default="context">
-            <titan-window-content :titan-window="context.titanWindow">
+            <div style="overflow:hidden;">
                 <button
                     @click="toggleFullscreen(context.titanWindow)"
                 >
-                    <titan-icon icon="fullscreen" />
+                    <titan-icon :icon="`fullscreen${isFullscreen?'-exit':''}`" />
                 </button>
+                <div>
+                    <div
+                        style="width:33%;height:100px;display:inline-block;background-color:rgba(255,0,0,1);"
+                    />
+                    <div
+                        class="pass-through"
+                        style="width:33%;height:100px;display:inline-block;background-color:rgba(0,255,0,0.5);"
+                    />
+                    <div
+                        style="width:33%;height:100px;display:inline-block;background-color:rgba(255,0,0,1);"
+                    />
+                </div>
                 {{ context }}
-            </titan-window-content>
+            </div>
         </template>
     </titan-window>
 </template>
