@@ -32,6 +32,10 @@ const DesktopManager =
             size:{
                 w: $isInsideTitan ? screen.availWidth : document.body.clientWidth,
                 h: $isInsideTitan ? screen.availHeight : document.body.clientHeight,
+                x: 0,
+                y: 0,
+                midX: ($isInsideTitan ? screen.availWidth : document.body.clientWidth) / 2.0,
+                midY: ($isInsideTitan ? screen.availHeight : document.body.clientHeight) / 2.0,
             }
         },
         // Outerra events are not reliable in isolation to gather mouse button and modifier
@@ -164,6 +168,8 @@ const DesktopManager =
             const screenSize = state.screen.size;
             screenSize.w = payload.w;
             screenSize.h = payload.h;
+            screenSize.midX = payload.w / 2.0;
+            screenSize.midY = payload.h / 2.0;
         },
         /**
          * Updates the current state of the mouse buttons based on a DOM mouse

@@ -17,7 +17,7 @@
                 </button>
                 <div
                     :class="{'pass-through':!isFullscreen}"
-                    style="width:100%;height:100%;display:block;background-color:rgba(0,255,0,0.5);"
+                    style="width:100%;height:100%;display:block;background-color:rgba(0,255,0,0.125);"
                     @mousewheel="handleZoom"
                 >
                     {{ context }}
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import TitanUtils, { $tWorldInterface, $isInsideTitan, /*$tLogger*/ } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
 
 import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
 
@@ -89,13 +89,23 @@ export default {
             if(!this.isFullscreen)
                 return;
 
+            // NOTE: in Outerra mousewheel events are doubled, and pair with a
+            //       mousewheel event with a deltaY of zero, regardless of which
+            //       direction the wheel is rolled - we need to ignore these
+            //       spurious deltaY = 0 events and handle the rest
+            //       See: https://calytrixtechnologies.atlassian.net/browse/TITAN-1275
+            if(evt.deltaY === 0)
+                return; // ignore
+
             if($isInsideTitan)
             {
                 const screenBounds = this.$store.getters.screenSize;
-                const worldPos = TitanUtils.worldPosForWindowCoords({x:screenBounds.w/2, y:screenBounds.h/2});
+                const worldPos = TitanUtils.worldPosForWindowCoords({x:screenBounds.midX, y:screenBounds.midY});
                 if(worldPos)
                 {
-                    this.scenarioCamera.zoomEditorCamera(evt.deltaY, worldPos);
+                    // invert the delatY to get mousewheel-up zoom in, as is
+                    // the case for Google Maps, Open Street Maps, Leaflet etc
+                    this.scenarioCamera.zoomEditorCamera(-evt.deltaY, worldPos);
                 }
             }
         },
