@@ -238,6 +238,7 @@ export default {
             else
                 this.status.minimized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
             this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_BACK, {id: this.id});
+            this.emitWindowResize();
         },
         toggleMinimize()
         {
@@ -256,6 +257,7 @@ export default {
             this.status.y = this.desktopBounds.y;
             this.status.w = this.desktopBounds.w;
             this.status.h = this.desktopBounds.h;
+            this.emitWindowResize();
         },
         toggleMaximize()
         {
@@ -273,6 +275,7 @@ export default {
                 this.status.w = this.status.fullscreen.w;
                 this.status.h = this.status.fullscreen.h;
                 this.status.fullscreen = false;
+                this.emitWindowResize();
             }
             if(this.status.maximized)
             {
@@ -281,6 +284,7 @@ export default {
                 this.status.w = this.status.maximized.w;
                 this.status.h = this.status.maximized.h;
                 this.status.maximized = false;
+                this.emitWindowResize();
             }
             if(this.status.minimized)
             {
@@ -289,7 +293,13 @@ export default {
                 this.status.w = this.status.minimized.w;
                 this.status.h = this.status.minimized.h;
                 this.status.minimized = false;
+                this.emitWindowResize();
             }
+        },
+        emitWindowResize()
+        {
+            const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
+            this.$emit('window-resized', bounds);
         },
         _handleFullScreenChange(isFullscreen)
         {
@@ -313,8 +323,6 @@ export default {
         {
             if(this.status.fullscreen || !this.fullScreenable)
                 return false;
-
-
             return true;
         },
         close()
@@ -434,11 +442,14 @@ export default {
                 this.status.y = y;
                 this.status.h = h;
             }
+
+            this.emitWindowResize();
         },
         _handleDragEnd(/*evt*/)
         {
             document.onmouseup = null;
             document.onmousemove = null;
+
             this.resizing.active = false;
             this.resizing.type = null;
             this.resizing.drag.x = 0;
@@ -458,7 +469,9 @@ export default {
             this.status.x = this.desktopBounds.x;
             this.status.y = this.desktopBounds.y;
             this.status.w = this.desktopBounds.w;
-            this.status.h = this.desktopBounds.h; // 64px is the height of the taskbar along the bottom of the desktop
+            this.status.h = this.desktopBounds.h;
+
+            this.emitWindowResize();
         },
     }
 };

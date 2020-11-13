@@ -18,7 +18,7 @@
 <script>
 import TitanUtils, { $isInsideTitan, $tWorldInterface, SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
-import MathUtils from '@/assets/js/utils/math-utils.js';
+import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
 import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
 import FullscreenTest from '@/components/titan/sim-mode/FullscreenTest.vue';
@@ -163,9 +163,9 @@ export default {
             //       If we only wanted the world pos under the mouse we could
             //       just do:
             //            const worldPos = $tWorldInterface.getWorldPosFromScreenPix(winXY);
-            const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
+            const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
             $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = $tWorldInterface.getWorldPositionUnderMouse();
+            const worldPos = Vec3.fromObj( $tWorldInterface.getWorldPositionUnderMouse() );
 
             // mouse is down, so it could be just a click, or about to start
             // dragging an entity or begin a rubber band selection, so get
@@ -227,8 +227,8 @@ export default {
             }
 
             // update object drag or rubber band selection if required
-            const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
-            const ecef = $tWorldInterface.getWorldPosFromScreenPix(winXY);
+            const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
+            const ecef = Vec3.fromObj( $tWorldInterface.getWorldPosFromScreenPix(winXY) );
             if(this.drag.isDraggingObject)
             {
                 // may be unable to query world position from screen (happens when move above horizon)
@@ -236,7 +236,7 @@ export default {
                 if(TitanUtils.isValidWorldPos(ecef))
                 {
                     // work out how to move the items in relation to the drag
-                    const vecOffset = MathUtils.vecSub(ecef, this.drag.lastECEF);
+                    const vecOffset = MathUtils.subtract(ecef, this.drag.lastECEF);
                     const activeScenario = $tWorldInterface.getActiveScenario();
                     // move the selected items accordingly
                     activeScenario.translateSelected(vecOffset, true);
