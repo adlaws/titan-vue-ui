@@ -12,43 +12,12 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
+    font-size: 15px;
+    font-family: Roboto, Verdana, Geneva, sans-serif;
     overflow: hidden;
     -webkit-user-select: none;
     -webkit-font-smoothing: subpixel-antialiased;
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: 15px;
 }
-
-/*
-h2 {
-    transition: color 0.2s ease;
-    position: relative;
-    margin-top: 0px;
-    font-size: 15px;
-    font-weight: bold;
-    color: #878787;
-    text-shadow: 0px 1px 0px #ABABAB,
-                 0px 1px 3px #828282,
-                 0px 2px 0px #4F4F4F,
-                 0px 3px 0px #4F4F4F,
-                 0px 3px 0px #4F4F4F,
-                 0px 3px 1px rgba(0, 0, 0, 0.7),
-                 0px 3px 2px rgba(0, 0, 0, 0.5);
-}
-
-h3 {
-    margin:0 0 0.5em 0;
-    padding: 0;
-    font-size: 15px;
-}
-
-input, textarea {
-    background-color: rgb(37, 33, 33);
-    border: 1px solid rgb(70, 70, 70);
-    padding: 2px;
-    color: white;
-}
-*/
 
 // margin and padding shortcuts in 1em increments
 @each $x in (0,1,2,3,4,5,6) {
@@ -89,17 +58,6 @@ $layoutcols:12;
     }
 }
 
-/*
-.silverEffect {
-    background-color: Silver;
-    background-image: gradient(linear, 0% 0%, 0% 100%, from(Gray), to(Silver));
-}
-
-.imgCaption:hover {
-    border-bottom: 2px solid;
-}
-*/
-
 .tabs {
     margin: auto;
     min-height: 200px;
@@ -109,149 +67,3 @@ $layoutcols:12;
         overflow-y: scroll;
     }
 }
-
-/*********************** Scrollbar style **************/
-
-/*
-::-webkit-scrollbar {
-    width: 15px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track-piece {
-    background-color: #3b3b3b;
-}
-
-::-webkit-scrollbar-thumb:vertical {
-    background-color: #cccccc;
-    background-size: 5px 5px;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    -webkit-box-shadow: inset 1px 1px 20px black;
-}
-*/
-
-/*************************
-  Extended jquery-ui styles
-  **************************/
-
-  /*
-.ui-tabs .ui-tabs-nav li a {
-    padding: 5px 0px;
-    font-size: 10px;
-}
-
-.ui-button-text {
-    font-size: 10px;
-    padding: 1px;
-}
-
-.ui-widget .ui-widget {
-    font-family: Verdana, Arial, sans-serif;
-    font-size: 10px;
-}
-
-.ui-accordion .ui-accordion-header {
-    font-size: 10px;
-}
-*/
-/***********************
-  Default Titan styles
-  ************************/
-
-/*
-.wrapper {
-    position: relative;
-    padding: 10px;
-    width: 300px;
-    max-height: 600px;
-    background-color: #5C5C5C;
-    border: 1px solid #26B3F7;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.accordionTreeTop .accordion {
-    margin: auto;
-
-    h3 {
-        padding-left: 20%;
-    }
-}
-
-.closeButton {
-    position: absolute;
-    top: 10px;
-    right: 5px;
-}
-
-.hide {
-    display: none;
-}
-
-.countryIcon {
-    padding: 2px 10px;
-    background-color: blue;
-    border-radius: 5px;
-}
-
-.vehIcon {
-    height: 50px;
-    width: 60px;
-    display: inline-block;
-}
-
-.imgCaption {
-    width: 210px;
-    border-bottom: 1px solid grey;
-
-    .caption {
-        float: right;
-    }
-}
-
-.ui-tabs .ui-tabs-nav li a {
-    padding: 5px 3px;
-    font-size: 13px;
-}
-
-.ui-button-text {
-    font-size: 10px;
-    padding: 0px;
-}
-
-.tabRight {
-    margin-left: 50px;
-}
-
-#feedback {
-    font-size: 1.4em;
-}
-
-.selectable {
-    .ui-selecting {
-        border: 1px solid #444444;
-        background-color: #383735;
-    }
-
-    .ui-selected {
-        border: 1px solid #26b3f7;
-        background: #47d1ff;
-        color: #383735;
-    }
-
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-
-    li {
-        margin: 3px;
-        padding: 0.4em;
-        background-color: #383735;
-    }
-}
-
-.ui-widget-content {
-    color: grey;
-}
-*/
