@@ -480,7 +480,7 @@ export default class GeoUtils
         let radiusN = GeoUtils.radiusOfCurvatureN( geocentricLatitude );
         let ratio = 1 - GeoUtils.WGS84_ECC_SQ * radiusN / (radiusN + elevation);
         let tanLatitude = Math.tan( geocentricLatitude ) / ratio;
-        let geodeticLatitude = GeoUtils.RAD2DEG * Math.atan( tanLatitude );
+        let geodeticLatitude = Math.atan( tanLatitude );
 
         // Step 2: Use above approximation to get radiusN and then correct for elevation
         radiusN = GeoUtils.radiusOfCurvatureN( geodeticLatitude );
@@ -573,6 +573,7 @@ export default class GeoUtils
 // Some useful constants
 GeoUtils.EARTH_MEAN_RADIUS = 6371000; // 6,371km
 GeoUtils.DEG2RAD = Math.PI / 180.0;
+GeoUtils.RAD2DEG = 1.0 / GeoUtils.DEG2RAD;
 GeoUtils.NORTH = 0;
 GeoUtils.NORTHEAST = GeoUtils.DEG2RAD * 45.0;
 GeoUtils.EAST = GeoUtils.DEG2RAD * 90.0;

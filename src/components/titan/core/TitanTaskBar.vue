@@ -10,8 +10,8 @@
         >
             <div class="startitan-button">
                 <titan-icon
-                    :style="`font-size:${taskbarSize*0.666}px;`"
                     icon="camera-iris"
+                    :size="`${taskbarSize*0.666}px`"
                 />
             </div>
             <div
@@ -21,24 +21,24 @@
             >
                 <ul>
                     <li @click="startScenarioConstructor()">
-                        <titan-icon style="font-size:200%;" icon="map-marker-path" />
+                        <titan-icon size="200%;" icon="map-marker-path" />
                         <span class="ml-1">Scenario Constructor</span>
                     </li>
                     <li @click="startLobby()">
-                        <titan-icon style="font-size:200%;" icon="account-group-outline" />
+                        <titan-icon size="200%;" icon="account-group-outline" />
                         <span class="ml-1">Scenario Lobby</span>
                     </li>
                     <li>
-                        <titan-icon style="font-size:200%;" icon="clipboard-edit-outline" />
+                        <titan-icon size="200%;" icon="clipboard-edit-outline" />
                         <span class="ml-1">Scenario Debrief</span>
                     </li>
                     <li>
-                        <titan-icon style="font-size:200%;" icon="cogs" />
+                        <titan-icon size="200%;" icon="cogs" />
                         <span class="ml-1">Options</span>
                     </li>
                     <li @click="quitApplication()">
                         <titan-icon
-                            style="font-size:200%;"
+                            size="200%;"
                             icon="logout"
                         />
                         <span class="ml-1">Quit</span>
@@ -60,6 +60,7 @@
         <div
             class="spacer"
         />
+        <titan-location />
         <titan-clock />
     </div>
 </template>
@@ -72,12 +73,14 @@ import TitanUtils, { SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 
 import TitanTaskbarWindowTile from '@/components/titan/core/TitanTaskbarWindowTile.vue';
 import TitanClock from '@/components/titan/core/TitanClock.vue';
+import TitanLocation from '@/components/titan/core/TitanLocation.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 export default {
     name: 'titan-task-bar',
     components: {
-        TitanTaskbarWindowTile, TitanClock, TitanIcon
+        TitanTaskbarWindowTile, TitanIcon,
+        TitanClock, TitanLocation,
     },
     props: {},
     data()

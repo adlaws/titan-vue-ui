@@ -18,29 +18,41 @@
                 <div
                     :class="{'pass-through':!isFullscreen}"
                     style="flex-grow:1;height:100%;"
-                    @mousewheel="/*handleZoom*/"
-                    @mousedown="/*_handleMouse*/"
-                    @mousemove="/*_handleMouse*/"
-                    @mouseup="/*_handleMouse*/"
                 >
                     <l-map
                         ref="leafletmap"
                         style="height:100%;z-index:0;background-color:rgba(0,0,0,0);"
+                        :zoom-animation="false"
                         :zoom="map.zoom"
                         :center="map.center"
                         :options="map.options"
                     >
                         <l-tile-layer
+                            ref="tileLayer"
                             :url="map.url"
                             :attribution="map.attribution"
-                            :opacity="0.5"
+                            :opacity="mapOpacity"
                         />
-                        <button
-                            style="position:absolute;top:16px;right:16px;width:32px;height:32px;z-index:1;padding:3px;background-color:white;"
-                            @click="toggleFullscreen(context.titanWindow)"
-                        >
-                            <titan-icon style="font-size:24px;line-height:24px;" :icon="`fullscreen${isFullscreen?'-exit':''}`" />
-                        </button>
+
+                        <l-control>
+                            <button
+                                style="width:32px;height:32px;padding:3px;background-color:white;"
+                                @click="toggleFullscreen(context.titanWindow)"
+                            >
+                                <titan-icon size="24px" :icon="`fullscreen${isFullscreen?'-exit':''}`" />
+                            </button>
+                        </l-control>
+
+                        <l-control>
+                            <input
+                                v-model="map.opacity"
+                                type="range"
+                                :min="0"
+                                :max="100"
+                                class="slider vertical"
+                                style="height:128px;width:24px;padding:3px;"
+                            >
+                        </l-control>
                     </l-map>
                 </div>
             </div>
@@ -51,13 +63,14 @@
 <script>
 import 'leaflet/dist/leaflet.css';
 
-import TitanUtils, { $otWorld, $tWorldInterface, $isInsideTitan, $tLogger } from '@/assets/js/titan/titan-utils.js';
-import MathUtils, { Vec2, Vec3 } from '@/assets/js/utils/math-utils.js';
-import GeoUtils from '@/assets/js/utils/geo-utils.js';
+import { $otWorld, $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
+import UiUtils from '@/assets/js/utils/ui-utils.js';
 
 import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
 
 import { latLng } from "leaflet";
+// Workaround for Leaflet default pin icons not showing up ------------------------------------------------------------
+// Ref: https://vue2-leaflet.netlify.app/quickstart/#marker-icons-are-missing
 import { Icon } from 'leaflet';
 delete Icon.Default.prototype._getIconUrl;
 Icon.Default.mergeOptions({
@@ -65,17 +78,25 @@ Icon.Default.mergeOptions({
     iconUrl: require('leaflet/dist/images/marker-icon.png'),
     shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
-import { LMap, LTileLayer } from "vue2-leaflet";
-
+// --------------------------------------------------------------------------------------------------------------------
+import { LMap, LTileLayer, LControl } from "vue2-leaflet";
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+
+// Outerra Map Project Modes for Geographic Camera
+// ref: titan-git\api\ot\projection.h
+const OT_MAP_PROJECTION = {
+    OFF:0,
+    GEOGRAPHIC:1,
+    MERCATOR:2,
+};
 
 export default {
     name: 'editor-ui',
     components:
     {
         TitanIcon,
-        LMap, LTileLayer
+        LMap, LTileLayer, LControl,
     },
     data()
     {
@@ -104,6 +125,7 @@ export default {
                 attribution:
                 '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                 zoom: 13,
+                opacity: 50,
                 center: latLng(47.41322, -1.219482),
                 currentCenter: latLng(47.41322, -1.219482),
                 mapOptions: {
@@ -111,6 +133,32 @@ export default {
                 },
             }
         };
+    },
+    computed:
+    {
+        mapOpacity() {return parseFloat(this.map.opacity) / 100.0;}
+    },
+    watch:
+    {
+        mapOpacity: UiUtils.throttle(
+            function()
+            {
+                if($isInsideTitan)
+                {
+                    // NOTE: needed in Outerra/Titan as the opacity changes doesn't seem to auto-update
+                    // the map as it does in a browser when the slider is moved. A redraw needs to be
+                    // triggered with a drag or resize for the opacity to change, and ye olde forceRedraw()
+                    // trick doesn't work for this. Without this, the area around the slider will update,
+                    // but the rest doesn't re-render, so possibly this is due to some sort of rendering
+                    // optimsation in Chromium...?
+                    // In any case, here we just trick the component into updating by setting the name
+                    // to the same value as it already is, which is harmless. Unfortunatley it also
+                    // causes a slight flicker, but... it's better than the alternative until a 'real'
+                    // solution can be found.
+                    const tileLayer = this.$refs.tileLayer;
+                    tileLayer.setName(tileLayer.name);
+                }
+            }, 100)
     },
     mounted()
     {
@@ -123,29 +171,24 @@ export default {
         // need to wait until next tick for the map component to be ready
         this.$nextTick(function()
         {
+            // obtain reference to the 'native' leaflet map instance
             this.leafletMapInstance = this.$refs.leafletmap.mapObject;
+            // ensure that the map fills the contianer
             this.forceMapRedraw();
+            // we have to rely on the 'native' leaflet map move event because vue2leafflet
+            // doesn't seem to expose the event for us. NOTE: we remove this handler
+            // during the `beforeDestroy()` Vue component lifecycle callback
             this.leafletMapInstance.on('move', this.updateCamera);
         });
     },
     beforeDestroy()
     {
+        // remove the leaflet map move event handler registered during the `mounted()`
+        // Vue component lifecycle callback
         this.leafletMapInstance.off('move', this.updateCamera);
     },
     methods:
     {
-        zoomUpdate(/*zoom*/)
-        {
-            this.updateCamera();
-        },
-        centerUpdate(/*center*/)
-        {
-            this.updateCamera();
-        },
-        boundsUpdate(/*center*/)
-        {
-            this.updateCamera();
-        },
         updateCamera()
         {
             if(!this.isFullscreen)
@@ -164,15 +207,8 @@ export default {
 
             if($isInsideTitan)
             {
-                // $tWorldInterface.set_geographic_camera(2, lon, lat, lonspan, latspan);
-                $tLogger.info('UPDATING CAMERA');
-                // $tWorldInterface.setGeographicCamera(lon, lat, lonspan, latspan);
-                $otWorld.set_geographic_camera(2, lon, lat, lonspan, latspan);
+                $otWorld.set_geographic_camera(OT_MAP_PROJECTION.MERCATOR, lon, lat, lonspan, latspan);
             }
-        },
-        innerClick()
-        {
-            alert("Click!");
         },
         toggleFullscreen(window)
         {
@@ -190,159 +226,11 @@ export default {
                 if($isInsideTitan)
                 {
                     this.cameraStateSnapshot();
-                    this.scenarioCamera.setFreeCameraMode('FreeCamMode_ManualRoll');
-                    this.scenarioCamera.switchToEditorCamera(4096);
+                    this.updateCamera();
                 }
             }
             this.forceMapRedraw();
             this.isFullscreen = !this.isFullscreen;
-        },
-        handleZoom(evt)
-        {
-            if(!this.isFullscreen)
-                return;
-
-            // NOTE: in Outerra mousewheel events are doubled, and pair with a
-            //       mousewheel event with a deltaY of zero, regardless of which
-            //       direction the wheel is rolled - we need to ignore these
-            //       spurious deltaY = 0 events and handle the rest
-            //       See: https://calytrixtechnologies.atlassian.net/browse/TITAN-1275
-            if(evt.deltaY === 0)
-                return; // ignore
-
-            if($isInsideTitan)
-            {
-                const screenBounds = this.$store.getters.screenSize;
-                const worldPos = TitanUtils.worldPosForWindowCoords({x:screenBounds.midX, y:screenBounds.midY});
-                if(worldPos)
-                {
-                    // invert the delatY to get mousewheel-up zoom in, as is
-                    // the case for Google Maps, Open Street Maps, Leaflet etc
-                    this.scenarioCamera.zoomEditorCamera(-evt.deltaY, worldPos);
-
-                    const nw = TitanUtils.worldPosForWindowCoords({x:0, y:0});
-                    const sw = TitanUtils.worldPosForWindowCoords({x:0, y:screenBounds.h});
-                    const ne = TitanUtils.worldPosForWindowCoords({x:screenBounds.w, y:0});
-                    const se = TitanUtils.worldPosForWindowCoords({x:screenBounds.w, y:screenBounds.h});
-                    const nwLL = GeoUtils.xyzToLatLongElevation(nw);
-                    const swLL = GeoUtils.xyzToLatLongElevation(sw);
-                    const neLL = GeoUtils.xyzToLatLongElevation(ne);
-                    const seLL = GeoUtils.xyzToLatLongElevation(se);
-                    $tLogger.info(nwLL, neLL, swLL, seLL);
-                }
-            }
-        },
-        _handleMouse(evt)
-        {
-            const evtType = evt.type;
-            const isRightButton = evt.button === 2;
-
-            if(!$isInsideTitan || !this.isFullscreen)
-                return; // nothing to do if we are in a browser
-
-            if(evtType === 'mousedown')
-            {
-                if(isRightButton)
-                    this._handleMouseDown(evt);
-            }
-            else if(evtType === 'mousemove')
-            {
-                this._handleMouseMove(evt);
-            }
-            else if(evtType === 'mouseup')
-            {
-                if(isRightButton)
-                    this._handleMouseUp();
-            }
-        },
-        /**
-         * Handles mousedown events
-         *
-         * @param {object} evt the mouse event
-         */
-        _handleMouseDown(evt)
-        {
-            // NOTE: we need to inject the mouse position otherwise Outerra
-            //       doesn't have any awareness of where the mouse is and can't
-            //       detect whether selectable items are "under the mouse" etc.
-            //       If we only wanted the world pos under the mouse we could
-            //       just do:
-            //            const worldPos = $tWorldInterface.getWorldPosFromScreenPix(winXY);
-            const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
-            $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = Vec3.fromObj( $tWorldInterface.getWorldPositionUnderMouse() );
-
-            // mouse is down, so it could be just a click, or about to start
-            // dragging an entity or begin a rubber band selection, so get
-            // get ready for these possibilties
-            this.drag.mightDrag = true;
-            this.drag.lastWinXY = winXY;
-            this.drag.lastECEF = worldPos;
-        },
-        /**
-         * Handles mousemove events
-         *
-         * @param {object} evt the mouse event
-         */
-        _handleMouseMove(evt)
-        {
-            // do we need to do anything with the mouse movement?
-            if(!this.drag.isDraggingMap && !this.drag.mightDrag)
-                return;
-
-            // initialise map drag if required
-            if(this.drag.mightDrag && !this.drag.isDraggingMap)
-            {
-                this.drag.isDraggingMap = true;
-            }
-
-            // update object drag or rubber band selection if required
-            const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
-            const ecef = Vec3.fromObj( $tWorldInterface.getWorldPosFromScreenPix(winXY) );
-            if(this.drag.isDraggingMap)
-            {
-                // may be unable to query world position from screen (happens
-                // when move above horizon) so check before proceeding
-                if(TitanUtils.isValidWorldPos(ecef))
-                {
-                    // work out how to move the map in relation to the drag
-                    const vecOffset = MathUtils.subtract(winXY, this.drag.lastWinXY);
-                    // move the map/camera (invert drag direction to make the map
-                    // move correctly)
-                    this.scenarioCamera.moveEditorCamera(-vecOffset.x, -vecOffset.y);
-                    // show the gizmo where the mouse is
-                    $tWorldInterface.showGizmoAt(ecef);
-                    // cache coords for next offset calculation
-                    this.drag.lastWinXY = winXY;
-                    this.drag.lastECEF = ecef;
-                }
-            }
-        },
-        /**
-         * Handles mouseup
-         *
-         * NOTE: that a right mouseup doesn't also generate a click event like
-         * a left mouseup does
-         *
-         * @param {object} evt the mouse event
-         */
-        _handleMouseUp(evt)
-        {
-            this.drag.mightDrag = false;
-            this.drag.isDraggingMap = false;
-
-            // NOTE: we need to inject the mouse position otherwise Outerra
-            //       doesn't have any awareness of where the mouse is and can't
-            //       detect whether selectable items are "under the mouse" etc.
-            //       If we only wanted the world pos under the mouse we could
-            //       just do:
-            //            const worldPos = $tWorldInterface.getWorldPosFromScreenPix(winXY);
-            const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
-            $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = Vec3.fromObj( $tWorldInterface.getWorldPositionUnderMouse() );
-
-            if(TitanUtils.isValidWorldPos(worldPos))
-                $tWorldInterface.showGizmoAt(worldPos);
         },
         cameraStateSnapshot()
         {
@@ -352,7 +240,9 @@ export default {
         },
         restoreCameraState()
         {
-            $otWorld.set_geographic_camera(0, 0, 0, 0, 0);
+            // turn off geographic camer
+            $otWorld.set_geographic_camera(OT_MAP_PROJECTION.OFF, 0, 0, 0, 0);
+            // put the 'normal' camera back where it was
             this.scenarioCamera.setFreeCameraMode(this.cameraState.mode);
             this.scenarioCamera.setPosition(this.cameraState.position);
             this.scenarioCamera.setRotation(this.cameraState.orientation);
@@ -383,3 +273,15 @@ export default {
     }
 };
 </script>
+
+<style lang="scss">
+input.slider.vertical
+{
+    cursor: pointer;
+    &.vertical
+    {
+        writing-mode: bt-lr; /* IE */
+        -webkit-appearance: slider-vertical; /* WebKit */
+    }
+}
+</style>
