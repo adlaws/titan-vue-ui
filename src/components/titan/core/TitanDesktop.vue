@@ -14,7 +14,7 @@ import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
 import { TITAN_ACTION } from '@/assets/js/store/titan-manager.js';
 
 import UiUtils from '@/assets/js/utils/ui-utils.js';
-import EventUtils from '@/assets/js/utils/event-utils.js';
+import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
 import TitanUtils, { $eview, $isInsideTitan, SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 
 import TitanTaskBar from '@/components/titan/core/TitanTaskBar.vue';
@@ -123,7 +123,7 @@ export default {
                 // unhandled to let Outerra handle the key event
                 $eview.mark_unhandled();
             }
-            else if(EventUtils.isKeyDown(evt, EventUtils.KEY_CODE.TAB))
+            else if(EventUtils.isKeyDown(evt, KEY_CODE.TAB))
             {
                 TitanUtils.outerraTabHack(evt);
             }
@@ -171,7 +171,7 @@ export default {
     left:0px;
     width:100vw;
     height:100vh;
-    background-color: rgba(0,255,0,0.125);
+    background-color: rgba(0,0,0,0);
 }
 .blue-area
 {

@@ -3,16 +3,21 @@
         class="vue-os--titan-clock"
         :style="`font-size:${taskbarSize*0.25}px;`"
     >
-        {{ time }}<br>{{ date }}
+        <titan-icon icon="clock" class="mr-1" />{{ time }}
+        <br>
+        <titan-icon icon="calendar-month" class="mr-1" />{{ date }}
     </div>
 </template>
 
 <script>
+import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default {
     name: 'titan-clock',
     components: {
+        TitanIcon,
     },
     data()
     {

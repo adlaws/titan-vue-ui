@@ -2,6 +2,7 @@
     <span
         class="m-0 p-0"
         :class="mdiClasses"
+        :style="`font-size:${size};line-height:${size};`"
     />
 </template>
 
@@ -13,7 +14,15 @@ export default {
         icon: {
             type: String,
             default: '',
-        }
+        },
+        size: {
+            type: String,
+            default: '1em;',
+        },
+        angle: {
+            type: String,
+            default: '1em;',
+        },
     },
     computed:
     {

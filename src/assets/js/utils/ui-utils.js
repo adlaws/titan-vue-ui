@@ -5,6 +5,8 @@ export default class UiUtils
      * succession, such as may occur when handling events related to dragging, zooming and so
      * on.
      *
+     * See also `throttle()`
+     *
      * By default, it creates a function which will only be invoked until it has *not* been
      * invoked for a certain timeout - more concretely, the function will be called after it
      * *stops* being called for 'wait' milliseconds.
@@ -20,7 +22,7 @@ export default class UiUtils
      *
      * Example usage:
      *
-     *      var debouncedFunction = window.portal.debounce(function() {
+     *      var debouncedFunction = debounce(function() {
      *          // something time consuming
      *       }, 250);
      *      window.addEventListener('resize', debouncedFunction);
@@ -59,6 +61,100 @@ export default class UiUtils
             {
                 func.apply(context, args);
             }
+        };
+    }
+
+    // Returns a function, that, when invoked, will only be triggered at most once
+    // during a given window of time. Normally, the throttled function will run
+    // as much as it can, without ever going more than once per `wait` duration;
+    // but if you'd like to disable the execution on the leading edge, pass
+    // `{leading: false}`. To disable execution on the trailing edge, ditto.
+    /**
+     * Advanced debouncing function, to avoid multiple calls to the same function in rapid
+     * succession, such as may occur when handling events related to dragging, zooming and so
+     * on.
+     *
+     * See also `debounce()`
+     *
+     * By default, it creates a function which will only be triggered at most once
+     * during a given window of time. More concretely the throttled function will run
+     * as much as it can, without ever going more than once per `wait` duration
+     *
+     * NOTE:
+     *   - If the `onTrailOut` option is true (default), the function will be triggered once
+     *     at the end of the wait cycle.
+     *   - If `onLeadIn` is true, the function will be triggered once, immediately (i.e., as
+     *     the rapid succession of events begins).
+     *   - If `onLeadIn` and `onTrailOut` are *both* true, the function will be triggered
+     *     once immediately, and then once again when things quiet down.
+     *
+     * Example usage:
+     *
+     *      var throttledFunction = throttle(function() {
+     *          // something time consuming
+     *      }, 250);
+     *      window.addEventListener('resize', throttledFunction);
+     *
+     * @param func the function to be 'throttledFunction'
+     * @param wait the time to wait before actually calling the function again
+     * @param options a JavaScript object which specifies when the throttled function should be
+     *        called in the context of the start or end of the rapid succession of events. It
+     *        is of the form...
+     *
+     *            {onLeadIn:{boolean}, onTrailOut:{boolean}}
+     *
+     *        ...where
+     *            onTrailOut if true (default) call on the 'end' of the wait cycle, if false do
+     *                       *not* call on the end of the wait cycle
+     *            onLeadIn if true call on the 'start' of the wait cycle, if false (default)
+     *                     do *not* call on the start of the wait cycle.
+     * @return {Function}
+     */
+    static throttle(func, wait, options = {onLeadIn: true, onTrailOut: true})
+    {
+        var context, args, result;
+        var timeout = null;
+        var previous = 0;
+
+        if (!options)
+            options = {};
+
+        const later = function()
+        {
+            previous = options.onLeadIn === false ? 0 : Date.now();
+            timeout = null;
+            result = func.apply(context, args);
+
+            if (!timeout)
+                context = args = null;
+        };
+
+        return function()
+        {
+            const now = Date.now();
+            if (!previous && options.onLeadIn === false)
+                previous = now;
+
+            const remaining = wait - (now - previous);
+            context = this;
+            args = arguments;
+            if (remaining <= 0 || remaining > wait)
+            {
+                if (timeout)
+                {
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+                previous = now;
+                result = func.apply(context, args);
+                if (!timeout)
+                    context = args = null;
+            }
+            else if (!timeout && options.onTrailOut !== false)
+            {
+                timeout = setTimeout(later, remaining);
+            }
+            return result;
         };
     }
 

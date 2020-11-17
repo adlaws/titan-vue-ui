@@ -18,4 +18,16 @@ module.exports = {
     // Since we are deploying into Titan, the map files are effectively of
     // no use in any case.
     productionSourceMap: true,
+    devServer: {
+        // See:
+        //     https://forum.vuejs.org/t/vue-cli-serve-with-https/39359
+        //     https://webpack.js.org/configuration/dev-server/#devserverhttps
+        // if true, `npm run serve` will start on HTTPS using a self signed
+        // certificate.
+        //     https: true,
+        // Alternatively, set the key/certificate with...
+        //     key: fs.readFileSync('/path/to/server.key'),
+        //     cert: fs.readFileSync('/path/to/server.crt'),
+        //     ca: fs.readFileSync('/path/to/ca.pem'),
+    },
 };
