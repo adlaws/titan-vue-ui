@@ -2,7 +2,7 @@
     <span
         class="m-0 p-0"
         :class="mdiClasses"
-        :style="`font-size:${size};line-height:${size};`"
+        :style="`font-size:${size};`"
     />
 </template>
 

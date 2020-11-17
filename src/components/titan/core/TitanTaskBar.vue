@@ -232,7 +232,7 @@ export default {
                     align-items: center;
 
                     margin:0px;
-                    padding: 12px 24px;
+                    padding: 6px 24px;
                     &:hover
                     {
                         cursor: pointer;
