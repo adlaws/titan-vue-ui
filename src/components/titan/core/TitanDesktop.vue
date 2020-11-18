@@ -11,7 +11,7 @@
 
 <script>
 import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
-import { TITAN_ACTION } from '@/assets/js/store/titan-manager.js';
+import { TITAN_MUTATION, TITAN_ACTION } from '@/assets/js/store/titan-manager.js';
 
 import UiUtils from '@/assets/js/utils/ui-utils.js';
 import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
@@ -51,6 +51,8 @@ export default {
     },
     mounted()
     {
+        this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, 'Desktop');
+
         /* eslint-disable no-undef */
         $eview.set_transparent(true);
         $eview.show_window(true);
@@ -103,6 +105,10 @@ export default {
                 $eview.mark_unhandled();
             }
         }.bind(this);
+    },
+    beforeDestroy()
+    {
+        this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, 'Desktop');
     },
     methods:
     {

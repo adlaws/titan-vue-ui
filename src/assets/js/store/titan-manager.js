@@ -10,6 +10,11 @@ Vue.use(Vuex);
 export const TITAN_MUTATION = {
     // TITAN STATE MANAGEMENT
     CHANGE_SIM_MODE:'titan::changeSimMode',
+    // TITAN UI MODE
+    ENTER_UI_MODE:'titan::uimode::enter',
+    EXIT_UI_MODE:'titan::uimode::exit',
+    EXIT_UI_MODE_IF_ACTIVE:'titan::uimode::exitIfActive',
+    // ENTITY SELECTOR WINDOW
     ENTITY_SELECTOR_SET_SELECTION:'titan::entitySelector::setSelection',
     ENTITY_SELECTOR_CLEAR_SELECTION:'titan::entitySelector::clearSelection',
 };
@@ -36,12 +41,23 @@ const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescription
 const TitanManager =
 {
     state: () => ({
+        // screen resolution available to Titan
         window:{
             width: window.screen.availWidth,
             height: window.screen.availHeight,
         },
+        // current titan simulation mode
         simMode: null,
+        // a cached list of all entity descriptors - since this doesn't change
+        // during the lifetime of a Titan execution cycle, we just ask for it
+        // once here to avoid constantly querying the C++ back end
         entityDescriptors: ENTITY_DESCRIPTORS,
+        // current titan UI mode (used to help determine what mouse and
+        // keyboard interactions currently "mean" and how to handle them)
+        uiMode:[],
+        // currently selected entity TODO: this should probably be moved away
+        // into the entity selection UI, and use the current UI mode to track
+        // mouse events for the creation of entities.
         entitySelector:
         {
             selected: null,
@@ -58,6 +74,12 @@ const TitanManager =
         titanWindow: (state) => state.window,
         titanSimMode: (state) => state.simMode,
         titanEntityDescriptors: (state) => state.entityDescriptors,
+        // --------------------------------------------------------------------
+        // TITAN UI MODE
+        // --------------------------------------------------------------------
+        uiMode: (state) => (state.uiMode.length === 0 ? null : state.uiMode[state.uiMode.length-1]),
+        isUiMode: (state, getters) => (uiMode) => getters.uiMode === uiMode,
+        uiModeState: (state) => state.uiMode.join('::'),
         // --------------------------------------------------------------------
         // ENTITY SELECTOR WINDOW
         // --------------------------------------------------------------------
@@ -95,6 +117,61 @@ const TitanManager =
                     TitanUtils.createEntity('abrams_m1a1', worldPos);
                 }
             }
+        },
+        // --------------------------------------------------------------------
+        // TITAN UI MODE
+        // --------------------------------------------------------------------
+        /**
+         * Enters the given UI mode (pushes it onto the UI mode stack)
+         *
+         * @param {object} state the store state object
+         * @param {string} uiMode the string identifier of the UI mode to enter
+         */
+        [TITAN_MUTATION.ENTER_UI_MODE](state, uiMode)
+        {
+            if(state.uiMode.length > 0)
+            {
+                const currentMode = state.uiMode[state.uiMode.length - 1];
+                if(currentMode === uiMode)
+                    throw(`Cannot enter UI mode '${uiMode}' because it is already the current mode!`);
+            }
+            state.uiMode.push(uiMode);
+        },
+        /**
+         * Leaves the given UI mode (pops it off the UI mode stack)
+         *
+         * If the given UI mode is not the current mode, an exception will be
+         * thrown
+         *
+         * @param {object} state the store state object
+         * @param {string} uiMode the string identifier of the UI mode to exit
+         */
+        [TITAN_MUTATION.EXIT_UI_MODE](state, uiMode)
+        {
+            if(state.uiMode.length === 0)
+                throw(`Cannot exit UI mode'${uiMode}' - no UI modes left to exit!`);
+            const currentMode = state.uiMode[state.uiMode.length - 1];
+            if(currentMode !== uiMode)
+                throw(`Cannot exit UI mode '${uiMode}' because it is not the current mode. The current mode is '${currentMode}'!`);
+            state.uiMode.pop();
+        },
+        /**
+         * Leaves the given UI mode (pops it off the UI mode stack) if it is
+         * currently active
+         *
+         * If the given UI mode is not the current mode, calling this method
+         * will have no effect.
+         *
+         * @param {object} state the store state object
+         * @param {string} uiMode the string identifier of the UI mode to exit
+         */
+        [TITAN_MUTATION.EXIT_UI_MODE_IF_ACTIVE](state, uiMode)
+        {
+            if(state.uiMode.length === 0)
+                return;
+            const currentMode = state.uiMode[state.uiMode.length - 1];
+            if(currentMode === uiMode)
+                state.uiMode.pop();
         },
         // --------------------------------------------------------------------
         // ENTITY SELECTOR WINDOW

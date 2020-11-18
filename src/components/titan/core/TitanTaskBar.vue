@@ -57,6 +57,7 @@
             @click.native="focusWindow(window)"
             @dblclick.native="toggleWindow(window)"
         />
+        {{ uiModeState }}
         <div
             class="spacer"
         />
@@ -98,6 +99,7 @@ export default {
         taskbarBounds() { return this.$store.getters.taskbarBounds; },
         desktopBounds() { return this.$store.getters.desktopBounds; },
         screenSize() { return this.$store.getters.screenSize; },
+        uiModeState() { return this.$store.getters.uiModeState; },
     },
     mounted()
     {
@@ -243,7 +245,6 @@ export default {
             }
         }
     }
-
 
     .spacer
     {

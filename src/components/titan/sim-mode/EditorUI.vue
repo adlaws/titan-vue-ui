@@ -17,7 +17,9 @@
 </template>
 
 <script>
-import TitanUtils, { $isInsideTitan, $tWorldInterface, SIM_MODE } from '@/assets/js/titan/titan-utils.js';
+import { TITAN_MUTATION } from '@/assets/js/store/titan-manager.js';
+
+import TitanUtils, { $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
@@ -65,13 +67,18 @@ export default {
         modifierKeys() { return this.$store.getters.modifierKeys; },
         mouseButtons() { return this.$store.getters.mouseButtons; },
         mousePress() { return this.$store.getters.mousePress; },
+        // determine if the UI mode is currently 'Editor'
+        isUiModeEditor() { return this.$store.getters.isUiMode('Editor'); },
         // plugins
         plugins() { return this.$store.getters.plugins; },
         editPlugins() { return this.plugins.SimMode_Edit || {}; },
         editWindowConfigs() { return this.editPlugins.windows || []; },
+
     },
     mounted()
     {
+        this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, 'Editor');
+
         // bind event handlers
         // NOTE: binding event handlers to `window` or `document` both
         // achieve the same thing - not sure which (if either) is a
@@ -96,6 +103,7 @@ export default {
     beforeDestroy()
     {
         HANDLED_MOUSE_EVENTS.forEach((evtType) => document.removeEventListener(evtType, this.handleMouseEvent) );
+        this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, 'Editor');
     },
     methods:
     {
@@ -114,8 +122,8 @@ export default {
             if(!$isInsideTitan)
                 return; // nothing to do if we are in a browser
 
-            if(this.currentSimMode !== SIM_MODE.EDITOR)
-                return; // wrong mode of operation - ignore
+            if(this.isUiModeEditor)
+                return; // wrong UI mode of operation - ignore
 
             const clickedOnWorld = TitanUtils.isPassThrough(evt);
             if(!clickedOnWorld)

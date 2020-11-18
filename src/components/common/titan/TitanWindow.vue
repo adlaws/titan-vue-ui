@@ -180,7 +180,7 @@ export default {
         isActive() { return this.$store.getters.isWindowActive(this.id); },
         isShown() { return this.$store.getters.isWindowShown(this.id); },
         isFullscreen() { return this.$store.getters.isWindowFullscreen(this.id); },
-        desktopBounds() { return this.$store.getters.desktopBounds;}
+        desktopBounds() { return this.$store.getters.desktopBounds;},
     },
     watch:
     {
@@ -191,6 +191,7 @@ export default {
         zIndex: function(newValue, /*oldValue*/) { this.$refs.container.style.zIndex = newValue; },
         icon: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, icon:newValue}); },
         title: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, title:newValue}); },
+        isActive: function(newValue, /*oldValue*/) { this.$emit('window-active', newValue); },
         desktopBounds: function(/*newValue, oldValue*/) { this._handleScreenSizeChange(); },
         isFullscreen: function(newValue, /*oldValue*/) { this._handleFullScreenChange(newValue); },
     },
@@ -234,6 +235,7 @@ export default {
     },
     beforeDestroy()
     {
+        this.$emit('window-closed');
         window.removeEventListener('resize', this._handleScreenSizeChange);
         this.$store.commit(DESKTOP_MUTATION.DEREGISTER_WINDOW, {id: this.id});
     },
@@ -261,7 +263,9 @@ export default {
             else
                 this.status.minimized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
             this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_BACK, {id: this.id});
-            this.emitWindowResize();
+
+            this.$emit('window-minimized');
+            this.$emit('window-resized', {x: -1, y: -1, w: 0, h: 0});
         },
         toggleMinimize()
         {
@@ -280,7 +284,10 @@ export default {
             this.status.y = this.desktopBounds.y;
             this.status.w = this.desktopBounds.w;
             this.status.h = this.desktopBounds.h;
-            this.emitWindowResize();
+
+            const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
+            this.$emit('window-maximized', bounds);
+            this.$emit('window-resized', bounds);
         },
         toggleMaximize()
         {
@@ -291,6 +298,7 @@ export default {
         },
         restore()
         {
+            let restored = false;
             if(this.status.fullscreen)
             {
                 this.status.x = this.status.fullscreen.x;
@@ -298,7 +306,7 @@ export default {
                 this.status.w = this.status.fullscreen.w;
                 this.status.h = this.status.fullscreen.h;
                 this.status.fullscreen = false;
-                this.emitWindowResize();
+                restored = true;
             }
             if(this.status.maximized)
             {
@@ -307,7 +315,7 @@ export default {
                 this.status.w = this.status.maximized.w;
                 this.status.h = this.status.maximized.h;
                 this.status.maximized = false;
-                this.emitWindowResize();
+                restored = true;
             }
             if(this.status.minimized)
             {
@@ -316,13 +324,14 @@ export default {
                 this.status.w = this.status.minimized.w;
                 this.status.h = this.status.minimized.h;
                 this.status.minimized = false;
-                this.emitWindowResize();
+                restored = true;
             }
-        },
-        emitWindowResize()
-        {
-            const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
-            this.$emit('window-resized', bounds);
+            if(restored)
+            {
+                const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
+                this.$emit('window-restored', bounds);
+                this.$emit('window-resized', bounds);
+            }
         },
         _handleFullScreenChange(isFullscreen)
         {
@@ -336,6 +345,10 @@ export default {
                 this.status.y = this.desktopBounds.y;
                 this.status.w = this.desktopBounds.w;
                 this.status.h = this.desktopBounds.h;
+
+                const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
+                this.$emit('window-fullscreened', bounds);
+                this.$emit('window-resized', bounds);
             }
             else
             {
@@ -460,7 +473,8 @@ export default {
                 this.status.h = h;
             }
 
-            this.emitWindowResize();
+            const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
+            this.$emit('window-resized', bounds);
         },
         _handleDragEnd(/*evt*/)
         {
@@ -488,7 +502,8 @@ export default {
             this.status.w = this.desktopBounds.w;
             this.status.h = this.desktopBounds.h;
 
-            this.emitWindowResize();
+            const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
+            this.$emit('window-resized', bounds);
         },
     }
 };

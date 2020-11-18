@@ -48,7 +48,7 @@ export default {
         return {
             latlngText: '0.000°N 0.000°E',
             headingText: '000.00°',
-            heading: '0.00°',
+            heading: 0,
         };
     },
     computed:

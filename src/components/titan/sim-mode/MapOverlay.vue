@@ -265,11 +265,14 @@ export default {
         forceMapRedraw()
         {
             // forces map to repaint
-            this.leafletMapInstance.invalidateSize();
-            this.$nextTick(function()
+            if(this.leafletMapInstance)
             {
-                setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 100);
-            });
+                this.leafletMapInstance.invalidateSize();
+                this.$nextTick(function()
+                {
+                    setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 100);
+                });
+            }
         },
     }
 };

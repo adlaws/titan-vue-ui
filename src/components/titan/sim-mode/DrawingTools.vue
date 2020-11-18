@@ -7,6 +7,7 @@
         :width="196"
         :height="32"
         :resizable="false"
+        @window-active="windowActiveChanged"
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
@@ -55,13 +56,23 @@ export default {
     computed:
     {
     },
+    watch:
+    {
+        currentTool()
+        {
+            if(this.currentTool !== null)
+                this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, 'Drawing');
+            else
+                this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, 'Drawing');
+        }
+    },
     mounted()
     {
-        this.updateFilteredEntities();
     },
     beforeDestroy()
     {
-        this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_CLEAR_SELECTION);
+        if(this.$store.getters.isUiMode('Drawing'))
+            this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, 'Drawing');
     },
     methods:
     {
@@ -70,6 +81,11 @@ export default {
             this.currentTool = tool;
             // this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_SET_SELECTION, selected);
         },
+        windowActiveChanged(isActive)
+        {
+            if(!isActive)
+                this.currentTool = null;
+        }
     }
 };
 </script>
