@@ -16,7 +16,7 @@
             :y="status.y"
             :closable="closable"
             :minimizable="minimizable"
-            :maximizable="maximizable"
+            :maximizable="maximizable && resizable"
             :draggable="draggable"
             :active="isActive"
             :fullscreen="isFullscreen"
@@ -99,11 +99,6 @@ export default {
             type: Number,
             default: -1
         },
-        // can the window be resized?
-        resizable: {
-            type: Boolean,
-            default: true
-        },
         // can the window be moved?
         draggable: {
             type: Boolean,
@@ -111,6 +106,12 @@ export default {
         },
         // can the window be closed/dismissed?
         closable: {
+            type: Boolean,
+            default: true
+        },
+        // can the window be resized?
+        // NOTE: if not resizable, it is also not maximizable!
+        resizable: {
             type: Boolean,
             default: true
         },
@@ -131,6 +132,21 @@ export default {
         },
         // is the window undecorated (no title bar, border, etc etc etc)
         undecorated: {
+            type: Boolean,
+            default: false,
+        },
+        // is the window minimized initially?
+        startMinimized: {
+            type: Boolean,
+            default: false,
+        },
+        // is the window maximized initially?
+        startMaximized: {
+            type: Boolean,
+            default: false,
+        },
+        // is the window fullscreen initially?
+        startFullscreen: {
             type: Boolean,
             default: false,
         },
@@ -208,6 +224,13 @@ export default {
             style.border = '0px solid black';
             style.boxShadow = 'none';
         }
+
+        if(this.startMinimized && this.minimizable)
+            this.minimize();
+        else if(this.startMaximized && this.resizable && this.maximizable)
+            this.maximize();
+        else if(this.startFullscreen)
+            this.$store.commit(DESKTOP_MUTATION.FULLSCREEN_ENTER, {id: window.id});
     },
     beforeDestroy()
     {
@@ -318,12 +341,6 @@ export default {
             {
                 this.restore();
             }
-        },
-        fullscreen()
-        {
-            if(this.status.fullscreen || !this.fullScreenable)
-                return false;
-            return true;
         },
         close()
         {

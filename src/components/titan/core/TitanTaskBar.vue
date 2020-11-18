@@ -60,8 +60,8 @@
         <div
             class="spacer"
         />
-        <titan-location />
-        <titan-clock />
+        <titan-location class="mr-2" />
+        <titan-clock class="mr-2" />
     </div>
 </template>
 

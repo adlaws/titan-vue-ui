@@ -6,6 +6,7 @@
         :y="50"
         :width="600"
         :height="500"
+        :start-minimized="true"
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">

@@ -1,0 +1,84 @@
+$assetsRoot: "assets/";
+$imagesRoot: $assetsRoot+"images/";
+$fontsRoot:  $assetsRoot+"fonts/";
+
+/**
+ * Set up locally served fonts
+ */
+ @import "./fonts.scss";
+
+html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    -webkit-user-select: none;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-family: "Roboto", Verdana, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    // -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-user-select: none;
+}
+
+pre, code, .monospace
+{
+    font-family: "RobotoMono", Consolas, "Courier New", Courier, monospace;
+}
+
+// margin and padding shortcuts in 0.5em increments
+@each $x in (0,1,2,3,4,5,6,7,8) {
+    .m-#{$x}  {margin:#{$x/2}em;}
+    .ml-#{$x} {margin-left:#{$x/2}em;}
+    .mr-#{$x} {margin-right:#{$x/2}em;}
+    .mt-#{$x} {margin-top:#{$x/2}em;}
+    .mb-#{$x} {margin-bottom:#{$x}em;}
+    .mlr-#{$x}{margin:0 #{$x/2}em;}
+    .mtb-#{$x}{margin:#{$x/2}em 0;}
+    .p-#{$x}  {padding:#{$x/2}em;}
+    .pl-#{$x} {padding-left:#{$x/2}em;}
+    .pr-#{$x} {padding-right:#{$x/2}em;}
+    .pt-#{$x} {padding-top:#{$x/2}em;}
+    .pb-#{$x} {padding-bottom:#{$x/2}em;}
+    .plr-#{$x}{padding:0 #{$x/2}em;}
+    .ptb-#{$x}{padding:#{$x/2}em 0;}
+}
+
+// grid layout setup
+$layoutcols:12;
+.row
+{
+    width:100%;
+    display:block;
+    border:0px solid red;
+}
+@for $x from 1 through $layoutcols{
+    .col-#{$x}{
+        display:inline-block;
+        width:(100%*($x/$layoutcols));
+        text-align:left;
+        border:0px solid green;
+    }
+    .offset-#{$x}{
+        display:inline-block;
+        margin-left:(100%*($x/$layoutcols));
+    }
+}
+
+.tabs {
+    margin: auto;
+    min-height: 200px;
+    width: 280px;
+
+    .tabPanel {
+        overflow-y: scroll;
+    }
+}

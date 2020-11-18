@@ -34,7 +34,5 @@ export default {
     // material design icons https://materialdesignicons.com/
     @import '~@mdi/font/css/materialdesignicons.css';
 
-    // TREX style overrides
-    // @import '@/assets/scss/titan/titan.scss';
-    // @import '@/assets/scss/titan/titan-widgets.scss';
+    @import '@/assets/scss/styles.scss';
 </style>

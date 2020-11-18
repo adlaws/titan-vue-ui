@@ -4,7 +4,8 @@
         style="width:100%;height:100%;overflow:hidden;"
     >
         <entity-selector />
-        <fullscreen-test />
+        <map-overlay />
+        <drawing-tools />
 
         <div
             v-for="(pluginWindow, idx) in pluginWindows"
@@ -21,7 +22,8 @@ import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
 import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
-import FullscreenTest from '@/components/titan/sim-mode/FullscreenTest.vue';
+import MapOverlay from '@/components/titan/sim-mode/MapOverlay.vue';
+import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 const HANDLED_MOUSE_EVENTS = new Set([
@@ -33,7 +35,7 @@ export default {
     name: 'editor-ui',
     components:
     {
-        EntitySelector, FullscreenTest,
+        EntitySelector, MapOverlay, DrawingTools,
         TitanIcon
     },
     data()

@@ -1,11 +1,12 @@
 <template>
     <titan-window
-        title="Full Screen Test"
-        :icon="`fullscreen${isFullscreen?'-exit':''}`"
+        title="Map Overlay"
+        icon="map"
         :x="150"
         :y="150"
         :width="350"
         :height="200"
+        :start-minimized="true"
         @window-resized="forceMapRedraw"
     >
         <template #default="context">
@@ -92,7 +93,7 @@ const OT_MAP_PROJECTION = {
 };
 
 export default {
-    name: 'editor-ui',
+    name: 'map-overlay',
     components:
     {
         TitanIcon,

@@ -15,6 +15,7 @@
                 <titan-icon
                     v-if="icon"
                     :icon="icon"
+                    :size="iconSize.w"
                     class="icon"
                 />
                 <svg
@@ -44,6 +45,7 @@
         >
             <titan-icon
                 icon="window-minimize"
+                :size="iconSize.w"
                 class="icon control-btn"
             />
         </div>
@@ -53,6 +55,7 @@
         >
             <titan-icon
                 :icon="maximized===false?'window-maximize':'window-restore'"
+                :size="iconSize.w"
                 class="icon control-btn"
             />
         </div>
@@ -62,6 +65,7 @@
         >
             <titan-icon
                 icon="window-close"
+                :size="iconSize.w"
                 class="icon control-btn"
             />
         </div>

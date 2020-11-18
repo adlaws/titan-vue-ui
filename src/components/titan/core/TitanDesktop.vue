@@ -161,9 +161,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/titan/titan.scss';
-@import '@/assets/scss/titan/titan-widgets.scss';
-
 .titan--desktop
 {
     overflow: hidden;
