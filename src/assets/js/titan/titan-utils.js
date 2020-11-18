@@ -309,6 +309,21 @@ export default class TitanUtils
     }
 
     /**
+     * Determine if an event happened on a `pass-though` area (i.e., on the
+     * Outerra world, rather than on a user interface element).
+     *
+     * @param {object} evt the mouse event
+     * @returns {boolean} true if the target of the event is a DOM element
+     *          with a `pass-though` class, false otherwise
+     */
+    static isPassThrough(evt)
+    {
+        if(evt && evt.target && evt.target.classList)
+            return evt.target.classList.contains('pass-through');
+        return false;
+    }
+
+    /**
      * Simplifies entity creation
      *
      * @param {string} entityKeyName the entity key name for the entity to create (can be found in

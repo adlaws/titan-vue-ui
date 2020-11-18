@@ -111,19 +111,19 @@ export default {
          */
         handleMouseEvent(evt)
         {
+            if(!$isInsideTitan)
+                return; // nothing to do if we are in a browser
+
             if(this.currentSimMode !== SIM_MODE.EDITOR)
                 return; // wrong mode of operation - ignore
+
+            const clickedOnWorld = TitanUtils.isPassThrough(evt);
+            if(!clickedOnWorld)
+                return; // we only care about mouse clicks on the world for now
 
             const evtType = evt.type;
             if(!HANDLED_MOUSE_EVENTS.has(evtType))
                 return; // we don't handle this type of mouse event
-
-            const clickedOnWorld = this.isPassThrough(evt);
-            if(!clickedOnWorld)
-                return; // we only care about mouse clicks on the world for now
-
-            if(!$isInsideTitan)
-                return; // nothing to do if we are in a browser
 
             const isLeftButton = evt.button === 0;
             if(evtType === 'mousedown')

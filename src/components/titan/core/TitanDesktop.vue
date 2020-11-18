@@ -106,12 +106,6 @@ export default {
     },
     methods:
     {
-        isPassThrough(evt)
-        {
-            if(evt && evt.target && evt.target.classList)
-                return evt.target.classList.contains('pass-through');
-            return false;
-        },
         // general key event handler
         handleKeyEvent(evt)
         {
@@ -133,7 +127,7 @@ export default {
         {
             this.$store.commit(DESKTOP_MUTATION.UPDATE_MOUSE_BUTTON_STATE, evt);
 
-            const passThrough = this.isPassThrough(evt);
+            const passThrough = TitanUtils.isPassThrough(evt);
             if(passThrough)
             {
                 // in a pass-through area, so process the click as if it

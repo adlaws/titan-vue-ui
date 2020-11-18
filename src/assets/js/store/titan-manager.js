@@ -42,28 +42,6 @@ const TitanManager =
         },
         simMode: null,
         entityDescriptors: ENTITY_DESCRIPTORS,
-        inputState: {
-            // Outerra events are not reliable in isolation to gather mouse button and modifier
-            // key state, so we keep track of it here
-            mouse: {
-                buttons: {left:false, right:false, middle:false}, // true if corresponding button is currently down, false otherwise
-                press: {
-                    lastDown: {time: -1, x: -1, y:- 1},
-                    lastUp: {time: -1, x: -1, y: -1},
-                    delta: {time: 0, x: 0, y: 0, dist:0},
-                    button: {left:false, right:false, middle:false}, // true if corresponding button was part of the last press, false otherwise
-                }
-            },
-            key: {
-                modifiers:
-                {
-                    shift: false, // true if any SHIFT key is down, false otherwise
-                    ctrl: false, // true if any CTRL key is down, false otherwise
-                    alt: false, // true if any ALT key is down, false otherwise
-                    meta: false, // true if any META key is down, false otherwise
-                }
-            },
-        },
         entitySelector:
         {
             selected: null,
