@@ -53,7 +53,9 @@ const TitanManager =
         // once here to avoid constantly querying the C++ back end
         entityDescriptors: ENTITY_DESCRIPTORS,
         // current titan UI mode (used to help determine what mouse and
-        // keyboard interactions currently "mean" and how to handle them)
+        // keyboard interactions currently "mean" and how to handle them). The
+        // current mode is at the top of the 'stack' (i.e., the last item in the
+        // array).
         uiMode:[],
         // currently selected entity TODO: this should probably be moved away
         // into the entity selection UI, and use the current UI mode to track
