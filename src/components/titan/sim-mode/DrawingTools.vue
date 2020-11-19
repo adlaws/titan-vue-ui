@@ -8,6 +8,7 @@
         :height="32"
         :resizable="false"
         @window-active="windowActiveChanged"
+        @window-closed="beforeCloseCleanup"
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
@@ -100,9 +101,8 @@ export default {
     },
     beforeDestroy()
     {
-        HANDLED_MOUSE_EVENTS.forEach((evtType) => document.removeEventListener(evtType, this.handleMouseEvent) );
-        if(this.isUiModeDrawing)
-            this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.Drawing);
+        // unbind event handlers and exit modes as required
+        this.beforeCloseCleanup();
     },
     methods:
     {
@@ -125,6 +125,12 @@ export default {
             // any ative tool becomes inactive
             if(!isActive)
                 this.currentTool = null;
+        },
+        beforeCloseCleanup()
+        {
+            HANDLED_MOUSE_EVENTS.forEach((evtType) => document.removeEventListener(evtType, this.handleMouseEvent) );
+            if(this.isUiModeDrawing)
+                this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.Drawing);
         },
         ////////////////////////////////////////////////////////////////////////////////////////////
         // MOUSE EVENT HANDLERS
