@@ -142,9 +142,9 @@ export default {
         },
     },
     watch: {
-        currentOption: function()
+        currentOption(newOption/*, oldOption*/)
         {
-            this.$emit('input', this.currentOption);
+            this.$emit('input', newOption);
         }
     },
     mounted()

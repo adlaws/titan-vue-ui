@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { TITAN_MUTATION } from '@/assets/js/store/titan-manager.js';
+import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
 
 import TitanUtils, { $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
@@ -29,7 +29,7 @@ import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 const HANDLED_MOUSE_EVENTS = new Set([
-    'mousedown', 'mousemove', 'mouseup',
+    'mousedown', 'mousemove',
     'click', 'dblclick',
 ]);
 
@@ -67,8 +67,9 @@ export default {
         modifierKeys() { return this.$store.getters.modifierKeys; },
         mouseButtons() { return this.$store.getters.mouseButtons; },
         mousePress() { return this.$store.getters.mousePress; },
-        // determine if the UI mode is currently 'Editor'
-        isUiModeEditor() { return this.$store.getters.isUiMode('Editor'); },
+        // determine if the UI mode is currently 'Editor' for the purpose of
+        // detremining how to handle mouse/keyboard interactions
+        isUiModeEditor() { return this.$store.getters.isUiMode(TITAN_UI_MODE.Editor); },
         // plugins
         plugins() { return this.$store.getters.plugins; },
         editPlugins() { return this.plugins.SimMode_Edit || {}; },
@@ -77,7 +78,8 @@ export default {
     },
     mounted()
     {
-        this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, 'Editor');
+        // enter UI mode
+        this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, TITAN_UI_MODE.Editor);
 
         // bind event handlers
         // NOTE: binding event handlers to `window` or `document` both
@@ -102,16 +104,24 @@ export default {
     },
     beforeDestroy()
     {
+        // clean up event handlers
         HANDLED_MOUSE_EVENTS.forEach((evtType) => document.removeEventListener(evtType, this.handleMouseEvent) );
-        this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, 'Editor');
+        // since we are exiting completely, we need to clean up our UI mode - exit from
+        // whatever sub-mode we were in back to the 'Editor' mode, and then exit 'Editor'
+        // mode itself
+        this.$store.commit(TITAN_MUTATION.EXIT_TO_UI_MODE, TITAN_UI_MODE.Editor);
+        this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.Editor);
     },
     methods:
     {
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // MOUSE EVENT HANDLERS
+        ////////////////////////////////////////////////////////////////////////////////////////////
         /**
          * Handles mouse events
          *
          * Will ignore events if...
-         *  - not in SIM_MODE.EDITOR
+         *  - not in 'Editor' UI Mode
          *  - the event is not in HANDLED_MOUSE_EVENTS
          *  - the event target is a DOM element with the class 'pass-through'
          *
@@ -122,50 +132,44 @@ export default {
             if(!$isInsideTitan)
                 return; // nothing to do if we are in a browser
 
-            if(this.isUiModeEditor)
+            if(!this.isUiModeEditor)
                 return; // wrong UI mode of operation - ignore
-
-            const clickedOnWorld = TitanUtils.isPassThrough(evt);
-            if(!clickedOnWorld)
-                return; // we only care about mouse clicks on the world for now
 
             const evtType = evt.type;
             if(!HANDLED_MOUSE_EVENTS.has(evtType))
                 return; // we don't handle this type of mouse event
 
+            const clickedOnWorld = TitanUtils.isPassThrough(evt);
+            if(!clickedOnWorld)
+                return; // we only care about mouse clicks on the world for now
+
             const isLeftButton = evt.button === 0;
-            if(evtType === 'mousedown')
-            {
-                if(isLeftButton)
-                    this._handleMouseDown(evt);
-            }
-            else if(evtType === 'mouseup')
-            {
-                if(isLeftButton)
-                    this._handleMouseUp();
-            }
-            else if(evtType === 'mousemove')
-            {
-                if(isLeftButton)
-                    this._handleMouseMove(evt);
-            }
-            else if(evtType === 'click')
-            {
-                if(isLeftButton)
-                    this._handleLeftClick(evt);
-            }
-            else if(evtType === 'dblclick')
-            {
-                if(isLeftButton)
-                    this._handleLeftDblClick(evt);
-            }
+            if(!isLeftButton)
+                return; // we only care about left mouse clicks at the moment
+
+            // handler function lookup
+            // NOTE: we don't check for drag or rubber band box selection ending
+            // on `mouseup` events because there will also be a `click` event
+            // that we want to distinguish - don't add `mouseup` event handler
+            // to replace the `click` handler because there will be trouble!
+            const handlers = {
+                mousedown: this._handleLeftMouseDown,
+                mousemove: this._handleMouseMove,
+                click: this._handleLeftClick,
+                dblclick: this._handleLeftDblClick,
+            };
+            const handler = handlers[evtType];
+            if(handler)
+                handler(evt);
+            else
+                TitanUtils.unhandledEventHandler(evt, this.$options.name);
         },
         /**
          * Handles mousedown events
          *
          * @param {object} evt the mouse event
          */
-        _handleMouseDown(evt)
+        _handleLeftMouseDown(evt)
         {
             // NOTE: we need to inject the mouse position otherwise Outerra
             //       doesn't have any awareness of where the mouse is and can't
@@ -183,16 +187,6 @@ export default {
             this.drag.mightDrag = true;
             this.drag.lastWinXY = winXY;
             this.drag.lastECEF = worldPos;
-        },
-        /**
-         * Handles mouseup events
-         *
-         * @param {object} evt the mouse event
-         */
-        _handleMouseUp(/*evt*/)
-        {
-            // NOTE: we don't check for drag or rubber band box selection ending here
-            // because there will also be a click event that we want to distinguish
         },
         /**
          * Handles mousemove events
@@ -344,6 +338,9 @@ export default {
                 }
             }
         },
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // SELECTION HANDLERS
+        ////////////////////////////////////////////////////////////////////////////////////////////
         /**
          * Selects whatever is under the mouse, clearing any existing selection
          * first (unless the CTRL key is pressed)
@@ -370,20 +367,6 @@ export default {
                 $tWorldInterface.clearSelection();
 
             $tWorldInterface.select();
-        },
-        /**
-         * Determine if an event happened on a `pass-though` area (i.e., on the
-         * Outerra world, rather than on a user interface element).
-         *
-         * @param {object} evt the mouse event
-         * @returns {boolean} true if the target of the event is a DOM element
-         *          with a `pass-though` class, false otherwise
-         */
-        isPassThrough(evt)
-        {
-            if(evt && evt.target && evt.target.classList)
-                return evt.target.classList.contains('pass-through');
-            return false;
         },
     }
 };

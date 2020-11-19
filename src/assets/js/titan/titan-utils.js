@@ -324,6 +324,22 @@ export default class TitanUtils
     }
 
     /**
+     * A common handler function to capture mouse/key events which have not been
+     * explicitly ignored or otherwise handled, purely for the purposes of
+     * catching and logging what is most likely an error.
+     *
+     * NOTE: IF THIS FUNCTION IS BEING CALLED, IT IS A PROBLEM TO BE FIXED, NOT
+     *       A PROBLEM TO BE IGNORED!!!
+     *
+     * @param {object} evt the event
+     * @param {string} contextText some text to give the error context
+     */
+    static unhandledEventHandler(evt, contextText)
+    {
+        $tLogger.error(`Expected handler but none found for '${evt.type}' in '${contextText}'!`);
+    }
+
+    /**
      * Simplifies entity creation
      *
      * @param {string} entityKeyName the entity key name for the entity to create (can be found in

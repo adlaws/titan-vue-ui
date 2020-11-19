@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="3072"
+   inkscape:export-xdpi="3072"
+   inkscape:export-filename="D:\dev\workspaces\TITAN\titan-svn\trunk-vue\gui\adlaws\titan-gui-js\src\assets\img\favicon.png"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg897"
+   version="1.1"
+   viewBox="0 0 4.2333332 4.2333335"
+   height="16"
+   width="16">
+  <defs
+     id="defs891" />
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-11"
+     inkscape:window-x="2869"
+     inkscape:window-height="2080"
+     inkscape:window-width="3840"
+     units="px"
+     showgrid="true"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     inkscape:cy="12.954325"
+     inkscape:cx="22.493937"
+     inkscape:zoom="44.8"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base">
+    <inkscape:grid
+       empspacing="8"
+       id="grid1470"
+       type="xygrid" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata894">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <circle
+       r="2.1166668"
+       cy="2.1166668"
+       cx="2.1166668"
+       id="path1477"
+       style="fill:#ffffff;stroke:none;stroke-width:3.02381;stroke-linecap:round;stop-color:#000000" />
+    <g
+       transform="matrix(0.10483733,0,0,0.10598031,-2.9554631,-17.671999)"
+       id="g1475">
+      <path
+         id="path22"
+         d="m 41.361587,175.32993 c 3.836458,-0.47625 8.043333,0.1852 11.826875,2.19604 1.561042,0.82021 2.883958,1.82562 4.048124,2.91041 h 8.334375 c -1.27,-3.70416 -3.889375,-6.95854 -7.752292,-8.99583 -2.19604,-1.16417 -4.550832,-1.79917 -6.932082,-2.01083 -0.687917,0.0794 -1.349375,0.18521 -1.984375,0.34396 -3.01625,0.8202 -5.662083,2.80458 -7.540625,5.55625 z"
+         class="st1"
+         style="fill:#063c61;stroke-width:0.264583" />
+      <path
+         style="fill:#000000;stroke-width:0.264583"
+         id="path24"
+         d="m 65.862002,181.25659 h -7.752291 -3.386666 -15.875 c -0.423333,2.06375 -0.502708,4.18042 -0.211667,5.47688 h 8.096251 l 0.05292,14.10229 c 1.984375,1.24354 4.233334,1.98437 6.058959,2.11667 l -0.07938,-16.21896 H 66.04721 v -1.77271 -1.98438 -0.84666 -0.87313 z"
+         class="st0" />
+      <path
+         id="path26"
+         d="m 49.775337,203.11118 c -1.031875,-0.34396 -2.037292,-0.7673 -2.989792,-1.32292 -3.995208,-2.30188 -7.14375,-6.42938 -8.493125,-11.56229 -0.238125,-0.87313 -0.370417,-1.77271 -0.502708,-2.64584 -0.264584,-2.14312 -0.185209,-4.28625 0.211666,-6.32354 0.396875,-2.03729 1.137709,-3.96875 2.196042,-5.715 0.02646,-0.0265 0.02646,-0.0529 0.05292,-0.0794 1.719792,-2.80459 4.180417,-4.89479 7.037917,-6.0325 0.185208,-0.0529 0.370416,-0.13229 0.555625,-0.18521 -1.217084,0.0794 -2.407709,0.29104 -3.571875,0.60854 -2.407709,0.66146 -4.577292,1.74625 -6.429376,3.175 -2.143125,1.64042 -3.889375,3.73063 -5.106458,6.05896 -0.370417,0.71437 -0.714375,1.42875 -0.978958,2.19604 -0.02646,0.0529 -0.02646,0.10583 -0.05292,0.18521 -1.11125,3.14854 -1.322917,6.61458 -0.449792,10.00125 1.957917,7.48771 8.942917,12.72646 16.933334,12.72646 1.42875,0 2.8575,-0.15875 4.259792,-0.50271 -0.926042,-0.10583 -1.799167,-0.3175 -2.672292,-0.58208 z"
+         class="st2"
+         style="fill:#0d5ca6;stroke-width:0.264583" />
+    </g>
+  </g>
+</svg>

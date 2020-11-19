@@ -78,8 +78,6 @@ import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 import TitanInput from '@/components/common/titan/forms/fields/basic/TitanInput.vue';
 import ImgFallback from '@/components/titan/core/ImgFallback.vue';
 
-import '@/assets/img/datasource.png';
-
 export default {
     name: 'editor-ui',
     components:

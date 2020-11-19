@@ -184,16 +184,16 @@ export default {
     },
     watch:
     {
-        'status.x': function(newValue, /*oldValue*/) { this.$refs.container.style.left = newValue + 'px'; },
-        'status.y': function(newValue, /*oldValue*/) { this.$refs.container.style.top = newValue + 'px'; },
-        'status.w': function(newValue, /*oldValue*/) { this.$refs.container.style.width = newValue + 'px'; },
-        'status.h': function(newValue, /*oldValue*/) { this.$refs.container.style.height = newValue + 'px'; },
-        zIndex: function(newValue, /*oldValue*/) { this.$refs.container.style.zIndex = newValue; },
-        icon: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, icon:newValue}); },
-        title: function(newValue, /*oldValue*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, title:newValue}); },
-        isActive: function(newValue, /*oldValue*/) { this.$emit('window-active', newValue); },
-        desktopBounds: function(/*newValue, oldValue*/) { this._handleScreenSizeChange(); },
-        isFullscreen: function(newValue, /*oldValue*/) { this._handleFullScreenChange(newValue); },
+        'status.x': function(newX, /*oldX*/) { this.$refs.container.style.left = newX + 'px'; },
+        'status.y': function(newY, /*oldY*/) { this.$refs.container.style.top = newY + 'px'; },
+        'status.w': function(newW, /*oldW*/) { this.$refs.container.style.width = newW + 'px'; },
+        'status.h': function(newH, /*oldH*/) { this.$refs.container.style.height = newH + 'px'; },
+        zIndex(newZ, /*oldZ*/) { this.$refs.container.style.zIndex = newZ; },
+        icon(newIcon, /*oldIcon*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, icon:newIcon}); },
+        title(newTitle, /*oldTitle*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, title:newTitle}); },
+        isActive(isActive, /*wasActive*/) { this.$emit('window-active', isActive); },
+        desktopBounds(/*newBounds, oldBounds*/) { this._handleScreenSizeChange(); },
+        isFullscreen(isFullscreen, /*wasFullscreen*/) { this._handleFullScreenChange(isFullscreen); },
     },
     beforeMount()
     {

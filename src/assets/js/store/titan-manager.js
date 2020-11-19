@@ -13,13 +13,21 @@ export const TITAN_MUTATION = {
     // TITAN UI MODE
     ENTER_UI_MODE:'titan::uimode::enter',
     EXIT_UI_MODE:'titan::uimode::exit',
-    EXIT_UI_MODE_IF_ACTIVE:'titan::uimode::exitIfActive',
+    EXIT_TO_UI_MODE:'titan::uimode::exitTo',
     // ENTITY SELECTOR WINDOW
     ENTITY_SELECTOR_SET_SELECTION:'titan::entitySelector::setSelection',
     ENTITY_SELECTOR_CLEAR_SELECTION:'titan::entitySelector::clearSelection',
 };
 export const TITAN_ACTION = {
     INIT_PLUGIN_CONFIG:'titan::initPluginConfig',
+};
+
+// Titan UI modes (used to help determine what mouse and keyboard interactions currently "mean"
+// and how to handle them)
+export const TITAN_UI_MODE = {
+    Desktop: 'Desktop',
+    Editor: 'Editor',
+    Drawing: 'Drawing',
 };
 
 const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
@@ -158,22 +166,29 @@ const TitanManager =
             state.uiMode.pop();
         },
         /**
-         * Leaves the given UI mode (pops it off the UI mode stack) if it is
-         * currently active
+         * Exits the any and all UI modes 'above' the given UI (popping them off
+         * the UI mode stack) until the given UI mode is reached.
          *
-         * If the given UI mode is not the current mode, calling this method
-         * will have no effect.
+         * If the 'target' UI mode is already at the top of the current UI mode
+         * stack, this mutation will have no effect
+         *
+         * If the 'target' UI mode is not in the current UI mode stack, an
+         * exception will be thrown
          *
          * @param {object} state the store state object
-         * @param {string} uiMode the string identifier of the UI mode to exit
+         * @param {string} uiMode the string identifier of the UI mode to exit to
          */
-        [TITAN_MUTATION.EXIT_UI_MODE_IF_ACTIVE](state, uiMode)
+        [TITAN_MUTATION.EXIT_TO_UI_MODE](state, uiMode)
         {
             if(state.uiMode.length === 0)
-                return;
+                throw(`Cannot exit to UI mode'${uiMode}' - no UI modes left to exit from!`);
             const currentMode = state.uiMode[state.uiMode.length - 1];
             if(currentMode === uiMode)
-                state.uiMode.pop();
+                return; // already the current mode, nothing to do
+            const modeIdx = state.uiMode.indexOf(uiMode);
+            if(modeIdx < 0)
+                throw(`Cannot exit to UI mode'${uiMode}' - it is not in te UI mode stack ${state.uiMode.join('::')}`);
+            state.uiMode.splice(modeIdx + 1);
         },
         // --------------------------------------------------------------------
         // ENTITY SELECTOR WINDOW

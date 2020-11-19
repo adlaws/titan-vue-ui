@@ -35,7 +35,7 @@ export default {
     },
     watch:
     {
-        taskbarSize: function(/*newValue, oldValue*/) { this.updateStyle(); },
+        taskbarSize(/*newValue, oldValue*/) { this.updateStyle(); },
     },
     mounted()
     {

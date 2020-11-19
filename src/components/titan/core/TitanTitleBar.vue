@@ -3,7 +3,7 @@
         class="vue-os--title-bar"
         :class="{active, maximized, nodrag:!draggable}"
         @mousedown="handleDragStart"
-        @dblclick="$emit('window-toggle-maximise')"
+        @dblclick="handleDblClickMaxmize"
     >
         <div
             class="control-btn icon"
@@ -136,11 +136,16 @@ export default {
     {
         return {
             dragStart: { x: 0, y: 0 },
-            iconSize: { w: 16, h: 16 }
+            iconSize: { w: 24, h: 24 }
         };
     },
     methods:
     {
+        handleDblClickMaxmize()
+        {
+            if(this.maximizable)
+                this.$emit('window-toggle-maximise');
+        },
         handleDragStart(evt)
         {
             event.preventDefault();

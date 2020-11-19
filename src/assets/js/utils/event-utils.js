@@ -80,8 +80,28 @@ export default class EventUtils
     {
         let result = EventUtils.isEventType(evt, 'keydown');
         if(keyCode!==undefined)
-            result = result && (evt.keyCode === keyCode);
+            result = result && EventUtils.isKey(evt, keyCode);
         return result;
+    }
+
+    /**
+     * Determine if the event is for a particular key
+     *
+     * @param evt the event
+     * @param keyCode the keycode to check - may be a single keycode, or an Array
+     *        or Set of keycodes to match
+     * @returns true if the event has the correct keycode, false otherwise
+     */
+    static isKey(evt, keyCode)
+    {
+        if(!evt || !keyCode)
+            return false;
+
+        if(keyCode instanceof Set)
+            return keyCode.has(evt.keyCode);
+        if(Array.isArray(keyCode))
+            return keyCode.indexOf(evt.keyCode) >= 0;
+        return evt.keyCode === keyCode;
     }
 
     /**
@@ -391,3 +411,19 @@ export const KEY_CODE = {
     MOUSE_MODIFIER_SHIFT:3
 };
 Object.freeze(KEY_CODE);
+
+export const ALPHA_KEYS = new Set([
+    KEY_CODE.A, KEY_CODE.B, KEY_CODE.C, KEY_CODE.D, KEY_CODE.E, KEY_CODE.F,
+    KEY_CODE.G, KEY_CODE.H, KEY_CODE.I, KEY_CODE.J, KEY_CODE.K, KEY_CODE.L,
+    KEY_CODE.M, KEY_CODE.N, KEY_CODE.O, KEY_CODE.P, KEY_CODE.Q, KEY_CODE.R,
+    KEY_CODE.S, KEY_CODE.T, KEY_CODE.U, KEY_CODE.V, KEY_CODE.W, KEY_CODE.X,
+    KEY_CODE.Y, KEY_CODE.Z
+]);
+export const NUM_KEYS = new Set([
+    KEY_CODE._0, KEY_CODE._1, KEY_CODE._2, KEY_CODE._3, KEY_CODE._4,
+    KEY_CODE._5, KEY_CODE._6, KEY_CODE._7, KEY_CODE._8, KEY_CODE._9
+]);
+export const FUNCTION_KEYS = new Set([
+    KEY_CODE.F1, KEY_CODE.F2, KEY_CODE.F3, KEY_CODE.F4, KEY_CODE.F5, KEY_CODE.F6,
+    KEY_CODE.F7, KEY_CODE.F8, KEY_CODE.F9, KEY_CODE.F10, KEY_CODE.F11, KEY_CODE.F12
+]);
