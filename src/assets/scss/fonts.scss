@@ -1,0 +1,55 @@
+// Roboto Font
+$robotoFontRoot: $fontsRoot+"roboto/";
+$robotoFontVersion: "1.0";
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Roboto Light'), local('Roboto-Light'), url($robotoFontRoot+'Roboto-Light.ttf?v='+$robotoFontVersion) format('truetype');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto Regular'), local('Roboto-Regular'), url($robotoFontRoot+'Roboto-Regular.ttf?v='+$robotoFontVersion) format('truetype');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Roboto Medium'), local('Roboto-Medium'), url($robotoFontRoot+'Roboto-Medium.ttf?v='+$robotoFontVersion) format('truetype');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Roboto Bold'), local('Roboto-Bold'), url($robotoFontRoot+'Roboto-Bold.ttf?v='+$robotoFontVersion) format('truetype');
+}
+
+// Roboto Mono Font
+$robotoMonoFontRoot: $fontsRoot+"roboto-mono/";
+$robotoMonoFontVersion: "1.0";
+@font-face {
+    font-family: 'RobotoMono';
+    font-style: normal;
+    font-weight: 300;
+    src: local('RobotoMono Light'), local('RobotoMono-Light'), url($robotoMonoFontRoot+'RobotoMono-Light.ttf?v='+$robotoMonoFontVersion) format('truetype');
+}
+@font-face {
+    font-family: 'RobotoMono';
+    font-style: normal;
+    font-weight: 400;
+    src: local('RobotoMono Regular'), local('RobotoMono-Regular'), url($robotoMonoFontRoot+'RobotoMono-Regular.ttf?v='+$robotoMonoFontVersion) format('truetype');
+}
+@font-face {
+    font-family: 'RobotoMono';
+    font-style: normal;
+    font-weight: 600;
+    src: local('RobotoMono Medium'), local('RobotoMono-Medium'), url($robotoMonoFontRoot+'RobotoMono-Medium.ttf?v='+$robotoMonoFontVersion) format('truetype');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    src: local('RobotoMono Bold'), local('RobotoMono-Bold'), url($robotoMonoFontRoot+'RobotoMono-Bold.ttf?v='+$robotoMonoFontVersion) format('truetype');
+}

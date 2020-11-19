@@ -3,9 +3,9 @@
         class="vue-os--titan-clock"
         :style="`font-size:${taskbarSize*0.25}px;`"
     >
-        <titan-icon icon="clock" class="mr-1" />{{ time }}
+        <titan-icon icon="clock" class="mr-1" /><span class="monospace">{{ time }}</span>
         <br>
-        <titan-icon icon="calendar-month" class="mr-1" />{{ date }}
+        <titan-icon icon="calendar-month" class="mr-1" /><span class="monospace">{{ date }}</span>
     </div>
 </template>
 
@@ -63,10 +63,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-.vue-os--titan-clock
-{
-    margin-right: 24px;
-}
-</style>

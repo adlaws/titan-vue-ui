@@ -1,119 +1,131 @@
 <template>
-    <div
-        class="pass-through"
-        style="width:100%;height:100%;overflow:hidden;"
+    <titan-window
+        title="Drawing"
+        icon="draw"
+        :x="150"
+        :y="150"
+        :width="196"
+        :height="32"
+        :resizable="false"
+        @window-active="windowActiveChanged"
     >
-        <entity-selector />
-        <map-overlay />
-        <drawing-tools />
-
-        <div
-            v-for="(pluginWindow, idx) in pluginWindows"
-            :key="`pluginWindow${idx}`"
-        >
-            <component :is="pluginWindow" />
-        </div>
-    </div>
+        <template #default="context">
+            <titan-window-content :titan-window="context.titanWindow">
+                <div class="vue-os--drawing-tools">
+                    <button
+                        v-for="tool in tools"
+                        :key="tool.type"
+                        class="tool"
+                        :class="{active:currentTool===tool.type}"
+                        @click="setTool(tool.type)"
+                    >
+                        <titan-icon :icon="tool.icon" size="150%" />
+                    </button>
+                    <br>
+                    <div
+                        v-for="color in colors"
+                        :key="`fill-${color.type}`"
+                        class="color"
+                        :class="{active:(currentFill && currentFill.type===color.type)}"
+                        :style="`background-color:rgb(${color.rgb[0]},${color.rgb[1]},${color.rgb[2]});`"
+                        @click="setFillColor(color)"
+                    />
+                </div>
+            </titan-window-content>
+        </template>
+    </titan-window>
 </template>
 
 <script>
-import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
+import {TITAN_MUTATION, TITAN_UI_MODE} from '@/assets/js/store/titan-manager.js';
 
 import TitanUtils, { $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
-import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
-import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
-import MapOverlay from '@/components/titan/sim-mode/MapOverlay.vue';
-import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
+import TitanWindow from '@/components/common/titan/TitanWindow.vue';
+import TitanWindowContent from '@/components/common/titan/TitanWindowContent.vue';
+
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 const HANDLED_MOUSE_EVENTS = new Set([
     'mousedown', 'mousemove',
-    'click', 'dblclick',
+    'click',
 ]);
 
 export default {
     name: 'editor-ui',
     components:
     {
-        EntitySelector, MapOverlay, DrawingTools,
-        TitanIcon
+        TitanWindow, TitanWindowContent,
+        TitanIcon,
     },
     data()
     {
         return {
-            testOptions: [
-                {id:0, text:'Option A', disabled:false, tooltip:'A is for Apple'},
-                {id:1, text:'Option B', disabled:false, tooltip:'B is for Banana'},
-                {id:2, text:'Option C', disabled:false, tooltip:'C is for Coconut'},
+            tools:[
+                {type: 'square', icon: 'shape-square-plus', tooltip: 'Square'},
+                {type: 'circle', icon: 'shape-circle-plus', tooltip: 'Circle'},
             ],
-            // mouse drag interaction state
-            drag:
-            {
-                mightDrag: false,
-                isDraggingObject: false,
-                isRubberBandSelecting: false,
-                lastWinXY: null,
-                lastECEF: null,
-            },
-            // plugins
-            pluginWindows: [],
+            colors:[
+                {type:'red', rgb: [255,0,0]},
+                {type:'green', rgb: [0,255,0]},
+                {type:'blue', rgb: [0,0,255]},
+            ],
+            currentTool: null,
+            currentFill: null,
+            currentStroke: null,
         };
     },
     computed:
     {
-        currentSimMode() { return this.$store.getters.titanSimMode; },
-        modifierKeys() { return this.$store.getters.modifierKeys; },
-        mouseButtons() { return this.$store.getters.mouseButtons; },
-        mousePress() { return this.$store.getters.mousePress; },
-        // determine if the UI mode is currently 'Editor' for the purpose of
-        // detremining how to handle mouse/keyboard interactions
-        isUiModeEditor() { return this.$store.getters.isUiMode(TITAN_UI_MODE.Editor); },
-        // plugins
-        plugins() { return this.$store.getters.plugins; },
-        editPlugins() { return this.plugins.SimMode_Edit || {}; },
-        editWindowConfigs() { return this.editPlugins.windows || []; },
-
+        isUiModeDrawing() { return this.$store.getters.isUiMode(TITAN_UI_MODE.Drawing); },
+    },
+    watch:
+    {
+        currentTool(newTool, /*oldTool*/)
+        {
+            if(newTool === null)
+                this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.Drawing);
+            else if(!this.isUiModeDrawing)
+                this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, TITAN_UI_MODE.Drawing);
+        }
     },
     mounted()
     {
-        // enter UI mode
-        this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, TITAN_UI_MODE.Editor);
-
         // bind event handlers
         // NOTE: binding event handlers to `window` or `document` both
         // achieve the same thing - not sure which (if either) is a
         // better choice here
         HANDLED_MOUSE_EVENTS.forEach((evtType) => document.addEventListener(evtType, this.handleMouseEvent) );
-
-        // inject plugin windows etc
-        const pluginWindows = [];
-        this.editWindowConfigs.forEach((pwc) =>
-        {
-            const component = pwc.component;
-            const type = pwc.type;
-            const extension = type === 'vue' ? '.umd.min.js' : '.js';
-            const componentURL = `plugins/components/${component}/${component}${extension}`;
-            if(type === 'vue')
-                pluginWindows.push( () => VueUtils.externalComponent(componentURL) );
-            else
-                VueUtils.injectScript(componentURL);
-        });
-        this.pluginWindows = pluginWindows;
     },
     beforeDestroy()
     {
-        // clean up event handlers
         HANDLED_MOUSE_EVENTS.forEach((evtType) => document.removeEventListener(evtType, this.handleMouseEvent) );
-        // since we are exiting completely, we need to clean up our UI mode - exit from
-        // whatever sub-mode we were in back to the 'Editor' mode, and then exit 'Editor'
-        // mode itself
-        this.$store.commit(TITAN_MUTATION.EXIT_TO_UI_MODE, TITAN_UI_MODE.Editor);
-        this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.Editor);
+        if(this.isUiModeDrawing)
+            this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.Drawing);
     },
     methods:
     {
+        setTool(tool)
+        {
+            this.currentTool = this.currentTool === tool ? null : tool;
+        },
+        setFillColor(color)
+        {
+            this.currentFill = color;
+        },
+        /**
+         * Handle activities required as this window becomes active/inactive
+         *
+         * @param {boolean} isActive true if the window has become active, false otherwise
+         */
+        windowActiveChanged(isActive)
+        {
+            // if the window becomes inactive, we aren't drawing any more, so
+            // any ative tool becomes inactive
+            if(!isActive)
+                this.currentTool = null;
+        },
         ////////////////////////////////////////////////////////////////////////////////////////////
         // MOUSE EVENT HANDLERS
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +133,7 @@ export default {
          * Handles mouse events
          *
          * Will ignore events if...
-         *  - not in 'Editor' UI Mode
+         *  - not in 'Drawing' UI Mode
          *  - the event is not in HANDLED_MOUSE_EVENTS
          *  - the event target is a DOM element with the class 'pass-through'
          *
@@ -132,7 +144,7 @@ export default {
             if(!$isInsideTitan)
                 return; // nothing to do if we are in a browser
 
-            if(!this.isUiModeEditor)
+            if(!this.isUiModeDrawing)
                 return; // wrong UI mode of operation - ignore
 
             const evtType = evt.type;
@@ -148,15 +160,10 @@ export default {
                 return; // we only care about left mouse clicks at the moment
 
             // handler function lookup
-            // NOTE: we don't check for drag or rubber band box selection ending
-            // on `mouseup` events because there will also be a `click` event
-            // that we want to distinguish - don't add `mouseup` event handler
-            // to replace the `click` handler because there will be trouble!
             const handlers = {
                 mousedown: this._handleLeftMouseDown,
                 mousemove: this._handleMouseMove,
                 click: this._handleLeftClick,
-                dblclick: this._handleLeftDblClick,
             };
             const handler = handlers[evtType];
             if(handler)
@@ -309,65 +316,36 @@ export default {
                 this._clearSelection();
             }
         },
-        /**
-         * Handles left mouse dblclick events
-         *
-         * @param {object} evt the mouse event
-         */
-        _handleLeftDblClick(evt)
-        {
-            // NOTE: we need to inject the mouse position otherwise Outerra
-            //       doesn't have any awareness of where the mouse is and can't
-            //       detect whether selectable items are "under the mouse" etc.
-            //       If we only wanted the world pos under the mouse we could
-            //       just do:
-            //            const worldPos = $tWorldInterface.getWorldPosFromScreenPix(winXY);
-            const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
-            $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = $tWorldInterface.getWorldPositionUnderMouse();
-            if(!$tWorldInterface.isSelectableObjectUnderMouse())
-            {
-                // force clear any selection (unless CTRL is pressed)
-                this._clearSelection(true);
-
-                const selectedEntity = this.$store.getters.getEntitySelectorSelection;
-                if(selectedEntity)
-                {
-                    // create an entity at the location
-                    TitanUtils.createEntity(selectedEntity.entityName, worldPos);
-                }
-            }
-        },
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // SELECTION HANDLERS
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        /**
-         * Selects whatever is under the mouse, clearing any existing selection
-         * first (unless the CTRL key is pressed)
-         */
-        _doSelection()
-        {
-            // NOTE: Outerra does not populate modifier keys on mouse events,
-            //       so we currently rely on our own input state management
-            //       to track their state
-            // clear selection (unless CTRL is pressed)
-            this._clearSelection();
-            $tWorldInterface.select();
-        },
-        /**
-         * Clears the selection, unless the CTRL key is currently held down
-         *
-         * @param {boolean} forced if true, clear the selection regardless of
-         *        the state of the CTRL key
-         */
-        _clearSelection(forced=false)
-        {
-            const isAdditiveSelection = this.$store.getters.modifierKeys.ctrl;
-            if(forced || !isAdditiveSelection)
-                $tWorldInterface.clearSelection();
-
-            $tWorldInterface.select();
-        },
     }
 };
 </script>
+
+<style lang="scss">
+.vue-os--drawing-tools
+{
+    button
+    {
+        &.tool
+        {
+             &.active
+             {
+                background: white;
+             }
+        }
+    }
+    div
+    {
+        &.color
+        {
+            display:inline-block;
+            width:32px;
+            height:32px;
+            border: 2px solid black;
+            &.active
+            {
+                border: 2px solid white;
+            }
+        }
+    }
+}
+</style>

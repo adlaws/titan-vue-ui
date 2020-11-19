@@ -3,9 +3,9 @@
         class="vue-os--titan-location"
         :style="`font-size:${taskbarSize*0.25}px;`"
     >
-        <titan-icon icon="map-marker" class="mr-1" />{{ latlngText }}
+        <titan-icon icon="map-marker" class="mr-1" /><span class="monospace">{{ latlngText }}</span>
         <br>
-        <titan-icon icon="compass" class="mr-1" />{{ headingText }}
+        <titan-icon icon="compass" class="mr-1" /><span class="monospace">{{ headingText }}</span>
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="-8 -8 16 16"
@@ -48,7 +48,7 @@ export default {
         return {
             latlngText: '0.000°N 0.000°E',
             headingText: '000.00°',
-            heading: '0.00°',
+            heading: 0,
         };
     },
     computed:
@@ -80,10 +80,12 @@ export default {
             let heading = GeoUtils.radToDeg( GeoUtils.getEcefQuatHeadingRad(ecef, orientation));
             while(heading < 0)
                 heading += 360.0;
-            const lat = GeoUtils.radToDeg(lla.latitude);
+            let lat = GeoUtils.radToDeg(lla.latitude);
             const ns = lat<0?'S':'N';
-            const lng = GeoUtils.radToDeg(lla.longitude);
+            lat = Math.abs(lat);
+            let lng = GeoUtils.radToDeg(lla.longitude);
             const ew = lng<0?'W':'E';
+            lng = Math.abs(lng);
 
             this.latlngText = `${lat.toFixed(3)}°${ns} ${lng.toFixed(3)}°${ew}`;
             this.headingText = (heading < 10 ? '00' : (heading < 100 ? '0' : '')) + `${heading.toFixed(2)}°`;
@@ -94,10 +96,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-.vue-os--titan-location
-{
-    margin-right: 16px;
-}
-</style>

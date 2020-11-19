@@ -309,6 +309,37 @@ export default class TitanUtils
     }
 
     /**
+     * Determine if an event happened on a `pass-though` area (i.e., on the
+     * Outerra world, rather than on a user interface element).
+     *
+     * @param {object} evt the mouse event
+     * @returns {boolean} true if the target of the event is a DOM element
+     *          with a `pass-though` class, false otherwise
+     */
+    static isPassThrough(evt)
+    {
+        if(evt && evt.target && evt.target.classList)
+            return evt.target.classList.contains('pass-through');
+        return false;
+    }
+
+    /**
+     * A common handler function to capture mouse/key events which have not been
+     * explicitly ignored or otherwise handled, purely for the purposes of
+     * catching and logging what is most likely an error.
+     *
+     * NOTE: IF THIS FUNCTION IS BEING CALLED, IT IS A PROBLEM TO BE FIXED, NOT
+     *       A PROBLEM TO BE IGNORED!!!
+     *
+     * @param {object} evt the event
+     * @param {string} contextText some text to give the error context
+     */
+    static unhandledEventHandler(evt, contextText)
+    {
+        $tLogger.error(`Expected handler but none found for '${evt.type}' in '${contextText}'!`);
+    }
+
+    /**
      * Simplifies entity creation
      *
      * @param {string} entityKeyName the entity key name for the entity to create (can be found in

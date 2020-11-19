@@ -56,7 +56,7 @@ const ApplicationState = new Vuex.Store({
             },
             simMode: null,
             entityDescriptors: ENTITY_DESCRIPTORS,
-            inputState: {
+            input.state: {
                 // Outerra events are not reliable in isolation to gather mouse button and modifier
                 // key state, so we keep track of it here
                 mouse: {
@@ -120,9 +120,9 @@ const ApplicationState = new Vuex.Store({
         titanSimMode: (state) => state.titan.simMode,
         titanEntityDescriptors: (state) => state.titan.entityDescriptors,
         // INPUT STATE
-        modifierKeys: (state) => state.titan.inputState.key.modifiers,
-        mouseButtons: (state) => state.titan.inputState.mouse.buttons,
-        mousePress: (state) => state.titan.inputState.mouse.press,
+        modifierKeys: (state) => state.titan.input.state.key.modifiers,
+        mouseButtons: (state) => state.titan.input.state.mouse.buttons,
+        mousePress: (state) => state.titan.input.state.mouse.press,
         // --------------------------------------------------------------------
         // ENTITY SELECTOR WINDOW
         // --------------------------------------------------------------------
@@ -349,7 +349,7 @@ const ApplicationState = new Vuex.Store({
 
             const now = Date.now();
 
-            const mouseStates = state.titan.inputState.mouse;
+            const mouseStates = state.titan.input.state.mouse;
             const buttonStates = mouseStates.buttons;
             const buttonPress = mouseStates.press;
 
@@ -444,7 +444,7 @@ const ApplicationState = new Vuex.Store({
             if(!evtType)
                 return;
 
-            const modifierKeyStates = state.titan.inputState.key.modifiers;
+            const modifierKeyStates = state.titan.input.state.key.modifiers;
             modifierKeyStates.shift = domEvent.shiftKey || false;
             modifierKeyStates.ctrl = domEvent.ctrlKey || false;
             modifierKeyStates.alt = domEvent.altKey || false;

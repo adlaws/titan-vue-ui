@@ -3,7 +3,7 @@
         class="vue-os--title-bar"
         :class="{active, maximized, nodrag:!draggable}"
         @mousedown="handleDragStart"
-        @dblclick="$emit('window-toggle-maximise')"
+        @dblclick="handleDblClickMaxmize"
     >
         <div
             class="control-btn icon"
@@ -15,6 +15,7 @@
                 <titan-icon
                     v-if="icon"
                     :icon="icon"
+                    :size="`${iconSize.w}px`"
                     class="icon"
                 />
                 <svg
@@ -44,6 +45,7 @@
         >
             <titan-icon
                 icon="window-minimize"
+                :size="`${iconSize.w}px`"
                 class="icon control-btn"
             />
         </div>
@@ -53,6 +55,7 @@
         >
             <titan-icon
                 :icon="maximized===false?'window-maximize':'window-restore'"
+                :size="`${iconSize.w}px`"
                 class="icon control-btn"
             />
         </div>
@@ -62,6 +65,7 @@
         >
             <titan-icon
                 icon="window-close"
+                :size="`${iconSize.w}px`"
                 class="icon control-btn"
             />
         </div>
@@ -132,11 +136,16 @@ export default {
     {
         return {
             dragStart: { x: 0, y: 0 },
-            iconSize: { w: 16, h: 16 }
+            iconSize: { w: 24, h: 24 }
         };
     },
     methods:
     {
+        handleDblClickMaxmize()
+        {
+            if(this.maximizable)
+                this.$emit('window-toggle-maximise');
+        },
         handleDragStart(evt)
         {
             event.preventDefault();

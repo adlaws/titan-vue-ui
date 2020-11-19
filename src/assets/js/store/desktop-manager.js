@@ -40,29 +40,36 @@ const DesktopManager =
         },
         // Outerra events are not reliable in isolation to gather mouse button and modifier
         // key state, so we keep track of it here
-        inputState: {
-            mouse: {
-                buttons: {
-                    left:false,
-                    right:false,
-                    middle:false
-                }, // true if corresponding button is currently down, false otherwise
-                press: {
-                    lastDown: {time: -1, x: -1, y:- 1},
-                    lastUp: {time: -1, x: -1, y: -1},
-                    delta: {time: 0, x: 0, y: 0, dist:0},
-                    button: {left:false, right:false, middle:false}, // true if corresponding button was part of the last press, false otherwise
-                }
+        input:{
+            state: {
+                mouse: {
+                    buttons: {
+                        left:false,
+                        right:false,
+                        middle:false
+                    }, // true if corresponding button is currently down, false otherwise
+                    press: {
+                        lastDown: {time: -1, x: -1, y:- 1},
+                        lastUp: {time: -1, x: -1, y: -1},
+                        delta: {time: 0, x: 0, y: 0, dist:0},
+                        button: {left:false, right:false, middle:false}, // true if corresponding button was part of the last press, false otherwise
+                    }
+                },
+                key: {
+                    modifiers:
+                    {
+                        shift: false, // true if either SHIFT key is down, false otherwise
+                        ctrl: false, // true if either CTRL key is down, false otherwise
+                        alt: false, // true if either ALT key is down, false otherwise
+                        meta: false, // true if either META key is down, false otherwise
+                    }
+                },
             },
-            key: {
-                modifiers:
-                {
-                    shift: false, // true if either SHIFT key is down, false otherwise
-                    ctrl: false, // true if either CTRL key is down, false otherwise
-                    alt: false, // true if either ALT key is down, false otherwise
-                    meta: false, // true if either META key is down, false otherwise
-                }
-            },
+            handler:
+            {
+                mouse: null,
+                key: null,
+            }
         },
         // the size, visiblity and position of the taskbar, can be 'docked' to north, south,
         // east or west edges
@@ -79,9 +86,9 @@ const DesktopManager =
         // --------------------------------------------------------------------
         // INPUT STATE
         // --------------------------------------------------------------------
-        modifierKeys: (state) => state.inputState.key.modifiers,
-        mouseButtons: (state) => state.inputState.mouse.buttons,
-        mousePress: (state) => state.inputState.mouse.press,
+        modifierKeys: (state) => state.input.state.key.modifiers,
+        mouseButtons: (state) => state.input.state.mouse.buttons,
+        mousePress: (state) => state.input.state.mouse.press,
         // --------------------------------------------------------------------
         // DESKTOP MANAGEMENT
         // --------------------------------------------------------------------
@@ -192,7 +199,7 @@ const DesktopManager =
 
             const now = Date.now();
 
-            const mouseStates = state.inputState.mouse;
+            const mouseStates = state.input.state.mouse;
             const buttonStates = mouseStates.buttons;
             const buttonPress = mouseStates.press;
 
@@ -287,7 +294,7 @@ const DesktopManager =
             if(!evtType)
                 return;
 
-            const modifierKeyStates = state.inputState.key.modifiers;
+            const modifierKeyStates = state.input.state.key.modifiers;
             modifierKeyStates.shift = domEvent.shiftKey || false;
             modifierKeyStates.ctrl = domEvent.ctrlKey || false;
             modifierKeyStates.alt = domEvent.altKey || false;
