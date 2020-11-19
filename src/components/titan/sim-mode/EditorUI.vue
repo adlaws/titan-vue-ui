@@ -19,7 +19,8 @@
 <script>
 import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
 
-import TitanUtils, { $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
+import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
@@ -28,6 +29,9 @@ import MapOverlay from '@/components/titan/sim-mode/MapOverlay.vue';
 import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
+const HANDLED_KEY_EVENTS = new Set([
+    'keyup'
+]);
 const HANDLED_MOUSE_EVENTS = new Set([
     'mousedown', 'mousemove',
     'click', 'dblclick',
@@ -85,6 +89,7 @@ export default {
         // NOTE: binding event handlers to `window` or `document` both
         // achieve the same thing - not sure which (if either) is a
         // better choice here
+        HANDLED_KEY_EVENTS.forEach((evtType) => document.addEventListener(evtType, this.handleKeyEvent) );
         HANDLED_MOUSE_EVENTS.forEach((evtType) => document.addEventListener(evtType, this.handleMouseEvent) );
 
         // inject plugin windows etc
@@ -105,6 +110,7 @@ export default {
     beforeDestroy()
     {
         // clean up event handlers
+        HANDLED_KEY_EVENTS.forEach((evtType) => document.removeEventListener(evtType, this.handleKeyEvent) );
         HANDLED_MOUSE_EVENTS.forEach((evtType) => document.removeEventListener(evtType, this.handleMouseEvent) );
         // since we are exiting completely, we need to clean up our UI mode - exit from
         // whatever sub-mode we were in back to the 'Editor' mode, and then exit 'Editor'
@@ -114,6 +120,45 @@ export default {
     },
     methods:
     {
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // KEY EVENT HANDLERS
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        /**
+         * Handles key events
+         *
+         * Will ignore events if...
+         *  - not in 'Editor' UI Mode
+         *  - the event is not in HANDLED_MOUSE_EVENTS
+         *  - the event target is a DOM element with the class 'pass-through'
+         *
+         * @param {object} evt the mouse event
+         */
+        handleKeyEvent(evt)
+        {
+            $tLogger.info(evt);
+
+            if(!$isInsideTitan)
+                return; // nothing to do if we are in a browser
+
+            if(!this.isUiModeEditor)
+                return; // wrong UI mode of operation - ignore
+
+            const evtType = evt.type;
+            if(!HANDLED_KEY_EVENTS.has(evtType))
+                return; // we don't handle this type of key event
+
+            if(EventUtils.isKey(evt, KEY_CODE.DELETE))
+            {
+                $tLogger.info('DELETE KEY!');
+                // delete anything that's selected
+                const activeScenario = $tWorldInterface.getActiveScenario();
+                activeScenario.removeSelected();
+            }
+            else
+            {
+                $eview.mark_unhandled();
+            }
+        },
         ////////////////////////////////////////////////////////////////////////////////////////////
         // MOUSE EVENT HANDLERS
         ////////////////////////////////////////////////////////////////////////////////////////////

@@ -103,7 +103,6 @@ export default {
     },
     mounted()
     {
-        this.updateTheTime();
         this.updateAlignment();
     },
     methods:
@@ -120,19 +119,6 @@ export default {
             container.style.height = this.taskbarBounds.height;
 
             this.vertical = this.taskbarBounds.vertical || false;
-        },
-        updateTheTime()
-        {
-            const now = new Date();
-            let hours = now.getHours();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours > 12 ? hours - 12 : hours;
-            hours = (hours < 10 ? '0' : '') + hours;
-            let minutes = now.getMinutes();
-            minutes = (minutes < 10 ? '0' : '') + minutes;
-            this.theTime = `${hours}:${minutes}${ampm}`;
-            const nextRefresh = ((60 - now.getSeconds()) * 1000) + 500;
-            setTimeout(this.updateTheTime, nextRefresh);
         },
         startScenarioConstructor()
         {

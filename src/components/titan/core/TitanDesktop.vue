@@ -3,6 +3,11 @@
         v-show="desktopVisible"
         class="titan--desktop pass-through"
     >
+        {{ currentSimMode }} |
+        <router-link :to="{name:'fps'}">
+            FPS
+        </router-link>
+
         <editor-ui v-if="isSimModeEditor" />
         <lobby-ui v-if="isSimModeAdmin" />
 
@@ -76,8 +81,6 @@ export default {
         self.moveTo(0, 0);
         self.resizeTo(screen.availWidth, screen.availHeight);
 
-        document.querySelectorAll('select').forEach((sel) => TitanUtils.outerraDropdownHack(sel));
-
         // bind event handlers
         // NOTE: binding event handlers to `window` or `document` both
         // achieve the same thing - not sure which (if either) is a
@@ -91,8 +94,7 @@ export default {
             'keyup', 'keydown'
         ].forEach((evtType) => document.addEventListener(evtType, this.handleKeyEvent) );
 
-        window.onkeydown = function(evt)
-        //window.on_desktop_key_down = function(evt)
+        window.on_desktop_key_down = function(evt)
         {
             if(!this.desktopVisible)
             {
@@ -153,6 +155,8 @@ export default {
     },
     beforeDestroy()
     {
+        this.isVisible = false;
+        this.$store.commit(TITAN_MUTATION.EXIT_TO_UI_MODE, TITAN_UI_MODE.Desktop);
         this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.Desktop);
     },
     methods:
@@ -175,7 +179,10 @@ export default {
                     $tLogger.info('hide desktop');
                     this.desktopVisible = false;
                 }
-                $eview.mark_unhandled();
+                else
+                {
+                    $eview.mark_unhandled();
+                }
             }
             else if(EventUtils.isKeyDown(evt, KEY_CODE.TAB))
             {

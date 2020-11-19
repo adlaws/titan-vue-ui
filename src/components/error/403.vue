@@ -2,9 +2,6 @@
     <error-base :error="error">
         <template #error-code>
             403
-            <v-icon class="screen-centered-icon">
-                mdi-shield-lock
-            </v-icon>
         </template>
         <template #error-heading>
             SORRY!
@@ -16,11 +13,11 @@
 </template>
 
 <script>
-import ColorUtils from '@/app/js/utils/color-utils.js';
+import ColorUtils from '@/assets/js/utils/color-utils.js';
 import ErrorBase from './ErrorBase.vue';
 
 export default {
-    name: 'Http403',
+    name: 'http403',
     components: {
         ErrorBase
     },

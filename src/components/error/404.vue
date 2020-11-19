@@ -2,9 +2,6 @@
     <error-base :error="error">
         <template #error-code>
             404
-            <v-icon class="screen-centered-icon">
-                mdi-cloud-question
-            </v-icon>
         </template>
         <template #error-heading>
             SORRY!
@@ -16,12 +13,12 @@
 </template>
 
 <script>
-import ColorUtils from '@/app/js/utils/color-utils.js';
+import ColorUtils from '@/assets/js/utils/color-utils.js';
 
 import ErrorBase from './ErrorBase.vue';
 
 export default {
-    name: 'Http404',
+    name: 'http404',
     components: {
         ErrorBase
     },

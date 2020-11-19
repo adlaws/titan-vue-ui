@@ -350,7 +350,7 @@ export default class TitanUtils
     static createEntity(entityKeyName, ecef=null)
     {
         const $scenario = $tWorldInterface.getActiveScenario();
-        //set to the gizmo pos if not supplied
+        // set to the gizmo pos if not supplied
         ecef === ecef || $scenario.getSelectedGroundPoint();
 
         let entity = null;

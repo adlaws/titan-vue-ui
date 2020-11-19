@@ -2,9 +2,6 @@
     <error-base :error="error">
         <template #error-code>
             500
-            <v-icon class="screen-centered-icon">
-                mdi-alert-octagram
-            </v-icon>
         </template>
         <template #error-heading>
             SORRY!
@@ -19,7 +16,7 @@
 import ErrorBase from './ErrorBase.vue';
 
 export default {
-    name: 'Http500',
+    name: 'http500',
     components: {
         ErrorBase
     },

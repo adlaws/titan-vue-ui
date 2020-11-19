@@ -25,6 +25,7 @@ export const TITAN_ACTION = {
 // Titan UI modes (used to help determine what mouse and keyboard interactions currently "mean"
 // and how to handle them)
 export const TITAN_UI_MODE = {
+    FPS: 'FPS',
     Desktop: 'Desktop',
     Editor: 'Editor',
     Drawing: 'Drawing',
@@ -104,12 +105,20 @@ const TitanManager =
             if(!SIM_MODES.has(mode))
                 return;
 
-            state.simMode = mode;
-            if($isInsideTitan)
+            if(!$isInsideTitan)
             {
+                state.simMode = mode;
+            }
+            else
+            {
+                const oldMode = $tWorldInterface.getSimulationMode();
                 $tWorldInterface.enterSimulationMode(mode);
+                state.simMode = $tWorldInterface.getSimulationMode();
+                if(state.simMode !== mode)
+                    throw(`Could not change simulation mode from '${oldMode}' to '${mode}'!`);
+
                 // tasks for Titan when switching modes
-                if(SIM_MODE.EDITOR === mode)
+                if(SIM_MODE.EDITOR === state.simMode)
                 {
                     TitanUtils.setScenarioMarkersVisible(true);
 
@@ -150,19 +159,16 @@ const TitanManager =
         /**
          * Leaves the given UI mode (pops it off the UI mode stack)
          *
-         * If the given UI mode is not the current mode, an exception will be
-         * thrown
-         *
          * @param {object} state the store state object
          * @param {string} uiMode the string identifier of the UI mode to exit
          */
         [TITAN_MUTATION.EXIT_UI_MODE](state, uiMode)
         {
             if(state.uiMode.length === 0)
-                throw(`Cannot exit UI mode'${uiMode}' - no UI modes left to exit!`);
+                return;
             const currentMode = state.uiMode[state.uiMode.length - 1];
             if(currentMode !== uiMode)
-                throw(`Cannot exit UI mode '${uiMode}' because it is not the current mode. The current mode is '${currentMode}'!`);
+                return;
             state.uiMode.pop();
         },
         /**
@@ -181,13 +187,13 @@ const TitanManager =
         [TITAN_MUTATION.EXIT_TO_UI_MODE](state, uiMode)
         {
             if(state.uiMode.length === 0)
-                throw(`Cannot exit to UI mode'${uiMode}' - no UI modes left to exit from!`);
+                return; // empty mode stack, nothing to do
             const currentMode = state.uiMode[state.uiMode.length - 1];
             if(currentMode === uiMode)
                 return; // already the current mode, nothing to do
             const modeIdx = state.uiMode.indexOf(uiMode);
             if(modeIdx < 0)
-                throw(`Cannot exit to UI mode'${uiMode}' - it is not in te UI mode stack ${state.uiMode.join('::')}`);
+                return; // not in the mode stack
             state.uiMode.splice(modeIdx + 1);
         },
         // --------------------------------------------------------------------

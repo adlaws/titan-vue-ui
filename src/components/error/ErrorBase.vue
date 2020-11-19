@@ -20,7 +20,7 @@
 
 <script>
 export default {
-    name: 'ErrorBase',
+    name: 'error-base',
     components:
     {
     },
