@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import TitanUtils, { SIM_MODE, SIM_MODES, $eview, $isInsideTitan, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { SIM_MODE, SIM_MODES, $isInsideTitan, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
 import FetchUtils from '@/assets/js/utils/fetch-utils.js';
 import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-dev.js';
 
@@ -125,15 +125,7 @@ const TitanManager =
                     const scenario = $tWorldInterface.getActiveScenario();
                     const camera = scenario.getActiveCamera();
                     camera.setFreeCameraMode('FreeCamMode_AutoRoll');
-                    $eview.camctrl_capture(false);
-
-                    // pretend that we clicked in the middle of the screen
-                    const worldPos =TitanUtils.worldPosForWindowCoords({x:screen.availWidth/2, y:screen.availHeight/2});
-                    // show the cursor gizmo at the location
-                    $tWorldInterface.showGizmoAt(worldPos);
-                    $tWorldInterface.clearSelection();
-                    // create an entity at the gizmo's location
-                    TitanUtils.createEntity('abrams_m1a1', worldPos);
+                    // $eview.camctrl_capture(false);
                 }
             }
         },
@@ -220,8 +212,6 @@ const TitanManager =
         {
             state.entitySelector.selected = null;
         },
-
-
         /**
          * NOTE: INTERNAL USE ONLY - do not expose via TITAN_MUTATION
          * NOTE: See also actions: TITAN_ACTION.INIT_PLUGIN_CONFIG

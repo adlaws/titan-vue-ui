@@ -19,7 +19,7 @@
 <script>
 import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
 
-import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, /*$tLogger*/ } from '@/assets/js/titan/titan-utils.js';
 import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
@@ -135,8 +135,6 @@ export default {
          */
         handleKeyEvent(evt)
         {
-            $tLogger.info(evt);
-
             if(!$isInsideTitan)
                 return; // nothing to do if we are in a browser
 
@@ -149,7 +147,6 @@ export default {
 
             if(EventUtils.isKey(evt, KEY_CODE.DELETE))
             {
-                $tLogger.info('DELETE KEY!');
                 // delete anything that's selected
                 const activeScenario = $tWorldInterface.getActiveScenario();
                 activeScenario.removeSelected();
@@ -256,6 +253,12 @@ export default {
                 {
                     // if there's an object under the mouse, we are dragging it
                     this.drag.isDraggingObject = true;
+
+                    // we have to deactivate the undo/redo monitoring otherwise every
+                    // single mouse move of the drag will be recorded, and we only
+                    // need the start and end of the drag for undo/redo purposes
+                    $tWorldInterface.set_undo_redo_keypress_monitoring_active(false);
+
                     const isSelected = $tWorldInterface.isObjectUnderMouseSelected();
                     if(!isSelected)
                     {
@@ -336,6 +339,8 @@ export default {
             {
                 // end of object dragging
                 this.drag.isDraggingObject = false;
+                // we can reactivate the undo/redo monitoring now
+                $tWorldInterface.set_undo_redo_keypress_monitoring_active(true);
             }
             else if(this.drag.isRubberBandSelecting)
             {
