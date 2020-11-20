@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import TitanUtils, { SIM_MODE, SIM_MODES, $isInsideTitan, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { SIM_MODE, SIM_MODES, FREE_CAMERA_MODE, $isInsideTitan, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
 import FetchUtils from '@/assets/js/utils/fetch-utils.js';
 import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-dev.js';
 
@@ -55,8 +55,8 @@ const TitanManager =
             width: window.screen.availWidth,
             height: window.screen.availHeight,
         },
-        // current titan simulation mode
-        simMode: null,
+        // current titan simulation mode - starts in 'SimMode_Menu'
+        simMode: ($isInsideTitan ? $tWorldInterface.getSimulationMode() : SIM_MODE.MENU),
         // a cached list of all entity descriptors - since this doesn't change
         // during the lifetime of a Titan execution cycle, we just ask for it
         // once here to avoid constantly querying the C++ back end
@@ -124,8 +124,7 @@ const TitanManager =
 
                     const scenario = $tWorldInterface.getActiveScenario();
                     const camera = scenario.getActiveCamera();
-                    camera.setFreeCameraMode('FreeCamMode_AutoRoll');
-                    // $eview.camctrl_capture(false);
+                    camera.setFreeCameraMode( FREE_CAMERA_MODE.AUTO_ROLL );
                 }
             }
         },

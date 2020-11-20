@@ -142,6 +142,21 @@ export const SIM_MODE = {
 Object.freeze(SIM_MODE);
 export const SIM_MODES = new Set(Object.values(SIM_MODE));
 
+export const CAMERA_MODE = {
+    CHASE: 'CamMode_OT_Chase',
+    FREEVIEW: 'CamMode_FreeView',
+    FIRST_PERSON: 'CamMode_OT_FirstPerson',
+    THIRD_PERSON: 'CamMode_OT_ThirdPerson',
+};
+Object.freeze(CAMERA_MODE);
+
+export const FREE_CAMERA_MODE = {
+    PANNING: 'FreeCamMode_Panning',
+    AUTO_ROLL: 'FreeCamMode_AutoRoll',
+    MANUAL_ROLL: 'FreeCamMode_ManualRoll',
+};
+Object.freeze(FREE_CAMERA_MODE);
+
 export const OBJECT_TYPE = {
     OBJECT: 'Object',
     ENTITY: 'Entity',
@@ -155,6 +170,7 @@ export const OBJECT_TYPE = {
     STATIC_UNIT: 'StaticUnit',
     TURRET: 'Turret'
 };
+Object.freeze(OBJECT_TYPE);
 
 //.. Keys used for OT camera control.. and others
 export const DESKTOP_KEY_CODES = new Set([
