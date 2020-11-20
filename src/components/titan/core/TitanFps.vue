@@ -12,7 +12,7 @@
 
 <script>
 import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
-import { SIM_MODE, $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $tWorldInterface, $isInsideTitan, /*$tLogger,*/ SIM_MODE, CAMERA_MODE, } from '@/assets/js/titan/titan-utils.js';
 
 export default {
     name: 'titan-fps',
@@ -40,12 +40,24 @@ export default {
 
         if($isInsideTitan)
         {
-            const entityDescriptor = 'hmmwv_m1025a2_desert';
-            const activeScenario = $tWorldInterface.getCurrentScenario();
+            // $tWorldInterface.flushCallbackFunctions(); // TODO: What is this for, exactly?
+            const activeScenario = $tWorldInterface.getActiveScenario();
             const activeCamera = activeScenario.getActiveCamera();
-            const cameraPos = activeCamera.getPositionAGL();
-            const targetLLA = { latitude: cameraPos.y, longitude: cameraPos.x, altitude: 0 };
-            activeScenario.createEntityLLA( entityDescriptor, targetLLA );
+
+            // find the entity with direct control (if any) and disable control
+            const controlledEntity = activeScenario.get_direct_control_vehicle();
+            if( controlledEntity )
+                controlledEntity.disableDirectControl();
+
+            // create an entity at the location in the middle of the screen
+            const worldPos = TitanUtils.worldPosForWindowCoords({x:screen.availWidth/2, y:screen.availHeight/2});
+            // const entity = TitanUtils.createEntity('abrams_m1a1', worldPos);
+            const entity = TitanUtils.createEntity('aus_soldier_camcu', worldPos);
+            entity.enableDirectControl();
+            activeCamera.setCameraMode( CAMERA_MODE.FREEVIEW );
+
+            activeScenario.scenarioEntered(true);
+            $tWorldInterface.pause(false);
         }
     },
     beforeDestroy()

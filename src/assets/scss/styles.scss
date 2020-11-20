@@ -13,7 +13,7 @@ html {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    -webkit-user-select: none;
+    user-select: none;
 }
 
 body {
@@ -26,7 +26,7 @@ body {
     -webkit-font-smoothing: antialiased;
     // -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: grayscale;
-    -webkit-user-select: none;
+    user-select: none;
 }
 
 pre, code, .monospace

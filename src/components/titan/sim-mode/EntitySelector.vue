@@ -60,7 +60,9 @@
                     Next
                 </button>
                 <hr>
-                {{ selected?selected:'' }}
+                <div style="user-select:text;">
+                    {{ selected?selected:'' }}
+                </div>
             </titan-window-content>
         </template>
     </titan-window>
@@ -203,6 +205,10 @@ export default {
                 text-overflow: ellips;
             }
         }
+    }
+    .selectable
+    {
+        -webkit-user-select:text;
     }
 }
 </style>

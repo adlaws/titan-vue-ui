@@ -21,7 +21,7 @@ import { TITAN_MUTATION, TITAN_ACTION, TITAN_UI_MODE } from '@/assets/js/store/t
 
 import UiUtils from '@/assets/js/utils/ui-utils.js';
 import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
-import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, $tLogger, SIM_MODE } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, $tLogger, SIM_MODE, CAMERA_MODE } from '@/assets/js/titan/titan-utils.js';
 
 import TitanTaskBar from '@/components/titan/core/TitanTaskBar.vue';
 import EditorUi from '@/components/titan/sim-mode/EditorUI.vue';
@@ -96,6 +96,8 @@ export default {
 
         window.on_desktop_key_down = function(evt)
         {
+            $tLogger.info('window.on_desktop_key_down');
+
             if(!this.desktopVisible)
             {
                 const isEscapeKey = EventUtils.isKey(evt, KEY_CODE.ESCAPE );
@@ -110,8 +112,8 @@ export default {
                             const activeCamera = activeScenario ? activeScenario.getActiveCamera() : null;
                             if(activeCamera)
                             {
-                                activeCamera.setCameraMode('CamMode_FreeView');
-                                activeCamera.setFreeCameraMode('FreeCamMode_AutoRoll');
+                                activeCamera.setCameraMode( CAMERA_MODE.FREEVIEW );
+                                activeCamera.setFreeCameraMode( FREE_CAMERA_MODE.AUTO_ROLL );
                             }
                         },100);
                     }
@@ -122,8 +124,6 @@ export default {
 
         window.on_desktop_mouse_down = function(evt)
         {
-            $tLogger.info('window.on_desktop_mouse_down');
-
             if(EventUtils.hasRightMouseButton(evt, 'on_desktop_mouse_down'))
             {
                 // feed through to Outerra for camera look functionality by
