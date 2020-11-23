@@ -89,13 +89,12 @@ export default {
     },
     watch:
     {
-        magneticHeading(to, from)
+        magneticHeading(newHeading, oldHeading)
         {
             // this is simply to ensure that the compass needle rotates vai the "shortest angular
             // distance" so that when the needle goes from, say 359° to 1°, it spins clockwise
             // through 360°, rather than counter-clockwise through 180°
-            const delta = ((((to - from) % 360) + 540) % 360) - 180;
-            this.compassRotation += delta;
+            this.compassRotation += MathUtils.shortestAngleDeg(oldHeading, newHeading);
         }
     },
     mounted()

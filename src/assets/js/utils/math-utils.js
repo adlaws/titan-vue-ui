@@ -194,6 +194,23 @@ class MathUtils
         return value;
     }
 
+    /**
+     * Find the shortest angular offset required to go from a start heading
+     * to a target heading.
+     *
+     * This is useful so that when a compass heading goes from, say 359° to 1°,
+     * it spins clockwise through 360°, rather than counter-clockwise through
+     * 180°
+     *
+     * @param {number} start the start angle (in degrees)
+     * @param {number} end the end angle (in degrees)
+     * @return the shortest angular offset to reach `end` from `start`
+     */
+    static shortestAngleDeg(start, end)
+    {
+        return ((((end - start) % 360) + 540) % 360) - 180;
+    }
+
     static negate(item)
     {
         if(item instanceof Vec2)
