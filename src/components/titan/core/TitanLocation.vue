@@ -87,7 +87,9 @@ export default {
             const ew = lng<0?'W':'E';
             lng = Math.abs(lng);
 
-            this.latlngText = `${lat.toFixed(3)}°${ns} ${lng.toFixed(3)}°${ew}`;
+            const i18nEW = this.$t(`direction.${ew}.abbr`);
+            const i18nNS = this.$t(`direction.${ns}.abbr`);
+            this.latlngText = `${lat.toFixed(3)}°${i18nNS} ${lng.toFixed(3)}°${i18nEW}`;
             this.headingText = (heading < 10 ? '00' : (heading < 100 ? '0' : '')) + `${heading.toFixed(2)}°`;
             this.heading = heading;
 

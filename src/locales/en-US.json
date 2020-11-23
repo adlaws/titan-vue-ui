@@ -1,0 +1,23 @@
+{
+    "Titan": "Titan",
+    "entity": "entity|entities",
+    "direction": {
+        "N": {
+            "full": "North",
+            "abbr": "N"
+        },
+        "S": {
+            "full": "South",
+            "abbr": "S"
+        },
+        "E": {
+            "full": "East",
+            "abbr": "E"
+        },
+        "W": {
+            "full": "West",
+            "abbr": "W"
+        }
+    },
+    "":""
+}

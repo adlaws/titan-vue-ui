@@ -1,9 +1,21 @@
 import Vue from 'vue';
 import App from './App.vue';
+
+Vue.config.productionTip = false;
+
+// application state store and routing
 import store from '@/assets/js/store/store.js';
 import router from '@/assets/js/router/router.js';
 
-Vue.config.productionTip = false;
+// internationalisation
+import VueI18n from 'vue-i18n';
+Vue.use(VueI18n);
+import { languages, defaultLocale } from '@/locales';
+const messages = Object.assign(languages);
+const i18n = new VueI18n({
+    locale: defaultLocale,
+    messages,
+});
 
 // ----------------------------------------------------------------------------
 // 'AUTOMAGIC' GLOBAL REGISTRATION OF 'COMMON' TITAN COMPONENTS
@@ -42,6 +54,7 @@ requireComponent.keys().forEach(fileName =>
 new Vue({
     router,
     store,
+    i18n,
     render: h => h(App),
 }).$mount('#app');
 
