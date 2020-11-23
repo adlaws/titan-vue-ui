@@ -96,6 +96,8 @@ export default {
             // create an entity at the location in the middle of the screen
             const worldPos = TitanUtils.worldPosForWindowCoords({x:screen.availWidth/2, y:screen.availHeight/2});
             this.entity = TitanUtils.createEntity('aus_soldier_camcu', worldPos);
+
+            // control the created entity
             this.entity.enableDirectControl();
 
             this.activeCamera.setCameraMode( CAMERA_MODE.FIRST_PERSON );

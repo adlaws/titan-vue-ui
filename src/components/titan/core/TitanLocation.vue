@@ -13,7 +13,13 @@
             :height="taskbarSize*0.25"
             :style="`position:relative;top:${taskbarSize/18}px;`"
         >
-            <g fill="white" stroke="white" stroke-linejoin="round" :transform="`rotate(${heading})`">
+            <g
+                ref="compassNeedle"
+                fill="white"
+                stroke="white"
+                stroke-linejoin="round"
+                :transform="`rotate(${compassRotation})`"
+            >
                 <path d="M-5 6l5-3 5 3L0-6z" />
             </g>
         </svg>
@@ -23,12 +29,11 @@
 
 <script>
 import { $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
-import { Vec3, Quat } from '@/assets/js/utils/math-utils.js';
-import GeoUtils from '@/assets/js/utils/geo-utils.js';
+import MathUtils from '@/assets/js/utils/math-utils.js';
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
-const DEFAULT_UPDATE_INTERVAL = 250; // update every 500ms (4x per second)
+const DEFAULT_UPDATE_INTERVAL = 125; // update every 125ms (8x per second)
 const MIN_UPDATE_INTERVAL = 100; // at most update 10x per second
 
 export default {
@@ -46,52 +51,89 @@ export default {
     data()
     {
         return {
-            latlngText: '0.000°N 0.000°E',
-            headingText: '000.00°',
-            heading: 0,
+            lla: {latitude:0.0, longitude: 0.0, altitude:0.0},
+            magneticHeading: 0, // between -180.0 and 180.0
+            compassRotation: 0.0,
+            running: false,
         };
     },
     computed:
     {
         taskbarSize() { return this.$store.getters.taskbarSize; },
+        latlngText()
+        {
+            let lat = this.lla.latitude;
+            let lng = this.lla.longitude;
+
+            const ns = lat<0?'S':'N';
+            const ew = lng<0?'W':'E';
+
+            lat = Math.abs(lat);
+            lng = Math.abs(lng);
+
+            // internationalized NSEW compass cardinals
+            const i18nEW = this.$t('direction.'+ew+'.abbr');
+            const i18nNS = this.$t('direction.'+ns+'.abbr');
+
+            // use string concatenation rather than formatters for performance
+            const latStr = (lat<10?'0':'') + lat.toFixed(3) + '°' + i18nNS;
+            const lngStr = (lng<10?'0':'') + (lng<100?'0':'') + lng.toFixed(3) + '°' + i18nEW;
+
+            return latStr + ' ' + lngStr;
+        },
+        headingText()
+        {
+            const heading = MathUtils.wrapClamp(this.magneticHeading, 0.0, 360.0);
+            return (heading<10?'0':'') + (heading<100?'0':'') + `${heading.toFixed(2)}°`;
+        }
+    },
+    watch:
+    {
+        magneticHeading(to, from)
+        {
+            // this is simply to ensure that the compass needle rotates vai the "shortest angular
+            // distance" so that when the needle goes from, say 359° to 1°, it spins clockwise
+            // through 360°, rather than counter-clockwise through 180°
+            const delta = ((((to - from) % 360) + 540) % 360) - 180;
+            this.compassRotation += delta;
+        }
     },
     mounted()
     {
+        // easing for the rotation in sync with the update rate to make the
+        // compass needle rotate smoothly
+        this.$refs.compassNeedle.style.transition = `all ${this.updateRate/1000.0}s ease-in-out`;
+        // start the update cycle
+        this.running = true;
         this.update();
+    },
+    beforeDestroy()
+    {
+        this.running = false;
     },
     methods:
     {
         update()
         {
-            let ecef = Vec3.fromObj({x:3038503.691797,y:307043.4483106,z:5599910.849361});
-            let orientation = Quat.fromObj({x:-0.2685823440551758,y:0.15256258845329285,z:-0.8806082010269165,w:0.3593290448188782});
+            if(!this.running)
+                return;
 
             if($isInsideTitan)
             {
                 const scenarioCamera = $tWorldInterface.getActiveScenario().getActiveCamera();
                 if(scenarioCamera)
                 {
-                    ecef = Vec3.fromObj(scenarioCamera.getPositionECEF());
-                    orientation = Quat.fromObj(scenarioCamera.getRotation());
+                    this.lla = scenarioCamera.getLLA();
+                    this.magneticHeading = scenarioCamera.getMagNorthHeading(0); // between -180.0 and 180.0
                 }
             }
-
-            const lla = GeoUtils.xyzToLatLongElevation(ecef);
-            let heading = GeoUtils.radToDeg( GeoUtils.getEcefQuatHeadingRad(ecef, orientation));
-            while(heading < 0)
-                heading += 360.0;
-            let lat = GeoUtils.radToDeg(lla.latitude);
-            const ns = lat<0?'S':'N';
-            lat = Math.abs(lat);
-            let lng = GeoUtils.radToDeg(lla.longitude);
-            const ew = lng<0?'W':'E';
-            lng = Math.abs(lng);
-
-            const i18nEW = this.$t(`direction.${ew}.abbr`);
-            const i18nNS = this.$t(`direction.${ns}.abbr`);
-            this.latlngText = `${lat.toFixed(3)}°${i18nNS} ${lng.toFixed(3)}°${i18nEW}`;
-            this.headingText = (heading < 10 ? '00' : (heading < 100 ? '0' : '')) + `${heading.toFixed(2)}°`;
-            this.heading = heading;
+            else
+            {
+                this.magneticHeading = MathUtils.wrapClamp(this.magneticHeading + (Math.random() * 10.0) -5, -180.0, 180.0);
+                this.lla.latitude = MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, -90.0, 90.0);
+                this.lla.longitude = MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, -180.0, 180.0);
+                this.lla.altitude = MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, 0.0, 10000.0);
+            }
 
             setTimeout(this.update, Math.max(MIN_UPDATE_INTERVAL, this.updateRate));
         },

@@ -166,6 +166,34 @@ class MathUtils
         return value < min ? min : (value > max ? max : value);
     }
 
+    /**
+     * Clamp a value to the given range, wrapping if it goes outside the range
+     *
+     * Useful to constrain "circular" values (such as clock hours, compass
+     * headings, and so on) to a given range of values
+     *
+     * @param {number} value the value to clamp
+     * @param {number} min the minimum allowed value (inclusive)
+     * @param {number} max the maximum value (exclusive)
+     * @returns the clamped value
+     */
+    static wrapClamp(value, min, max)
+    {
+        if(value >= min && value < max)
+            return value;
+
+        let delta = max - min;
+        while(value < min)
+        {
+            value += delta;
+        }
+        while(value >= max)
+        {
+            value -= delta;
+        }
+        return value;
+    }
+
     static negate(item)
     {
         if(item instanceof Vec2)

@@ -96,8 +96,6 @@ export default {
 
         window.on_desktop_key_down = function(evt)
         {
-            $tLogger.info('window.on_desktop_key_down');
-
             if(!this.desktopVisible)
             {
                 const isEscapeKey = EventUtils.isKey(evt, KEY_CODE.ESCAPE );
