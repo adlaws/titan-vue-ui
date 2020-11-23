@@ -168,9 +168,13 @@ export const OBJECT_TYPE = {
     HELICOPTER: 'Helicopter',
     WATERCRAFT: 'Watercraft',
     STATIC_UNIT: 'StaticUnit',
-    TURRET: 'Turret'
+    TURRET: 'Turret',
+    GROUP_ENTITY: 'EntityGroup'
 };
 Object.freeze(OBJECT_TYPE);
+export const OBJECT_TYPES = Object.values(OBJECT_TYPE);
+export const OBJECT_TYPES_SET = new Set(OBJECT_TYPES);
+
 
 //.. Keys used for OT camera control.. and others
 export const DESKTOP_KEY_CODES = new Set([
@@ -269,25 +273,6 @@ export const DESKTOP_KEY_CODES = new Set([
     KEY_CODE.SINGLE_QUOTE  // SINGLE QUOTE '
 ]);
 
-// type names to avoid hard coded values being manually repeated everywhere
-export const OBJECT_TYPENAME = {
-    OBJECT: 'Object',
-    ENTITY: 'Entity',
-    WAYPOINT: 'Waypoint',
-    TRIGGER: 'Trigger',
-    CHARACTER: 'Character',
-    GROUND_VEHICLE: 'GroundVehicle',
-    AEROPLANE: 'Aeroplane',
-    HELICOPTER: 'Helicopter',
-    WATERCRAFT: 'Watercraft',
-    STATIC_UNIT: 'StaticUnit',
-    TURRET: 'Turret',
-    GROUP_ENTITY: 'EntityGroup'
-};
-Object.freeze(OBJECT_TYPENAME);
-export const OBJECT_TYPENAMES = Object.values(OBJECT_TYPENAME);
-export const OBJECT_TYPENAMES_SET = new Set(OBJECT_TYPENAMES);
-
 export default class TitanUtils
 {
     /**
@@ -373,13 +358,13 @@ export default class TitanUtils
         const desc = $tWorldInterface.getEntityDescriptorFromName(entityKeyName);
         if(desc)
         {
-            const entity = $scenario.createEntityECEF(desc, ecef);
+            entity = $scenario.createEntityECEF(desc, ecef);
             if(entity)
             {
                 const entityTypeName = entity.getTypeName();
-                if (entityTypeName !== OBJECT_TYPENAME.OBJECT)
+                if (entityTypeName !== OBJECT_TYPE.OBJECT)
                 {
-                    if(OBJECT_TYPENAMES_SET.has(entityTypeName))
+                    if(OBJECT_TYPES_SET.has(entityTypeName))
                     {
                         const name = desc.Name || desc.entityName;
                         entity.setUniqueName(name);
