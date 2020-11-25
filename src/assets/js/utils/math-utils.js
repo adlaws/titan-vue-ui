@@ -211,6 +211,39 @@ class MathUtils
         return ((((end - start) % 360) + 540) % 360) - 180;
     }
 
+    /**
+     * Interpolates the values of two objects containing corresponding
+     * sets of values.
+     *
+     * For example:
+     *
+     *     interpolate({r:0,g:0,b:0}, {r:256,g:256,b:256}, 0.5);
+     *     // returns {r:128,g:128,b:128}
+     *
+     *     interpolate({r:0,g:0,b:0}, {r:256,g:256,b:256}, 0.5, ['r','g']);
+     *     // returns {r:128,g:128}
+     *
+     * @param {object} objA the first object
+     * @param {object} objB the second object
+     * @param {number} factor the factor (between 0.0 and 1.0 inclusive), designating
+     *        "how far" between A and B to interpolate
+     * @param {array} keys optionally specify which keys to interpolate
+     */
+    static interpolate(objA, objB, factor, keys=null)
+    {
+        const f = factor<0?0.0:factor>1.0?1.0:factor;
+        const valueKeys = keys ? keys : Object.keys(objA);
+        const result = {};
+        valueKeys.forEach((key)=>
+        {
+            const valA = objA[key] || 0.0;
+            const valB = objB[key] || 0.0;
+            const delta = valB - valA;
+            result[key] = valA + (delta * f);
+        });
+        return result;
+    }
+
     static negate(item)
     {
         if(item instanceof Vec2)

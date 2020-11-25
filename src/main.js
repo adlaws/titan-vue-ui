@@ -17,6 +17,8 @@ const i18n = new VueI18n({
     messages,
 });
 
+require('@/../public/js/titanEventListener');
+
 // ----------------------------------------------------------------------------
 // 'AUTOMAGIC' GLOBAL REGISTRATION OF 'COMMON' TITAN COMPONENTS
 // NOTE: needs to be done before `new Vue({...})` call

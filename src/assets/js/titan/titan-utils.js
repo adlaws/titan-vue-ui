@@ -175,7 +175,6 @@ Object.freeze(OBJECT_TYPE);
 export const OBJECT_TYPES = Object.values(OBJECT_TYPE);
 export const OBJECT_TYPES_SET = new Set(OBJECT_TYPES);
 
-
 //.. Keys used for OT camera control.. and others
 export const DESKTOP_KEY_CODES = new Set([
     KEY_CODE.BACKSPACE,
@@ -570,7 +569,7 @@ export default class TitanUtils
             }
             else
             {
-                const logContent = '{'+Object.getOwnPropertyNames(obj).map(p=>`'${p}': '${typeof(p)}'`).join(', ')+'}';
+                const logContent = '{'+Object.getOwnPropertyNames(obj).sort().map(p=>`'${p}': '${typeof(p)}'`).join(', ')+'}';
                 loggerFunc( logContent );
             }
         }

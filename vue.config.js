@@ -30,4 +30,27 @@ module.exports = {
         //     cert: fs.readFileSync('/path/to/server.crt'),
         //     ca: fs.readFileSync('/path/to/ca.pem'),
     },
+    // avoid adding the build hash to the built filenames
+    filenameHashing: false,
+
+    // eslint-disable-next-line no-unused-vars
+    chainWebpack: config =>
+    {
+        // WebPack shim to bring in TitanEventHandlers / TitanEvent globals
+        // Ref: https://webpack.js.org/guides/shimming/
+        //      https://jamesscheller.com/tag/nuxt-js/
+        /*
+        config.module
+            .rule('exports-loader')
+            .test(require.resolve('../../js/titanEventListener.js'))
+            .use('exports-loader')
+            // exports from titanEventListener.js...
+            //      $global.titanEventHandlers as TitanEventHandlers
+            //      $global.TitanEvent TitanEvent
+            // can be used in components by doing...
+            //      const { TitanEventHandlers, TitanEvent } = require('@/../../../js/titanEventListener.js');
+            .loader('exports-loader?type=commonjs&exports[]=multiple|$global.titanEventHandlers|TitanEventHandlers&exports[]=multiple|$global.TitanEvent|TitanEvent')
+            .end();
+        */
+    }
 };

@@ -38,7 +38,8 @@ const MIN_UPDATE_INTERVAL = 100; // at most update 10x per second
 
 export default {
     name: 'titan-location',
-    components: {
+    components:
+    {
         TitanIcon,
     },
     props:
@@ -128,10 +129,10 @@ export default {
             }
             else
             {
-                this.magneticHeading = MathUtils.wrapClamp(this.magneticHeading + (Math.random() * 10.0) -5, -180.0, 180.0);
-                this.lla.latitude = MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, -90.0, 90.0);
-                this.lla.longitude = MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, -180.0, 180.0);
-                this.lla.altitude = MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, 0.0, 10000.0);
+                this.magneticHeading = 45.67;// MathUtils.wrapClamp(this.magneticHeading + (Math.random() * 10.0) -5, -180.0, 180.0);
+                this.lla.latitude = 12.34; // MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, -90.0, 90.0);
+                this.lla.longitude = 56.78; // MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, -180.0, 180.0);
+                this.lla.altitude = 100.0; // MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, 0.0, 10000.0);
             }
 
             setTimeout(this.update, Math.max(MIN_UPDATE_INTERVAL, this.updateRate));
