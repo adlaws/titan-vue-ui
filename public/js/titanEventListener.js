@@ -145,6 +145,7 @@ export function onUserEventArgs(evtName, evtArgs)
  */
 export function onScenarioEvent(evtName, evtArgs)
 {
+    $tLogger.info('>>>>>>>>>>>>>>>>>>>> Oh yeah it\'s working, it\'s time to get excited!!!!!')
     try
     {
         const titanEventHandlers = window.titanEventHandlers;

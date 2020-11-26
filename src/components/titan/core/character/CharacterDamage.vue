@@ -18,8 +18,6 @@
 <script>
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
-const FULL_HEALTH_COLOR = {h:120,s:100,l:33};
-const NO_HEALTH_COLOR = {h:0,s:100,l:50};
 const BODY_PART = {
     HEAD:'head',
     TORSO:'torso',
@@ -28,6 +26,8 @@ const BODY_PART = {
     LEFT_LEG:'leftLeg',
     RIGHT_LEG:'rightLeg',
 };
+const FULL_HEALTH_COLOR = {h:120,s:100,l:33};
+const NO_HEALTH_COLOR = {h:0,s:100,l:50};
 
 export default {
     name: 'character-damage',
@@ -37,27 +37,27 @@ export default {
             type: Number,
             default: 128,
         },
-        head:{
+        [BODY_PART.HEAD]:{
             type: Number,
             default: 100.0,
         },
-        torso:{
+        [BODY_PART.TORSO]:{
             type: Number,
             default: 100.0,
         },
-        leftArm:{
+        [BODY_PART.LEFT_ARM]:{
             type: Number,
             default: 100.0,
         },
-        rightArm:{
+        [BODY_PART.RIGHT_ARM]:{
             type: Number,
             default: 100.0,
         },
-        leftLeg:{
+        [BODY_PART.LEFT_LEG]:{
             type: Number,
             default: 100.0,
         },
-        rightLeg:{
+        [BODY_PART.RIGHT_LEG]:{
             type: Number,
             default: 100.0,
         },
@@ -70,12 +70,12 @@ export default {
     },
     watch:
     {
-        head: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.HEAD, newHealth ); },
-        torso: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.TORSO, newHealth ); },
-        leftArm: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.LEFT_ARM, newHealth ); },
-        rightArm: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.RIGHT_ARM, newHealth ); },
-        leftLeg: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.LEFT_LEG, newHealth ); },
-        rightLeg: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.RIGHT_LEG, newHealth ); },
+        [BODY_PART.HEAD]: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.HEAD, newHealth ); },
+        [BODY_PART.TORSO]: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.TORSO, newHealth ); },
+        [BODY_PART.LEFT_ARM]: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.LEFT_ARM, newHealth ); },
+        [BODY_PART.RIGHT_ARM]: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.RIGHT_ARM, newHealth ); },
+        [BODY_PART.LEFT_LEG]: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.LEFT_LEG, newHealth ); },
+        [BODY_PART.RIGHT_LEG]: function(newHealth,/*oldHealth*/) { this.updateHealthColor( BODY_PART.RIGHT_LEG, newHealth ); },
     },
     mounted()
     {
@@ -85,11 +85,7 @@ export default {
     },
     methods:
     {
-        updateHealthColor(bodyPart, health)
-        {
-            console.log(bodyPart, health);
-            this.$refs[bodyPart].style.fill = this.healthColor(health);
-        },
+        updateHealthColor(bodyPart, health) { this.$refs[bodyPart].style.fill = this.healthColor(health); },
         healthColor(health) { return this.hslStr(MathUtils.interpolate(NO_HEALTH_COLOR, FULL_HEALTH_COLOR, health/100.0));},
         hslStr: (hsl) => 'hsl('+hsl.h+','+hsl.s+'%,'+hsl.l+'%)'
     }

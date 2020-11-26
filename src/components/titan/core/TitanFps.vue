@@ -12,7 +12,7 @@
 
         <div
             style="position:absolute;display:block;width:8em;height:1.25em;right:16px;bottom:148px;background-color:black;color:#08f;padding: 0 5px;"
-            @click="status.health.head=(status.health.head===0?100:0)"
+            @click="status.health.head=Math.random()*100.0"
         >
             F-88 A2 (ACOG)
         </div>
@@ -124,6 +124,13 @@ export default {
             this.activeCamera.setCameraMode( CAMERA_MODE.FIRST_PERSON );
             this.activeScenario.scenarioEntered(true);
             $tWorldInterface.pause(false);
+
+            $tLogger.info('Adding Global Listener...');
+            window.TitanEvent.addGlobalListener((evtName, evtArgs)=>
+            {
+                $tLogger.info('GLOBAL LISTENER', evtName, evtArgs);
+            });
+            $tLogger.info('Added Global Listener!');
         }
     },
     beforeDestroy()
