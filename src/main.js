@@ -18,6 +18,9 @@ const i18n = new VueI18n({
 });
 
 require('@/../public/js/titanEventListener');
+console.log('>>>>>>>>>>>>> global is: "' + typeof($global)+'"');
+// eslint-disable-next-line no-undef
+window.$global = typeof($global) === 'undefined' ? {} : $global;
 
 // ----------------------------------------------------------------------------
 // 'AUTOMAGIC' GLOBAL REGISTRATION OF 'COMMON' TITAN COMPONENTS

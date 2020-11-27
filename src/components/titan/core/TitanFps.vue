@@ -83,7 +83,7 @@ export default {
     },
     mounted()
     {
-        $tLogger.info(window.TitanEvent);
+        $tLogger.info('>>>>>>>>>>>>>>>>> window.TitanEvent is ', window.TitanEvent);
 
         this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, TITAN_UI_MODE.FPS);
         this.$store.commit(TITAN_MUTATION.CHANGE_SIM_MODE, SIM_MODE.PLAY);
