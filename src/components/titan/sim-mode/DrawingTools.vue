@@ -4,8 +4,8 @@
         icon="draw"
         :x="150"
         :y="150"
-        :width="196"
-        :height="32"
+        :width="224"
+        :height="160"
         :resizable="false"
         @window-active="windowActiveChanged"
         @window-closed="beforeCloseCleanup"
@@ -17,19 +17,19 @@
                         v-for="tool in tools"
                         :key="tool.type"
                         class="tool"
-                        :class="{active:currentTool===tool.type}"
-                        @click="setTool(tool.type)"
+                        :class="{active:currentTool && currentTool.type===tool.type}"
+                        @click="setTool(tool)"
                     >
                         <titan-icon :icon="tool.icon" size="150%" />
                     </button>
                     <br>
                     <div
-                        v-for="color in colors"
-                        :key="`fill-${color.type}`"
-                        class="color"
-                        :class="{active:(currentFill && currentFill.type===color.type)}"
-                        :style="`background-color:rgb(${color.rgb[0]},${color.rgb[1]},${color.rgb[2]});`"
-                        @click="setFillColor(color)"
+                        v-for="(swatch, idx) in palette"
+                        :key="`swatch-${idx}`"
+                        class="swatch"
+                        :class="{active:(currentFill && currentFill.id===swatch.id)}"
+                        :style="`background-color:${swatch.color.toRgbaString()};`"
+                        @click="setFillColor(swatch)"
                     />
                 </div>
             </titan-window-content>
@@ -40,8 +40,10 @@
 <script>
 import {TITAN_MUTATION, TITAN_UI_MODE} from '@/assets/js/store/titan-manager.js';
 
-import TitanUtils, { $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
-import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
+import TitanUtils, { $isInsideTitan, $tWorldInterface, $tRenderToolbox } from '@/assets/js/titan/titan-utils.js';
+import { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
+import { Color } from '@/assets/js/utils/color-utils.js';
+import DataUtils from '@/assets/js/utils/data-utils.js';
 
 import TitanWindow from '@/components/common/titan/TitanWindow.vue';
 import TitanWindowContent from '@/components/common/titan/TitanWindowContent.vue';
@@ -62,16 +64,31 @@ export default {
     },
     data()
     {
+        // just make a nice palette of 5 colors - should be plenty
+        const palette = [];
+        const colorCount = 5;
+        for(let idx=0; idx<colorCount;idx++)
+        {
+            const color = new Color('#F00').adjustHue(idx*360/colorCount);
+            palette.push({id:idx, color:color});
+        }
+        // 5 shades of grey
+        for(let idx=0; idx<colorCount;idx++)
+        {
+            const color = new Color(`hsl(0,0,${1-((1/(colorCount-1))*idx)})`);
+            palette.push({id:idx+colorCount, color:color});
+        }
+
         return {
+            palette,
             tools:[
-                {type: 'square', icon: 'shape-square-plus', tooltip: 'Square'},
-                {type: 'circle', icon: 'shape-circle-plus', tooltip: 'Circle'},
+                {type: 'rectangle', icon: 'shape-square-plus', tooltip: 'Square'},
+                {type: 'ellipse', icon: 'shape-circle-plus', tooltip: 'Circle'},
             ],
-            colors:[
-                {type:'red', rgb: [255,0,0]},
-                {type:'green', rgb: [0,255,0]},
-                {type:'blue', rgb: [0,0,255]},
-            ],
+            drag:{
+                mightDrag: false,
+                isDrawingShape: false,
+            },
             currentTool: null,
             currentFill: null,
             currentStroke: null,
@@ -106,13 +123,32 @@ export default {
     },
     methods:
     {
+        /**
+         * Set the tool. If the same tool is set twice it is turned off (i.e., toggles if the same tool is
+         * set).
+         *
+         * @param {object} tool the tool definition
+         */
         setTool(tool)
         {
-            this.currentTool = this.currentTool === tool ? null : tool;
+            if(this.currentTool === null || tool === null)
+                this.currentTool = tool;
+            else
+            {
+                // change if different tool, turn off if same tool again
+                this.currentTool = this.currentTool.type === tool.type ? null : tool;
+            }
         },
-        setFillColor(color)
+        /**
+         * Sets the fill and stroke color
+         *
+         * @param {object} swatch the swatch color definition, expected to be an object of the
+         *        form {name:{String}, color: {Color}}
+         */
+        setFillColor(swatch)
         {
-            this.currentFill = color;
+            this.currentFill = swatch;
+            this.currentStroke = swatch;
         },
         /**
          * Handle activities required as this window becomes active/inactive
@@ -209,67 +245,42 @@ export default {
         _handleMouseMove(evt)
         {
             // do we need to do anything with the mouse movement?
-            if(!this.drag.isDraggingObject && !this.drag.isRubberBandSelecting && !this.drag.mightDrag)
+            if(!this.drag.isDrawingShape && !this.drag.mightDrag)
                 return;
+
+            const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
 
             // initialise object drag or rubber band selection if required
             if(this.drag.mightDrag)
             {
                 // not *might* drag any more - we are *definitely* dragging something at this point
                 this.drag.mightDrag = false;
+                this.drag.isDrawingShape = true;
 
                 // update selection if required to ensure that the item under the mouse is selected
                 $tWorldInterface.injectMousePosition(this.drag.lastWinXY, 15000);
-                if($tWorldInterface.isSelectableObjectUnderMouse())
-                {
-                    // if there's an object under the mouse, we are dragging it
-                    this.drag.isDraggingObject = true;
-                    const isSelected = $tWorldInterface.isObjectUnderMouseSelected();
-                    if(!isSelected)
-                    {
-                        this._doSelection();
-                    }
-                    $tWorldInterface.showGizmoAt(this.drag.lastEcef);
-                }
-                else
-                {
-                    // if there's nothing selectable under the mouse, it's the start of a
-                    // rubber band box selection
-                    this.drag.isRubberBandSelecting = true;
-                    // clicked on nothing - clear the selection (unless CTRL is pressed)
-                    this._clearSelection();
-                    $tWorldInterface.showGizmoAt(this.drag.lastEcef);
-                    $tWorldInterface.beginAreaDragSelect();
-                }
+                $tWorldInterface.showGizmoAt(this.drag.lastEcef);
+
+                const titanColor = this._toRenderToolboxColor(this.currentFill ? this.currentFill.color : null);
+                const toolType = this.currentTool ? this.currentTool.type : 'ellipse';
+
+                $tRenderToolbox.setShapeFillColor(titanColor);
+                $tRenderToolbox.setShapeBorderColor(titanColor);
+                $tRenderToolbox.setTool('shape', {type: toolType});
+                $tRenderToolbox.setDefaultStartHeight(0.5);
+                $tRenderToolbox.setPenPosition(winXY);
+                $tRenderToolbox.penDown();
             }
 
-            // update object drag or rubber band selection if required
-            const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
+            // update shape as required
             const ecef = Vec3.fromObj( $tWorldInterface.getWorldPosFromScreenPix(winXY) );
-            if(this.drag.isDraggingObject)
+            // may be unable to query world position from screen (happens when move above horizon)
+            // so check before proceeding
+            if(TitanUtils.isValidWorldPos(ecef))
             {
-                // may be unable to query world position from screen (happens when move above horizon)
-                // so check before proceeding
-                if(TitanUtils.isValidWorldPos(ecef))
-                {
-                    // work out how to move the items in relation to the drag
-                    const vecOffset = MathUtils.subtract(ecef, this.drag.lastECEF);
-                    const activeScenario = $tWorldInterface.getActiveScenario();
-                    // move the selected items accordingly
-                    activeScenario.translateSelected(vecOffset, true);
-                    // show the gizmo where the mouse is
-                    $tWorldInterface.showGizmoAt(ecef);
-                    // cache coords for next offset calculation
-                    this.drag.lastWinXY = winXY;
-                    this.drag.lastECEF = ecef;
-                }
-            }
-            else if(this.drag.isRubberBandSelecting)
-            {
-                // we need to continually inject the current mouse position so that the blue
-                // selection box renders to track with the mouse position; if we don't do this
-                // the selection box doesn't render, which is a bad user experience
-                $tWorldInterface.injectMousePosition(winXY, 15000);
+                // const vecOffset = MathUtils.subtract(ecef, this.drag.lastECEF);
+                // update the shape as required
+                $tRenderToolbox.setPenPosition(winXY);
                 // show the gizmo where the mouse is
                 $tWorldInterface.showGizmoAt(ecef);
                 // cache coords for next offset calculation
@@ -300,28 +311,30 @@ export default {
             // NOTE: we have to clear `mightDrag` here in case there was no
             //       `mousemove` event to clear it
             this.drag.mightDrag = false;
-            if(this.drag.isDraggingObject)
+            if(this.drag.isDrawingShape)
             {
                 // end of object dragging
-                this.drag.isDraggingObject = false;
-            }
-            else if(this.drag.isRubberBandSelecting)
-            {
-                // end of rubber band box selection
-                this.drag.isRubberBandSelecting = false;
-                $tWorldInterface.endAreaDragSelect();
-            }
-            else if($tWorldInterface.isSelectableObjectUnderMouse())
-            {
-                // clicked on an item, update the selection
-                this._doSelection();
-            }
-            else
-            {
-                // clicked on nothing; clear selection (unless CTRL is pressed)
-                this._clearSelection();
+                this.drag.isDrawingShape = false;
+                $tRenderToolbox.penUp();
             }
         },
+        /**
+         * Converts a color to one usable by the Titan render toolbox
+         *
+         * Titan render toolbox colors are expressed as {x:R,y:G,z:B,w:A} with
+         * the RGBA values being between 0.0 and 1.0
+         *
+         * @param {Color} a Color instance (see color-utils.js)
+         * @returns {Object} an object of the form {x:R,y:G,z:B,w:A} suitable for
+         * use with the Titan render toolbox
+         */
+        _toRenderToolboxColor(color)
+        {
+            // get the normalized RGBA values
+            const rgbNormalized = color ? color.toRgbNormalized() : {r:0,g:0,b:0,a:1};
+            // remap RGBA to XYZW
+            return DataUtils.remap(rgbNormalized, {r:'x', g:'y', b:'z', a:'w'});
+        }
     }
 };
 </script>
@@ -333,15 +346,15 @@ export default {
     {
         &.tool
         {
-             &.active
-             {
+            &.active
+            {
                 background: white;
-             }
+            }
         }
     }
     div
     {
-        &.color
+        &.swatch
         {
             display:inline-block;
             width:32px;
@@ -350,6 +363,7 @@ export default {
             &.active
             {
                 border: 2px solid white;
+                box-shadow: inset 0 0 8px rgba(255,255,255,0.5), 0 0 8px rgba(0,0,0,0.5);
             }
         }
     }

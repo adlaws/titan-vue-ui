@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ColorUtils from '@/assets/js/utils/color-utils.js';
+import { Color } from '@/assets/js/utils/color-utils.js';
 
 import ErrorBase from './ErrorBase.vue';
 
@@ -24,8 +24,8 @@ export default {
     },
     data()
     {
-        const color1 = new ColorUtils(this.$vuetify.theme.currentTheme.primary).toRgbString();
-        const color2 = new ColorUtils(color1).adjustHue(30).toRgbString();
+        const color1 = new Color(this.$vuetify.theme.currentTheme.primary).toRgbString();
+        const color2 = new Color(color1).adjustHue(30).toRgbString();
 
         const _makeGrey = function(level, opacity) { return `rgba(${level},${level},${level},${opacity})`; };
         const grey1 = _makeGrey(17, 0.08);

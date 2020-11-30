@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import ColorUtils from '@/assets/js/utils/color-utils.js';
+import { Color } from '@/assets/js/utils/color-utils.js';
+
 import ErrorBase from './ErrorBase.vue';
 
 export default {
@@ -23,9 +24,9 @@ export default {
     },
     data()
     {
-        const g1color1 = new ColorUtils(this.$vuetify.theme.currentTheme.success).opacify(0.46);
+        const g1color1 = new Color(this.$vuetify.theme.currentTheme.success).opacify(0.46);
         const g1color2 = g1color1.clone().darker(50);
-        const g2color1 = new ColorUtils(this.$vuetify.theme.currentTheme.info);
+        const g2color1 = new Color(this.$vuetify.theme.currentTheme.info);
         const g2color2 = g2color1.clone().darker(50);
 
         const _makeStripedGradientRGBA = function(rgbaA, rgbaB, steps)

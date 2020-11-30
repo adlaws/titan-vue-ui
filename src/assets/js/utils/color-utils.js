@@ -1,12 +1,12 @@
-export default class ColorUtils
+export class Color
 {
     constructor(color)
     {
-        if(!(this instanceof ColorUtils))
-            return new ColorUtils(color);
+        if(!(this instanceof Color))
+            return new Color(color);
         if(typeof color === 'object')
             return color;
-        this._attachValues(ColorUtils.toColorObject(color));
+        this._attachValues(Color.toColorObject(color));
     }
 
     toRgbString()
@@ -79,23 +79,23 @@ export default class ColorUtils
         let r;
         let g;
         let b;
-        const colorhexs = ColorUtils.getColorArr('hexs');
+        const colorhexs = Color.getColorArr('hexs');
         for (let i = 0; i < colorhexs.length; i++)
         {
             r = parseInt(colorhexs[i].substr(0, 2), 16);
             g = parseInt(colorhexs[i].substr(2, 2), 16);
             b = parseInt(colorhexs[i].substr(4, 2), 16);
             if(this.red === r && this.green === g && this.blue === b)
-                return ColorUtils.getColorArr('names')[i];
+                return Color.getColorArr('names')[i];
         }
         return '';
     }
 
     toHexString()
     {
-        var r = ColorUtils.toHex(this.red);
-        var g = ColorUtils.toHex(this.green);
-        var b = ColorUtils.toHex(this.blue);
+        var r = Color.toHex(this.red);
+        var g = Color.toHex(this.green);
+        var b = Color.toHex(this.blue);
         return '#' + r + g + b;
     }
 
@@ -105,6 +105,16 @@ export default class ColorUtils
             r: this.red,
             g: this.green,
             b: this.blue,
+            a: this.opacity
+        };
+    }
+
+    toRgbNormalized()
+    {
+        return {
+            r: this.red / 255.0,
+            g: this.green / 255.0,
+            b: this.blue / 255.0,
             a: this.opacity
         };
     }
@@ -163,8 +173,8 @@ export default class ColorUtils
         this.sat += x;
         if(this.sat > 1)
             this.sat = 1;
-        rgb = ColorUtils.hslToRgb(this.hue, this.sat, this.lightness);
-        color = ColorUtils.colorObject(rgb, this.opacity, this.hue, this.sat);
+        rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
+        color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
         this._attachValues(color);
         return this;
     }
@@ -175,8 +185,8 @@ export default class ColorUtils
         this.sat -= x;
         if(this.sat < 0)
             this.sat = 0;
-        const rgb = ColorUtils.hslToRgb(this.hue, this.sat, this.lightness);
-        const color = ColorUtils.colorObject(rgb, this.opacity, this.hue, this.sat);
+        const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
+        const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
         this._attachValues(color);
         return this;
     }
@@ -187,8 +197,8 @@ export default class ColorUtils
         this.lightness += x;
         if(this.lightness > 1)
             this.lightness = 1;
-        const rgb = ColorUtils.hslToRgb(this.hue, this.sat, this.lightness);
-        const color = ColorUtils.colorObject(rgb, this.opacity, this.hue, this.sat);
+        const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
+        const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
         this._attachValues(color);
         return this;
     }
@@ -199,8 +209,8 @@ export default class ColorUtils
         this.lightness -= x;
         if(this.lightness < 0)
             this.lightness = 0;
-        const rgb = ColorUtils.hslToRgb(this.hue, this.sat, this.lightness);
-        const color = ColorUtils.colorObject(rgb, this.opacity, this.hue, this.sat);
+        const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
+        const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
         this._attachValues(color);
         return this;
     }
@@ -221,15 +231,15 @@ export default class ColorUtils
         while(hue < 0)
             hue += 360;
         this.hue = hue;
-        const rgb = ColorUtils.hslToRgb(this.hue, this.sat, this.lightness);
-        const color = ColorUtils.colorObject(rgb, this.opacity, this.hue, this.sat);
+        const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
+        const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
         this._attachValues(color);
         return this;
     }
 
     clone()
     {
-        return new ColorUtils(this.toRgbaString());
+        return new Color(this.toRgbaString());
     }
 
     _attachValues(color)
@@ -270,7 +280,7 @@ export default class ColorUtils
 
     static toColorObject(c)
     {
-        c = ColorUtils.w3trim(c.toLowerCase());
+        c = Color.w3trim(c.toLowerCase());
         let typ;
         let arr = [];
         let arrlength;
@@ -341,7 +351,7 @@ export default class ColorUtils
             if(typ === 'rgb')
             {
                 if(arr.length !== arrlength)
-                    return ColorUtils.emptyObject();
+                    return Color.emptyObject();
 
                 for (i = 0; i < arrlength; i++)
                 {
@@ -355,7 +365,7 @@ export default class ColorUtils
                             arr[i] = Math.round(arr[i] * 255);
                     }
                     if(isNaN(arr[i]))
-                        return ColorUtils.emptyObject();
+                        return Color.emptyObject();
                     if(parseInt(arr[i]) > 255)
                         arr[i] = 255;
                     if(i < 3)
@@ -389,7 +399,7 @@ export default class ColorUtils
                         arr[i] = arr[i].replace('%', '');
                         arr[i] = Number(arr[i]);
                         if(isNaN(arr[i]))
-                            return ColorUtils.emptyObject();
+                            return Color.emptyObject();
                         arr[i] = arr[i] / 100;
                     }
                     else
@@ -403,15 +413,15 @@ export default class ColorUtils
                 }
                 if(typ === 'hsl')
                 {
-                    rgb = ColorUtils.hslToRgb(arr[0], arr[1], arr[2]);
+                    rgb = Color.hslToRgb(arr[0], arr[1], arr[2]);
                     hue = Number(arr[0]);
                     sat = Number(arr[1]);
                 }
                 if(typ === 'hwb')
-                    rgb = ColorUtils.hwbToRgb(arr[0], arr[1], arr[2]);
+                    rgb = Color.hwbToRgb(arr[0], arr[1], arr[2]);
 
                 if(typ === 'ncol')
-                    rgb = ColorUtils.ncolToRgb(arr[0], arr[1], arr[2]);
+                    rgb = Color.ncolToRgb(arr[0], arr[1], arr[2]);
 
                 if(opacity === true)
                     a = Number(arr[3]);
@@ -427,7 +437,7 @@ export default class ColorUtils
                         arr[i] = arr[i].replace('%', '');
                         arr[i] = Number(arr[i]);
                         if(isNaN(arr[i]))
-                            return ColorUtils.emptyObject();
+                            return Color.emptyObject();
 
                         arr[i] = arr[i] / 100;
                     }
@@ -440,23 +450,23 @@ export default class ColorUtils
                     if(Number(arr[i]) < 0)
                         arr[i] = 0;
                 }
-                rgb = ColorUtils.cmykToRgb(arr[0], arr[1], arr[2], arr[3]);
+                rgb = Color.cmykToRgb(arr[0], arr[1], arr[2], arr[3]);
 
                 if(opacity === true)
                     a = Number(arr[4]);
             }
         }
         else if(c.substr(0, 3) === 'ncs')
-            rgb = ColorUtils.ncsToRgb(c);
+            rgb = Color.ncsToRgb(c);
         else
         {
             match = false;
-            colornames = ColorUtils.getColorArr('names');
+            colornames = Color.getColorArr('names');
             for (i = 0; i < colornames.length; i++)
             {
                 if(c.toLowerCase() === colornames[i].toLowerCase())
                 {
-                    colorhexs = ColorUtils.getColorArr('hexs');
+                    colorhexs = Color.getColorArr('hexs');
                     match = true;
                     rgb = {
                         r: parseInt(colorhexs[i].substr(0, 2), 16),
@@ -473,8 +483,8 @@ export default class ColorUtils
                     c = c.substr(0, 1) + c.substr(0, 1) + c.substr(1, 1) + c.substr(1, 1) + c.substr(2, 1) + c.substr(2, 1);
                 for (i = 0; i < c.length; i++)
                 {
-                    if(!ColorUtils.isHex(c.substr(i, 1)))
-                        return ColorUtils.emptyObject();
+                    if(!Color.isHex(c.substr(i, 1)))
+                        return Color.emptyObject();
                 }
                 arr[0] = parseInt(c.substr(0, 2), 16);
                 arr[1] = parseInt(c.substr(2, 2), 16);
@@ -482,7 +492,7 @@ export default class ColorUtils
                 for (i = 0; i < 3; i++)
                 {
                     if(isNaN(arr[i]))
-                        return ColorUtils.emptyObject();
+                        return Color.emptyObject();
                 }
                 rgb = {
                     r: arr[0],
@@ -491,23 +501,23 @@ export default class ColorUtils
                 };
             }
         }
-        return ColorUtils.colorObject(rgb, a, hue, sat);
+        return Color.colorObject(rgb, a, hue, sat);
     }
 
     static colorObject(rgb, a, h, s)
     {
         if(!rgb)
-            return ColorUtils.emptyObject();
+            return Color.emptyObject();
 
         if(a === null)
             a = 1;
 
-        const hsl = ColorUtils.rgbToHsl(rgb.r, rgb.g, rgb.b);
-        const hwb = ColorUtils.rgbToHwb(rgb.r, rgb.g, rgb.b);
-        const cmyk = ColorUtils.rgbToCmyk(rgb.r, rgb.g, rgb.b);
+        const hsl = Color.rgbToHsl(rgb.r, rgb.g, rgb.b);
+        const hwb = Color.rgbToHwb(rgb.r, rgb.g, rgb.b);
+        const cmyk = Color.rgbToCmyk(rgb.r, rgb.g, rgb.b);
         const hue = (h || hsl.h);
         const sat = (s || hsl.s);
-        const ncol = ColorUtils.hueToNcol(hue);
+        const ncol = Color.hueToNcol(hue);
 
         let color = {
             // RGB
@@ -548,7 +558,7 @@ export default class ColorUtils
             ncol: ncol,
             valid: true
         };
-        color = ColorUtils.roundDecimals(color);
+        color = Color.roundDecimals(color);
         return color;
     }
 
@@ -628,9 +638,9 @@ export default class ColorUtils
             t2 = light + sat - (light * sat);
 
         t1 = light * 2 - t2;
-        r = ColorUtils.hueToRgb(t1, t2, hue + 2) * 255;
-        g = ColorUtils.hueToRgb(t1, t2, hue) * 255;
-        b = ColorUtils.hueToRgb(t1, t2, hue - 2) * 255;
+        r = Color.hueToRgb(t1, t2, hue + 2) * 255;
+        g = Color.hueToRgb(t1, t2, hue) * 255;
+        b = Color.hueToRgb(t1, t2, hue - 2) * 255;
         return {
             r: r,
             g: g,
@@ -650,7 +660,7 @@ export default class ColorUtils
 
     static hwbToRgb(hue, white, black)
     {
-        const rgb = ColorUtils.hslToRgb(hue, 1, 0.50);
+        const rgb = Color.hslToRgb(hue, 1, 0.50);
         const rgbArr = [];
         rgbArr[0] = rgb.r / 255;
         rgbArr[1] = rgb.g / 255;
@@ -718,7 +728,7 @@ export default class ColorUtils
                 black = (percent / 100);
             }
         }
-        return ColorUtils.hwbToRgb(h, white, black);
+        return Color.hwbToRgb(h, white, black);
     }
 
     static hueToNcol(hue)
@@ -743,7 +753,7 @@ export default class ColorUtils
     static ncsToRgb(ncs)
     {
         let black1, chroma1, factor1, red1, red2, green1, green2, blue1, blue2, max, factor2, grey, r, g, b;
-        ncs = ColorUtils.w3trim(ncs).toUpperCase();
+        ncs = Color.w3trim(ncs).toUpperCase();
         ncs = ncs.replace('(', '');
         ncs = ncs.replace(')', '');
         ncs = ncs.replace('NCS', 'NCS ');
