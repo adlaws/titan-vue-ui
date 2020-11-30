@@ -17,10 +17,16 @@ const i18n = new VueI18n({
     messages,
 });
 
-require('@/../public/js/titanEventListener');
-console.log('>>>>>>>>>>>>> global is: "' + typeof($global)+'"');
-// eslint-disable-next-line no-undef
-window.$global = typeof($global) === 'undefined' ? {} : $global;
+// ----------------------------------------------------------------------------
+// This is necessary so that TitanEventInterface works correctly
+// NOTE: It's possible that this will not be needed in the future - currently
+//       it's only needed because of the odd way that TitanEventInterface
+//       sets itself up and operates in comparison to the other Titan
+//       event systems, namely in that events must be registered via a kind of
+//       JavaScript proxy to an intergen interface, rather than directly on
+//       an *actual* intergen interface.
+require('@/../public/js/titanEventListener.js');
+// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 // 'AUTOMAGIC' GLOBAL REGISTRATION OF 'COMMON' TITAN COMPONENTS

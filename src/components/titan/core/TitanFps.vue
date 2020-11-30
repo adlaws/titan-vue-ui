@@ -69,6 +69,7 @@ export default {
             activeCamera: null,
             cachedCameraPosRot: null,
             entity: null,
+            entityEventSystem: null,
             status:
             {
                 health:{ head:100 },
@@ -83,8 +84,6 @@ export default {
     },
     mounted()
     {
-        $tLogger.info('>>>>>>>>>>>>>>>>> window.TitanEvent is ', window.TitanEvent);
-
         this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, TITAN_UI_MODE.FPS);
         this.$store.commit(TITAN_MUTATION.CHANGE_SIM_MODE, SIM_MODE.PLAY);
 
@@ -113,24 +112,21 @@ export default {
             this.entity.enableDirectControl();
 
             // get notified of entity changes to stuff
-            const entityEventSystem = this.entity.getEventSystem();
-            entityEventSystem.bindCallbackFunction('CharacterPostureChanged_EventInstant', ()=>
-            {
-                // $tLogger.info('CharacterPostureChanged_EventInstant!!');
-                this.status.posture = this.entity.getCharacterPose();
-                // $tLogger.info(this.entity.getCharacterPoseData());
-            });
+            this.entityEventSystem = this.entity.getEventSystem();
+            this.entityEventSystem.bindCallbackFunction('CharacterPostureChanged_EventInstant', this.updateCharacterPosture);
 
             this.activeCamera.setCameraMode( CAMERA_MODE.FIRST_PERSON );
             this.activeScenario.scenarioEntered(true);
             $tWorldInterface.pause(false);
 
-            $tLogger.info('Adding Global Listener...');
-            window.TitanEvent.addGlobalListener((evtName, evtArgs)=>
+            // NOTE: the $global.TitanEvent thing is a holdover from how TitanEventInterface.cpp
+            //       works and hopefully will turn into something more like...
+            //       $tEventInterface.addListener('someEventName', myHandlerFunction );
+            //       Refer also to the source in titanEventListener.js
+            window.$global.TitanEvent.addGlobalListener((evtName, evtArgs)=>
             {
-                $tLogger.info('GLOBAL LISTENER', evtName, evtArgs);
+                $tLogger.info(`GLOBAL LISTENER TRIGGERED in component ${this.$options.name}: ${evtName}`, evtArgs);
             });
-            $tLogger.info('Added Global Listener!');
         }
     },
     beforeDestroy()
@@ -140,6 +136,8 @@ export default {
         {
             $tWorldInterface.pause(true);
             this.activeScenario.scenarioEntered(false);
+
+            this.entityEventSystem.removeCallbackFunction(this.updateCharacterPosture);
 
             const controlledEntity = this.activeScenario.get_direct_control_vehicle();
             if( controlledEntity )
@@ -162,5 +160,14 @@ export default {
         this.$store.commit(TITAN_MUTATION.CHANGE_SIM_MODE, SIM_MODE.MENU);
         this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.FPS);
     },
+    methods:
+    {
+        updateCharacterPosture()
+        {
+            // this gives us an integer back for the current pose - check the following for details:
+            //     src\titan_module_hyperion\interfaces\EntityInterface.cpp: getCharacterPose()
+            this.status.posture = this.entity.getCharacterPose();
+        }
+    }
 };
 </script>

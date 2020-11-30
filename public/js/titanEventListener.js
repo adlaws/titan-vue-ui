@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 // --------------------------------------------------------------------------------------------------------------------
 /**
  * Set up functions required by:
@@ -11,16 +9,29 @@
  *
  *     gui/js/titanEventListener.js
  */
-// eslint-disable-next-line no-undef
+
+/** $global.titanEventHandlers functions must be added by window context to prevent crash
+ *
+ * @type {{}}
+ */
 var $global = typeof($global) === 'undefined' ? {} : $global;
+if(typeof(window) !== 'undefined')
+{
+    // NOTE: This section is entirely for to provide a `$global` when working in a
+    //       browser
+    // NOTE: in Titan at the stage this JavaScript is brought in, there is no
+    //       `window` instance (it's not merely null, but actually `undefined`),
+    //       so we need to be carefule about how we reference it here. If Titan
+    //       ever touches `window` in here it will just crash immediately.
+    window.$global = $global;
+}
+
 // eslint-disable-next-line no-undef
 var $otLogger = typeof($query_interface) === 'undefined' ? null : $query_interface('ot::js::logger.get');
+// "mini" version of the logger found in `titan-utils.js` just so we can provide
+// some logging functionality here
 var $tLogger = {
     error: function() { $tLogger._doLog('error', arguments); },
-    warning: function() { $tLogger._doLog('warning', arguments); },
-    info: function() { $tLogger._doLog('info', arguments); },
-    debug: function() { $tLogger._doLog('debug', arguments); },
-    fading: function() { $tLogger._doLog('fading', arguments); },
     _doLog: function(level, varargs)
     {
         var parts = Array.prototype.slice.call(varargs);
@@ -104,7 +115,7 @@ function onUserEventArgs(evtName, evtArgs)
             }
             catch (e)
             {
-                $tLogger.error(`Could not process user event handler event '${evtName}': ${e.message}`);
+                $tLogger.error(`onUserEventArgs() could not process user event handler event '${evtName}': ${e.message}`);
             }
         });
 
@@ -116,13 +127,13 @@ function onUserEventArgs(evtName, evtArgs)
             }
             catch (e)
             {
-                $tLogger.error(`Could not process global user event handler event '${evtName}': ${e.message}`);
+                $tLogger.error(`onUserEventArgs() could not process global handler for event '${evtName}': ${e.message}`);
             }
         });
     }
     catch (e)
     {
-        $tLogger.error('onUserEventArgs: ' + e.message);
+        $tLogger.error('onUserEventArgs() failed: ' + e.message);
     }
 
     var titanEventHandlers = $global.titanEventHandlers;
@@ -137,7 +148,7 @@ function onUserEventArgs(evtName, evtArgs)
     }
     catch (e)
     {
-        $tLogger.error(`Could not process window user event handler event '${evtName}': ${e.message}`);
+        $tLogger.error(`onUserEventArgs() could not process window user event handler event '${evtName}': ${e.message}`);
     }
 
     /* see titanGlobalWindowAPI.js for triggerTitanWindowEvent instance - declared there to prevent crash */
@@ -152,7 +163,7 @@ function onUserEventArgs(evtName, evtArgs)
     }
     catch (e)
     {
-        $tLogger.error(`Could not trigger Titan window event for '${evtName}': ${e.message}`);
+        $tLogger.error(`onUserEventArgs() could not trigger Titan window event for '${evtName}': ${e.message}`);
     }
 }
 
@@ -165,7 +176,6 @@ function onUserEventArgs(evtName, evtArgs)
 // eslint-disable-next-line no-unused-vars
 function onScenarioEvent(evtName, evtArgs)
 {
-    $tLogger.info('>>>>>>>>>>>>>>>>>>>> Oh yeah it\'s working, it\'s time to get excited!!!!!', evtName, evtArgs);
     var titanEventHandlers = $global.titanEventHandlers;
     if(!titanEventHandlers)
         return;
@@ -178,7 +188,7 @@ function onScenarioEvent(evtName, evtArgs)
     }
     catch (e)
     {
-        // $tLogger.error('onScenarioEvent: ' + e.message);
+        $tLogger.error(`onScenarioEvent() could not process scenario event for '${evtName}': ${e.message}`);
     }
 
     var triggerTitanWindowEvent = titanEventHandlers.triggerTitanWindowEvent;
@@ -193,7 +203,7 @@ function onScenarioEvent(evtName, evtArgs)
     }
     catch (e)
     {
-        $tLogger.error(`Could not trigger Titan window event for '${evtName}': ${e.message}`);
+        $tLogger.error(`onScenarioEvent() could not trigger Titan window event for '${evtName}': ${e.message}`);
     }
 }
 
@@ -205,8 +215,9 @@ function onScenarioEvent(evtName, evtArgs)
  * @param eventName
  */
 // eslint-disable-next-line no-unused-vars
-function onEntityEvent(/*entityGUID, eventName*/)
+function onEntityEvent(entityGUID, evtName)
 {
     // TODO: this is empty in the original gui/js/titanEventListener.js implementation
     // and may not actually be needed
+    $tLogger.error(`onEntityEvent() was called for event '${evtName}', entity '${entityGUID}'`);
 }
