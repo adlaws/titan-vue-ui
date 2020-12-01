@@ -25,15 +25,16 @@
         </svg>
     </div>
 </template>
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="-8 -8 16 16"><path d="M-5 5l5-3 5 3L0-7z" stroke="#000" stroke-linejoin="round"/></svg>
 
 <script>
+import gsap from 'gsap'; // provides tweening functions
+
 import { $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
-const DEFAULT_UPDATE_INTERVAL = 125; // update every 125ms (8x per second)
+const DEFAULT_UPDATE_INTERVAL_MS = 250; // update every 250ms (4x per second)
 const MIN_UPDATE_INTERVAL = 100; // at most update 10x per second
 
 export default {
@@ -44,17 +45,23 @@ export default {
     },
     props:
     {
-        updateRate:{
+        updateInterval:{
             type: Number,
-            default: DEFAULT_UPDATE_INTERVAL,
+            default: DEFAULT_UPDATE_INTERVAL_MS,
         }
     },
     data()
     {
         return {
             lla: {latitude:0.0, longitude: 0.0, altitude:0.0},
+            tweenedLatitude: 0.0,
+            tweenedLongitude: 0.0,
             magneticHeading: 0, // between -180.0 and 180.0
+            tweenedMagneticHeading: 0,
             compassRotation: 0.0,
+            tweenedCompassRotation: 0.0,
+            updateIntervalMs: DEFAULT_UPDATE_INTERVAL_MS,
+            updateIntervalSeconds: (DEFAULT_UPDATE_INTERVAL_MS/1000.0),
             running: false,
         };
     },
@@ -63,8 +70,8 @@ export default {
         taskbarSize() { return this.$store.getters.taskbarSize; },
         latlngText()
         {
-            let lat = this.lla.latitude;
-            let lng = this.lla.longitude;
+            let lat = this.tweenedLatitude;
+            let lng = this.tweenedLongitude;
 
             const ns = lat<0?'S':'N';
             const ew = lng<0?'W':'E';
@@ -84,25 +91,49 @@ export default {
         },
         headingText()
         {
-            const heading = MathUtils.wrapClamp(this.magneticHeading, 0.0, 360.0);
+            const heading = MathUtils.wrapClamp(this.tweenedMagneticHeading, 0.0, 360.0);
             return (heading<10?'0':'') + (heading<100?'0':'') + `${heading.toFixed(2)}°`;
         }
     },
     watch:
     {
+        updateRate(newVal)
+        {
+            this.updateIntervalMs = Math.max(MIN_UPDATE_INTERVAL, newVal/1000.0);
+        },
+        updateIntervalMs(newVal)
+        {
+            this.updateIntervalSeconds = newVal/1000.0;
+        },
+        updateIntervalSeconds(newVal)
+        {
+            this.$refs.compassNeedle.style.transition = `all ${newVal}s ease-in-out`;
+        },
         magneticHeading(newHeading, oldHeading)
         {
-            // this is simply to ensure that the compass needle rotates vai the "shortest angular
+            // this is simply to ensure that the compass needle rotates via the "shortest angular
             // distance" so that when the needle goes from, say 359° to 1°, it spins clockwise
             // through 360°, rather than counter-clockwise through 180°
-            this.compassRotation += MathUtils.shortestAngleDeg(oldHeading, newHeading);
-        }
+            const delta = MathUtils.shortestAngleDeg(oldHeading, newHeading);
+            this.compassRotation += delta;
+            // ease the compass heading value to provide the illusion of continuous updates
+            this.easeValue({tweenedMagneticHeading: newHeading});
+        },
+        lla:{
+            deep: true,
+            handler:function(newVal)
+            {
+                // ease the lat/long values to provide the illusion of continuous updates
+                this.easeValue({tweenedLatitude: newVal.latitude});
+                this.easeValue({tweenedLongitude: newVal.longitude});
+            }
+        },
     },
     mounted()
     {
+        this.updateIntervalMs = Math.max(MIN_UPDATE_INTERVAL, this.updateRate/1000.0);
         // easing for the rotation in sync with the update rate to make the
         // compass needle rotate smoothly
-        this.$refs.compassNeedle.style.transition = `all ${this.updateRate/1000.0}s ease-in-out`;
         // start the update cycle
         this.running = true;
         this.update();
@@ -113,6 +144,10 @@ export default {
     },
     methods:
     {
+        easeValue(params)
+        {
+            gsap.to(this.$data, { duration: this.updateIntervalSeconds, ease: 'power2.out', ...params });
+        },
         update()
         {
             if(!this.running)
