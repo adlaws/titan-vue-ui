@@ -8,6 +8,13 @@
             FPS
         </router-link>
 
+        <transition name="fade" mode="out-in">
+            <titan-splash
+                v-if="showSplash"
+                @click.native="showSplash=false"
+            />
+        </transition>
+
         <editor-ui v-if="isSimModeEditor" />
         <lobby-ui v-if="isSimModeAdmin" />
 
@@ -23,6 +30,7 @@ import UiUtils from '@/assets/js/utils/ui-utils.js';
 import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
 import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, $tLogger, SIM_MODE, CAMERA_MODE } from '@/assets/js/titan/titan-utils.js';
 
+import TitanSplash from '@/components/titan/core/TitanSplash.vue';
 import TitanTaskBar from '@/components/titan/core/TitanTaskBar.vue';
 import EditorUi from '@/components/titan/sim-mode/EditorUI.vue';
 import LobbyUi from '@/components/titan/sim-mode/LobbyUI.vue';
@@ -32,12 +40,13 @@ export default {
     components:
     {
         TitanTaskBar,
-        EditorUi, LobbyUi,
+        EditorUi, LobbyUi, TitanSplash,
     },
     data()
     {
         return {
             desktopVisible: true,
+            showSplash: true,
         };
     },
     computed:
@@ -150,6 +159,9 @@ export default {
                 $eview.mark_unhandled();
             }
         }.bind(this);
+
+        // Hide the splash screen
+        setTimeout(()=>{ this.showSplash = false; }, 4000);
     },
     beforeDestroy()
     {
@@ -232,13 +244,13 @@ export default {
     height:100vh;
     background-color: rgba(0,0,0,0);
 }
-.blue-area
+
+.fade-enter-active, .fade-leave-active
 {
-    background-color: rgba(0,128,255,0.125);
-    position: absolute;
-    top:100;
-    left:100;
-    width: 250px;
-    height: 350px;
+  transition: opacity .333s;
+}
+.fade-enter, .fade-leave-to
+{
+  opacity: 0;
 }
 </style>

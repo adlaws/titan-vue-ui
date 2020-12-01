@@ -10,7 +10,7 @@
         >
             <div class="startitan-button">
                 <cse-logo
-                    :size="`${taskbarSize*0.666}px`"
+                    :size="taskbarSize*0.666"
                 />
             </div>
             <div
