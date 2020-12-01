@@ -13,13 +13,21 @@
         >
             <component :is="pluginWindow" />
         </div>
+
+        <titan-context-menu
+            v-if="contextMenu.show"
+            :items="contextMenu.items"
+            :x="contextMenu.x"
+            :y="contextMenu.y"
+            @selected="contextMenuSelection"
+        />
     </div>
 </template>
 
 <script>
 import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
 
-import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, /*$tLogger*/ } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
 import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
@@ -28,13 +36,14 @@ import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
 import MapOverlay from '@/components/titan/sim-mode/MapOverlay.vue';
 import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+import TitanContextMenu from '@/components/titan/core/TitanContextMenu.vue';
 
 const HANDLED_KEY_EVENTS = new Set([
     'keyup'
 ]);
 const HANDLED_MOUSE_EVENTS = new Set([
     'mousedown', 'mousemove',
-    'click', 'dblclick',
+    'click', 'dblclick', 'contextmenu',
 ]);
 
 export default {
@@ -42,16 +51,22 @@ export default {
     components:
     {
         EntitySelector, MapOverlay, DrawingTools,
-        TitanIcon
+        TitanIcon, TitanContextMenu,
     },
     data()
     {
         return {
-            testOptions: [
-                {id:0, text:'Option A', disabled:false, tooltip:'A is for Apple'},
-                {id:1, text:'Option B', disabled:false, tooltip:'B is for Banana'},
-                {id:2, text:'Option C', disabled:false, tooltip:'C is for Coconut'},
-            ],
+            contextMenu:{
+                show: false,
+                x: 0,
+                y: 0,
+                items: [
+                    {id:0, text:'Option A', disabled:false, tooltip:'A is for Apple'},
+                    {id:1, text:'Option B', disabled:false, tooltip:'B is for Banana'},
+                    {separator:true},
+                    {id:3, text:'Option C', disabled:true, tooltip:'C is for Coconut', },
+                ]
+            },
             // mouse drag interaction state
             drag:
             {
@@ -171,8 +186,8 @@ export default {
          */
         handleMouseEvent(evt)
         {
-            if(!$isInsideTitan)
-                return; // nothing to do if we are in a browser
+            // if(!$isInsideTitan)
+            //    return; // nothing to do if we are in a browser
 
             if(!this.isUiModeEditor)
                 return; // wrong UI mode of operation - ignore
@@ -185,22 +200,29 @@ export default {
             if(!clickedOnWorld)
                 return; // we only care about mouse clicks on the world for now
 
+            let handler = null;
             const isLeftButton = evt.button === 0;
-            if(!isLeftButton)
-                return; // we only care about left mouse clicks at the moment
+            const isContextMenu = evt.type === 'contextmenu';
+            if(isLeftButton)
+            {
+                // handler function lookup
+                // NOTE: we don't check for drag or rubber band box selection ending
+                // on `mouseup` events because there will also be a `click` event
+                // that we want to distinguish - don't add `mouseup` event handler
+                // to replace the `click` handler because there will be trouble!
+                const handlers = {
+                    mousedown: this._handleLeftMouseDown,
+                    mousemove: this._handleMouseMove,
+                    click: this._handleLeftClick,
+                    dblclick: this._handleLeftDblClick,
+                };
+                handler = handlers[evtType];
+            }
+            else if(isContextMenu)
+            {
+                handler = this._handleContextMenu;
+            }
 
-            // handler function lookup
-            // NOTE: we don't check for drag or rubber band box selection ending
-            // on `mouseup` events because there will also be a `click` event
-            // that we want to distinguish - don't add `mouseup` event handler
-            // to replace the `click` handler because there will be trouble!
-            const handlers = {
-                mousedown: this._handleLeftMouseDown,
-                mousemove: this._handleMouseMove,
-                click: this._handleLeftClick,
-                dblclick: this._handleLeftDblClick,
-            };
-            const handler = handlers[evtType];
             if(handler)
                 handler(evt);
             else
@@ -249,7 +271,14 @@ export default {
 
                 // update selection if required to ensure that the item under the mouse is selected
                 $tWorldInterface.injectMousePosition(this.drag.lastWinXY, 15000);
-                if($tWorldInterface.isSelectableObjectUnderMouse())
+                const isObject = $tWorldInterface.isSelectableObjectUnderMouse();
+                const isShape = !isObject && $tWorldInterface.isSelectableShapeObjectUnderMouse();
+                const isTrigger = !isShape && $tWorldInterface.isSelectableTriggerUnderMouse();
+                const isWaypoint = !isTrigger && $tWorldInterface.isSelectableWaypointUnderMouse();
+
+                $tLogger.info({isObject, isShape, isTrigger, isWaypoint});
+
+                if(isObject)
                 {
                     // if there's an object under the mouse, we are dragging it
                     this.drag.isDraggingObject = true;
@@ -319,6 +348,8 @@ export default {
          */
         _handleLeftClick(evt)
         {
+            this.hideContextMenu();
+
             // NOTE: we need to inject the mouse position otherwise Outerra
             //       doesn't have any awareness of where the mouse is and can't
             //       detect whether selectable items are "under the mouse" etc.
@@ -366,6 +397,8 @@ export default {
          */
         _handleLeftDblClick(evt)
         {
+            this.hideContextMenu();
+
             // NOTE: we need to inject the mouse position otherwise Outerra
             //       doesn't have any awareness of where the mouse is and can't
             //       detect whether selectable items are "under the mouse" etc.
@@ -387,6 +420,28 @@ export default {
                     TitanUtils.createEntity(selectedEntity.entityName, worldPos);
                 }
             }
+        },
+        /**
+         * Handles right mouse contextmenu events
+         *
+         * @param {object} evt the mouse event
+         */
+        _handleContextMenu(evt)
+        {
+            this.hideContextMenu();
+
+            evt.preventDefault();
+            this.contextMenu.x = evt.clientX-32;
+            this.contextMenu.y = evt.clientY-8;
+            this.contextMenu.show = true;
+
+            /*
+            const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
+            $tWorldInterface.injectMousePosition(winXY, 15000);
+            const worldPos = $tWorldInterface.getWorldPositionUnderMouse();
+            if(!$tWorldInterface.isSelectableObjectUnderMouse())
+                return;
+            */
         },
         ////////////////////////////////////////////////////////////////////////////////////////////
         // SELECTION HANDLERS
@@ -417,6 +472,18 @@ export default {
                 $tWorldInterface.clearSelection();
 
             $tWorldInterface.select();
+        },
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // CONTEXT MENU MANAGEMENT
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        hideContextMenu()
+        {
+            this.contextMenu.show = false;
+        },
+        contextMenuSelection(item)
+        {
+            $tLogger.info(`Item ${item.id} was selected.`);
+            this.hideContextMenu();
         },
     }
 };
