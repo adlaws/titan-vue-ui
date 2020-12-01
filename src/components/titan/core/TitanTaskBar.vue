@@ -9,8 +9,7 @@
             @click="showStartMenu=!showStartMenu"
         >
             <div class="startitan-button">
-                <titan-icon
-                    icon="camera-iris"
+                <cse-logo
                     :size="`${taskbarSize*0.666}px`"
                 />
             </div>
@@ -76,11 +75,12 @@ import TitanTaskbarWindowTile from '@/components/titan/core/TitanTaskbarWindowTi
 import TitanClock from '@/components/titan/core/TitanClock.vue';
 import TitanLocation from '@/components/titan/core/TitanLocation.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+import CseLogo from '@/components/titan/core/CseLogo.vue';
 
 export default {
     name: 'titan-task-bar',
     components: {
-        TitanTaskbarWindowTile, TitanIcon,
+        TitanTaskbarWindowTile, TitanIcon, CseLogo,
         TitanClock, TitanLocation,
     },
     props: {},
