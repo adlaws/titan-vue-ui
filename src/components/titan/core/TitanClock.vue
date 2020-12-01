@@ -10,6 +10,11 @@
 </template>
 
 <script>
+import tzlookup from 'tz-lookup';
+import ctz from 'countries-and-timezones';
+
+import { $tWorldInterface, $isInsideTitan, $tLogger } from '@/assets/js/titan/titan-utils.js';
+
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -38,6 +43,17 @@ export default {
     {
         updateTime()
         {
+            if($isInsideTitan)
+            {
+                const scenarioCamera = $tWorldInterface.getActiveScenario().getActiveCamera();
+                if(scenarioCamera)
+                {
+                    const lla = scenarioCamera.getLLA();
+                    const tzName = tzlookup(lla.latitude, lla.longitude);
+                    $tLogger.info(tzName, ctz.getTimezone(tzName).utcOffset);
+                }
+            }
+
             const now = new Date();
 
             const year = now.getFullYear();
