@@ -34,7 +34,7 @@ import MathUtils from '@/assets/js/utils/math-utils.js';
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
-const DEFAULT_UPDATE_INTERVAL_MS = 250; // update every 250ms (4x per second)
+const DEFAULT_UPDATE_INTERVAL_MS = 125; // update every 125ms (8x per second)
 const MIN_UPDATE_INTERVAL = 100; // at most update 10x per second
 
 export default {
@@ -97,18 +97,7 @@ export default {
     },
     watch:
     {
-        updateRate(newVal)
-        {
-            this.updateIntervalMs = Math.max(MIN_UPDATE_INTERVAL, newVal/1000.0);
-        },
-        updateIntervalMs(newVal)
-        {
-            this.updateIntervalSeconds = newVal/1000.0;
-        },
-        updateIntervalSeconds(newVal)
-        {
-            this.$refs.compassNeedle.style.transition = `all ${newVal}s ease-in-out`;
-        },
+        updateInterval() { this.updateAllRates(); },
         magneticHeading(newHeading, oldHeading)
         {
             // this is simply to ensure that the compass needle rotates via the "shortest angular
@@ -131,9 +120,7 @@ export default {
     },
     mounted()
     {
-        this.updateIntervalMs = Math.max(MIN_UPDATE_INTERVAL, this.updateRate/1000.0);
-        // easing for the rotation in sync with the update rate to make the
-        // compass needle rotate smoothly
+        this.updateAllRates();
         // start the update cycle
         this.running = true;
         this.update();
@@ -144,6 +131,14 @@ export default {
     },
     methods:
     {
+        updateAllRates()
+        {
+            this.updateIntervalMs = Math.max(MIN_UPDATE_INTERVAL, this.updateInterval);
+            this.updateIntervalSeconds = this.updateIntervalMs/1000.0;
+            // CSS easing for the rotation in sync with the update rate to make the
+            // compass needle rotate smoothly
+            this.$refs.compassNeedle.style.transition = `all ${this.updateIntervalSeconds}s ease-in-out`;
+        },
         easeValue(params)
         {
             gsap.to(this.$data, { duration: this.updateIntervalSeconds, ease: 'power2.out', ...params });
@@ -170,7 +165,7 @@ export default {
                 this.lla.altitude = 100.0; // MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, 0.0, 10000.0);
             }
 
-            setTimeout(this.update, Math.max(MIN_UPDATE_INTERVAL, this.updateRate));
+            setTimeout(this.update, Math.max(MIN_UPDATE_INTERVAL, this.updateIntervalMs));
         },
     },
 };
