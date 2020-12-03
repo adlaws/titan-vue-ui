@@ -473,8 +473,8 @@ export default {
 
                 evt.preventDefault();
                 this.contextMenu.items = [
-                    {id:'raise-entity', text: 'Raise', tooltip:'Raise entity', icon:'arrow-expand-up', entity:uuid, disabled:false, },
-                    {id:'snap-to-ground', text:'Snap To Ground', icon:'arrow-collapse-down', tooltip:'Place entity on the ground', entity:uuid, disabled:false,  },
+                    {id:'raise-entity', text: 'Raise by 10m', tooltip:'Raise entity', icon:'arrow-expand-up', entity:uuid },
+                    {id:'snap-to-ground', text:'Snap To Ground', icon:'arrow-collapse-down', tooltip:'Place entity on the ground', entity:uuid },
                 ];
             }
 
@@ -533,6 +533,7 @@ export default {
                 const entity = $tWorldInterface.getActiveScenario().getEntityById(item.entity);
                 if(!entity)
                     return;
+
                 if(item.id === 'raise-entity')
                 {
                     const aglPos = entity.getPositionAGL();
