@@ -171,12 +171,45 @@ export default {
     mounted()
     {
         // need to make sure we keep the context menu inside the available screen space
+        const desktopBounds = this.$store.getters.desktopBounds;
         const container = this.$refs.container;
         const bounds = container.getBoundingClientRect();
-        const desktopBounds = this.$store.getters.desktopBounds;
 
         this.pos.x = MathUtils.clamp(this.x, desktopBounds.left, desktopBounds.right - bounds.width);
         this.pos.y = MathUtils.clamp(this.y, desktopBounds.top, desktopBounds.bottom - bounds.height);
+
+        this.$nextTick(() =>
+        {
+            // once the positions are all updated, wait for the next 'tick' to correct
+            // any problems with disappearing off the edge of the screen; we don't know
+            // if this happens until after the location/size of the container has been
+            // updated and the component has been rendered, hence the need to wait for
+            // the tick.
+            const parentMenu = container.parentElement;
+            if(!parentMenu)
+                return; // we are not a sub-menu, so everything is cool
+
+            // get our *absolute* position on the screen and our *current* bounds
+            // now that we are rendered
+            const absolutePosition = this._getAbsolutePosition(container);
+            const bounds2 = container.getBoundingClientRect();
+            // check the right edge and bottom to see if we go off the screen
+            const rightEdge = absolutePosition.x + bounds2.width;
+            const bottomEdge = absolutePosition.y + bounds2.height;
+            if( rightEdge > desktopBounds.right)
+            {
+                // we're off the right edge of the screen - reposition so we are aligned
+                // with the left side of the parent menu
+                const parentBounds = parentMenu.getBoundingClientRect();
+                this.pos.x -= (parentBounds.width + bounds2.width);
+            }
+            if(bottomEdge > desktopBounds.bottom)
+            {
+                // we're off the bottom edge of the screen - reposition so we are aligned
+                // with the bottom edge of the screen
+                this.pos.y -= (bottomEdge - desktopBounds.bottom);
+            }
+        });
     },
     beforeDestroy()
     {
@@ -191,8 +224,11 @@ export default {
         {
             const container = this.$refs[`submenu-${idx}`][0];
             const bounds = container.getBoundingClientRect();
+
             this.submenu.x = bounds.width;
             this.submenu.y = container.offsetTop;
+
+
             this.submenu.idx = idx;
         },
         _handleItemClicked(item)
@@ -202,6 +238,27 @@ export default {
 
             this.selected = item;
             this.$emit('selected', this.selected);
+        },
+        /**
+         * Utility method to obtain the absolute position of the element
+         *
+         * We need this because elm.getBoundingClientRect() returns results
+         * relative to the container of the element
+         *
+         * @param {DOMElement} the DOM element to check
+         * @return {object} the absolute {x,y} coordinates of the element
+         */
+        _getAbsolutePosition( el )
+        {
+            let x = 0;
+            let y = 0;
+            while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) )
+            {
+                x += el.offsetLeft - el.scrollLeft;
+                y += el.offsetTop - el.scrollTop;
+                el = el.offsetParent;
+            }
+            return { x, y };
         }
     }
 };

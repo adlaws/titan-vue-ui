@@ -478,9 +478,13 @@ export default {
                 ];
             }
 
-            this.contextMenu.x = evt.clientX-32;
-            this.contextMenu.y = evt.clientY-8;
-            this.contextMenu.show = true;
+            this.$nextTick(()=>
+            {
+                // wait until next tick so that this.contextMenu.show = false can take effect and reset the menu
+                this.contextMenu.x = evt.clientX-32;
+                this.contextMenu.y = evt.clientY-8;
+                this.contextMenu.show = true;
+            });
         },
         ////////////////////////////////////////////////////////////////////////////////////////////
         // SELECTION HANDLERS
