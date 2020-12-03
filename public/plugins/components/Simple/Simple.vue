@@ -37,6 +37,12 @@ export default {
                 { id: 'Toyota Corolla (grey)', text: 'Toyota Corolla (grey)' },
                 { id: 'hmmwv_m1025a2_desert',   text: 'HMMWV Humvee' },
                 { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
+                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
+                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
+                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
+                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
+                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
+                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
             ],
             selectedOption: null,
         };

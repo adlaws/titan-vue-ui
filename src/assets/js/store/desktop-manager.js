@@ -127,7 +127,9 @@ const DesktopManager =
             const screenSize = getters.screenSize;
             const bounds = {
                 x: 0, y: 0,
-                w: screenSize.w, h: screenSize.h
+                w: screenSize.w, h: screenSize.h,
+                left: 0, right: screenSize.w,
+                top: 0, bottom: screenSize.h
             };
             if(getters.isTaskbarVisible)
             {
@@ -142,13 +144,18 @@ const DesktopManager =
                 {
                     bounds.w -= size;
                     bounds.x += west?size:0;
+                    bounds.left = bounds.x;
+                    bounds.right = bounds.y + bounds.w;
                 }
                 else
                 {
                     bounds.h -= size;
                     bounds.y += north?size:0;
+                    bounds.top = bounds.y;
+                    bounds.bottom = bounds.x + bounds.h;
                 }
             }
+
             return bounds;
         },
         windows: (state) => state.windows || {},

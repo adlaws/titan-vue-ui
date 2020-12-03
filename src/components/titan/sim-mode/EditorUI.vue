@@ -60,12 +60,7 @@ export default {
                 show: false,
                 x: 0,
                 y: 0,
-                items: [
-                    {id:0, text:'Option A', disabled:false, tooltip:'A is for Apple'},
-                    {id:1, text:'Option B', disabled:false, tooltip:'B is for Banana'},
-                    {separator:true},
-                    {id:3, text:'Option C', disabled:true, tooltip:'C is for Coconut', },
-                ]
+                items: []
             },
             // mouse drag interaction state
             drag:
@@ -150,9 +145,6 @@ export default {
          */
         handleKeyEvent(evt)
         {
-            if(!$isInsideTitan)
-                return; // nothing to do if we are in a browser
-
             if(!this.isUiModeEditor)
                 return; // wrong UI mode of operation - ignore
 
@@ -160,8 +152,18 @@ export default {
             if(!HANDLED_KEY_EVENTS.has(evtType))
                 return; // we don't handle this type of key event
 
+            if(EventUtils.isKey(evt, KEY_CODE.ESCAPE))
+            {
+                // hide the context menu
+                this.hideContextMenu();
+            }
+
+            if(!$isInsideTitan)
+                return; // nothing to do if we are in a browser
+
             if(EventUtils.isKey(evt, KEY_CODE.DELETE))
             {
+
                 // delete anything that's selected
                 const activeScenario = $tWorldInterface.getActiveScenario();
                 activeScenario.removeSelected();
@@ -225,8 +227,6 @@ export default {
 
             if(handler)
                 handler(evt);
-            else
-                TitanUtils.unhandledEventHandler(evt, this.$options.name);
         },
         /**
          * Handles mousedown events
@@ -430,18 +430,57 @@ export default {
         {
             this.hideContextMenu();
 
-            evt.preventDefault();
+            if(!$isInsideTitan)
+            {
+                evt.preventDefault();
+                this.contextMenu.items = [
+                    {id:0, text: 'Option A', tooltip:'A is for Apple', icon:'apple', disabled:false,},
+                    {id:1, text: 'Option B', tooltip:'B is for Baguette', icon:'baguette', disabled:false,},
+                    {separator:true},
+                    {id:2, text: 'Option B', tooltip:'B is for Baguette', icon:'fruit-cherries', disabled:false,},
+                    {
+                        id:9, text:'Option C', tooltip:'C is for Cherry', disabled:false,
+                        items:[
+                            {id:'a', text:'Sub menu 1'},
+                            {id:'b', text:'Sub menu 2'},
+                        ]
+                    },
+                    {
+                        id:4, text:'Option D', tooltip:'D is for Dog', disabled:false,
+                        items:[
+                            {id:'X', text:'Sub menu X'},
+                            {id:'Y', text:'Sub menu Y',
+                                items:[
+                                    {id:'Y-a', text:'Sub Y-A'},
+                                    {id:'Y-b', text:'Sub Y-B'},
+                                ]}
+                        ],
+                    },
+                ];
+            }
+            else
+            {
+                const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
+                $tWorldInterface.injectMousePosition(winXY, 15000);
+                const isObject = $tWorldInterface.isSelectableObjectUnderMouse();
+                if(!isObject)
+                    return;
+
+                const uuid = $tWorldInterface.getObjectUUIDUnderMouse();
+                const entity = $tWorldInterface.getActiveScenario().getEntityById(uuid);
+                if(!entity)
+                    return;
+
+                evt.preventDefault();
+                this.contextMenu.items = [
+                    {id:'raise-entity', text: 'Raise', tooltip:'Raise entity', icon:'arrow-expand-up', entity:uuid, disabled:false, },
+                    {id:'snap-to-ground', text:'Snap To Ground', icon:'arrow-collapse-down', tooltip:'Place entity on the ground', entity:uuid, disabled:false,  },
+                ];
+            }
+
             this.contextMenu.x = evt.clientX-32;
             this.contextMenu.y = evt.clientY-8;
             this.contextMenu.show = true;
-
-            /*
-            const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
-            $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = $tWorldInterface.getWorldPositionUnderMouse();
-            if(!$tWorldInterface.isSelectableObjectUnderMouse())
-                return;
-            */
         },
         ////////////////////////////////////////////////////////////////////////////////////////////
         // SELECTION HANDLERS
@@ -482,8 +521,24 @@ export default {
         },
         contextMenuSelection(item)
         {
-            $tLogger.info(`Item ${item.id} was selected.`);
+            $tLogger.info(`Item ${item.id} was selected.`, item);
             this.hideContextMenu();
+
+            if($isInsideTitan)
+            {
+                const entity = $tWorldInterface.getActiveScenario().getEntityById(item.entity);
+                if(!entity)
+                    return;
+                if(item.id === 'raise-entity')
+                {
+                    const aglPos = entity.getPositionAGL();
+                    entity.setPositionAGL({x:aglPos.x, y:aglPos.y, z:aglPos.z+10});
+                }
+                else if(item.id === 'snap-to-ground')
+                {
+                    entity.snapToGround();
+                }
+            }
         },
     }
 };

@@ -1,24 +1,120 @@
+<!-- ------------------------------------------------------------------------------------------
+A context menu component, allows nested sub-menus
+
+@param {Number} x the preferred x position on the screen (may be adjusted due to proximity to edges of screen)
+@param {Number} y the preferred y position on the screen (may be adjusted due to proximity to edges of screen)
+@param {Array} items the context menu items
+
+Events:
+    @selected fired when an item is selected, with the selected item as the parameter
+    @closed fired when the context menu is closed after a selection is made
+    @cancelled fired when the context menu is closed with no selection being made
+
+Example use:
+
+    <template>
+        <div>
+            <button @click="showContextMenu">Context Menu</button>
+        </div>
+        <titan-context-menu
+            v-if="contextMenu.show"
+            :items="contextMenu.items"
+            :x="contextMenu.x"
+            :y="contextMenu.y"
+            @selected="contextMenuSelection"
+        />
+    </template>
+
+    <script>
+        export default {
+            data()
+            {
+                return {
+                    contextMenu:{
+                        show: false,
+                        x: 0,
+                        y: 0,
+                        items: [
+                            {id:'a',text:'Option A'},
+                            {id:'b',text:'Option B', disabled:true},
+                            {separator:true},
+                            {id:'c',text:'Sub menu C', items:[
+                                {id:'c-a', text:'C Option A'},
+                                {id:'c-b', text:'C Option B'},
+                                {id:'c-c', text:'C Sub Menu C', items:[
+                                    {id:'c-c-a',text:'Option C-C-A'},
+                                    {id:'c-c-b',text:'Option C-C-B'},
+                                ]},
+                            ]},
+                            {id:'d',text:'Option D'},
+                        ]
+                    },
+                };
+            },
+            methods:
+            {
+                showContextMenu(evt)
+                {
+                    this.contextMenu.x = evt.clientX;
+                    this.contextMenu.y = evt.clientY;
+                    this.contextMenu.show = true;
+                },
+                contextMenuSelection(selected)
+                {
+                    this.contextMenu.show = false;
+                    console.log(selected.id);
+                }
+            }
+        };
+    </script>
+----------------------------------------------------------------------------------------------- -->
+
 <template>
     <div
+        ref="container"
         class="titan--context-menu"
-        :style="`left:${x}px;top:${y}px;`"
+        :style="`left:${pos.x}px;top:${pos.y}px;`"
     >
         <ul>
             <template
                 v-for="(item, idx) in items"
             >
-                <li v-if="item.separator"
+                <li
+                    v-if="item.separator"
                     :key="`item-${idx}`"
                     class="separator"
                 >
                     <hr>
                 </li>
-                <li v-else
+                <li
+                    v-else-if="item.items"
+                    :ref="`submenu-${idx}`"
                     :key="`item-${idx}`"
                     :class="{disabled:item.disabled===true}"
-                    @click="$emit('selected', item)"
+                    @click="_revealSubmenu(idx)"
                 >
-                    {{ item.text }}
+                    <titan-icon v-if="item.icon" :icon="item.icon" />
+                    <span v-else style="width:1em;display:inline-block;" />
+                    <span class="ml-1">{{ item.text }}</span>
+                    <span class="spacer" />
+                    <titan-icon icon="chevron-right" />
+                    <titan-context-menu
+                        v-if="submenu.idx === idx"
+                        :x="submenu.x"
+                        :y="submenu.y"
+                        :items="item.items"
+                        @selected="_handleItemClicked"
+                    />
+                </li>
+                <li
+                    v-else
+                    :key="`item-${idx}`"
+                    :class="{disabled:item.disabled===true}"
+                    @click.stop="_handleItemClicked(item)"
+                >
+                    <titan-icon v-if="item.icon" :icon="item.icon||'blank'" />
+                    <span v-else style="width:1em;display:inline-block;" />
+                    <span class="ml-1">{{ item.text }}</span>
                 </li>
             </template>
         </ul>
@@ -26,15 +122,25 @@
 </template>
 
 <script>
+import MathUtils from '@/assets/js/utils/math-utils.js';
+
+import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+
 export default {
     name:'titan-context-menu',
+    components:
+    {
+        TitanIcon,
+    },
     props:
     {
+        // the preferred x position on the screen - may be adjusted due to proximity to edges of screen
         x:
         {
             type:Number,
             default:0
         },
+        // the preferred x position on the screen - may be adjusted due to proximity to edges of screen
         y:
         {
             type:Number,
@@ -45,6 +151,59 @@ export default {
             default:() => []
         },
     },
+    data()
+    {
+        return {
+            // the final position of the context menu on the screen after adjustments
+            // due to available screen space
+            pos:{
+                x:0,
+                y:0
+            },
+            submenu:{
+                idx:-1,
+                x:0,
+                y:0,
+            },
+            selected: null,
+        };
+    },
+    mounted()
+    {
+        // need to make sure we keep the context menu inside the available screen space
+        const container = this.$refs.container;
+        const bounds = container.getBoundingClientRect();
+        const desktopBounds = this.$store.getters.desktopBounds;
+
+        this.pos.x = MathUtils.clamp(this.x, desktopBounds.left, desktopBounds.right - bounds.width);
+        this.pos.y = MathUtils.clamp(this.y, desktopBounds.top, desktopBounds.bottom - bounds.height);
+    },
+    beforeDestroy()
+    {
+        if(this.selected === null)
+            this.$emit('cancelled');
+        else
+            this.$emit('closed');
+    },
+    methods:
+    {
+        _revealSubmenu(idx)
+        {
+            const container = this.$refs[`submenu-${idx}`][0];
+            const bounds = container.getBoundingClientRect();
+            this.submenu.x = bounds.width;
+            this.submenu.y = container.offsetTop;
+            this.submenu.idx = idx;
+        },
+        _handleItemClicked(item)
+        {
+            if(item.disabled)
+                return;
+
+            this.selected = item;
+            this.$emit('selected', this.selected);
+        }
+    }
 };
 </script>
 
@@ -59,7 +218,10 @@ export default {
 
     padding: 0;
     margin: 0;
+    top:0;
+    left:0;
     position: absolute;
+
     min-width:10em;
 
     ul
@@ -69,15 +231,24 @@ export default {
         list-style: none;
         li
         {
+            .spacer { flex-grow: 1; }
+            hr { width: 100%; }
+
             margin:0px;
             padding: 4px 8px;
+
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-items: center;
+
             &.disabled
             {
                 color: rgba(255,255,255,0.333);
             }
             &.separator
             {
-                padding: 0px 8px;
+                padding: 0px 4px;
             }
             &:not(.separator):not(.disabled)
             {

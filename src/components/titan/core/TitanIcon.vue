@@ -1,5 +1,5 @@
 <template>
-    <span
+    <i
         class="m-0 p-0"
         :class="mdiClasses"
         :style="`font-size:${size};`"
@@ -20,8 +20,8 @@ export default {
             default: '1em;',
         },
         angle: {
-            type: String,
-            default: '1em;',
+            type: Number,
+            default: 0,
         },
     },
     computed:
