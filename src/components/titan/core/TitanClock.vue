@@ -10,10 +10,11 @@
 </template>
 
 <script>
-// import tzlookup from 'tz-lookup';
-// import ctz from 'countries-and-timezones';
+import tzlookup from 'tz-lookup';
+import ctz from 'countries-and-timezones';
 
-// import { $tWorldInterface, $isInsideTitan, $tLogger } from '@/assets/js/titan/titan-utils.js';
+import { $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
+import DateTimeUtils from '@/assets/js/utils/datetime-utils.js';
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
@@ -43,31 +44,42 @@ export default {
     {
         updateTime()
         {
-            // if($isInsideTitan)
-            // {
-            //     const scenarioCamera = $tWorldInterface.getActiveScenario().getActiveCamera();
-            //     if(scenarioCamera)
-            //     {
-            //         const lla = scenarioCamera.getLLA();
-            //         const tzName = tzlookup(lla.latitude, lla.longitude);
-            //         $tLogger.info(tzName, ctz.getTimezone(tzName).utcOffset);
-            //     }
-            // }
-
             const now = new Date();
-
             const year = now.getFullYear();
-            const month = MONTHS[now.getMonth()];
-            let day = now.getDate();
+
+            let titanNow = now;
+            if($isInsideTitan)
+            {
+                const activeScenario = $tWorldInterface.getActiveScenario();
+                const scenarioCamera = activeScenario.getActiveCamera();
+                let tzOffsetMins = 0;
+                if(scenarioCamera)
+                {
+                    const lla = scenarioCamera.getLLA();
+                    const timezone = tzlookup(lla.latitude, lla.longitude);
+                    tzOffsetMins = ctz.getTimezone(timezone).utcOffset;
+                }
+
+                let tod = activeScenario.getTimeOfDay();
+                let doy = activeScenario.getDayOfYear();
+
+                let totalSeconds = Math.floor(tod / 1000);
+
+                const startOfYear = DateTimeUtils.makeUtcDateTime(year,0,1);
+                titanNow = DateTimeUtils.dateTimeAdd(startOfYear, {days:doy,seconds:totalSeconds, minutes:tzOffsetMins});
+            }
+
+            const month = MONTHS[titanNow.getMonth()];
+            let day = titanNow.getDate();
             day = (day < 10 ? '0' : '') + day;
 
-            let hours = now.getHours();
+            let hours = titanNow.getHours();
             const ampm = hours >= 12 ? 'PM' : 'AM';
             hours = hours > 12 ? hours - 12 : hours;
             hours = (hours < 10 ? '0' : '') + hours;
-            let minutes = now.getMinutes();
+            let minutes = titanNow.getMinutes();
             minutes = (minutes < 10 ? '0' : '') + minutes;
-            let seconds = now.getSeconds();
+            let seconds = titanNow.getSeconds();
             seconds = (seconds < 10 ? '0' : '') + seconds;
 
             this.time = `${hours}:${minutes}:${seconds} ${ampm}`;

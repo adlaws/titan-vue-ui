@@ -89,7 +89,6 @@ export default {
         return {
             showStartMenu: false,
             vertical: false,
-            theTime: '00:00am',
         };
     },
     computed:
