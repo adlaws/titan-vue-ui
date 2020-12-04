@@ -6,24 +6,25 @@
         <titan-icon icon="clock" class="mr-1" /><span class="monospace">{{ time }}</span>
         <br>
         <titan-icon icon="calendar-month" class="mr-1" /><span class="monospace">{{ date }}</span>
+        <titan-place-and-time />
     </div>
 </template>
 
 <script>
-import tzlookup from 'tz-lookup';
-import ctz from 'countries-and-timezones';
+// import tzlookup from 'tz-lookup';
 
-import { $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
-import DateTimeUtils from '@/assets/js/utils/datetime-utils.js';
+// import { $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
+// import DateTimeUtils from '@/assets/js/utils/datetime-utils.js';
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+import TitanPlaceAndTime from '@/components/titan/core/TitanPlaceAndTime.vue';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default {
     name: 'titan-clock',
     components: {
-        TitanIcon,
+        TitanIcon, TitanPlaceAndTime
     },
     data()
     {
@@ -48,6 +49,7 @@ export default {
             const year = now.getFullYear();
 
             let titanNow = now;
+            /*
             if($isInsideTitan)
             {
                 const activeScenario = $tWorldInterface.getActiveScenario();
@@ -68,6 +70,7 @@ export default {
                 const startOfYear = DateTimeUtils.makeUtcDateTime(year,0,1);
                 titanNow = DateTimeUtils.dateTimeAdd(startOfYear, {days:doy,seconds:totalSeconds, minutes:tzOffsetMins});
             }
+            */
 
             const month = MONTHS[titanNow.getMonth()];
             let day = titanNow.getDate();

@@ -3,9 +3,12 @@
         class="vue-os--titan-location"
         :style="`font-size:${taskbarSize*0.25}px;`"
     >
-        <titan-icon icon="map-marker" class="mr-1" /><span class="monospace">{{ latlngText }}</span>
+        <titan-icon icon="map-marker" class="mr-1" />
+        <latitude class="monospace" :latitude="tweenedLatitude" />
+        <longitude class="monospace ml-2" :longitude="tweenedLongitude" />
         <br>
-        <titan-icon icon="compass" class="mr-1" /><span class="monospace">{{ headingText }}</span>
+        <titan-icon icon="compass" class="mr-1" />
+        <heading class="monospace" :heading="tweenedMagneticHeading" />
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="-8 -8 16 16"
@@ -33,6 +36,9 @@ import { $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+import Latitude from '@/components/titan/core/display/Latitude.vue';
+import Longitude from '@/components/titan/core/display/Longitude.vue';
+import Heading from '@/components/titan/core/display/Heading.vue';
 
 const DEFAULT_UPDATE_INTERVAL_MS = 125; // update every 125ms (8x per second)
 const MIN_UPDATE_INTERVAL = 100; // at most update 10x per second
@@ -41,7 +47,7 @@ export default {
     name: 'titan-location',
     components:
     {
-        TitanIcon,
+        TitanIcon, Latitude, Longitude, Heading,
     },
     props:
     {
@@ -68,32 +74,6 @@ export default {
     computed:
     {
         taskbarSize() { return this.$store.getters.taskbarSize; },
-        latlngText()
-        {
-            let lat = this.tweenedLatitude;
-            let lng = this.tweenedLongitude;
-
-            const ns = lat<0?'S':'N';
-            const ew = lng<0?'W':'E';
-
-            lat = Math.abs(lat);
-            lng = Math.abs(lng);
-
-            // internationalized NSEW compass cardinals
-            const i18nEW = this.$t('direction.'+ew+'.abbr');
-            const i18nNS = this.$t('direction.'+ns+'.abbr');
-
-            // use string concatenation rather than formatters for performance
-            const latStr = (lat<10?'0':'') + lat.toFixed(3) + '°' + i18nNS;
-            const lngStr = (lng<10?'0':'') + (lng<100?'0':'') + lng.toFixed(3) + '°' + i18nEW;
-
-            return latStr + ' ' + lngStr;
-        },
-        headingText()
-        {
-            const heading = MathUtils.wrapClamp(this.tweenedMagneticHeading, 0.0, 360.0);
-            return (heading<10?'0':'') + (heading<100?'0':'') + `${heading.toFixed(2)}°`;
-        }
     },
     watch:
     {

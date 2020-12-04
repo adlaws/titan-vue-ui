@@ -3,11 +3,6 @@
         v-show="desktopVisible"
         class="titan--desktop pass-through"
     >
-        {{ currentSimMode }} |
-        <router-link :to="{name:'fps'}">
-            FPS
-        </router-link>
-
         <transition name="fade" mode="out-in">
             <titan-splash
                 v-if="showSplash"
@@ -161,7 +156,7 @@ export default {
         }.bind(this);
 
         // Hide the splash screen
-        setTimeout(()=>{ this.showSplash = false; }, 4000);
+        setTimeout(()=>{ this.showSplash = false; }, 5000);
     },
     beforeDestroy()
     {
