@@ -122,15 +122,19 @@ const DesktopManager =
                 width:'100vw', height:`${size}px`,
             };
         },
-        desktopBounds: (state, getters) =>
+        screenBounds: (state, getters) =>
         {
             const screenSize = getters.screenSize;
-            const bounds = {
+            return {
                 x: 0, y: 0,
                 w: screenSize.w, h: screenSize.h,
                 left: 0, right: screenSize.w,
                 top: 0, bottom: screenSize.h
             };
+        },
+        desktopBounds: (state, getters) =>
+        {
+            const bounds = { ...getters.screenBounds};
             if(getters.isTaskbarVisible)
             {
                 const size = getters.taskbarSize;

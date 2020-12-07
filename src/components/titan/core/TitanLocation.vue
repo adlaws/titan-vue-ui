@@ -37,7 +37,7 @@
 
         <titan-context-menu
             v-if="contextMenu.locationFormat.show"
-            :items="contextMenu.locationFormat.items"
+            :items="locationFormatContextItems"
             :x="contextMenu.locationFormat.x"
             :y="contextMenu.locationFormat.y"
             text-key="label"
@@ -95,9 +95,6 @@ export default {
                 locationFormat:
                 {
                     show:false,
-                    items:[
-                        ...POSITION_FORMAT_OPTIONS
-                    ],
                     x:0,
                     y:0,
                 }
@@ -109,6 +106,17 @@ export default {
         taskbarSize() { return this.$store.getters.taskbarSize; },
         positionFormat() { return this.$store.getters.positionFormat; },
         isMGRS() { return this.$store.getters.isPositionFormat(POSITION_FORMAT.MGRS); },
+        locationFormatContextItems()
+        {
+            const formatID = this.positionFormat.id;
+            return POSITION_FORMAT_OPTIONS.map((opt)=>
+            {
+                const item = {...opt};
+                if(item.id===formatID)
+                    item.icon = 'check-bold';
+                return item;
+            });
+        },
     },
     watch:
     {

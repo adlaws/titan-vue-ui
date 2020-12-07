@@ -163,7 +163,7 @@ export default {
         },
         ignoreTaskbar:
         {
-            type:Boolean,
+            type:[Boolean, String],
             default: false,
         },
     },
