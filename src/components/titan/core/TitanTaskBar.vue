@@ -21,26 +21,26 @@
                 <ul>
                     <li @click="startScenarioConstructor()">
                         <titan-icon size="200%;" icon="map-marker-path" />
-                        <span class="ml-1">Scenario Constructor</span>
+                        <span class="ml-1">{{ $t('Scenario Constructor', language.id) }}</span>
                     </li>
                     <li @click="startLobby()">
                         <titan-icon size="200%;" icon="account-group-outline" />
-                        <span class="ml-1">Scenario Lobby</span>
+                        <span class="ml-1">{{ $t('Scenario Lobby', language.id) }}</span>
                     </li>
                     <li>
                         <titan-icon size="200%;" icon="clipboard-edit-outline" />
-                        <span class="ml-1">Scenario Debrief</span>
+                        <span class="ml-1">{{ $t('After Action Review', language.id) }}</span>
                     </li>
                     <li>
                         <titan-icon size="200%;" icon="cogs" />
-                        <span class="ml-1">Options</span>
+                        <span class="ml-1">{{ $t('Options', language.id) }}</span>
                     </li>
                     <li @click="quitApplication()">
                         <titan-icon
                             size="200%;"
                             icon="logout"
                         />
-                        <span class="ml-1">Quit</span>
+                        <span class="ml-1">{{ $t('Quit', language.id) }}</span>
                     </li>
                 </ul>
             </div>
@@ -101,6 +101,7 @@ export default {
         desktopBounds() { return this.$store.getters.desktopBounds; },
         screenSize() { return this.$store.getters.screenSize; },
         uiModeState() { return this.$store.getters.uiModeState; },
+        language() {return this.$store.getters.language; },
     },
     mounted()
     {

@@ -40,7 +40,7 @@
 <script>
 import {TITAN_MUTATION, TITAN_UI_MODE} from '@/assets/js/store/titan-manager.js';
 
-import TitanUtils, { $isInsideTitan, $tWorldInterface, $tRenderToolbox } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $isInsideTitan, $tRenderToolbox } from '@/assets/js/titan/titan-utils.js';
 import { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 import { Color } from '@/assets/js/utils/color-utils.js';
 import DataUtils from '@/assets/js/utils/data-utils.js';
@@ -227,8 +227,8 @@ export default {
             //       just do:
             //            const worldPos = $tWorldInterface.getWorldPosFromScreenPix(winXY);
             const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
-            $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = Vec3.fromObj( $tWorldInterface.getWorldPositionUnderMouse() );
+            TitanUtils.injectMousePosition(winXY);
+            const worldPos = Vec3.fromObj( TitanUtils.worldPosUnderMouse() );
 
             // mouse is down, so it could be just a click, or about to start
             // dragging an entity or begin a rubber band selection, so get
@@ -258,8 +258,8 @@ export default {
                 this.drag.isDrawingShape = true;
 
                 // update selection if required to ensure that the item under the mouse is selected
-                $tWorldInterface.injectMousePosition(this.drag.lastWinXY, 15000);
-                $tWorldInterface.showGizmoAt(this.drag.lastEcef);
+                TitanUtils.injectMousePosition(this.drag.lastWinXY);
+                TitanUtils.showGizmoAt(this.drag.lastEcef);
 
                 const titanColor = this._toRenderToolboxColor(this.currentFill ? this.currentFill.color : null);
                 const toolType = this.currentTool ? this.currentTool.type : 'ellipse';
@@ -273,7 +273,7 @@ export default {
             }
 
             // update shape as required
-            const ecef = Vec3.fromObj( $tWorldInterface.getWorldPosFromScreenPix(winXY) );
+            const ecef = Vec3.fromObj( TitanUtils.worldPosForWindowCoords(winXY) );
             // may be unable to query world position from screen (happens when move above horizon)
             // so check before proceeding
             if(TitanUtils.isValidWorldPos(ecef))
@@ -282,7 +282,7 @@ export default {
                 // update the shape as required
                 $tRenderToolbox.setPenPosition(winXY);
                 // show the gizmo where the mouse is
-                $tWorldInterface.showGizmoAt(ecef);
+                TitanUtils.showGizmoAt(ecef);
                 // cache coords for next offset calculation
                 this.drag.lastWinXY = winXY;
                 this.drag.lastECEF = ecef;
@@ -302,11 +302,11 @@ export default {
             //       just do:
             //            const worldPos = $tWorldInterface.getWorldPosFromScreenPix(winXY);
             const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
-            $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = $tWorldInterface.getWorldPositionUnderMouse();
+            TitanUtils.injectMousePosition(winXY);
+            const worldPos = TitanUtils.worldPosUnderMouse();
 
             if(TitanUtils.isValidWorldPos(worldPos))
-                $tWorldInterface.showGizmoAt(worldPos);
+                TitanUtils.showGizmoAt(worldPos);
 
             // NOTE: we have to clear `mightDrag` here in case there was no
             //       `mousemove` event to clear it

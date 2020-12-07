@@ -20,6 +20,7 @@
             :x="contextMenu.x"
             :y="contextMenu.y"
             @selected="contextMenuSelection"
+            @cancelled="hideContextMenu"
         />
     </div>
 </template>
@@ -240,10 +241,10 @@ export default {
             //       detect whether selectable items are "under the mouse" etc.
             //       If we only wanted the world pos under the mouse we could
             //       just do:
-            //            const worldPos = $tWorldInterface.getWorldPosFromScreenPix(winXY);
+            //            const worldPos = TitanUtils.worldPosForWindowCoords()(winXY);
             const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
-            $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = Vec3.fromObj( $tWorldInterface.getWorldPositionUnderMouse() );
+            TitanUtils.injectMousePosition(winXY);
+            const worldPos = Vec3.fromObj(TitanUtils.worldPosUnderMouse());
 
             // mouse is down, so it could be just a click, or about to start
             // dragging an entity or begin a rubber band selection, so get
@@ -270,13 +271,11 @@ export default {
                 this.drag.mightDrag = false;
 
                 // update selection if required to ensure that the item under the mouse is selected
-                $tWorldInterface.injectMousePosition(this.drag.lastWinXY, 15000);
-                const isObject = $tWorldInterface.isSelectableObjectUnderMouse();
-                const isShape = !isObject && $tWorldInterface.isSelectableShapeObjectUnderMouse();
-                const isTrigger = !isShape && $tWorldInterface.isSelectableTriggerUnderMouse();
-                const isWaypoint = !isTrigger && $tWorldInterface.isSelectableWaypointUnderMouse();
-
-                $tLogger.info({isObject, isShape, isTrigger, isWaypoint});
+                TitanUtils.injectMousePosition(this.drag.lastWinXY);
+                const isObject = TitanUtils.isSelectableObjectUnderMouse();
+                // const isShape = !isObject && TitanUtils.isSelectableShapeObjectUnderMouse();
+                // const isTrigger = !isShape && TitanUtils.isSelectableTriggerUnderMouse();
+                // const isWaypoint = !isTrigger && TitanUtils.isSelectableWaypointUnderMouse();
 
                 if(isObject)
                 {
@@ -286,14 +285,14 @@ export default {
                     // we have to deactivate the undo/redo monitoring otherwise every
                     // single mouse move of the drag will be recorded, and we only
                     // need the start and end of the drag for undo/redo purposes
-                    $tWorldInterface.set_undo_redo_keypress_monitoring_active(false);
+                    TitanUtils.set_undo_redo_keypress_monitoring_active(false);
 
-                    const isSelected = $tWorldInterface.isObjectUnderMouseSelected();
+                    const isSelected = TitanUtils.isObjectUnderMouseSelected();
                     if(!isSelected)
                     {
                         this._doSelection();
                     }
-                    $tWorldInterface.showGizmoAt(this.drag.lastEcef);
+                    TitanUtils.showGizmoAt(this.drag.lastEcef);
                 }
                 else
                 {
@@ -302,14 +301,14 @@ export default {
                     this.drag.isRubberBandSelecting = true;
                     // clicked on nothing - clear the selection (unless CTRL is pressed)
                     this._clearSelection();
-                    $tWorldInterface.showGizmoAt(this.drag.lastEcef);
-                    $tWorldInterface.beginAreaDragSelect();
+                    TitanUtils.showGizmoAt(this.drag.lastEcef);
+                    TitanUtils.beginAreaDragSelect();
                 }
             }
 
             // update object drag or rubber band selection if required
             const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
-            const ecef = Vec3.fromObj( $tWorldInterface.getWorldPosFromScreenPix(winXY) );
+            const ecef = Vec3.fromObj( TitanUtils.worldPosForWindowCoords(winXY) );
             if(this.drag.isDraggingObject)
             {
                 // may be unable to query world position from screen (happens when move above horizon)
@@ -322,7 +321,7 @@ export default {
                     // move the selected items accordingly
                     activeScenario.translateSelected(vecOffset, true);
                     // show the gizmo where the mouse is
-                    $tWorldInterface.showGizmoAt(ecef);
+                    TitanUtils.showGizmoAt(ecef);
                     // cache coords for next offset calculation
                     this.drag.lastWinXY = winXY;
                     this.drag.lastECEF = ecef;
@@ -333,9 +332,9 @@ export default {
                 // we need to continually inject the current mouse position so that the blue
                 // selection box renders to track with the mouse position; if we don't do this
                 // the selection box doesn't render, which is a bad user experience
-                $tWorldInterface.injectMousePosition(winXY, 15000);
+                TitanUtils.injectMousePosition(winXY);
                 // show the gizmo where the mouse is
-                $tWorldInterface.showGizmoAt(ecef);
+                TitanUtils.showGizmoAt(ecef);
                 // cache coords for next offset calculation
                 this.drag.lastWinXY = winXY;
                 this.drag.lastECEF = ecef;
@@ -355,13 +354,13 @@ export default {
             //       detect whether selectable items are "under the mouse" etc.
             //       If we only wanted the world pos under the mouse we could
             //       just do:
-            //            const worldPos = $tWorldInterface.getWorldPosFromScreenPix(winXY);
+            //            const worldPos = TitanUtils.worldPosForWindowCoords()(winXY);
             const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
-            $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = $tWorldInterface.getWorldPositionUnderMouse();
+            TitanUtils.injectMousePosition(winXY);
+            const worldPos = TitanUtils.worldPosUnderMouse();
 
             if(TitanUtils.isValidWorldPos(worldPos))
-                $tWorldInterface.showGizmoAt(worldPos);
+                TitanUtils.showGizmoAt(worldPos);
 
             // NOTE: we have to clear `mightDrag` here in case there was no
             //       `mousemove` event to clear it
@@ -371,15 +370,15 @@ export default {
                 // end of object dragging
                 this.drag.isDraggingObject = false;
                 // we can reactivate the undo/redo monitoring now
-                $tWorldInterface.set_undo_redo_keypress_monitoring_active(true);
+                TitanUtils.set_undo_redo_keypress_monitoring_active(true);
             }
             else if(this.drag.isRubberBandSelecting)
             {
                 // end of rubber band box selection
                 this.drag.isRubberBandSelecting = false;
-                $tWorldInterface.endAreaDragSelect();
+                TitanUtils.endAreaDragSelect();
             }
-            else if($tWorldInterface.isSelectableObjectUnderMouse())
+            else if(TitanUtils.isSelectableObjectUnderMouse())
             {
                 // clicked on an item, update the selection
                 this._doSelection();
@@ -404,11 +403,11 @@ export default {
             //       detect whether selectable items are "under the mouse" etc.
             //       If we only wanted the world pos under the mouse we could
             //       just do:
-            //            const worldPos = $tWorldInterface.getWorldPosFromScreenPix(winXY);
+            //            const worldPos = TitanUtils.worldPosForWindowCoords()(winXY);
             const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
-            $tWorldInterface.injectMousePosition(winXY, 15000);
-            const worldPos = $tWorldInterface.getWorldPositionUnderMouse();
-            if(!$tWorldInterface.isSelectableObjectUnderMouse())
+            TitanUtils.injectMousePosition(winXY);
+            const worldPos = TitanUtils.worldPosUnderMouse();
+            if(!TitanUtils.isSelectableObjectUnderMouse())
             {
                 // force clear any selection (unless CTRL is pressed)
                 this._clearSelection(true);
@@ -461,12 +460,12 @@ export default {
             else
             {
                 const winXY = TitanUtils.domEventXYtoOuterraXY(evt);
-                $tWorldInterface.injectMousePosition(winXY, 15000);
-                const isObject = $tWorldInterface.isSelectableObjectUnderMouse();
+                TitanUtils.injectMousePosition(winXY);
+                const isObject = TitanUtils.isSelectableObjectUnderMouse();
                 if(!isObject)
                     return;
 
-                const uuid = $tWorldInterface.getObjectUUIDUnderMouse();
+                const uuid = TitanUtils.getObjectUUIDUnderMouse();
                 const entity = $tWorldInterface.getActiveScenario().getEntityById(uuid);
                 if(!entity)
                     return;
@@ -500,7 +499,7 @@ export default {
             //       to track their state
             // clear selection (unless CTRL is pressed)
             this._clearSelection();
-            $tWorldInterface.select();
+            TitanUtils.select();
         },
         /**
          * Clears the selection, unless the CTRL key is currently held down
@@ -512,9 +511,9 @@ export default {
         {
             const isAdditiveSelection = this.$store.getters.modifierKeys.ctrl;
             if(forced || !isAdditiveSelection)
-                $tWorldInterface.clearSelection();
+                TitanUtils.clearSelection();
 
-            $tWorldInterface.select();
+            TitanUtils.select();
         },
         ////////////////////////////////////////////////////////////////////////////////////////////
         // CONTEXT MENU MANAGEMENT
@@ -525,7 +524,6 @@ export default {
         },
         contextMenuSelection(item)
         {
-            $tLogger.info(`Item ${item.id} was selected.`, item);
             this.hideContextMenu();
 
             if($isInsideTitan)

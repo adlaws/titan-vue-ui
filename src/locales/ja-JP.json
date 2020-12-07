@@ -1,6 +1,12 @@
 {
     "Titan": "タイタン",
+    "entity": "エンティティ",
     "Entity": "エンティティ",
+    "Scenario Constructor": "シナリオ作成",
+    "Scenario Lobby": "シナリオロビー",
+    "After Action Review": "人事考課",
+    "Options": "設定",
+    "Quit": "終了",
     "direction": {
         "N": {
             "full": "北",

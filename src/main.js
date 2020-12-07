@@ -10,10 +10,10 @@ import router from '@/assets/js/router/router.js';
 // internationalisation
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
-import { languages, defaultLocale } from '@/locales';
-const messages = Object.assign(languages);
+import { LANGUAGE, DEFAULT_LOCALE } from '@/locales';
+const messages = Object.assign(LANGUAGE);
 const i18n = new VueI18n({
-    locale: defaultLocale,
+    locale: DEFAULT_LOCALE,
     messages,
 });
 

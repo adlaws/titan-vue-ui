@@ -15,6 +15,10 @@ export class Vec2
             obj.y || 0.0
         );
     }
+    static origin()
+    {
+        return new Vec2(0.0, 0.0);
+    }
     static toString()
     {
         return `{x:${this.x},y:${this.y}}`;
@@ -36,6 +40,10 @@ export class Vec3
             obj.y || 0.0,
             obj.z || 0.0
         );
+    }
+    static origin()
+    {
+        return new Vec3(0.0, 0.0, 0.0);
     }
     static toString()
     {
@@ -60,6 +68,10 @@ export class Quat
             obj.y || 0.0,
             obj.z || 0.0
         );
+    }
+    static origin()
+    {
+        return new Quat(0.0, 0.0, 0.0, 0.0);
     }
     static toString()
     {

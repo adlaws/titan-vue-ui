@@ -1,16 +1,21 @@
 import en_US from './en-US.json';
 import ja_JP from './ja-JP.json';
 
-export const defaultLocale = 'en-US';
-
-export const languages = {
-    'en-US':en_US,
-    'ja-JP':ja_JP,
+export const LOCALE = {
+    ENGLISH_US: 'en-US',
+    JAPANESE: 'ja-JP',
 };
+
+export const LANGUAGE = {
+    [LOCALE.ENGLISH_US]:en_US,
+    [LOCALE.JAPANESE]:ja_JP,
+};
+
+export const DEFAULT_LOCALE = LOCALE.ENGLISH_US;
 
 // ref: https://kazupon.github.io/vue-i18n/guide/datetime.html
 export const dateTimeFormats = {
-    'en-US': {
+    [LOCALE.ENGLISH_US]: {
         short: {
             year: 'numeric', month: 'short', day: 'numeric'
         },
@@ -19,7 +24,7 @@ export const dateTimeFormats = {
             weekday: 'short', hour: 'numeric', minute: 'numeric'
         }
     },
-    'ja-JP': {
+    [LOCALE.JAPANESE]: {
         short: {
             year: 'numeric', month: 'short', day: 'numeric'
         },
@@ -32,12 +37,12 @@ export const dateTimeFormats = {
 
 // ref: https://kazupon.github.io/vue-i18n/guide/number.html#custom-formatting
 export const numberFormats = {
-    'en-US': {
+    [LOCALE.ENGLISH_US]: {
         currency: {
             style: 'currency', currency: 'USD'
         }
     },
-    'ja-JP': {
+    [LOCALE.JAPANESE]: {
         currency: {
             style: 'currency', currency: 'JPY', currencyDisplay: 'symbol'
         }

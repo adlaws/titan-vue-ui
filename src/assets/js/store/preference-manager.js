@@ -5,9 +5,11 @@ import DataUtils from '@/assets/js/utils/data-utils.js';
 
 Vue.use(Vuex);
 
+import { LOCALE } from '@/locales';
+
 export const LANGUAGE = {
-    ENGLISH_US: 'en-US',
-    JAPANESE: 'ja-JP',
+    ENGLISH_US: LOCALE.ENGLISH_US,
+    JAPANESE: LOCALE.JAPANESE,
 };
 const LANGUAGE_OPTIONS = [
     {label: 'English (US)', abbr:'EN', id: LANGUAGE.ENGLISH_US},

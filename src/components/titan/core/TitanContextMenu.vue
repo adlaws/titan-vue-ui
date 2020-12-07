@@ -7,7 +7,6 @@ A context menu component, allows nested sub-menus
 
 Events:
     @selected fired when an item is selected, with the selected item as the parameter
-    @closed fired when the context menu is closed after a selection is made
     @cancelled fired when the context menu is closed with no selection being made
 
 Example use:
@@ -122,9 +121,15 @@ Example use:
 </template>
 
 <script>
+import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+
+// the context menu can be dismissed without making a selection by clicking
+// anywhere outside the bounds of the context menu, or by pressing the ESCAPE
+// key
+const CANCELLATION_EVENTS = ['keydown', 'mousedown'];
 
 export default {
     name:'titan-context-menu',
@@ -228,14 +233,19 @@ export default {
                 // with the bottom edge of the screen
                 this.pos.y -= (bottomEdge - desktopBounds.bottom);
             }
+
+            CANCELLATION_EVENTS.forEach((evtName) =>
+            {
+                document.addEventListener(evtName, this._watchForClickOutsideOrEscape);
+            });
         });
     },
     beforeDestroy()
     {
-        if(this.selected === null)
-            this.$emit('cancelled');
-        else
-            this.$emit('closed');
+        CANCELLATION_EVENTS.forEach((evtName) =>
+        {
+            document.removeEventListener(evtName, this._watchForClickOutsideOrEscape);
+        });
     },
     methods:
     {
@@ -259,6 +269,19 @@ export default {
             this.$emit('selected', this.selected);
         },
         /**
+         * This method checks for clicks outside the context menu or pressing
+         * of the escape key to cancel/dismiss the context menu without making
+         * a selection.
+         */
+        _watchForClickOutsideOrEscape(evt)
+        {
+            if(this.$refs.container.contains(evt.target))
+                return; // it's on the context menu, don't do anything
+
+            if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY_CODE.ESCAPE))
+                this.$emit('cancelled'); // ESC key or click outside - cancelled
+        },
+        /**
          * Utility method to obtain the absolute position of the element
          *
          * We need this because elm.getBoundingClientRect() returns results
@@ -278,7 +301,7 @@ export default {
                 el = el.offsetParent;
             }
             return { x, y };
-        }
+        },
     }
 };
 </script>

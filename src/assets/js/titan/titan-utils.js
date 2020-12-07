@@ -404,7 +404,139 @@ export default class TitanUtils
         // return $tWorldInterface.getWorldPositionUnderMouse();
         if($isInsideTitan)
             return $tWorldInterface.getWorldPosFromScreenPix(winXY);
-        return {x: 0, y: 0, z: 0};
+        return {x:0, y:0, z:0};
+    }
+
+    /**
+     * Obtain world coordinates (ECEF/(x,y,z) coordinates) for the terrain location which
+     * currently coincides with mouse coordinates.
+     *
+     * @returns the world coordinates of the point of the terrain under the mouse
+     */
+    static worldPosUnderMouse()
+    {
+        if($isInsideTitan)
+            return $tWorldInterface.getWorldPositionUnderMouse();
+        return {x:0, y:0, z:0};
+    }
+
+    /**
+     * Show the gizmo at the given ECEF coordinates
+     *
+     * @param the world coordinates at which to position the gizmoe
+     */
+    static showGizmoAt(ecef)
+    {
+        if($isInsideTitan)
+            $tWorldInterface.showGizmoAt(ecef);
+    }
+
+    /**
+     * Obtain the UUID of the object under the mouse, if any
+     *
+     * @returns the UUID of the object under the mouse, if any
+     */
+    static getObjectUUIDUnderMouse()
+    {
+        if($isInsideTitan)
+            return $tWorldInterface.getObjectUUIDUnderMouse();
+        return -1;
+    }
+
+    /**
+     * Determine if the object under the mouse is selected
+     *
+     * @returns true if the object under the mouse is selected, false otherwise
+     */
+    static isObjectUnderMouseSelected()
+    {
+        if($isInsideTitan)
+            return $tWorldInterface.isObjectUnderMouseSelected();
+        return false;
+    }
+
+    /**
+     * Determine if the object under the mouse is selectable
+     *
+     * @returns true if the object under the mouse is selectable, false otherwise
+     */
+    static isSelectableObjectUnderMouse()
+    {
+        if($isInsideTitan)
+            return $tWorldInterface.isSelectableObjectUnderMouse();
+        return false;
+    }
+
+    /**
+     * Determine if the object under the mouse is a selectable shape
+     *
+     * @returns true if the object under the mouse is a selectable shape,
+     *          false otherwise
+     */
+    static isSelectableShapeObjectUnderMouse()
+    {
+        if($isInsideTitan)
+            return $tWorldInterface.isSelectableShapeObjectUnderMouse();
+        return false;
+    }
+
+    /**
+     * Determine if the object under the mouse is a selectable trigger
+     *
+     * @returns true if the object under the mouse is a selectable trigger,
+     *          false otherwise
+     */
+    static isSelectableTriggerUnderMouse()
+    {
+        if($isInsideTitan)
+            return $tWorldInterface.isSelectableTriggerUnderMouse();
+        return false;
+    }
+
+    /**
+     * Determine if the object under the mouse is a selectable waypoint
+     *
+     * @returns true if the object under the mouse is a selectable waypoint,
+     *          false otherwise
+     */
+    static isSelectableWaypointUnderMouse()
+    {
+        if($isInsideTitan)
+            return $tWorldInterface.isSelectableWaypointUnderMouse();
+        return false;
+    }
+
+    /**
+     * Add whatever is under the mouse to the current selection
+     *
+     * NOTE: see also injectMousePosition()
+     */
+    static select()
+    {
+        if($isInsideTitan)
+            $tWorldInterface.select();
+    }
+
+    /**
+     * Clear the current selection
+     */
+    static clearSelection()
+    {
+        if($isInsideTitan)
+            $tWorldInterface.clearSelection();
+    }
+
+    /**
+     * Inject the mouse position into Titan
+     *
+     * NOTE: the mouse position should be given with Y=0 at the *bottom* of the
+     * screen (which is inverse to a browser coordinate system's Y axis orientation)
+     *
+     */
+    static injectMousePosition(winXY, limit=15000)
+    {
+        if($isInsideTitan)
+            $tWorldInterface.injectMousePosition(winXY, limit);
     }
 
     /**
@@ -423,6 +555,35 @@ export default class TitanUtils
         if(!candidate)
             return false;
         return !(candidate.x === 0 && candidate.y === 0 && candidate.z === 0);
+    }
+
+    /**
+     * Utility method to begin an area drag select.
+     */
+    static beginAreaDragSelect()
+    {
+        if($isInsideTitan)
+            $tWorldInterface.beginAreaDragSelect();
+    }
+
+    /**
+     * Utility method to end an area drag select.
+     */
+    static endAreaDragSelect()
+    {
+        if($isInsideTitan)
+            $tWorldInterface.endAreaDragSelect();
+    }
+
+    /**
+     * Utility method to end an area drag select.
+     *
+     * @param isActive if true, set undo/redo keypress monitoring active, otherwise disable it
+     */
+    static set_undo_redo_keypress_monitoring_active(isActive)
+    {
+        if($isInsideTitan)
+            $tWorldInterface.set_undo_redo_keypress_monitoring_active(isActive===true);
     }
 
     /**

@@ -42,6 +42,7 @@
             :y="contextMenu.locationFormat.y"
             text-key="label"
             @selected="locationFormatSelection"
+            @cancelled="contextMenu.locationFormat.show=false"
         />
     </div>
 </template>

@@ -1,6 +1,12 @@
 {
     "Titan": "Titan",
     "entity": "entity|entities",
+    "Entity": "Entity|Entities",
+    "Scenario Constructor": "Scenario Constructor",
+    "Scenario Lobby": "Scenario Lobby",
+    "After Action Review": "After Action Review",
+    "Options": "Options",
+    "Quit": "Quit",
     "direction": {
         "N": {
             "full": "North",

@@ -13,7 +13,8 @@
 </template>
 
 <script>
-import { PREFERENCE_MUTATION, LANGUAGE } from '@/assets/js/store/preference-manager.js';
+
+import { LANGUAGE, PREFERENCE_MUTATION } from '@/assets/js/store/preference-manager.js';
 
 export default {
     name: 'titan-locale',
