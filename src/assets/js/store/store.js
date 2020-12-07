@@ -3,13 +3,15 @@ import Vuex from 'vuex';
 
 import DesktopManager from './desktop-manager.js';
 import TitanManager from './titan-manager.js';
+import PreferenceManager from './preference-manager.js';
 
 Vue.use(Vuex);
 
 const ApplicationState = new Vuex.Store({
     modules: {
-        DesktopManager: DesktopManager,
-        TitanManager: TitanManager,
+        DesktopManager,
+        TitanManager,
+        PreferenceManager,
     }
 });
 

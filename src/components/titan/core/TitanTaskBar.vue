@@ -62,6 +62,7 @@
         />
         <titan-location class="mr-2" />
         <titan-clock class="mr-2" />
+        <titan-locale class="mr-2" />
     </div>
 </template>
 
@@ -74,6 +75,7 @@ import TitanUtils, { SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 import TitanTaskbarWindowTile from '@/components/titan/core/TitanTaskbarWindowTile.vue';
 import TitanClock from '@/components/titan/core/TitanClock.vue';
 import TitanLocation from '@/components/titan/core/TitanLocation.vue';
+import TitanLocale from '@/components/titan/core/TitanLocale.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 import CseLogo from '@/components/titan/core/CseLogo.vue';
 
@@ -81,7 +83,7 @@ export default {
     name: 'titan-task-bar',
     components: {
         TitanTaskbarWindowTile, TitanIcon, CseLogo,
-        TitanClock, TitanLocation,
+        TitanClock, TitanLocation, TitanLocale,
     },
     props: {},
     data()

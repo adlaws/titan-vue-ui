@@ -6,7 +6,6 @@
         <titan-icon icon="clock" class="mr-1" /><span class="monospace">{{ time }}</span>
         <br>
         <titan-icon icon="calendar-month" class="mr-1" /><span class="monospace">{{ date }}</span>
-        <titan-place-and-time />
     </div>
 </template>
 
@@ -17,14 +16,13 @@
 // import DateTimeUtils from '@/assets/js/utils/datetime-utils.js';
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
-import TitanPlaceAndTime from '@/components/titan/core/TitanPlaceAndTime.vue';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default {
     name: 'titan-clock',
     components: {
-        TitanIcon, TitanPlaceAndTime
+        TitanIcon,
     },
     data()
     {
@@ -53,14 +51,13 @@ export default {
             if($isInsideTitan)
             {
                 const activeScenario = $tWorldInterface.getActiveScenario();
-                const scenarioCamera = activeScenario.getActiveCamera();
                 let tzOffsetMins = 0;
-                if(scenarioCamera)
-                {
-                    const lla = scenarioCamera.getLLA();
-                    const timezone = tzlookup(lla.latitude, lla.longitude);
-                    tzOffsetMins = ctz.getTimezone(timezone).utcOffset;
-                }
+                // const scenarioCamera = activeScenario.getActiveCamera();
+                // if(scenarioCamera)
+                // {
+                //     const lla = scenarioCamera.getLLA();
+                //     const timezone = tzlookup(lla.latitude, lla.longitude);
+                // }
 
                 let tod = activeScenario.getTimeOfDay();
                 let doy = activeScenario.getDayOfYear();

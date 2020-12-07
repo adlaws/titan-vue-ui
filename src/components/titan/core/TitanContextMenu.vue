@@ -93,9 +93,9 @@ Example use:
                     :class="{disabled:item.disabled===true}"
                     @click="_revealSubmenu(idx)"
                 >
-                    <titan-icon v-if="item.icon" :icon="item.icon" />
+                    <titan-icon v-if="item[iconKey]" :icon="item[iconKey]" />
                     <span v-else style="width:1em;display:inline-block;" />
-                    <span class="ml-1">{{ item.text }}</span>
+                    <span class="ml-1 mr-2">{{ item[textKey] }}</span>
                     <span class="spacer" />
                     <titan-icon icon="chevron-right" />
                     <titan-context-menu
@@ -112,9 +112,9 @@ Example use:
                     :class="{disabled:item.disabled===true}"
                     @click.stop="_handleItemClicked(item)"
                 >
-                    <titan-icon v-if="item.icon" :icon="item.icon||'blank'" />
+                    <titan-icon v-if="item[iconKey]" :icon="item[iconKey]||'blank'" />
                     <span v-else style="width:1em;display:inline-block;" />
-                    <span class="ml-1">{{ item.text }}</span>
+                    <span class="ml-1 mr-2">{{ item[textKey] }}</span>
                 </li>
             </template>
         </ul>
@@ -146,9 +146,25 @@ export default {
             type:Number,
             default:0
         },
-        items:{
+        items:
+        {
             type:Array,
             default:() => []
+        },
+        textKey:
+        {
+            type:String,
+            default: 'text'
+        },
+        iconKey:
+        {
+            type:String,
+            default: 'icon'
+        },
+        ignoreTaskbar:
+        {
+            type:Boolean,
+            default: false,
         },
     },
     data()
@@ -170,8 +186,11 @@ export default {
     },
     mounted()
     {
-        // need to make sure we keep the context menu inside the available screen space
-        const desktopBounds = this.$store.getters.desktopBounds;
+        // need to make sure we keep the context menu inside the available screen space - we can
+        // also opt to ignore the taskbar and appear over the top of it if desired, but generally
+        // we don't want to do that
+        const desktopBounds = this.ignoreTaskbar ? this.$store.getters.screenBounds : this.$store.getters.desktopBounds;
+        // work out bounds for context menu
         const container = this.$refs.container;
         const bounds = container.getBoundingClientRect();
 
@@ -267,7 +286,7 @@ export default {
 <style lang="scss">
 .titan--context-menu
 {
-    z-index: 1025;
+    z-index: 1024;
 
     box-shadow: 0 0 16px rgba(0,0,0,0.8);
     background-color: rgba(0,32,64,0.9);

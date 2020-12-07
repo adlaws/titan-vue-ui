@@ -4,8 +4,16 @@
         :style="`font-size:${taskbarSize*0.25}px;`"
     >
         <titan-icon icon="map-marker" class="mr-1" />
-        <latitude class="monospace" :latitude="tweenedLatitude" />
-        <longitude class="monospace ml-2" :longitude="tweenedLongitude" />
+        <span
+            @click="contextMenu.locationFormat.show = false"
+            @contextmenu.prevent="showLocationFormatContextMenu"
+        >
+            <mgrs v-if="isMGRS" :latitude="tweenedLatitude" :longitude="tweenedLongitude" />
+            <span v-else>
+                <latitude class="monospace" :latitude="tweenedLatitude" />
+                <longitude class="monospace ml-2" :longitude="tweenedLongitude" />
+            </span>
+        </span>
         <br>
         <titan-icon icon="compass" class="mr-1" />
         <heading class="monospace" :heading="tweenedMagneticHeading" />
@@ -26,19 +34,31 @@
                 <path d="M-5 6l5-3 5 3L0-6z" />
             </g>
         </svg>
+
+        <titan-context-menu
+            v-if="contextMenu.locationFormat.show"
+            :items="contextMenu.locationFormat.items"
+            :x="contextMenu.locationFormat.x"
+            :y="contextMenu.locationFormat.y"
+            text-key="label"
+            @selected="locationFormatSelection"
+        />
     </div>
 </template>
 
 <script>
 import gsap from 'gsap'; // provides tweening functions
 
+import { POSITION_FORMAT, POSITION_FORMAT_OPTIONS, PREFERENCE_MUTATION } from '@/assets/js/store/preference-manager.js';
 import { $tWorldInterface, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
-import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 import Latitude from '@/components/titan/core/display/Latitude.vue';
 import Longitude from '@/components/titan/core/display/Longitude.vue';
 import Heading from '@/components/titan/core/display/Heading.vue';
+import MGRS from '@/components/titan/core/display/MGRS.vue';
+import TitanContextMenu from '@/components/titan/core/TitanContextMenu.vue';
+import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 const DEFAULT_UPDATE_INTERVAL_MS = 125; // update every 125ms (8x per second)
 const MIN_UPDATE_INTERVAL = 100; // at most update 10x per second
@@ -47,7 +67,9 @@ export default {
     name: 'titan-location',
     components:
     {
-        TitanIcon, Latitude, Longitude, Heading,
+        Latitude, Longitude, Heading, 'mgrs':MGRS,
+        TitanContextMenu,
+        TitanIcon,
     },
     props:
     {
@@ -69,11 +91,24 @@ export default {
             updateIntervalMs: DEFAULT_UPDATE_INTERVAL_MS,
             updateIntervalSeconds: (DEFAULT_UPDATE_INTERVAL_MS/1000.0),
             running: false,
+            contextMenu:{
+                locationFormat:
+                {
+                    show:false,
+                    items:[
+                        ...POSITION_FORMAT_OPTIONS
+                    ],
+                    x:0,
+                    y:0,
+                }
+            }
         };
     },
     computed:
     {
         taskbarSize() { return this.$store.getters.taskbarSize; },
+        positionFormat() { return this.$store.getters.positionFormat; },
+        isMGRS() { return this.$store.getters.isPositionFormat(POSITION_FORMAT.MGRS); },
     },
     watch:
     {
@@ -147,6 +182,28 @@ export default {
 
             setTimeout(this.update, Math.max(MIN_UPDATE_INTERVAL, this.updateIntervalMs));
         },
+        showLocationFormatContextMenu(evt)
+        {
+            this.contextMenu.locationFormat.show = false;
+            this.contextMenu.locationFormat.x = evt.clientX-64;
+            this.contextMenu.locationFormat.y = evt.clientY;
+            this.contextMenu.locationFormat.show = true;
+        },
+        locationFormatSelection(format)
+        {
+            this.contextMenu.locationFormat.show = false;
+            this.$store.commit(PREFERENCE_MUTATION.SET_POSITION_FORMAT, format.id);
+        },
+        changeLocationFormat()
+        {
+            const currentFormat = this.positionFormat.id;
+            let nextFormat = POSITION_FORMAT.DMS;
+            if(currentFormat === POSITION_FORMAT.DMS)
+                nextFormat = POSITION_FORMAT.DECIMAL;
+            else if(currentFormat === POSITION_FORMAT.DECIMAL)
+                nextFormat = POSITION_FORMAT.MGRS;
+            this.$store.commit(PREFERENCE_MUTATION.SET_POSITION_FORMAT, nextFormat);
+        }
     },
 };
 </script>
