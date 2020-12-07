@@ -109,13 +109,16 @@ export default {
         locationFormatContextItems()
         {
             const formatID = this.positionFormat.id;
-            return POSITION_FORMAT_OPTIONS.map((opt)=>
+            const items = POSITION_FORMAT_OPTIONS.map((opt)=>
             {
                 const item = {...opt};
                 if(item.id===formatID)
                     item.icon = 'check-bold';
                 return item;
             });
+            items.push({separator:true});
+            items.push({id:'create_bookmark', label:'Bookmark This Place', icon:'map-marker-radius'});
+            return items;
         },
     },
     watch:
