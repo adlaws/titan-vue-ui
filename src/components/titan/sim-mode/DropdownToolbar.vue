@@ -1,9 +1,9 @@
 <!-- ------------------------------------------------------------------------------------------
-A drop down toolbar
+A drop down toolbar, which displays a row of items under it ready for action
 
-@param {Number} x the preferred x position on the screen (may be adjusted due to proximity to edges of screen)
-@param {Number} y the preferred y position on the screen (may be adjusted due to proximity to edges of screen)
-@param {Array} items the context menu items
+@param {Number} size the width of the dropdown trigger in pixels
+@param {Number} y the preferred y position on the screen (offset from top of screen)
+@param {Array} items the items
 
 Events:
     @selected fired when an item is selected, with the selected item as the parameter
@@ -121,8 +121,8 @@ import MathUtils from '@/assets/js/utils/math-utils.js';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 const APPEARANCE = {
-    ACTIVE:{opacity:1.0, color:'#888'},
-    INACTIVE:{opacity:0.5, color:'#888'},
+    ACTIVE: {opacity: 1.0, color: '#888'},
+    INACTIVE: {opacity: 0.5, color: '#888'},
 };
 // the toolbar can be dismissed without making a selection by clicking
 // anywhere outside the bounds of the context menu, or by pressing the ESCAPE
@@ -190,7 +190,7 @@ export default {
     },
     mounted()
     {
-        this.$refs.trigger.style.transition = `all 0.25s ease-in-out`;
+        this.$refs.trigger.style.transition = 'all 0.25s ease-in-out';
         this._updatePosition();
     },
     beforeDestroy()
@@ -229,6 +229,28 @@ export default {
                 container.style.top = MathUtils.clamp(this.y, this.desktopBounds.top, this.desktopBounds.bottom-containerBounds.height) + 'px';
         },
         /**
+         * When the mouse enters the dropdown area, we automatically show the items
+         */
+        _handleMouseEnter()
+        {
+            // stop any scheduled close of the dropdown
+            this._cancelAutoClose();
+            this.showItems = true;
+        },
+        /**
+         * When the mouse leaves the dropdown area, we trigger an automatic close after
+         * 1 second (this is cancelled if the user re-enters the dropdown area)
+         */
+        _handleMouseLeave()
+        {
+            this._cancelAutoClose();
+            this.autoCloseTimeout = setTimeout(()=>
+            {
+                this.$emit('cancelled'); // cancelled without selection
+                this.showItems = false;
+            }, 1000);
+        },
+        /**
          * Toggles the visibility of the items in the dropdown area
          */
         _toggleShow()
@@ -249,38 +271,8 @@ export default {
             }
 
             this.showItems = !this.showItems;
-        },
-        /**
-         * When the mouse enters the dropdown area, we automatically show the items
-         */
-        _handleMouseEnter()
-        {
-            // stop any scheduled close of the dropdown
-            this._cancelAutoClose();
-            this.showItems = true;
-        },
-        /**
-         * When the mouse leaves the dropdown area, we trigger an automatic close after
-         * 1 second (this is cancelled if the user re-enters the dropdown area)
-         */
-        _handleMouseLeave()
-        {
-            this._cancelAutoClose();
-            this.autoCloseTimeout = setTimeout(()=>
-            {
-                this.showItems = false;
-            }, 1000);
-        },
-        /**
-         * Cancel any scheduled automatic close - see _handleMouseLeave()
-         */
-        _cancelAutoClose()
-        {
-            if(this.autoCloseTimeout !== null)
-            {
-                clearTimeout(this.autoCloseTimeout);
-                this.autoCloseTimeout = null;
-            }
+            if(!this.showItems)
+                this.$emit('cancelled'); // cancelled without selection
         },
         /**
          * This method checks for clicks outside the context menu or pressing
@@ -294,8 +286,19 @@ export default {
 
             if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY_CODE.ESCAPE))
             {
-                this.$emit('cancelled'); // ESC key or click outside - cancelled
+                this.$emit('cancelled'); // ESC key or click outside - cancelled without selection
                 this.showItems = false;
+            }
+        },
+        /**
+         * Cancel any scheduled automatic close - see _handleMouseLeave()
+         */
+        _cancelAutoClose()
+        {
+            if(this.autoCloseTimeout !== null)
+            {
+                clearTimeout(this.autoCloseTimeout);
+                this.autoCloseTimeout = null;
             }
         },
     }

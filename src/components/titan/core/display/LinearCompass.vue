@@ -198,7 +198,7 @@ export default {
         },
         easeValue(params)
         {
-            gsap.to(this.$data, { duration: this.updateIntervalSeconds, ease: 'power2.out', ...params });
+            gsap.to(this.$data, { duration: this.updateIntervalSeconds, ease: 'none', ...params });
         },
     }
 };
