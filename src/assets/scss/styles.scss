@@ -82,3 +82,16 @@ $layoutcols:12;
         overflow-y: scroll;
     }
 }
+
+// transitions ------------------------------------------------------------------------------------
+// Ref: https://vuejs.org/v2/guide/transitions.html#Transitioning-Single-Elements-Components
+
+// Fast fade in/out - context menus etc
+// <transition name="fade" mode="out-in"> ... </transition>
+.fade-enter-active, .fade-leave-active{transition: opacity .125s;}
+.fade-enter, .fade-leave-to{opacity: 0;}
+
+// Slower fade in/out - splash screens, modals, logins etc
+// <transition name="fade-slow" mode="out-in"> ... </transition>
+.fade-slow-enter-active, .fade-slow-leave-active{transition: opacity .5s;}
+.fade-slow-enter, .fade-slow-leave-to{opacity: 0;}

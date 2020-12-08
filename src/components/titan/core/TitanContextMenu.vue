@@ -97,13 +97,15 @@ Example use:
                     <span class="ml-1 mr-2">{{ item[textKey] }}</span>
                     <span class="spacer" />
                     <titan-icon icon="chevron-right" />
-                    <titan-context-menu
-                        v-if="submenu.idx === idx"
-                        :x="submenu.x"
-                        :y="submenu.y"
-                        :items="item.items"
-                        @selected="_handleItemClicked"
-                    />
+                    <transition name="fade" mode="out-in">
+                        <titan-context-menu
+                            v-if="submenu.idx === idx"
+                            :x="submenu.x"
+                            :y="submenu.y"
+                            :items="item.items"
+                            @selected="_handleItemClicked"
+                        />
+                    </transition>
                 </li>
                 <li
                     v-else

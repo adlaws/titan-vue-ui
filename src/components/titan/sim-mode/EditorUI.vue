@@ -3,7 +3,9 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <compass />
+        <linear-compass />
+        <dropdown-toolbar :y="40" />
+
         <entity-selector />
         <map-overlay />
         <drawing-tools />
@@ -15,14 +17,16 @@
             <component :is="pluginWindow" />
         </div>
 
-        <titan-context-menu
-            v-if="contextMenu.show"
-            :items="contextMenu.items"
-            :x="contextMenu.x"
-            :y="contextMenu.y"
-            @selected="contextMenuSelection"
-            @cancelled="hideContextMenu"
-        />
+        <transition name="fade" mode="out-in">
+            <titan-context-menu
+                v-if="contextMenu.show"
+                :items="contextMenu.items"
+                :x="contextMenu.x"
+                :y="contextMenu.y"
+                @selected="contextMenuSelection"
+                @cancelled="hideContextMenu"
+            />
+        </transition>
     </div>
 </template>
 
@@ -34,8 +38,9 @@ import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
-import EntitySelector from '@/components/titan/core/display/Compass.vue';
-import Compass from '@/components/titan/sim-mode/EntitySelector.vue';
+import EntitySelector from '@/components/titan/core/display/LinearCompass.vue';
+import LinearCompass from '@/components/titan/sim-mode/EntitySelector.vue';
+import DropdownToolbar from '@/components/titan/sim-mode/DropdownToolbar.vue';
 import MapOverlay from '@/components/titan/sim-mode/MapOverlay.vue';
 import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
@@ -53,7 +58,7 @@ export default {
     name: 'editor-ui',
     components:
     {
-        Compass,
+        LinearCompass, DropdownToolbar,
         EntitySelector, MapOverlay, DrawingTools,
         TitanIcon, TitanContextMenu,
     },

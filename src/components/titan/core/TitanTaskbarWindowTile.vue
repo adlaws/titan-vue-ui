@@ -79,6 +79,7 @@ export default {
         justify-content: center;
         align-items: center;
 
+        color:#999;
         background-color: rgba(0,16,32,1.0);
         border:1px solid rgba(0,32,64,1.0);
         border-radius:4px;
@@ -87,17 +88,20 @@ export default {
         cursor: pointer;
         &:hover
         {
+            color:#FFF;
             border:1px solid rgba(0,32,64,1.0);
             background-color: rgba(0,32,64,1.0);
             box-shadow: 0 0 8px rgba(0,16,32,1.0);
         }
         &.active
         {
+            color:#DDD;
             border:1px solid rgba(0,48,96,1.0);
             background-color: rgba(0,48,96,1.0);
             box-shadow: 0 0 8px rgba(0,32,64,1.0);
             &:hover
             {
+                color:#FFF;
                 border:1px solid rgba(0,64,128,1.0);
                 background-color: rgba(0,64,128,1.0);
                 box-shadow: 0 0 8px rgba(0,48,96,1.0);

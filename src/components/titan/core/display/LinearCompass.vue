@@ -44,7 +44,7 @@ const DEFAULT_UPDATE_INTERVAL_MS = 125; // update every 125ms (8x per second)
 const MIN_UPDATE_INTERVAL = 100; // at most update 10x per second
 
 export default {
-    name: 'compass',
+    name: 'linear-compass',
     props:
     {
         updateInterval:{

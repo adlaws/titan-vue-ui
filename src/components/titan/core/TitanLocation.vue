@@ -35,15 +35,17 @@
             </g>
         </svg>
 
-        <titan-context-menu
-            v-if="contextMenu.locationFormat.show"
-            :items="locationFormatContextItems"
-            :x="contextMenu.locationFormat.x"
-            :y="contextMenu.locationFormat.y"
-            text-key="label"
-            @selected="locationFormatSelection"
-            @cancelled="contextMenu.locationFormat.show=false"
-        />
+        <transition name="fade" mode="out-in">
+            <titan-context-menu
+                v-if="contextMenu.locationFormat.show"
+                :items="locationFormatContextItems"
+                :x="contextMenu.locationFormat.x"
+                :y="contextMenu.locationFormat.y"
+                text-key="label"
+                @selected="locationFormatSelection"
+                @cancelled="contextMenu.locationFormat.show=false"
+            />
+        </transition>
     </div>
 </template>
 

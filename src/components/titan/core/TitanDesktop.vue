@@ -3,7 +3,7 @@
         v-show="desktopVisible"
         class="titan--desktop pass-through"
     >
-        <transition name="fade" mode="out-in">
+        <transition name="fade-slow" mode="out-in">
             <titan-splash
                 v-if="showSplash"
                 @click.native="showSplash=false"
@@ -238,14 +238,5 @@ export default {
     width:100vw;
     height:100vh;
     background-color: rgba(0,0,0,0);
-}
-
-.fade-enter-active, .fade-leave-active
-{
-  transition: opacity .333s;
-}
-.fade-enter, .fade-leave-to
-{
-  opacity: 0;
 }
 </style>
