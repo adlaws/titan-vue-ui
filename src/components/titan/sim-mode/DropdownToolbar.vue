@@ -1,5 +1,10 @@
 <!-- ------------------------------------------------------------------------------------------
-A drop down toolbar, which displays a row of items under it ready for action
+A drop down toolbar, which displays a row of items under it ready for action:
+
+                 ----------------------V----------------------
+                               +---+ +---+ +---+
+                               | A | | B | | C |
+                               +---+ +---+ +---+
 
 @param {Number} size the width of the dropdown trigger in pixels
 @param {Number} y the preferred y position on the screen (offset from top of screen)
@@ -12,15 +17,10 @@ Events:
 Example use:
 
     <template>
-        <div>
-            <button @click="showContextMenu">Context Menu</button>
-        </div>
-        <titan-context-menu
-            v-if="contextMenu.show"
-            :items="contextMenu.items"
-            :x="contextMenu.x"
-            :y="contextMenu.y"
-            @selected="contextMenuSelection"
+        <dropdown-toolbar
+            :y="64"
+            :items="items"
+            @selected="handleSelected"
         />
     </template>
 
@@ -29,38 +29,18 @@ Example use:
             data()
             {
                 return {
-                    contextMenu:{
-                        show: false,
-                        x: 0,
-                        y: 0,
                         items: [
-                            {id:'a',text:'Option A'},
-                            {id:'b',text:'Option B', disabled:true},
-                            {separator:true},
-                            {id:'c',text:'Sub menu C', items:[
-                                {id:'c-a', text:'C Option A'},
-                                {id:'c-b', text:'C Option B'},
-                                {id:'c-c', text:'C Sub Menu C', items:[
-                                    {id:'c-c-a',text:'Option C-C-A'},
-                                    {id:'c-c-b',text:'Option C-C-B'},
-                                ]},
-                            ]},
-                            {id:'d',text:'Option D'},
+                            {id:'a', icon:'car', text:'Car'},
+                            {id:'b', icon:'ferry', text:'Ferry'},
+                            {id:'c', icon:'airplane', text:'Aeroplane'},
                         ]
                     },
                 };
             },
             methods:
             {
-                showContextMenu(evt)
+                handleSelected(selected)
                 {
-                    this.contextMenu.x = evt.clientX;
-                    this.contextMenu.y = evt.clientY;
-                    this.contextMenu.show = true;
-                },
-                contextMenuSelection(selected)
-                {
-                    this.contextMenu.show = false;
                     console.log(selected.id);
                 }
             }
