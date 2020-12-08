@@ -3,6 +3,7 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
+        <compass />
         <entity-selector />
         <map-overlay />
         <drawing-tools />
@@ -28,12 +29,13 @@
 <script>
 import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
 
-import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, /*$tLogger*/ } from '@/assets/js/titan/titan-utils.js';
 import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
-import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
+import EntitySelector from '@/components/titan/core/display/Compass.vue';
+import Compass from '@/components/titan/sim-mode/EntitySelector.vue';
 import MapOverlay from '@/components/titan/sim-mode/MapOverlay.vue';
 import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
@@ -51,6 +53,7 @@ export default {
     name: 'editor-ui',
     components:
     {
+        Compass,
         EntitySelector, MapOverlay, DrawingTools,
         TitanIcon, TitanContextMenu,
     },

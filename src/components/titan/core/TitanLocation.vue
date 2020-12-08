@@ -91,6 +91,7 @@ export default {
             tweenedCompassRotation: 0.0,
             updateIntervalMs: DEFAULT_UPDATE_INTERVAL_MS,
             updateIntervalSeconds: (DEFAULT_UPDATE_INTERVAL_MS/1000.0),
+            updateTimer: null,
             running: false,
             contextMenu:{
                 locationFormat:
@@ -154,7 +155,7 @@ export default {
     },
     beforeDestroy()
     {
-        this.running = false;
+        this.stopUpdates();
     },
     methods:
     {
@@ -192,7 +193,16 @@ export default {
                 this.lla.altitude = 100.0; // MathUtils.clamp(this.lla.latitude += (Math.random() * 1.0) - 0.5, 0.0, 10000.0);
             }
 
-            setTimeout(this.update, Math.max(MIN_UPDATE_INTERVAL, this.updateIntervalMs));
+            this.updateTimer = setTimeout(this.update, Math.max(MIN_UPDATE_INTERVAL, this.updateIntervalMs));
+        },
+        stopUpdates()
+        {
+            this.running = false;
+            if(this.updateTimer !== null)
+            {
+                clearTimeout(this.updateTimer);
+                this.updateTimer = null;
+            }
         },
         showLocationFormatContextMenu(evt)
         {
