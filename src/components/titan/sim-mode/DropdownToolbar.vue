@@ -12,7 +12,7 @@ A drop down toolbar, which displays a row of items under it ready for action:
 
 Events:
     @selected fired when an item is selected, with the selected item as the parameter
-    @cancelled fired when the context menu is closed with no selection being made
+    @cancelled fired when the dropdown is closed with no selection being made
 
 Example use:
 

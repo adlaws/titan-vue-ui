@@ -7,12 +7,13 @@ import Http404 from '@/components/error/404';
 import Http500 from '@/components/error/500';
 
 import Root from '@/components/common/Root.vue';
+import TitanLoginPage from '@/components/titan/core/TitanLoginPage.vue';
 import TitanDesktop from '@/components/titan/core/TitanDesktop.vue';
 import TitanFps from '@/components/titan/core/TitanFps.vue';
 
 Vue.use(VueRouter);
 
-var authenticationGuard = function(to, from, next)
+const authenticationGuard = function(to, from, next)
 {
     // no authentication at this time
     next();
@@ -28,10 +29,26 @@ var router = new VueRouter({
             beforeEnter: authenticationGuard,
             redirect: {name: 'titan'}
         },
+        // login/authorization page
+        { path: '/login', name: 'login', component: TitanLoginPage },
+        // logout URL (no actual page, just visiting this URL causes an immediate logout)
+        {
+            path: '/logout',
+            name: 'logout',
+            beforeEnter: (/*to, from, next*/) =>
+            {
+                // clear the session storage (gets rid of any auth data)
+                sessionStorage.clear();
+                // clear the global storage (gets rid of any application state data)
+                // ApplicationState.dispatch('logout');
+                //  redirect to the splash scren
+                router.push({name: 'login'});
+            }
+        },
         // desktop
         {
             // must be authenticated to access this page or any child pages
-            beforeEnter: authenticationGuard,
+            // beforeEnter: authenticationGuard,
             path: '/titan',
             name: 'titan',
             redirect: {name: 'desktop'},

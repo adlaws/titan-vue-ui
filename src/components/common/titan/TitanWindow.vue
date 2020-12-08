@@ -61,42 +61,42 @@ export default {
         },
         // x position of the window (left is 0)
         x: {
-            type: Number,
+            type: [Number, String],
             default: 0,
         },
         // y position of the window (top is 0)
         y: {
-            type: Number,
+            type: [Number, String],
             default: 0,
         },
         // width of window (pixels)
         width: {
-            type: Number,
+            type: [Number, String],
             default: 200
         },
         // height of window (pixels)
         height: {
-            type: Number,
+            type: [Number, String],
             default: 100
         },
         // minimum width of window (pixels)
         minWidth: {
-            type: Number,
+            type: [Number, String],
             default: 128
         },
         // minimum height of window (pixels)
         minHeight: {
-            type: Number,
+            type: [Number, String],
             default: 128
         },
         // maximum width of window (pixels)
         maxWidth: {
-            type: Number,
+            type: [Number, String],
             default: -1
         },
         // maximum height of window (pixels)
         maxHeight: {
-            type: Number,
+            type: [Number, String],
             default: -1
         },
         // can the window be moved?
@@ -358,7 +358,9 @@ export default {
         close()
         {
             this.$destroy();
-            // remove the element from the DOM
+            // NOTE:/TODO: remove the element from the DOM - this is definitely
+            // not the most "Vue" thing to do here since we should be letting
+            // Vue manage the DOM... we should watch out for side effects
             this.$el.parentNode.removeChild(this.$el);
         },
         _onMouseMove(evt)

@@ -6,7 +6,7 @@
         @dblclick="handleDblClickMaxmize"
     >
         <div
-            class="control-btn icon"
+            class="icon"
         >
             <template
                 name="window-icon"
@@ -34,6 +34,7 @@
 
         <div class="title">
             <span
+                class="ml-1"
                 :title="title"
             >
                 {{ title }}
