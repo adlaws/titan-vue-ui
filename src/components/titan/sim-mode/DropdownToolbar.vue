@@ -54,17 +54,16 @@ Example use:
         @mouseenter="_handleMouseEnter"
         @mouseleave="_handleMouseLeave"
     >
-        <div @click="_toggleShow">
+        <div
+            class="trigger"
+            @click="_toggleShow"
+        >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 360 14"
                 :width="size"
             >
-                <g
-                    ref="trigger"
-                    :fill="color"
-                    :opacity="opacity"
-                >
+                <g :fill="color" :opacity="opacity">
                     <path v-if="showItems" d="M0 8l176.54-2L180 0l3.46 6L360 8z" />
                     <path v-else d="M0 6l176.54 2 3.46 6 3.46-6L360 6z" />
                 </g>
@@ -152,9 +151,9 @@ export default {
     },
     watch:
     {
-        desktopBounds: function() { this._updatePosition(); },
-        y: function() { this._updatePosition(); },
-        size: function() { this._updatePosition(); },
+        desktopBounds: function() { this.$nextTick(this._updatePosition); },
+        y: function() { this.$nextTick(this._updatePosition); },
+        size: function() { this.$nextTick(this._updatePosition); },
         showItems: function(isShowing)
         {
             this._cancelAutoClose();
@@ -170,7 +169,6 @@ export default {
     },
     mounted()
     {
-        this.$refs.trigger.style.transition = 'all 0.25s ease-in-out';
         this._updatePosition();
     },
     beforeDestroy()
@@ -293,6 +291,11 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    .trigger
+    {
+        cursor: pointer;
+    }
+
     ul
     {
         display: flex;
@@ -322,30 +325,26 @@ export default {
             align-items: center;
 
             color:#999;
-            background-color: rgba(0,16,32,1.0);
-            border:1px solid rgba(0,32,64,1.0);
+            background-color: #012;
             border-radius:4px;
 
             cursor: pointer;
             &:hover
             {
-                color:#FFF;
-                border:1px solid rgba(0,32,64,1.0);
-                background-color: rgba(0,32,64,1.0);
-                box-shadow: 0 0 8px rgba(0,16,32,1.0);
+                color:#024;
+                background-color: #EEE;
+                box-shadow: 0 0 8px #012;
             }
             &.active
             {
-                color:#DDD;
-                border:1px solid rgba(0,48,96,1.0);
-                background-color: rgba(0,48,96,1.0);
-                box-shadow: 0 0 8px rgba(0,32,64,1.0);
+                color:#036;
+                background-color: #E8E8E8;
+                box-shadow: 0 0 8px #024;
                 &:hover
                 {
-                    color:#FFF;
-                    border:1px solid rgba(0,64,128,1.0);
-                    background-color: rgba(0,64,128,1.0);
-                    box-shadow: 0 0 8px rgba(0,48,96,1.0);
+                    color:#048;
+                    background-color: #FFF;
+                    box-shadow: 0 0 8px #036;
                 }
             }
 

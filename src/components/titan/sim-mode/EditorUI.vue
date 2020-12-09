@@ -3,8 +3,8 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <linear-compass :size="720" />
-        <dropdown-toolbar :y="20" />
+        <linear-compass />
+        <dropdown-toolbar :y="22" />
 
         <entity-selector />
         <map-overlay />
@@ -38,8 +38,8 @@ import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
-import EntitySelector from '@/components/titan/core/display/LinearCompass.vue';
-import LinearCompass from '@/components/titan/sim-mode/EntitySelector.vue';
+import LinearCompass from '@/components/titan/core/display/LinearCompass.vue';
+import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
 import DropdownToolbar from '@/components/titan/sim-mode/DropdownToolbar.vue';
 import MapOverlay from '@/components/titan/sim-mode/MapOverlay.vue';
 import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
