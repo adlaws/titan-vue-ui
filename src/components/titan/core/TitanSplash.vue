@@ -28,6 +28,9 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/assets/scss/mixins-functions.scss';
+@import '@/assets/scss/variables.scss';
+
 .titan--splash
 {
     display: flex;
@@ -41,10 +44,14 @@ export default {
     left:37.5%;
     width:25vw;
     height:25vh;
+    min-width:450px;
+    min-height:250px;
 
-    color: white;
-    background-color: rgba(0,16,32,0.9);
-    box-shadow: 0 0 16px black;
+    background-color: rgba($menu-bg-inactive,0.9);
+    backdrop-filter: $glass-blur;
+    color: $menu-fg-inactive;
+
+    @include box-shadow($drop-shadow-medium);
     border-radius: 4px;
 }
 </style>

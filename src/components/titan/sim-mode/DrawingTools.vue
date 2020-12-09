@@ -17,7 +17,7 @@
                         v-for="tool in tools"
                         :key="tool.type"
                         class="tool small mr-1"
-                        :class="{active:currentTool && currentTool.type===tool.type}"
+                        :class="{selected:currentTool && currentTool.type===tool.type}"
                         @click="setTool(tool)"
                     >
                         <titan-icon :icon="tool.icon" size="150%" />
@@ -27,7 +27,7 @@
                         v-for="(swatch, idx) in palette"
                         :key="`swatch-${idx}`"
                         class="swatch"
-                        :class="{active:(currentFill && currentFill.id===swatch.id)}"
+                        :class="{selected:(currentFill && currentFill.id===swatch.id)}"
                         :style="`background-color:${swatch.color.toRgbaString()};`"
                         @click="setFillColor(swatch)"
                     />
@@ -350,7 +350,7 @@ export default {
             width:32px;
             height:32px;
             border: 2px solid black;
-            &.active
+            &.selected
             {
                 border: 2px solid white;
                 box-shadow: inset 0 0 8px rgba(255,255,255,0.5), 0 0 8px rgba(0,0,0,0.5);
