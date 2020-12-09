@@ -51,7 +51,7 @@ export default {
     backdrop-filter: $glass-blur;
     color: $menu-fg-inactive;
 
-    @include box-shadow($drop-shadow-medium);
+    @include box-shadow($drop-shadow-large, $menu-bg-inactive, 1.0);
     border-radius: 4px;
 }
 </style>
