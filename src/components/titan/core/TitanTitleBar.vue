@@ -1,6 +1,6 @@
 <template>
     <div
-        class="vue-os--title-bar"
+        class="titan-desktop--window-title-bar"
         :class="{active, maximized, nodrag:!draggable}"
         @mousedown="handleDragStart"
         @dblclick="handleDblClickMaxmize"
@@ -181,58 +181,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss">
-.vue-os--title-bar
-{
-    margin: 0;
-    padding: 0;
-
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-
-    cursor: move;
-    &.maximized, &.nodrag
-    {
-        cursor: default;
-    }
-    user-select: none;
-    width:100%;
-    min-height:32px;
-    height:32px;
-    max-height:32px;
-
-    background-color:#024;
-    color:#888;
-    &.active
-    {
-        background-color:#048;
-        color:white;
-    }
-
-    .icon
-    {
-        width: 24px;
-        height: 24px;
-        font-size: 24px;
-        line-height: 24px;
-        margin: 2px;
-    }
-
-    .title
-    {
-        margin: 0 2px;
-        flex-grow: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .control-btn
-    {
-        cursor: pointer;
-    }
-}
-</style>

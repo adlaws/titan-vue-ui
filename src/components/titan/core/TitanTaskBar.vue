@@ -1,7 +1,7 @@
 <template>
     <div
         ref="container"
-        class="titan--task-bar"
+        class="titan-desktop--task-bar"
         :class="{vertical}"
     >
         <div
@@ -157,86 +157,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-.titan--task-bar
-{
-    position: absolute;
-    bottom:0;
-    left:0;
-    right:0;
-    width:100vw;
-    height:64px;
-
-    background-color: rgba(0,16,32,0.9);
-    backdrop-filter: blur(10px);
-    color:#CCC;
-    box-shadow: 0 0 16px rgba(0,0,0,0.8);
-
-    z-index: 1024;
-    user-select: none;
-
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-
-    .start
-    {
-        margin-left: 24px;
-
-        .startitan-button
-        {
-            display: flex;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-            align-items: center;
-            &:hover
-            {
-                cursor: pointer;
-                color: white;
-                text-shadow:0 0 10px rgba(255,255,255,0.25);
-            }
-        }
-
-        .menu
-        {
-            z-index: 1025;
-            box-shadow: 0 0 16px rgba(0,0,0,0.8);
-            background-color: rgba(0,32,64,0.9);
-            padding: 0;
-            margin: 0;
-            position: absolute;
-            bottom: 64px;
-            left: 0px;
-            ul
-            {
-                margin:0;
-                padding:0;
-                list-style: none;
-                li
-                {
-                    display: flex;
-                    flex-wrap: nowrap;
-                    justify-content: flex-start;
-                    align-items: center;
-
-                    margin:0px;
-                    padding: 6px 24px;
-                    &:hover
-                    {
-                        cursor: pointer;
-                        color: white;
-                        background-color: rgba(0,64,128,0.9);
-                    }
-                }
-            }
-        }
-    }
-
-    .spacer
-    {
-        flex-grow: 1;
-    }
-}
-</style>

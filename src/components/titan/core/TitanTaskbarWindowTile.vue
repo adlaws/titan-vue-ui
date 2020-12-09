@@ -1,7 +1,7 @@
 <template>
     <div
         ref="container"
-        class="vue-os--titan-taskbar-window-tile"
+        class="titan-desktop--taskbar-window-tile"
         :class="{active:window.managed.active}"
         :title="window.title"
     >
@@ -62,51 +62,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-    .vue-os--titan-taskbar-window-tile
-    {
-        width: 48px;
-        height: 48px;
-        font-size:40px;
-        line-height:40px;
-
-        margin: 0;
-        padding: 0;
-
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: center;
-        align-items: center;
-
-        color:#999;
-        background-color: rgba(0,16,32,1.0);
-        border:1px solid rgba(0,32,64,1.0);
-        border-radius:4px;
-        margin-right:8px;
-
-        cursor: pointer;
-        &:hover
-        {
-            color:#FFF;
-            border:1px solid rgba(0,32,64,1.0);
-            background-color: rgba(0,32,64,1.0);
-            box-shadow: 0 0 8px rgba(0,16,32,1.0);
-        }
-        &.active
-        {
-            color:#DDD;
-            border:1px solid rgba(0,48,96,1.0);
-            background-color: rgba(0,48,96,1.0);
-            box-shadow: 0 0 8px rgba(0,32,64,1.0);
-            &:hover
-            {
-                color:#FFF;
-                border:1px solid rgba(0,64,128,1.0);
-                background-color: rgba(0,64,128,1.0);
-                box-shadow: 0 0 8px rgba(0,48,96,1.0);
-            }
-        }
-    }
-
-</style>

@@ -21,7 +21,7 @@
                     </template>
                 </titan-input>
                 <table
-                    class="vue-os--entity-selector-table"
+                    class="titan-desktop--entity-selector-table"
                 >
                     <tr>
                         <th>Entity</th>
@@ -170,39 +170,43 @@ export default {
 </script>
 
 <style lang="scss">
-.vue-os--entity-selector-table
+@import '@/assets/scss/mixins-functions.scss';
+@import '@/assets/scss/variables.scss';
+
+.titan-desktop--entity-selector-table
 {
     margin:0;
     padding:0;
-    border: 0px solid rgba(0,0,0,0);
+    border: none;
     width: 100%;
     tr
     {
         margin:0;
         padding:0;
-        border: 0px solid rgba(0,0,0,0);
+        border: none;
         &.selected
         {
-            background-color: #08f;
+            background-color: $menu-bg-active;
+            color: $menu-fg-active;
         }
         td
         {
             margin:0;
             padding:0;
-            border: 0px solid rgba(0,0,0,0);
+            border: none;
             &.name
             {
                 width:90%;
                 overflow: hidden;
                 white-space: nowrap;
-                text-overflow: ellips;
+                text-overflow: ellipsis;
             }
             &.image
             {
                 width:10%;
                 overflow: hidden;
                 white-space: nowrap;
-                text-overflow: ellips;
+                text-overflow: ellipsis;
             }
         }
     }

@@ -1,8 +1,8 @@
 <template>
     <div
         ref="container"
-        class="titan--window-content"
-        :class="{active: titanWindow.active}"
+        class="titan-desktop--window-content"
+        :class="{active: titanWindow.isActive}"
     >
         <!-- Active Window: {{ windowContext }} -->
         <slot />
@@ -33,22 +33,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss">
-.titan--window-content
-{
-    height: 100%;
-    overflow: scroll;
-    padding: 8px;
-    margin: 0px;
-    margin-top: 0;
-    border-radius: 2px;
-
-    background-color: #ddd;
-    color: #111;
-    &.active
-    {
-        background-color: #eee;
-    }
-}
-</style>

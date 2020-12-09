@@ -1,7 +1,7 @@
 <template>
     <div
         v-show="desktopVisible"
-        class="titan--desktop pass-through"
+        class="titan-desktop pass-through"
     >
         <transition name="fade-slow" mode="out-in">
             <titan-splash
@@ -230,7 +230,7 @@ export default {
 </script>
 
 <style lang="scss">
-.titan--desktop
+.titan-desktop
 {
     overflow: hidden;
     top:0px;

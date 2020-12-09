@@ -5,7 +5,7 @@
         :x="150"
         :y="150"
         :width="224"
-        :height="160"
+        :height="170"
         :resizable="false"
         @window-active="windowActiveChanged"
         @window-closed="beforeCloseCleanup"
@@ -16,13 +16,13 @@
                     <button
                         v-for="tool in tools"
                         :key="tool.type"
-                        class="tool"
+                        class="tool small mr-1"
                         :class="{active:currentTool && currentTool.type===tool.type}"
                         @click="setTool(tool)"
                     >
                         <titan-icon :icon="tool.icon" size="150%" />
                     </button>
-                    <br>
+                    <div class="mt-1" />
                     <div
                         v-for="(swatch, idx) in palette"
                         :key="`swatch-${idx}`"
@@ -342,16 +342,6 @@ export default {
 <style lang="scss">
 .vue-os--drawing-tools
 {
-    button
-    {
-        &.tool
-        {
-            &.active
-            {
-                background: white;
-            }
-        }
-    }
     div
     {
         &.swatch

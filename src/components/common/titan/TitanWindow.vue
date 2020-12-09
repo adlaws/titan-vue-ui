@@ -2,14 +2,15 @@
     <div
         v-show="isShown && !status.minimized"
         ref="container"
-        class="vue-os--window"
-        :class="{fullscreen: isFullscreen}"
+        class="titan-desktop--window"
+        :class="{fullscreen: isFullscreen, active:isActive}"
         @mousemove="_onMouseMove"
         @mousedown="_handleResizeStart"
         @mouseup="_handleFocus"
     >
         <titan-title-bar
             v-if="!(undecorated || noTitleBar || isFullscreen)"
+            ref="titlebar"
             :title="title"
             :icon="icon"
             :x="status.x"
@@ -40,6 +41,9 @@ import CryptoUtils from '@/assets/js/utils/crypto-utils.js';
 import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
 
 import TitanTitleBar from '@/components/titan/core/TitanTitleBar.vue';
+
+// distance from edges of window (in pixels) which act as resize drag handles
+const RESIZE_THRESHOLD = 8;
 
 export default {
     name: 'titan-window',
@@ -383,11 +387,10 @@ export default {
             let resizeType = null;
             if(mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom)
             {
-                const threshold = 16;
-                const isW = (mouseX >= left) && (mouseX < left + threshold);
-                const isE = !isW && (mouseX >= right - threshold) && (mouseX <= right);
-                const isN = (mouseY >= top) && (mouseY < top + threshold);
-                const isS = !isN && (mouseY >= bottom - threshold) && (mouseY <= bottom);
+                const isW = (mouseX >= left) && (mouseX < left + RESIZE_THRESHOLD);
+                const isE = !isW && (mouseX >= right - RESIZE_THRESHOLD) && (mouseX <= right);
+                const isN = (mouseY >= top) && (mouseY < top + RESIZE_THRESHOLD);
+                const isS = !isN && (mouseY >= bottom - RESIZE_THRESHOLD) && (mouseY <= bottom);
                 if(!(!isW && !isE && !isN && !isS))
                 {
                     resizeType = { e: isE, w: isW, n: isN, s: isS };
@@ -401,6 +404,10 @@ export default {
                 }
             }
             container.style.cursor = cursor;
+            if(this.$refs.titlebar)
+            {
+                this.$refs.titlebar.$el.style.cursor = cursor === 'default' ? null : cursor;
+            }
             this.resizing.type = resizeType;
         },
         _handleResizeStart(evt)
@@ -510,39 +517,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss">
-.vue-os--window
-{
-    position:absolute;
-
-    padding: 0;
-    margin: 0;
-
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-content: stretch;
-
-    background-color: rgba(0,0,0,0);
-    border: 2px solid #024;
-    border-radius: 4px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.6666);
-
-    &.fullscreen{
-        border: 0px solid rgba(0,0,0,0);
-        border-radius: 0;
-        box-shadow: none;
-    }
-
-    .content
-    {
-        background-color: #eee;
-        color: #111;
-        height: 100%;
-        overflow: hidden;
-        padding: 8px;
-    }
-}
-</style>
