@@ -101,6 +101,27 @@ $layoutcols:12;
     --my-variable-name: #999999;
 }
 
+.success
+{
+    color: $success-fg-color;
+    background-color: $success-bg-color;
+}
+.info
+{
+    color: $info-fg-color;
+    background-color: $info-bg-color;
+}
+.warning
+{
+    color: $warning-fg-color;
+    background-color: $warning-bg-color;
+}
+.error
+{
+    color: $error-fg-color;
+    background-color: $error-bg-color;
+}
+
 button
 {
     cursor: pointer;
@@ -112,7 +133,10 @@ button
 
     background-color: $menu-bg-inactive;
     color: $menu-fg-inactive;
+
     @include box-shadow($drop-shadow-small);
+
+    @include transition($transition-duration-medium, (background-color, color, box-shadow));
 
     padding: 0.666em 1.333em;
     &.small { padding: 0.4em 0.8em; }
@@ -261,7 +285,7 @@ input
                     margin: 0px;
                     padding: 6px 24px;
 
-                    @include transition($transition-duration-fast, [background-color]);
+                    @include transition($transition-duration-fast, (background-color));
 
                     &:hover
                     {
@@ -296,7 +320,7 @@ input
 
     cursor: pointer;
 
-    @include transition($transition-duration-fast, [box-shadow, color, background-color]);
+    @include transition($transition-duration-fast, (box-shadow, color, background-color));
 
     &:hover
     {
@@ -330,11 +354,11 @@ input
     justify-content: flex-start;
     align-content: stretch;
 
-    @include transition($transition-duration-medium, [box-shadow, color, background-color]);
+    @include transition($transition-duration-medium, (box-shadow, color, background-color));
 
     background-color: $transparent-black;
     border-radius: 0px;
-    @include box-shadow($drop-shadow-small);
+    @include box-shadow($drop-shadow-medium);
 
     &.active
     {
@@ -363,7 +387,7 @@ input
     justify-content: flex-start;
     align-items: center;
 
-    @include transition($transition-duration-medium, [box-shadow, color, background-color]);
+    @include transition($transition-duration-medium, (box-shadow, color, background-color));
 
     cursor: move;
     &.maximized, &.nodrag
@@ -416,7 +440,7 @@ input
     margin: 0px;
     margin-top: 0;
 
-    @include transition($transition-duration-fast, [box-shadow, color, background-color]);
+    @include transition($transition-duration-fast, (box-shadow, color, background-color));
 
     background-color: $window-bg-inactive;
     color: $window-fg-inactive;
@@ -454,7 +478,6 @@ input
         li
         {
             backdrop-filter: $glass-blur;
-            color: $menu-fg-inactive;
 
             width: 52px;
             height: 52px;
@@ -474,12 +497,14 @@ input
             background-color: $menu-bg-inactive;
             border-radius:4px;
 
+            @include transition($transition-duration-medium, (box-shadow));
+
             cursor: pointer;
             &:hover
             {
                 color: $menu-bg-hover;
                 background-color: $menu-fg-hover;
-                @include box-shadow($drop-shadow-small, $menu-bg-inactive, 0.4);
+                @include box-shadow($drop-shadow-medium, $menu-bg-inactive, 0.4);
             }
             &.active
             {
@@ -490,7 +515,7 @@ input
                 {
                     color: $menu-bg-active-hover;
                     background-color: $menu-fg-active-hover;
-                    @include box-shadow($drop-shadow-small, $menu-bg-inactive, 0.4);
+                    @include box-shadow($drop-shadow-medium, $menu-bg-inactive, 0.4);
                 }
             }
 
@@ -499,6 +524,73 @@ input
                 font-size:25%;
                 line-height:25%;
                 margin-top:2px;
+            }
+        }
+    }
+}
+
+.titan--context-menu
+{
+    z-index: 1024;
+
+    border-radius: 2px;
+
+    position: absolute;
+    top:0;
+    left:0;
+    min-width: 10em;
+
+    padding: 0;
+    margin: 0;
+
+    color: $menu-fg-inactive;
+    background-color: rgba($menu-bg-inactive, 0.9);
+    @include box-shadow($drop-shadow-medium);
+
+    ul
+    {
+        margin:0;
+        padding:0;
+        list-style: none;
+        li
+        {
+            @include transition($transition-duration-medium, (color, background-color));
+
+            .spacer { flex-grow: 1; }
+            hr { width: 100%; }
+
+            margin:0px;
+            padding: 4px 8px;
+
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-items: center;
+
+            &.disabled
+            {
+                color: $menu-fg-disabled;
+                background-color: $menu-bg-disabled;
+            }
+            &.separator
+            {
+                padding: 0px 4px;
+            }
+            &:not(.separator):not(.disabled)
+            {
+                &:hover
+                {
+                    cursor: pointer;
+                    color: $menu-fg-hover;
+                    background-color: $menu-bg-hover;
+                }
+            }
+            &.disabled
+            {
+                &:hover
+                {
+                    cursor: not-allowed;
+                }
             }
         }
     }

@@ -11,11 +11,13 @@ $transition-duration-fast: 0.08s;
 $glass-blur: blur(10px);
 
 // colors ------------------------------------------------------------------------------------
-$base-color: #08F; // rgba(0,136,255)
+// the base color should be the 'accent' color of the interface
+$base-color: #08F; // #0088FF, rgba(0,136,255)
 
-$bg-dark: shade( $base-color, 87.5% ); // #0088FF => #001122, rgba(0,17,34)
-$bg-medium: shade( $base-color, 75% ); // #0088FF => #002244, rgba(0,34,68)
-$bg-light: shade( $base-color, 50% ); // #0088FF => #004488, rgba(0,58,136)
+
+$bg-dark: shade( $base-color, 87.5% ); // transforms #0088FF, rgba(0,136,255) into #001122, rgba(0,17,34)
+$bg-medium: shade( $base-color, 75% ); // transforms #0088FF, rgba(0,136,255) into #002244, rgba(0,34,68)
+$bg-light: shade( $base-color, 50% );  // transforms #0088FF, rgba(0,136,255) into #004488, rgba(0,58,136)
 $bg-bright: $base-color;
 
 $white: #E8E8E8;
@@ -36,27 +38,36 @@ $drop-shadow-large: 16px;
 $drop-shadow-medium: 8px;
 $drop-shadow-small: 4px;
 
-$menu-bg-inactive: $bg-dark;
-$menu-bg-disabled: $gray-light;
-$menu-bg-hover: $bg-light;
-$menu-bg-active: $bg-light;
-$menu-bg-active-hover: $bg-bright;
-$menu-fg-inactive: choose-contrast-color($menu-bg-inactive, $white-dark, $black-light);
-$menu-fg-disabled: $gray-dark;
-$menu-fg-hover: choose-contrast-color($menu-bg-inactive, $white, $black);
-$menu-fg-active: choose-contrast-color($menu-bg-inactive, $white, $black);
-$menu-fg-active-hover: choose-contrast-color($menu-bg-inactive, $white-light, $black-dark);
-
 $text-bg: $white;
+$text-fg: $black;
 $text-bg-active: $white-light;
-$text-bg-inactive: $white-dark;
-$text-bg-disabled: $gray-light;
-$text-fg: $black-dark;
 $text-fg-active: $black-dark;
-$text-fg-inactive: $black;
+$text-bg-inactive: $white-dark;
+$text-fg-inactive: $black-light;
+$text-bg-disabled: $gray-light;
 $text-fg-disabled: $gray-dark;
 
-$window-bg-active: $text-bg-active;
 $window-fg-active: $text-fg-active;
-$window-bg-inactive: $text-bg-inactive;
+$window-bg-active: $text-bg-active;
 $window-fg-inactive: $text-fg-inactive;
+$window-bg-inactive: $text-bg-inactive;
+
+$menu-bg-active: $bg-light;
+$menu-fg-active: choose-contrast-color($menu-bg-active, $white, $black);
+$menu-bg-inactive: $bg-dark;
+$menu-fg-inactive: choose-contrast-color($menu-bg-inactive, $white-dark, $black-light);
+$menu-bg-disabled: $gray-light;
+$menu-fg-disabled: $gray-dark;
+$menu-bg-hover: $bg-light;
+$menu-fg-hover: choose-contrast-color($menu-bg-inactive, $white, $black);
+$menu-bg-active-hover: $bg-bright;
+$menu-fg-active-hover: choose-contrast-color($menu-bg-inactive, $white-light, $black-dark);
+
+$success-bg-color: #080;
+$success-fg-color: choose-contrast-color($success-bg-color, $white-light, $black-dark);;
+$warning-bg-color: #F60;
+$warning-fg-color: choose-contrast-color($warning-bg-color, $white-dark, $black-light);;
+$error-bg-color: #800;
+$error-fg-color: choose-contrast-color($error-bg-color, $white-dark, $black-light);;
+$info-bg-color: #048;
+$info-fg-color: choose-contrast-color($info-bg-color, $white-dark, $black-light);;
