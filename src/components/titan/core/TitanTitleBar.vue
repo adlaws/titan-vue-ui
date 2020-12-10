@@ -149,7 +149,7 @@ export default {
         },
         handleDragStart(evt)
         {
-            event.preventDefault();
+            evt.preventDefault();
 
             if(!this.draggable || this.maximized !== false)
                 return;
@@ -164,7 +164,7 @@ export default {
         },
         handleDrag(evt)
         {
-            event.preventDefault();
+            evt.preventDefault();
             const dragDeltaX = evt.clientX - this.dragStart.x;
             const dragDeltaY = evt.clientY - this.dragStart.y;
             this.dragStart.x = evt.clientX;

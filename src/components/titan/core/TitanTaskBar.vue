@@ -19,15 +19,15 @@
                 class="menu"
             >
                 <ul>
-                    <li @click="startScenarioConstructor()">
+                    <li @click="startScenarioConstructor">
                         <titan-icon size="200%;" icon="map-marker-path" />
                         <span class="ml-1">{{ $t('Scenario Constructor', language.id) }}</span>
                     </li>
-                    <li @click="startLobby()">
+                    <li @click="startLobby">
                         <titan-icon size="200%;" icon="account-group-outline" />
                         <span class="ml-1">{{ $t('Scenario Lobby', language.id) }}</span>
                     </li>
-                    <li>
+                    <li @click="$router.push({name:'fps'})">
                         <titan-icon size="200%;" icon="clipboard-edit-outline" />
                         <span class="ml-1">{{ $t('After Action Review', language.id) }}</span>
                     </li>
