@@ -24,7 +24,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/mixins-functions.scss';
 @import '@/assets/scss/variables.scss';
 
 .titan--splash

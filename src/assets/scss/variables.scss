@@ -1,3 +1,6 @@
+@import '@/assets/scss/functions.scss';
+@import '@/assets/scss/mixins.scss';
+
 $assetsRoot: "assets/";
 $imagesRoot: $assetsRoot+"images/";
 $fontsRoot:  $assetsRoot+"fonts/";
@@ -13,6 +16,13 @@ $glass-blur: blur(10px);
 // colors ------------------------------------------------------------------------------------
 // the base color should be the 'accent' color of the interface
 $base-color: #08F; // #0088FF, rgba(0,136,255)
+
+$primary-color: #048;
+$secondary-color: desaturate($primary-color, 100%);
+$success-color: #080;
+$warning-color: #F60;
+$error-color: #800;
+$info-color: #048;
 
 
 $bg-dark: shade( $base-color, 87.5% ); // transforms #0088FF, rgba(0,136,255) into #001122, rgba(0,17,34)
@@ -63,11 +73,16 @@ $menu-fg-hover: choose-contrast-color($menu-bg-inactive, $white, $black);
 $menu-bg-active-hover: $bg-bright;
 $menu-fg-active-hover: choose-contrast-color($menu-bg-inactive, $white-light, $black-dark);
 
-$success-bg-color: #080;
-$success-fg-color: choose-contrast-color($success-bg-color, $white-light, $black-dark);;
-$warning-bg-color: #F60;
-$warning-fg-color: choose-contrast-color($warning-bg-color, $white-dark, $black-light);;
-$error-bg-color: #800;
+$primary-bg-color: $menu-bg-inactive;
+$primary-fg-color: choose-contrast-color($primary-bg-color, $white-light, $black-dark);
+$secondary-bg-color: lighten(desaturate($menu-bg-inactive, 100%), 30%);
+$secondary-fg-color: choose-contrast-color($secondary-bg-color, $white-light, $black-dark);
+
+$success-bg-color: $success-color;
+$success-fg-color: choose-contrast-color($success-bg-color, $white-light, $black-dark);
+$warning-bg-color: $warning-color;
+$warning-fg-color: choose-contrast-color($warning-bg-color, $white-dark, $black-light);
+$error-bg-color: $error-color;
 $error-fg-color: choose-contrast-color($error-bg-color, $white-dark, $black-light);;
-$info-bg-color: #048;
+$info-bg-color: $info-color;
 $info-fg-color: choose-contrast-color($info-bg-color, $white-dark, $black-light);;

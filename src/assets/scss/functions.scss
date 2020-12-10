@@ -1,31 +1,3 @@
-
-// example usage:
-//     @include transition(0.5s, (opacity, color), ease-out);
-@mixin transition ($duration:$transition-duration-fast, $properties:[], $easing:ease-in-out)
-{
-    // $transition: ();
-    // @each $property in $properties {
-    //     $transition: append($transition, $property $duration $easing, comma);
-    // }
-    // transition: $transition;
-
-    // concatenate transition properties lst with commas
-    $transition-props: ();
-    @each $property in $properties {
-        $transition-props: append($transition-props, $property, comma);
-    }
-    transition-property: $transition-props;
-    transition-duration: $duration;
-    transition-timing-function: $easing;
-}
-
-// example usage
-//     @include box-shadow(8px, red, 1.0);
-@mixin box-shadow($size:16px, $color:black, $opacity:0.8)
-{
-    box-shadow: 0 0 $size rgba($color, $opacity);
-}
-
 // functions
 @function tint($color, $percentage) { @return mix(white, $color, $percentage); }
 @function shade($color, $percentage) { @return mix(black, $color, $percentage); }

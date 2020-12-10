@@ -1,4 +1,3 @@
-@import './mixins-functions.scss';
 @import './variables.scss';
 
 /**
@@ -136,7 +135,7 @@ button
 
     @include box-shadow($drop-shadow-small);
 
-    @include transition($transition-duration-medium, (background-color, color, box-shadow));
+    @include transition($transition-duration-fast, (background-color, color, box-shadow));
 
     padding: 0.666em 1.333em;
     &.small { padding: 0.4em 0.8em; }

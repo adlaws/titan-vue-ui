@@ -13,46 +13,40 @@
             :draggable="false"
         >
             <template #default>
-                <div style="height:100%;color:white;background-color:black;">
-                    Some stuff here
+                <div class="login-form">
+                    <form>
+                        <div class="form-row">
+                            <label for="username">Username</label>
+                            <input
+                                type="text"
+                                name="username"
+                                autocomplete="none"
+                                required
+                            >
+                        </div>
+                        <div class="form-row">
+                            <label for="password">Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                autocomplete="current-password"
+                                required
+                            >
+                        </div>
+                    </form>
+                    <div class="spacer" />
+                    <div class="button-row">
+                        <button>Cancel</button>
+                        <button>Sign In</button>
+                    </div>
                 </div>
             </template>
         </titan-window>
-    <!--
-        <easy-modal-content height="30%" @cancel="_doCancel">
-            <template #header>
-                Login
-            </template>
-            <template #body>
-                Some Login Fields here
-            </template>
-            <template #footer>
-                <div class="button-bar m-1">
-                    <button
-                        @click="_doCancel"
-                    >
-                        <slot name="modal-cancel">
-                            Single Player
-                        </slot>
-                    </button>
-                    <button
-                        class="inputButton"
-                        @click="_doConfirm"
-                    >
-                        <slot name="modal-ok">
-                            Sign In
-                        </slot>
-                    </button>
-                </div>
-            </template>
-        </easy-modal-content>
-        -->
     </modal-container>
 </template>
 
 <script>
 import ModalContainer from '@/components/titan/modals/ModalContainer.vue';
-// import EasyModalContent from '@/components/titan/modals/EasyModalContent.vue';
 
 export default {
     name: 'titan-login-page',
@@ -99,3 +93,34 @@ export default {
     }
 };
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/variables.scss';
+
+.login-form
+{
+    color: $window-fg-active;
+    background-color: $window-bg-active;
+    padding: 8px;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    .spacer { flex-grow: 1 }
+
+    .form-row
+    {
+        width:100%;
+        display: flex;
+        label {flex-grow: 0.1;flex-basis: 0;}
+        input {flex-grow: 1;}
+    }
+
+    .button-row
+    {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+</style>
