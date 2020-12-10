@@ -20,10 +20,6 @@ export default {
     {
         CseLogo
     },
-    data()
-    {
-        return {};
-    }
 };
 </script>
 

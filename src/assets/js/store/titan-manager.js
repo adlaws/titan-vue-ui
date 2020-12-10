@@ -9,6 +9,7 @@ Vue.use(Vuex);
 
 export const TITAN_MUTATION = {
     // TITAN STATE MANAGEMENT
+    SET_SPLASH_SCREEN_SHOWN:'titan::setSplachScreenShown',
     CHANGE_SIM_MODE:'titan::changeSimMode',
     // TITAN UI MODE
     ENTER_UI_MODE:'titan::uimode::enter',
@@ -50,6 +51,10 @@ const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescription
 const TitanManager =
 {
     state: () => ({
+        splashScreen: {
+            show: true,
+            hasShown: false,
+        },
         // screen resolution available to Titan
         window:{
             width: window.screen.availWidth,
@@ -82,6 +87,7 @@ const TitanManager =
         // --------------------------------------------------------------------
         // TITAN STATE MANAGEMENT
         // --------------------------------------------------------------------
+        showSplashScreen: (state) => state.splashScreen.show && !state.splashScreen.hasShown,
         titanWindow: (state) => state.window,
         titanSimMode: (state) => state.simMode,
         titanEntityDescriptors: (state) => state.entityDescriptors,
@@ -100,6 +106,10 @@ const TitanManager =
         // --------------------------------------------------------------------
         // TITAN STATE MANAGEMENT
         // --------------------------------------------------------------------
+        [TITAN_MUTATION.SET_SPLASH_SCREEN_SHOWN](state, hasShown)
+        {
+            state.splashScreen.hasShown = hasShown;
+        },
         [TITAN_MUTATION.CHANGE_SIM_MODE](state, mode)
         {
             if(!SIM_MODES.has(mode))

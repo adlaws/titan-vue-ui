@@ -5,8 +5,8 @@
     >
         <transition name="fade-slow" mode="out-in">
             <titan-splash
-                v-if="showSplash"
-                @click.native="showSplash=false"
+                v-if="showSplashScreen"
+                @click.native="_hideSplashScreen"
             />
         </transition>
 
@@ -41,11 +41,11 @@ export default {
     {
         return {
             desktopVisible: true,
-            showSplash: true,
         };
     },
     computed:
     {
+        showSplashScreen() { return this.$store.getters.showSplashScreen; },
         currentSimMode() { return this.$store.getters.titanSimMode; },
         isSimModeEditor() { return this.currentSimMode === SIM_MODE.EDITOR; },
         isSimModeAdmin() { return this.currentSimMode === SIM_MODE.ADMIN; },
@@ -53,6 +53,7 @@ export default {
     },
     watch:
     {
+        currentSimMode() { if(this.showSplashScreen) this._hideSplashScreen(); },
         desktopVisible(isVisible, /*wasVisible*/)
         {
             if(isVisible)
@@ -155,8 +156,11 @@ export default {
             }
         }.bind(this);
 
-        // Hide the splash screen
-        setTimeout(()=>{ this.showSplash = false; }, 5000);
+        if(this.showSplashScreen)
+        {
+            // Hide the splash screen after seconds
+            setTimeout(this._hideSplashScreen, 5000);
+        }
     },
     beforeDestroy()
     {
@@ -220,11 +224,23 @@ export default {
                 return;
             }
         },
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // OTHER HANDLERS
+        ////////////////////////////////////////////////////////////////////////////////////////////
         _browserResizeHandler: UiUtils.debounce(function()
         {
             const screenSize = {w: document.body.clientWidth, h:document.body.clientHeight};
             this.$store.commit(DESKTOP_MUTATION.UPDATE_SCREEN_SIZE, screenSize);
         }, 100, {onLeadIn: true, onTrailOut: true}),
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // OTHER HANDLERS
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        _hideSplashScreen()
+        {
+            // we hide the splash screen by marking it as shown, which prevents it
+            // from displaying again during this execution cycle
+            this.$store.commit(TITAN_MUTATION.SET_SPLASH_SCREEN_SHOWN, true);
+        },
     }
 };
 </script>
