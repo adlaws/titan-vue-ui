@@ -1,28 +1,43 @@
 <template>
-    <v-app id="cnrserver">
-        <h1 class="display-4 font-weight-black">
-            <slot name="error-code" />
-        </h1>
-        <h2 class="display-2 font-weight-light">
-            <slot name="error-heading" />
-        </h2>
-        <p class="display-1 font-weight-light">
-            <slot name="error-message" />
-        </p>
-        <router-link
-            :to="{ name: 'home', params: {}}"
-            class="white--text font-weight-medium"
-        >
-            Back to Home
-        </router-link>
-    </v-app>
+    <div
+        style="position:absolute;width:100%;height:100%;display:block;top:0;left:0;bottom:0;right:0;"
+        :style="error.style"
+    >
+        <div class="screen-centered">
+            <h1>
+                <slot name="error-code" />
+            </h1>
+            <h2>
+                <slot name="error-heading" />
+            </h2>
+            <p>
+                <slot name="error-message" />
+            </p>
+            <p>
+                <router-link
+                    :to="{ name: 'titan', params: {}}"
+                    style="color:white;text-decoration:none;"
+                >
+                    Back to Home
+                </router-link>
+            </p>
+        </div>
+        <div class="screen-centered-icon">
+            <slot name="icon">
+                <titan-icon icon="alert" />
+            </slot>
+        </div>
+    </div>
 </template>
 
 <script>
+import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+
 export default {
     name: 'error-base',
     components:
     {
+        TitanIcon,
     },
     props: {
         error: {
@@ -30,7 +45,7 @@ export default {
             default: function()
             {
                 const color1 = '#000';
-                const color2 = this.$vuetify.theme.currentTheme.primary;
+                const color2 = '#08f';
 
                 const _makeGrey = function(level, opacity) { return `rgba(${level},${level},${level},${opacity})`; };
                 const grey1 = _makeGrey(17, 0.04);
@@ -62,9 +77,33 @@ export default {
 </script>
 
 <style lang="scss">
+.screen-centered {
+    z-index:2;
+    // color, size
+    color: black !important;
+    // font-size:90vh !important;
+    // centering
+    position: fixed !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    h1{
+        font-size:800%;
+        line-height:50%;
+        text-align: center;
+    }
+    h2{
+        font-size:200%;
+        line-height:50%;
+        text-align: center;
+    }
+    p{
+        text-align: center;
+    }
+}
 .screen-centered-icon {
     // appear behind everything else
-    z-index:-1;
+    z-index:1;
     // color, size
     opacity:0.125;
     color: black !important;

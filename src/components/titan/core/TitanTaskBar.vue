@@ -35,7 +35,7 @@
                         <titan-icon size="200%;" icon="cogs" />
                         <span class="ml-1">{{ $t('Options', language.id) }}</span>
                     </li>
-                    <li @click="quitApplication()">
+                    <li @click="quitApplication">
                         <titan-icon
                             size="200%;"
                             icon="logout"

@@ -62,6 +62,7 @@ var router = new VueRouter({
         // error pages - 500, 403 and 404 for everything else
         { path: '/401', name: '401', component: Http401 },
         { path: '/403', name: '403', component: Http403 },
+        { path: '/404', name: '500', component: Http404 },
         { path: '/500', name: '500', component: Http500 },
         { path: '*',    name: '404', component: Http404 }
     ]

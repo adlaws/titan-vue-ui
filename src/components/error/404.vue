@@ -7,7 +7,10 @@
             SORRY!
         </template>
         <template #error-message>
-            The page you were looking for cannot be found.
+            The part of the application you were looking for cannot be found.
+        </template>
+        <template #icon>
+            <titan-icon icon="map-marker-question" />
         </template>
     </error-base>
 </template>
@@ -15,16 +18,17 @@
 <script>
 import { Color } from '@/assets/js/utils/color-utils.js';
 
+import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 import ErrorBase from './ErrorBase.vue';
 
 export default {
     name: 'http404',
     components: {
-        ErrorBase
+        ErrorBase, TitanIcon
     },
     data()
     {
-        const color1 = new Color(this.$vuetify.theme.currentTheme.primary).toRgbString();
+        const color1 = new Color('#F40').toRgbString();
         const color2 = new Color(color1).adjustHue(30).toRgbString();
 
         const _makeGrey = function(level, opacity) { return `rgba(${level},${level},${level},${opacity})`; };

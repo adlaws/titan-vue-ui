@@ -74,6 +74,8 @@
 </template>
 
 <script>
+import MathUtils from '@/assets/js/utils/math-utils.js';
+
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 export default {
@@ -140,6 +142,10 @@ export default {
             iconSize: { w: 24, h: 24 }
         };
     },
+    computed:
+    {
+        desktopBounds() { return this.$store.getters.desktopBounds; }
+    },
     methods:
     {
         handleDblClickMaxmize()
@@ -165,10 +171,12 @@ export default {
         handleDrag(evt)
         {
             evt.preventDefault();
-            const dragDeltaX = evt.clientX - this.dragStart.x;
-            const dragDeltaY = evt.clientY - this.dragStart.y;
-            this.dragStart.x = evt.clientX;
-            this.dragStart.y = evt.clientY;
+            const dragX = MathUtils.clamp(evt.clientX, this.desktopBounds.left, this.desktopBounds.right);
+            const dragY = MathUtils.clamp(evt.clientY, this.desktopBounds.top, this.desktopBounds.bottom);
+            const dragDeltaX = dragX - this.dragStart.x;
+            const dragDeltaY = dragY - this.dragStart.y;
+            this.dragStart.x = dragX;
+            this.dragStart.y = dragY;
             const newX = this.x + dragDeltaX;
             const newY = this.y + dragDeltaY;
             this.$emit('window-updateXY', { x: newX, y: newY });

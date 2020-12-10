@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import MathUtils from '@/assets/js/utils/math-utils.js';
 import CryptoUtils from '@/assets/js/utils/crypto-utils.js';
 
 import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
@@ -212,10 +213,11 @@ export default {
     },
     mounted()
     {
-        this.status.x = this.x;
-        this.status.y = this.y;
-        this.status.w = Math.max(this.minWidth, this.width);
-        this.status.h = Math.max(this.minHeight, this.height);
+        const xywh = this._processPositionAndSize(this.x, this.y, this.width, this.height);
+        this.status.x = xywh.x;
+        this.status.y = xywh.y;
+        this.status.w = xywh.width;
+        this.status.h = xywh.height;
 
         const style = this.$refs.container.style;
         style.left = status.x + 'px';
@@ -514,6 +516,89 @@ export default {
             const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
             this.$emit('window-resized', bounds);
         },
+        _processPositionAndSize(x, y, width, height)
+        {
+            width = this._processWidth(width);
+            height = this._processHeight(height);
+            x = this._processX(x, height);
+            y = this._processY(y, height);
+            return {x,y,width,height};
+        },
+        _processWidth(windowWidth)
+        {
+            if(typeof windowWidth !== 'number')
+            {
+                // convert from percent, pixels as required
+                if(windowWidth.endsWith('%'))
+                    windowWidth = (this._parseFloatSafe(windowWidth, 0) / 100.0) * this.desktopBounds.w;
+                else
+                    windowWidth = this._parseFloatSafe(windowWidth, 0);
+            }
+            // constrain width according to limits
+            windowWidth = Math.max(this.minWidth, windowWidth);
+            if(this.maxWidth > 0)
+                windowWidth = Math.min(this.maxWidth, windowWidth);
+
+            return windowWidth;
+        },
+        _processHeight(windowHeight)
+        {
+            if(typeof windowHeight !== 'number')
+            {
+                // convert from percent, pixels as required
+                if(windowHeight.endsWith('%'))
+                    windowHeight = (this._parseFloatSafe(windowHeight, 0) / 100.0) * this.desktopBounds.h;
+                else
+                    windowHeight = this._parseFloatSafe(windowHeight, 0);
+            }
+            // constrain width according to limits
+            windowHeight = Math.max(this.minHeight, windowHeight);
+            if(this.maxHeight > 0)
+                windowHeight = Math.min(this.maxHeight, windowHeight);
+
+            return windowHeight;
+        },
+        _processX(windowX, windowWidth)
+        {
+            if(typeof windowX !== 'number')
+            {
+                if(windowX.endsWith('%'))
+                    windowX = this.desktopBounds.left + ((this._parseFloatSafe(windowX, 0) / 100.0) * this.desktopBounds.w);
+                else if(windowX === 'left')
+                    windowX= this.desktopBounds.left;
+                else if(windowX === 'right')
+                    windowX= this.desktopBounds.right - windowWidth;
+                else if(windowX === 'center')
+                    windowX= this.desktopBounds.left + ((this.desktopBounds.w - windowWidth)/2.0);
+                else
+                    windowX = this._parseFloatSafe(windowX, 0);
+            }
+
+            return MathUtils.clamp(windowX, this.desktopBounds.left, this.desktopBounds.right - windowWidth);
+        },
+        _processY(windowY, windowHeight)
+        {
+            if(typeof windowY !== 'number')
+            {
+                if(windowY.endsWith('%'))
+                    windowY = this.desktopBounds.left + ((this._parseFloatSafe(windowY, 0) / 100.0) * this.desktopBounds.h);
+                else if(windowY === 'top')
+                    windowY= this.desktopBounds.top;
+                else if(windowY === 'bottom')
+                    windowY= this.desktopBounds.bottom - windowHeight;
+                else if(windowY === 'center')
+                    windowY= this.desktopBounds.top + ((this.desktopBounds.h - windowHeight)/2.0);
+                else
+                    windowY = this._parseFloatSafe(windowY, 0);
+            }
+
+            return MathUtils.clamp(windowY, this.desktopBounds.top, this.desktopBounds.bottom - windowHeight);
+        },
+        _parseFloatSafe(str, defaultValue=0)
+        {
+            const result = parseFloat(str);
+            return isNaN(result) ? defaultValue : result;
+        }
     }
 };
 </script>

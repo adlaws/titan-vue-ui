@@ -3,19 +3,19 @@
         <titan-window
             title="Sign In"
             icon="key-variant"
-            :x="100"
-            :y="100"
-            :width="300"
-            :height="300"
+            x="center"
+            y="center"
+            width="30%"
+            height="30%"
             :closable="false"
             :resizable="false"
             :minimizable="false"
             :draggable="false"
         >
-            <template #default="context">
-                <titan-window-content :titan-window="context.titanWindow">
+            <template #default>
+                <div style="height:100%;color:white;background-color:black;">
                     Some stuff here
-                </titan-window-content>
+                </div>
             </template>
         </titan-window>
     <!--

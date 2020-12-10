@@ -9,21 +9,25 @@
         <template #error-message>
             Internal server error!
         </template>
+        <template #icon>
+            <titan-icon icon="alert-octagram" />
+        </template>
     </error-base>
 </template>
 
 <script>
+import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 import ErrorBase from './ErrorBase.vue';
 
 export default {
     name: 'http500',
     components: {
-        ErrorBase
+        ErrorBase, TitanIcon
     },
     data()
     {
         const color1 = '#000';
-        const color2 = this.$vuetify.theme.currentTheme.error;
+        const color2 = 'red';
 
         const _makeGrey = function(level, opacity) { return `rgba(${level},${level},${level},${opacity})`; };
         const grey1 = _makeGrey(40, 0.04);
