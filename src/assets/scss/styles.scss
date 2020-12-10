@@ -168,17 +168,16 @@ button
     }
     &.selected:enabled
     {
-        background-color: $white-light;
-        color: $menu-bg-active;
-        box-shadow: 0 0 4px rgba($black-light,0.5) inset, 0 0 8px rgba($menu-bg-active-hover,0.666);
+        background-color: $menu-bg-active-hover;
+        color: $menu-fg-active-hover;
+        box-shadow: 0 0 8px rgba(black,0.5) inset, 0 0 8px rgba($white-light,0.5);
         &:hover
         {
             background-color: $menu-bg-active-hover;
             color: $menu-fg-active-hover;
-            box-shadow: 0 0 8px rgba(black,0.5) inset, 0 0 8px rgba($white-light,0.5);
+            box-shadow: 0 0 4px rgba($black-light,0.5) inset, 0 0 8px rgba($menu-bg-active-hover,0.666);
         }
     }
-
 }
 
 input
