@@ -7,6 +7,7 @@
             y="center"
             width="30%"
             height="30%"
+            min-width="450"
             :closable="false"
             :resizable="false"
             :minimizable="false"
@@ -14,30 +15,48 @@
         >
             <template #default>
                 <div class="login-form">
-                    <form>
-                        <div class="form-row">
-                            <label for="username">Username</label>
+                    <form
+                        style="position:relative;"
+                    >
+                        <div
+                            class="form-row"
+                            style="position:relative;"
+                        >
+                            <label
+                                for="username"
+                            >
+                                Username
+                            </label>
                             <input
                                 type="text"
                                 name="username"
                                 autocomplete="none"
                                 required
+                                style="position:absolute;left:0;top:0;"
                             >
                         </div>
-                        <div class="form-row">
+                        <div
+                            class="form-row"
+                            style="position:relative; display:block;"
+                        >
                             <label for="password">Password</label>
                             <input
                                 type="password"
                                 name="password"
                                 autocomplete="current-password"
                                 required
+                                style="position:absolute;left:0;top:0;"
                             >
                         </div>
                     </form>
                     <div class="spacer" />
                     <div class="button-row">
-                        <button>Cancel</button>
-                        <button>Sign In</button>
+                        <button class="disabled">
+                            Cancel
+                        </button>
+                        <button class="">
+                            Sign In
+                        </button>
                     </div>
                 </div>
             </template>

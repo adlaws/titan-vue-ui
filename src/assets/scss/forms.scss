@@ -1,0 +1,19 @@
+input
+{
+    outline: none;
+
+    border: 1px solid rgba($menu-bg-inactive,0.25);
+    margin: 0.25em;
+    padding: 0.25em;
+    border-radius: 2px;
+
+    &:focus
+    {
+        border-color: $transparent-black;
+        @include box-shadow($drop-shadow-medium, $menu-bg-active-hover, 0.75);
+    }
+
+    background-color: $text-bg-active;
+    color: $text-fg-active;
+}
+

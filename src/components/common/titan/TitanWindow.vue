@@ -86,22 +86,22 @@ export default {
         },
         // minimum width of window (pixels)
         minWidth: {
-            type: [Number, String],
+            type: Number,
             default: 128
         },
         // minimum height of window (pixels)
         minHeight: {
-            type: [Number, String],
+            type: Number,
             default: 128
         },
         // maximum width of window (pixels)
         maxWidth: {
-            type: [Number, String],
+            type: Number,
             default: -1
         },
         // maximum height of window (pixels)
         maxHeight: {
-            type: [Number, String],
+            type: Number,
             default: -1
         },
         // can the window be moved?

@@ -1,0 +1,87 @@
+button, .button
+{
+    cursor: pointer;
+
+    border: none;
+    outline: none;
+
+    border-radius: 2px;
+
+    background-color: map-get($colors, default);
+    color: choose-contrast-color(map-get($colors, default), $white, $black);
+
+    padding: 0.666em 1.333em;
+    &.small { padding: 0.4em 0.8em; }
+
+    @include box-shadow($drop-shadow-small);
+    @include transition($transition-duration-fast, (background-color, color, box-shadow));
+
+    &[disabled], &.disabled
+    {
+        cursor: not-allowed;
+        box-shadow: none;
+        background-color: $gray-light;
+        color: $gray;
+    }
+    &:hover:enabled:not(.disabled)
+    {
+        @include box-shadow($drop-shadow-medium);
+        background-color: $menu-bg-hover;
+        color: $menu-fg-hover;
+    }
+    &:active:enabled:not(.disabled), &.active:enabled:not(.disabled)
+    {
+        box-shadow: 0 0 8px rgba(0,0,0,0.5) inset;
+        background-color: $menu-bg-active;
+        color: $menu-fg-active;
+        &:hover
+        {
+            background-color: $menu-bg-active-hover;
+            color: $menu-fg-active-hover;
+        }
+}
+    &.selected:enabled:not(.disabled)
+    {
+        box-shadow: 0 0 8px rgba(black,0.5) inset, 0 0 8px rgba($white-light,0.5);
+        background-color: $menu-bg-active-hover;
+        color: $menu-fg-active-hover;
+        &:hover
+        {
+            box-shadow: 0 0 4px rgba($black-light, 0.5) inset, 0 0 8px rgba($menu-bg-active-hover,0.666);
+            background-color: $menu-fg-active-hover;
+            color: $menu-bg-active-hover;
+        }
+    }
+
+    @each $name, $color in $colors {
+        &.#{$name} {
+            background-color: shade( $color, map-get($shade-variants,medium) );
+            color: choose-contrast-color(shade( $color, map-get($shade-variants,medium)), $white, $black);
+            &:hover:enabled:not(.disabled)
+            {
+                background-color: shade( $color, map-get($shade-variants,light) );
+                color: choose-contrast-color(shade( $color, map-get($shade-variants,light)), $white, $black);
+            }
+            &:active:enabled:not(.disabled), &.active:enabled:not(.disabled)
+            {
+                background-color: shade( $color, map-get($shade-variants,light) );
+                color: choose-contrast-color(shade( $color, map-get($shade-variants,light)), $white, $black);
+                &:hover
+                {
+                    background-color: shade( $color, map-get($shade-variants,bright) );
+                    color: choose-contrast-color(shade( $color, map-get($shade-variants,bright)), $white, $black);
+                }
+            }
+            &.selected:enabled:not(.disabled)
+            {
+                background-color: shade( $color, map-get($shade-variants,bright) );
+                color: choose-contrast-color(shade( $color, map-get($shade-variants,bright)), $white, $black);
+                &:hover
+                {
+                    background-color: shade( $color, map-get($shade-variants,bright) );
+                    color: choose-contrast-color(shade( $color, map-get($shade-variants,bright)), $white, $black);
+                }
+            }
+        }
+    }
+}
