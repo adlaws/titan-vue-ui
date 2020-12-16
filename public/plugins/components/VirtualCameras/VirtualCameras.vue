@@ -9,16 +9,27 @@
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
-                <titan-select
+                <v-select
                     v-model="selectedCameraMode"
-                    :options="cameraOptions"
-                />
-                <button
+                    :items="cameraOptions"
+                    item-text="text"
+                    item-value="id"
+                >
+                    <template v-slot:selection="{ item }">
+                        <v-icon>{{ item.icon }}</v-icon>
+                        <span class="ml-2">{{ item.text }}</span>
+                    </template>
+                    <template v-slot:item="{ item }">
+                        <v-icon>{{ item.icon }}</v-icon>
+                        <span class="ml-2">{{ item.text }}</span>
+                    </template>
+                </v-select>
+                <v-btn
                     :disabled="!selectedCameraMode"
                     @click="switchCameraMode"
                 >
                     Create
-                </button>
+                </v-btn>
             </titan-window-content>
         </template>
     </titan-window>
@@ -40,9 +51,9 @@ export default {
     {
         return {
             cameraOptions:[
-                { id: 'standard',     text: 'Standard Camera', disabled: false },
-                { id: 'orbit',        text: 'Orbit Camera',    disabled: false },
-                { id: 'randomFlight', text: 'Random Flight',   disabled: false },
+                { id: 'standard',     text: 'Standard Camera', icon: "mdi-camera",          disabled: false },
+                { id: 'orbit',        text: 'Orbit Camera',    icon: "mdi-orbit",           disabled: false },
+                { id: 'randomFlight', text: 'Random Flight',   icon: "mdi-vector-polyline", disabled: false },
             ],
             selectedCameraMode: 'standard',
             currentCameraMode: 'standard',

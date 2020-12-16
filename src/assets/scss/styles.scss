@@ -2,16 +2,21 @@
 
 @import './fonts.scss';
 @import './layout.scss';
-@import './buttons.scss';
-@import './forms.scss';
+// @import './buttons.scss';
+// @import './forms.scss';
 
 html {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
     user-select: none;
+    // NOTE: The `!important` is required on the `overflow` rule to hide the vertical scrollbar
+    //       when using the Vuetify UI framework due to its CSS reset rules:
+    //       Ref: The scrollbar is showing even though my content is not overflowing vertically:
+    //            https://vuetifyjs.com/en/getting-started/frequently-asked-questions/#questions
+    overflow: hidden !important;
+    background-color: $transparent-black;
 }
 
 body {
@@ -20,12 +25,27 @@ body {
     margin: 0;
     padding: 0;
     font-size: 16px;
-    font-family: "Roboto", Verdana, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Verdana, Geneva, "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     // -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: grayscale;
     user-select: none;
 }
+
+// Vuetify overrides ------------------------------------------------------------------------------
+#app
+{
+    // NOTE: The `background-color` is required on otherwise we cover up Titan with white (which
+    //       we can't see through) when using the Vuetify UI framework
+    background-color: $transparent-black !important;
+}
+.v-application
+{
+    // NOTE: Override the standard Vuetify font with Verdana, at least until the Chromium font
+    //       anti-aliasing (or lack thereof for fonts) issue is resolved
+    font-family: Verdana, Geneva, "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+// ------------------------------------------------------------------------------------------------
 
 pre, code, .monospace
 {
@@ -43,6 +63,19 @@ pre, code, .monospace
 // <transition name="fade-slow" mode="out-in"> ... </transition>
 .fade-slow-enter-active, .fade-slow-leave-active{ @include transition($transition-duration-slow, [opacity]); }
 .fade-slow-enter, .fade-slow-leave-to{opacity: 0;}
+
+// animations -------------------------------------------------------------------------------------
+@keyframes shake-error {
+    0%, 100% {transform: translateX(0);}
+    33.333%, 66.666% {transform: translateX(-0.375rem);}
+    16.666%, 50%, 83.333% {transform: translateX(0.375rem);}
+}
+.shake-error {
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+    animation-name: shake-error;
+}
 
 // desktop component styles -----------------------------------------------------------------------
 // CSS variables - accessible in JavaScript via…

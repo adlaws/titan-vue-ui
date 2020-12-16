@@ -10,16 +10,15 @@
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
-                <titan-input
+                <v-text-field
                     v-model="filterText"
-                    type="text"
                     label="Search:"
                     @input="debouncedFilterUpdate"
                 >
                     <template slot="append">
                         <titan-icon icon="magnify" />
                     </template>
-                </titan-input>
+                </v-text-field>
                 <table
                     class="titan-desktop--entity-selector-table"
                 >
@@ -77,7 +76,7 @@ import UiUtils from '@/assets/js/utils/ui-utils.js';
 import TitanWindow from '@/components/common/titan/TitanWindow.vue';
 import TitanWindowContent from '@/components/common/titan/TitanWindowContent.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
-import TitanInput from '@/components/common/titan/forms/fields/basic/TitanInput.vue';
+// import TitanInput from '@/components/common/titan/forms/fields/basic/TitanInput.vue';
 import ImgFallback from '@/components/titan/core/ImgFallback.vue';
 
 export default {
@@ -86,7 +85,7 @@ export default {
     {
         TitanWindow, TitanWindowContent,
         TitanIcon,
-        TitanInput,
+        // TitanInput,
         ImgFallback
     },
     data()

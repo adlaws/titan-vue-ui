@@ -27,7 +27,7 @@ var router = new VueRouter({
         {
             path: '/',
             beforeEnter: authenticationGuard,
-            redirect: {name: 'titan'}
+            redirect: {name: 'login'}
         },
         // login/authorization page
         { path: '/login', name: 'login', component: TitanLoginPage },

@@ -9,9 +9,19 @@
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
-                <h1 @click="changeGreeting">
+                <h1>
                     {{ greetings[greetingIdx] }}
                 </h1>
+                <v-btn
+                    @click="changeGreeting"
+                >
+                    Change Language
+                    <v-icon
+                        right
+                    >
+                        mdi-earth
+                    </v-icon>
+                </v-btn>
             </titan-window-content>
         </template>
     </titan-window>

@@ -17,6 +17,8 @@ const i18n = new VueI18n({
     messages,
 });
 
+import vuetify from '@/plugins/vuetify';
+
 // ----------------------------------------------------------------------------
 // This is necessary so that TitanEventInterface works correctly
 // NOTE: It's possible that this will not be needed in the future - currently
@@ -66,6 +68,7 @@ new Vue({
     router,
     store,
     i18n,
+    vuetify,
     render: h => h(App),
 }).$mount('#app');
 

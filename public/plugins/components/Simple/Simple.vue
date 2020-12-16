@@ -9,16 +9,19 @@
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
-                <titan-select
+                <v-select
                     v-model="selectedOption"
-                    :options="entityOptions"
+                    label="Entity Type:"
+                    :items="entityOptions"
+                    item-text="text"
+                    item-value="id"
                 />
-                <button
+                <v-btn
                     :disabled="!selectedOption"
                     @click="createEntity"
                 >
                     Create
-                </button>
+                </v-btn>
             </titan-window-content>
         </template>
     </titan-window>
@@ -34,14 +37,8 @@ export default {
         return {
             entityOptions:[
                 { id: 'bus_blue',               text: 'Bus' },
-                { id: 'Toyota Corolla (grey)', text: 'Toyota Corolla (grey)' },
+                { id: 'Toyota Corolla (grey)',  text: 'Toyota Corolla (grey)' },
                 { id: 'hmmwv_m1025a2_desert',   text: 'HMMWV Humvee' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
                 { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
             ],
             selectedOption: null,
