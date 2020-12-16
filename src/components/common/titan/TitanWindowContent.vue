@@ -31,6 +31,9 @@ export default {
     {
         return {
             container: null,
+            isScroll: false,
+            isHorzScroll: false,
+            isVertScroll: false,
         };
     },
     watch:
@@ -43,6 +46,10 @@ export default {
         'titanWindow.status.minimized': function() { this._updateStyles(); },
         'titanWindow.status.maximized': function() { this._updateStyles(); },
         'titanWindow.status.fullscreen': function() { this._updateStyles(); },
+        'titanWindow.isActive': function() { this._updateScrollHandles(); },
+        isScroll: function() { this._updateScrollHandles(); },
+        isVertScroll: function() { this._updateScrollHandles(); },
+        isHorzScroll: function() { this._updateScrollHandles(); },
     },
     mounted()
     {
@@ -60,12 +67,32 @@ export default {
                 return; // never any scroll bars
 
             console.log();
-            const isScroll = overflowRule === 'scroll';
-            const isHorzScroll = isScroll || this.container.scrollWidth > this.container.clientWidth;
-            const isVertScroll = isScroll || this.container.scrollHeight > this.container.clientHeight;
-            this.container.style.marginRight = isVertScroll ? '4px' : 0;
-            this.container.style.marginBottom = isHorzScroll ? '4px' : 0;
-        }
+            this.isScroll = overflowRule === 'scroll';
+            this.isHorzScroll = this.isScroll || this.container.scrollWidth > this.container.clientWidth;
+            this.isVertScroll = this.isScroll || this.container.scrollHeight > this.container.clientHeight;
+        },
+        _updateScrollHandles()
+        {
+            let rightBorder = 'none';
+            let bottomBorder = 'none';
+
+            const overflowRule = this.container.style.overflow;
+            if(this.container.style.overflow !== 'hidden')
+            {
+                const isScroll = overflowRule === 'scroll';
+                const isHorzScroll = isScroll || this.container.scrollWidth > this.container.clientWidth;
+                const isVertScroll = isScroll || this.container.scrollHeight > this.container.clientHeight;
+                if((isHorzScroll || isVertScroll) && !(isHorzScroll && isVertScroll))
+                {
+                    const bgColor = window.getComputedStyle(this.container, null).getPropertyValue("background-color");
+                    const border = '4px solid ' + bgColor;
+                    rightBorder = isVertScroll ? border : rightBorder;
+                    bottomBorder = isHorzScroll ? border : bottomBorder;
+                }
+            }
+            this.container.style.borderRight = rightBorder;
+            this.container.style.borderBottom = bottomBorder;
+        },
     }
 };
 </script>
