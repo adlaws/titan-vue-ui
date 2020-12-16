@@ -6,32 +6,49 @@
         :y="150"
         :width="224"
         :height="170"
-        :resizable="false"
+        :resizable="true"
         @window-active="windowActiveChanged"
         @window-closed="beforeCloseCleanup"
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
-                <div class="vue-os--drawing-tools">
-                    <button
-                        v-for="tool in tools"
-                        :key="tool.type"
-                        class="tool small mr-1"
-                        :class="{selected:currentTool && currentTool.type===tool.type}"
-                        @click="setTool(tool)"
-                    >
-                        <titan-icon :icon="tool.icon" size="150%" />
-                    </button>
-                    <div class="mt-1" />
-                    <div
-                        v-for="(swatch, idx) in palette"
-                        :key="`swatch-${idx}`"
-                        class="swatch"
-                        :class="{selected:(currentFill && currentFill.id===swatch.id)}"
-                        :style="`background-color:${swatch.color.toRgbaString()};`"
-                        @click="setFillColor(swatch)"
-                    />
-                </div>
+                <v-container>
+                    <v-row>
+                        <v-btn-toggle
+                            v-model="currentTool"
+                            mandatory
+                        >
+                            <v-btn
+                                v-for="(tool, idx) in tools"
+                                :key="`tool-${idx}`"
+                                :value="tool.type"
+                            >
+                                <v-icon>{{ tool.icon }}</v-icon>
+                            </v-btn>
+                        </v-btn-toggle>
+                    </v-row>
+                    <v-row>
+                        <v-btn-toggle
+                            v-model="currentFill"
+                            mandatory
+                        >
+                            <v-btn
+                                v-for="(swatch, idx) in palette"
+                                :key="`swatch-${idx}`"
+                                :style="`background-color:${swatch.color.toRgbaString()};`"
+                                :value="swatch.id"
+                            />
+                        </v-btn-toggle>
+                        <!-- div
+                            v-for="(swatch, idx) in palette"
+                            :key="`swatch-${idx}`"
+                            class="swatch"
+                            :class="{selected:(currentFill && currentFill.id===swatch.id)}"
+                            :style="`background-color:${swatch.color.toRgbaString()};`"
+                            @click="setFillColor(swatch)"
+                        / -->
+                    </v-row>
+                </v-container>
             </titan-window-content>
         </template>
     </titan-window>
@@ -48,7 +65,7 @@ import DataUtils from '@/assets/js/utils/data-utils.js';
 import TitanWindow from '@/components/common/titan/TitanWindow.vue';
 import TitanWindowContent from '@/components/common/titan/TitanWindowContent.vue';
 
-import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+// import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 
 const HANDLED_MOUSE_EVENTS = new Set([
     'mousedown', 'mousemove',
@@ -60,7 +77,7 @@ export default {
     components:
     {
         TitanWindow, TitanWindowContent,
-        TitanIcon,
+        // TitanIcon,
     },
     data()
     {
@@ -82,8 +99,8 @@ export default {
         return {
             palette,
             tools:[
-                {type: 'rectangle', icon: 'shape-square-plus', tooltip: 'Square'},
-                {type: 'ellipse', icon: 'shape-circle-plus', tooltip: 'Circle'},
+                {type: 'rectangle', icon: 'mdi-shape-square-plus', tooltip: 'Square'},
+                {type: 'ellipse', icon: 'mdi-shape-circle-plus', tooltip: 'Circle'},
             ],
             drag:{
                 mightDrag: false,

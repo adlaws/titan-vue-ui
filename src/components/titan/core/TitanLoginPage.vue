@@ -28,9 +28,9 @@
                             v-model="form.username"
                             label="Username"
                             prepend-inner-icon="mdi-account"
-                            clear-icon="mdi-close"
                             autocomplete="current-username"
                             clearable
+                            clear-icon="mdi-close"
                             :rules="[form.rules.usernameRequired,]"
                             @click:clear="resetLoginFail();"
                             @input="resetLoginFail"

@@ -13,51 +13,38 @@
                 <v-text-field
                     v-model="filterText"
                     label="Search:"
+                    clearable
+                    clear-icon="mdi-close"
                     @input="debouncedFilterUpdate"
                 >
                     <template slot="append">
                         <titan-icon icon="magnify" />
                     </template>
                 </v-text-field>
-                <table
-                    class="titan-desktop--entity-selector-table"
+
+                <v-data-table
+                    dense
+                    item-key="Name"
+                    show-select
+                    single-select
+                    :headers="table.headers"
+                    :items="entityDescriptors"
+                    :items-per-page="5"
+                    :search="filterText"
+                    @item-selected="selectEntity"
+                    @click:row="selectRow"
                 >
-                    <tr>
-                        <th>Entity</th>
-                        <th>Image</th>
-                    </tr>
-                    <tr
-                        v-for="(entityDescriptor,idx) in pageItems"
-                        :key="`entity-${idx}`"
-                        :class="{selected:selected && entityDescriptor.entityName===selected.entityName}"
-                        @click="selectEntity(entityDescriptor)"
+                    <template
+                        v-slot:[`item.Path`]="{ item }"
                     >
-                        <td class="name">
-                            {{ entityDescriptor.Name }}
-                        </td>
-                        <td class="image">
-                            <img-fallback
-                                :src="`${PACKAGES_PATH}${entityDescriptor.Path}.gif`"
-                                fallback="images/thumbnail-missing.gif"
-                                width="64"
-                                height="32"
-                            />
-                        </td>
-                    </tr>
-                </table>
-                <button
-                    :disabled="!hasPrevPage"
-                    @click="previousPage"
-                >
-                    Prev
-                </button>
-                Page {{ pageCount===0?'0':page+1 }} of {{ pageCount }}
-                <button
-                    :disabled="!hasNextPage"
-                    @click="nextPage"
-                >
-                    Next
-                </button>
+                        <img-fallback
+                            :src="`${PACKAGES_PATH}${item.Path}.gif`"
+                            fallback="images/thumbnail-missing.gif"
+                            width="64"
+                            height="32"
+                        />
+                    </template>
+                </v-data-table>
                 <hr>
                 <div style="user-select:text;">
                     {{ selected?selected:'' }}
@@ -91,35 +78,24 @@ export default {
     data()
     {
         return {
-            page:0,
-            itemsPerPage:10,
+            table:{
+                headers: [
+                    {
+                        text: 'Entity',
+                        align: 'start',
+                        sortable: true,
+                        value: 'Name',
+                    },
+                    { text: 'Image', value: 'Path', sortable: false },
+                ],
+            },
             filterText: '',
-            filteredEntities:[],
-            tableRows:[],
             PACKAGES_PATH,
         };
     },
     computed:
     {
         entityDescriptors() { return this.$store.getters.titanEntityDescriptors; },
-        pageCount()
-        {
-            return Math.ceil(this.filteredEntities.length/this.itemsPerPage);
-        },
-        pageItems()
-        {
-            const startItem = this.page * this.itemsPerPage;
-            const endItem = startItem + this.itemsPerPage;
-            return this.filteredEntities.slice(startItem, endItem);
-        },
-        hasPrevPage()
-        {
-            return this.page > 0;
-        },
-        hasNextPage()
-        {
-            return this.page < this.pageCount-1;
-        },
         selected() { return this.$store.getters.getEntitySelectorSelection; },
     },
     mounted()
@@ -132,9 +108,22 @@ export default {
     },
     methods:
     {
+        selectRow(item, row)
+        {
+            row.select(true);
+        },
         selectEntity(selected)
         {
-            this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_SET_SELECTION, selected);
+            const isSelected = selected.value === true;
+            if(isSelected)
+            {
+                const entity = selected.item;
+                this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_SET_SELECTION, entity);
+            }
+            else
+            {
+                this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_CLEAR_SELECTION);
+            }
         },
         previousPage()
         {
