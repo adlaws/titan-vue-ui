@@ -482,7 +482,7 @@ const DesktopManager =
             const currentZindex = managed.zIndex;
             // deactivate and make the Z-index 1 (send to back)
             managed.active = false;
-            managed.zIndex = 1;
+            managed.zIndex = 0;
             // adjust the Z-indices of all windows currently
             // in below the window 'up' by one, activate the
             // 'top' one
@@ -492,6 +492,17 @@ const DesktopManager =
                 const wManaged = w.managed;
                 if(wManaged.zIndex < currentZindex)
                     wManaged.zIndex++;
+                wManaged.active = wManaged.zIndex === state.maxZ;
+            }
+            // now that we have gone through all the windows, make the "top"
+            // window the active one
+            // TODO: at the moment, even if all windows are minimised, one
+            //       will remain "active", though probably all should be
+            //       inactive under such circumstances
+            for(const id in state.windows)
+            {
+                const w = state.windows[id];
+                const wManaged = w.managed;
                 wManaged.active = wManaged.zIndex === state.maxZ;
             }
         },

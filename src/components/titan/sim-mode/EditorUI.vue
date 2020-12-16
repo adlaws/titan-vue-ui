@@ -3,8 +3,8 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <linear-compass />
-        <dropdown-toolbar :y="22" />
+        <linear-compass v-if="!isAnyWindowFullscreen" />
+        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
         <entity-selector />
         <map-overlay />
@@ -34,7 +34,7 @@
 import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
 
 import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, /*$tLogger*/ } from '@/assets/js/titan/titan-utils.js';
-import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
+import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
@@ -93,11 +93,11 @@ export default {
         // determine if the UI mode is currently 'Editor' for the purpose of
         // detremining how to handle mouse/keyboard interactions
         isUiModeEditor() { return this.$store.getters.isUiMode(TITAN_UI_MODE.Editor); },
+        isAnyWindowFullscreen() { return this.$store.getters.isAnyWindowFullscreen; },
         // plugins
         plugins() { return this.$store.getters.plugins; },
         editPlugins() { return this.plugins.SimMode_Edit || {}; },
         editWindowConfigs() { return this.editPlugins.windows || []; },
-
     },
     mounted()
     {
@@ -161,7 +161,7 @@ export default {
             if(!HANDLED_KEY_EVENTS.has(evtType))
                 return; // we don't handle this type of key event
 
-            if(EventUtils.isKey(evt, KEY_CODE.ESCAPE))
+            if(EventUtils.isKey(evt, KEY.KEY_CODE.ESCAPE))
             {
                 // hide the context menu
                 this.hideContextMenu();
@@ -170,7 +170,7 @@ export default {
             if(!$isInsideTitan)
                 return; // nothing to do if we are in a browser
 
-            if(EventUtils.isKey(evt, KEY_CODE.DELETE))
+            if(EventUtils.isKey(evt, KEY.KEY_CODE.DELETE))
             {
 
                 // delete anything that's selected

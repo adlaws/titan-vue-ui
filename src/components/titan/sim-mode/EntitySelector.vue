@@ -170,7 +170,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/variables.scss';
+@import '@/assets/scss/utilities/_all.scss';
 
 .titan-desktop--entity-selector-table
 {
@@ -203,9 +203,6 @@ export default {
             &.image
             {
                 width:10%;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
             }
         }
     }

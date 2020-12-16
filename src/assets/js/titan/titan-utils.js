@@ -24,7 +24,7 @@
 //-------------------------------------------------------------------------------
 // get global context from any scope we are in now
 // eslint-disable-next-line
-import KEY_CODE from '@/assets/js/utils/event-utils.js';
+import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 import UIUtils from '@/assets/js/utils/ui-utils.js';
 
@@ -177,99 +177,99 @@ export const OBJECT_TYPES_SET = new Set(OBJECT_TYPES);
 
 //.. Keys used for OT camera control.. and others
 export const DESKTOP_KEY_CODES = new Set([
-    KEY_CODE.BACKSPACE,
-    KEY_CODE.TAB,
-    KEY_CODE.ENTER,
-    KEY_CODE.SHIFT,
-    KEY_CODE.CTRL,
-    KEY_CODE.ALT,
-    KEY_CODE.PAUSE_BREAK,
-    KEY_CODE.CAPSLOCK,
-    KEY_CODE.PAGE_UP,
-    KEY_CODE.PAGE_DOWN,
-    KEY_CODE.END,
-    KEY_CODE.HOME,
-    KEY_CODE.LEFT_ARROW,
-    KEY_CODE.UP_ARROW,
-    KEY_CODE.RIGHT_ARROW,
-    KEY_CODE.DOWN_ARROW,
-    KEY_CODE.INSERT,
-    KEY_CODE.DELETE,
-    KEY_CODE._0,
-    KEY_CODE._1,
-    KEY_CODE._2,
-    KEY_CODE._3,
-    KEY_CODE._4,
-    KEY_CODE._5,
-    KEY_CODE._6,
-    KEY_CODE._7,
-    KEY_CODE._8,
-    KEY_CODE._9,
-    KEY_CODE.A,
-    KEY_CODE.B,
-    KEY_CODE.C,
-    KEY_CODE.D,
-    KEY_CODE.E,
-    KEY_CODE.F,
-    KEY_CODE.G,
-    KEY_CODE.H,
-    KEY_CODE.I,
-    KEY_CODE.J,
-    KEY_CODE.K,
-    KEY_CODE.L,
-    KEY_CODE.M,
-    KEY_CODE.N,
-    KEY_CODE.O,
-    KEY_CODE.P,
-    KEY_CODE.Q,
-    KEY_CODE.R,
-    KEY_CODE.S,
-    KEY_CODE.T,
-    KEY_CODE.U,
-    KEY_CODE.V,
-    KEY_CODE.W,
-    KEY_CODE.X,
-    KEY_CODE.Y,
-    KEY_CODE.Z,
-    KEY_CODE.NUMPAD_0,
-    KEY_CODE.NUMPAD_1,
-    KEY_CODE.NUMPAD_2,
-    KEY_CODE.NUMPAD_3,
-    KEY_CODE.NUMPAD_4,
-    KEY_CODE.NUMPAD_5,
-    KEY_CODE.NUMPAD_6,
-    KEY_CODE.NUMPAD_7,
-    KEY_CODE.NUMPAD_8,
-    KEY_CODE.NUMPAD_9,
-    KEY_CODE.NUMPAD_MULTIPLY,
-    KEY_CODE.NUMPAD_ADD,
+    KEY.KEY_CODE.BACKSPACE,
+    KEY.KEY_CODE.TAB,
+    KEY.KEY_CODE.ENTER,
+    KEY.KEY_CODE.SHIFT,
+    KEY.KEY_CODE.CTRL,
+    KEY.KEY_CODE.ALT,
+    KEY.KEY_CODE.PAUSE,
+    KEY.KEY_CODE.CAPSLOCK,
+    KEY.KEY_CODE.PAGE_UP,
+    KEY.KEY_CODE.PAGE_DOWN,
+    KEY.KEY_CODE.END,
+    KEY.KEY_CODE.HOME,
+    KEY.KEY_CODE.ARROWLEFT,
+    KEY.KEY_CODE.ARROWUP,
+    KEY.KEY_CODE.ARROWRIGHT,
+    KEY.KEY_CODE.ARROWDOWN,
+    KEY.KEY_CODE.INSERT,
+    KEY.KEY_CODE.DELETE,
+    KEY.KEY_CODE.DIGIT0,
+    KEY.KEY_CODE.DIGIT1,
+    KEY.KEY_CODE.DIGIT2,
+    KEY.KEY_CODE.DIGIT3,
+    KEY.KEY_CODE.DIGIT4,
+    KEY.KEY_CODE.DIGIT5,
+    KEY.KEY_CODE.DIGIT6,
+    KEY.KEY_CODE.DIGIT7,
+    KEY.KEY_CODE.DIGIT8,
+    KEY.KEY_CODE.DIGIT9,
+    KEY.KEY_CODE.A,
+    KEY.KEY_CODE.B,
+    KEY.KEY_CODE.C,
+    KEY.KEY_CODE.D,
+    KEY.KEY_CODE.E,
+    KEY.KEY_CODE.F,
+    KEY.KEY_CODE.G,
+    KEY.KEY_CODE.H,
+    KEY.KEY_CODE.I,
+    KEY.KEY_CODE.J,
+    KEY.KEY_CODE.K,
+    KEY.KEY_CODE.L,
+    KEY.KEY_CODE.M,
+    KEY.KEY_CODE.N,
+    KEY.KEY_CODE.O,
+    KEY.KEY_CODE.P,
+    KEY.KEY_CODE.Q,
+    KEY.KEY_CODE.R,
+    KEY.KEY_CODE.S,
+    KEY.KEY_CODE.T,
+    KEY.KEY_CODE.U,
+    KEY.KEY_CODE.V,
+    KEY.KEY_CODE.W,
+    KEY.KEY_CODE.X,
+    KEY.KEY_CODE.Y,
+    KEY.KEY_CODE.Z,
+    KEY.KEY_CODE.NUMPAD0,
+    KEY.KEY_CODE.NUMPAD1,
+    KEY.KEY_CODE.NUMPAD2,
+    KEY.KEY_CODE.NUMPAD3,
+    KEY.KEY_CODE.NUMPAD4,
+    KEY.KEY_CODE.NUMPAD5,
+    KEY.KEY_CODE.NUMPAD6,
+    KEY.KEY_CODE.NUMPAD7,
+    KEY.KEY_CODE.NUMPAD8,
+    KEY.KEY_CODE.NUMPAD9,
+    KEY.KEY_CODE.NUMPADMULTIPLY,
+    KEY.KEY_CODE.NUMPADADD,
     108, // ??????????
-    KEY_CODE.NUMPAD_SUBTRACT,
-    KEY_CODE.NUMPAD_DECIMAL,
-    KEY_CODE.NUMPAD_DIVIDE,
-    KEY_CODE.F1,
-    KEY_CODE.F2,
-    KEY_CODE.F3,
-    KEY_CODE.F4,
-    KEY_CODE.F5,
-    KEY_CODE.F6,
-    KEY_CODE.F7,
-    KEY_CODE.F8,
-    KEY_CODE.F9,
-    KEY_CODE.F10,
-    KEY_CODE.F11,
-    KEY_CODE.F12,
-    KEY_CODE.SEMI_COLON,
-    KEY_CODE.EQUALS,
-    KEY_CODE.COMMA,
-    KEY_CODE.DASH,
-    KEY_CODE.PERIOD,
-    KEY_CODE.FORWARD_SLASH,
-    KEY_CODE.GRAVE_ACCENT, // GRAVE ACCENT `
-    KEY_CODE.OPEN_BRACKET, // OPEN BRACKET [
-    KEY_CODE.BACK_SLASH,
-    KEY_CODE.CLOSE_BRACKET, // CLOSE BRACKET ]
-    KEY_CODE.SINGLE_QUOTE  // SINGLE QUOTE '
+    KEY.KEY_CODE.NUMPADSUBTRACT,
+    KEY.KEY_CODE.NUMPADDECIMAL,
+    KEY.KEY_CODE.NUMPADDIVIDE,
+    KEY.KEY_CODE.F1,
+    KEY.KEY_CODE.F2,
+    KEY.KEY_CODE.F3,
+    KEY.KEY_CODE.F4,
+    KEY.KEY_CODE.F5,
+    KEY.KEY_CODE.F6,
+    KEY.KEY_CODE.F7,
+    KEY.KEY_CODE.F8,
+    KEY.KEY_CODE.F9,
+    KEY.KEY_CODE.F10,
+    KEY.KEY_CODE.F11,
+    KEY.KEY_CODE.F12,
+    KEY.KEY_CODE.SEMICOLON,
+    KEY.KEY_CODE.EQUALS,
+    KEY.KEY_CODE.COMMA,
+    KEY.KEY_CODE.DASH,
+    KEY.KEY_CODE.PERIOD,
+    KEY.KEY_CODE.FORWARD_SLASH,
+    KEY.KEY_CODE.GRAVE_ACCENT, // GRAVE ACCENT `
+    KEY.KEY_CODE.BRACKETLEFT, // OPEN BRACKET [
+    KEY.KEY_CODE.BACKSLASH,
+    KEY.KEY_CODE.BRACKETRIGHT, // CLOSE BRACKET ]
+    KEY.KEY_CODE.QUOTE  // SINGLE QUOTE '
 ]);
 
 export default class TitanUtils
@@ -947,31 +947,47 @@ export default class TitanUtils
      * 'out of the box', so this method is provided until this is fixed.
      *
      * It simply tries to focus the next (enabled) editable field
+     *
+     * @param {event} evt the key event event
+     * @param {object} opts options - currently accepted options are:
+     *           - {Array} elements: an array containing the TAB-key navigable
+     *             elements (null, by default)
+     *           - {DOM} parent: the DOM containing the TAB-key navigable elements
+     *             are (document, by default). Ignored if `elements` is specified.
+     *           - {string} selector: the CSS selector to find the TAB-key navigable
+     *             elements ('input, button, a, area, object, select, textarea, [contenteditable]'
+     *             by default).  Ignored if `elements` is specified.
      */
-    static outerraTabHack(evt)
+    static outerraTabHack(evt, opts)
     {
         // no need to do anything if we are just in a browser
         if(!$isInsideTitan)
             return;
 
+        const defaultOpts = {
+            elements: null,
+            parent: document,
+            selector: 'input, button, a, area, object, select, textarea, [contenteditable]'
+        };
+        const finalOpts = {...defaultOpts, ...opts};
+
         // sanity check to make sure this is a TAB key (really this method
         // should only be called if the key is already verified to be a TAB
         // but we keep this here in case someone does something silly)
-        if(evt.keyCode !== KEY_CODE.TAB)
+        // Note also that we only do this on keydown - if we do it on keyup as
+        // well we get a 'double skip' across fields
+        if(!EventUtils.isKeyDown(evt, KEY.KEY_CODE.TAB))
             return;
 
         evt.preventDefault();
-
-        // only do this on keydown - if we do it on keyup as well we get a
-        // 'double skip' across fields
-        if(evt.type !== 'keydown')
-            return;
 
         const direction = evt.shiftKey ? -1 : 1;
         // current field
         const currentElm = evt.target;
         // find all tab-able elements
-        const allElements = document.querySelectorAll('input, button, a, area, object, select, textarea, [contenteditable]');
+        const allElements = finalOpts.elements || finalOpts.parent.querySelectorAll(finalOpts.selector);
+        if(allElements.length < 2)
+            return;
         // Find the current tab index.
         const currentIndex = [...allElements].findIndex(el => currentElm.isEqualNode(el));
         // focus the following element
@@ -1011,7 +1027,10 @@ export default class TitanUtils
      */
     static outerraDropdownHack(el, maxHeight)
     {
-        if (!el || el.children.length < 2 || el.__ddhack !== undefined)
+        if(!$isInsideTitan)
+            return;
+
+        if (!el || el.__ddhack !== undefined || el.children.length < 2 )
         {
             // already done or not necessary
             return;
@@ -1027,12 +1046,13 @@ export default class TitanUtils
         const decorator = d.createElement('select');
 
         decorator.size = children.length;
-        decorator.style.maxHeight = maxHeight;
         decorator.style.display = 'none';
         decorator.style.outline = 'none';
         decorator.style.overflow = 'auto';
         decorator.style.position = 'fixed';
         decorator.style.zIndex = 100000;
+        if(maxHeight !== undefined)
+            decorator.style.maxHeight = maxHeight;
 
         [...children]
             .filter((child) => child.nodeName === 'OPTION')

@@ -123,7 +123,7 @@ Example use:
 </template>
 
 <script>
-import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
+import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
@@ -280,7 +280,7 @@ export default {
             if(this.$refs.container.contains(evt.target))
                 return; // it's on the context menu, don't do anything
 
-            if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY_CODE.ESCAPE))
+            if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY.CODE.ESCAPE))
                 this.$emit('cancelled'); // ESC key or click outside - cancelled
         },
         /**

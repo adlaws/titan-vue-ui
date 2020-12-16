@@ -8,7 +8,7 @@ button, .button
     border-radius: 2px;
 
     background-color: map-get($colors, default);
-    color: choose-contrast-color(map-get($colors, default), $white, $black);
+    color: findContrastColor(map-get($colors, default), $white, $black);
 
     padding: 0.666em 1.333em;
     &.small { padding: 0.4em 0.8em; }
@@ -55,31 +55,31 @@ button, .button
 
     @each $name, $color in $colors {
         &.#{$name} {
-            background-color: shade( $color, map-get($shade-variants,medium) );
-            color: choose-contrast-color(shade( $color, map-get($shade-variants,medium)), $white, $black);
+            background-color: scale-color( $color, $lightness:map-get($shade-variants,medium) );
+            color: findContrastColor(scale-color( $color, $lightness:map-get($shade-variants,medium)), $white, $black);
             &:hover:enabled:not(.disabled)
             {
-                background-color: shade( $color, map-get($shade-variants,light) );
-                color: choose-contrast-color(shade( $color, map-get($shade-variants,light)), $white, $black);
+                background-color: scale-color( $color, $lightness: map-get($shade-variants,light) );
+                color: findContrastColor(scale-color( $color, $lightness: map-get($shade-variants,light)), $white, $black);
             }
             &:active:enabled:not(.disabled), &.active:enabled:not(.disabled)
             {
-                background-color: shade( $color, map-get($shade-variants,light) );
-                color: choose-contrast-color(shade( $color, map-get($shade-variants,light)), $white, $black);
+                background-color: scale-color( $color, $lightness: map-get($shade-variants,light) );
+                color: findContrastColor(scale-color( $color, $lightness: map-get($shade-variants,light)), $white, $black);
                 &:hover
                 {
-                    background-color: shade( $color, map-get($shade-variants,bright) );
-                    color: choose-contrast-color(shade( $color, map-get($shade-variants,bright)), $white, $black);
+                    background-color: scale-color( $color, $lightness: map-get($shade-variants,bright) );
+                    color: findContrastColor(scale-color( $color, $lightness: map-get($shade-variants,bright)), $white, $black);
                 }
             }
             &.selected:enabled:not(.disabled)
             {
-                background-color: shade( $color, map-get($shade-variants,bright) );
-                color: choose-contrast-color(shade( $color, map-get($shade-variants,bright)), $white, $black);
+                background-color: scale-color( $color, $lightness: map-get($shade-variants,bright) );
+                color: findContrastColor(scale-color( $color, $lightness: map-get($shade-variants,bright)), $white, $black);
                 &:hover
                 {
-                    background-color: shade( $color, map-get($shade-variants,bright) );
-                    color: choose-contrast-color(shade( $color, map-get($shade-variants,bright)), $white, $black);
+                    background-color: scale-color( $color, $lightness: map-get($shade-variants,bright) );
+                    color: findContrastColor(scale-color( $color, $lightness: map-get($shade-variants,bright)), $white, $black);
                 }
             }
         }

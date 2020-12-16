@@ -16,7 +16,7 @@
                     v-if="icon"
                     :icon="icon"
                     :size="`${iconSize.w}px`"
-                    class="icon"
+                    class="title-icon"
                 />
                 <svg
                     v-else
@@ -32,7 +32,7 @@
             </template>
         </div>
 
-        <div class="title">
+        <div class="title-text">
             <span
                 class="ml-1"
                 :title="title"

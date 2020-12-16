@@ -3,7 +3,10 @@
         v-show="desktopVisible"
         class="titan-desktop pass-through"
     >
-        <transition name="fade-slow" mode="out-in">
+        <transition
+            name="fade-slow"
+            mode="out-in"
+        >
             <titan-splash
                 v-if="showSplashScreen"
                 @click.native="_hideSplashScreen"
@@ -22,8 +25,8 @@ import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
 import { TITAN_MUTATION, TITAN_ACTION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
 
 import UiUtils from '@/assets/js/utils/ui-utils.js';
-import EventUtils, { KEY_CODE } from '@/assets/js/utils/event-utils.js';
-import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, $tLogger, SIM_MODE, CAMERA_MODE } from '@/assets/js/titan/titan-utils.js';
+import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
+import TitanUtils, { $eview, $isInsideTitan, $tWorldInterface, $tLogger, SIM_MODE, CAMERA_MODE, FREE_CAMERA_MODE } from '@/assets/js/titan/titan-utils.js';
 
 import TitanSplash from '@/components/titan/core/TitanSplash.vue';
 import TitanTaskBar from '@/components/titan/core/TitanTaskBar.vue';
@@ -79,13 +82,6 @@ export default {
     {
         this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, TITAN_UI_MODE.Desktop);
 
-        /* eslint-disable no-undef */
-        $eview.set_transparent(true);
-        $eview.show_window(true);
-
-        self.moveTo(0, 0);
-        self.resizeTo(screen.availWidth, screen.availHeight);
-
         // bind event handlers
         // NOTE: binding event handlers to `window` or `document` both
         // achieve the same thing - not sure which (if either) is a
@@ -103,7 +99,7 @@ export default {
         {
             if(!this.desktopVisible)
             {
-                const isEscapeKey = EventUtils.isKey(evt, KEY_CODE.ESCAPE );
+                const isEscapeKey = EventUtils.isKey(evt, KEY.CODE.ESCAPE );
                 if((isEscapeKey))
                 {
                     this.desktopVisible = true;
@@ -167,6 +163,18 @@ export default {
         this.isVisible = false;
         this.$store.commit(TITAN_MUTATION.EXIT_TO_UI_MODE, TITAN_UI_MODE.Desktop);
         this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.Desktop);
+        [
+            'mousedown', 'mouseup', 'mousemove','mousewheel',
+            'mouseout', 'mouseover',
+            'click', 'dblclick', 'contextmenu',
+        ].forEach((evtType) => document.removeEventListener(evtType, this.handleMouseEvent) );
+        [
+            'keyup', 'keydown'
+        ].forEach((evtType) => document.removeEventListener(evtType, this.handleKeyEvent) );
+
+        window.on_desktop_key_down = null;
+        window.on_desktop_mouse_down = null;
+        window.on_desktop_mouse_move = null;
     },
     methods:
     {
@@ -182,7 +190,7 @@ export default {
             {
                 // event is not for a text field, so mark as
                 // unhandled to let Outerra handle the key event
-                if(this.desktopVisible && EventUtils.isKeyDown(evt, [KEY_CODE.F6, KEY_CODE.F7]))
+                if(this.desktopVisible && EventUtils.isKeyDown(evt, [KEY.CODE.F6, KEY.CODE.F7]))
                 {
                     // hide desktop
                     $tLogger.info('hide desktop');
@@ -193,7 +201,7 @@ export default {
                     $eview.mark_unhandled();
                 }
             }
-            else if(EventUtils.isKeyDown(evt, KEY_CODE.TAB))
+            else if(EventUtils.isKeyDown(evt, KEY.CODE.TAB))
             {
                 TitanUtils.outerraTabHack(evt);
             }
@@ -213,10 +221,10 @@ export default {
                 // happened on the Outerra world
                 if(EventUtils.isRightMouseDown(evt))
                 {
-                    // right mouse button events are camera control - for now we
-                    // just mark as unhandled and let Outerra do the rest
-                    // TODO: in future a right mouse click could trigger context
-                    //       menus etc in certain circumstances
+                    // right mouse button events are camera control - just mark as unhandled and
+                    // let Outerra do the rest
+                    // NOTE: a right mouse click can trigger context menus etc in certain
+                    //       circumstances, but this is separate
                     // evt.stopPropagation();
                     // evt.preventDefault();
                     $eview.mark_unhandled();

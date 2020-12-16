@@ -2,7 +2,6 @@
     <div>
         <label v-if="label" :for="id">{{ label }}</label>
         <select
-            :id="id"
             ref="select"
             v-model="currentOption"
             :name="name"
@@ -61,7 +60,6 @@ import CryptoUtils from '@/assets/js/utils/crypto-utils';
 export default {
     name: 'titan-select',
     props: {
-        id:{type:String, default:()=>CryptoUtils.simpleUUID()},
         name:{type:String, default:()=>CryptoUtils.simpleUUID()},
         label:{type:String, default:null},
         value: {

@@ -46,6 +46,17 @@ import TitanTitleBar from '@/components/titan/core/TitanTitleBar.vue';
 // distance from edges of window (in pixels) which act as resize drag handles
 const RESIZE_THRESHOLD = 8;
 
+const EVENT = {
+    WINDOW_ACTIVE:'window-active',
+    WINDOW_CLOSED:'window-closed',
+    WINDOW_RESIZED:'window-resized',
+    WINDOW_MINIMIZED:'window-minimized',
+    WINDOW_MAXIMIZED:'window-maximized',
+    WINDOW_FULLSCREENED:'window-fullscreened',
+    WINDOW_RESTORED:'window-restored',
+};
+
+
 export default {
     name: 'titan-window',
     components: {
@@ -86,22 +97,22 @@ export default {
         },
         // minimum width of window (pixels)
         minWidth: {
-            type: Number,
+            type: [Number, String],
             default: 128
         },
         // minimum height of window (pixels)
         minHeight: {
-            type: Number,
+            type: [Number, String],
             default: 128
         },
         // maximum width of window (pixels)
         maxWidth: {
-            type: Number,
+            type: [Number, String],
             default: -1
         },
         // maximum height of window (pixels)
         maxHeight: {
-            type: Number,
+            type: [Number, String],
             default: -1
         },
         // can the window be moved?
@@ -169,6 +180,10 @@ export default {
                 maximized: false,
                 minimized: false,
                 fullscreen: false,
+                minWidth:128,
+                maxWidth:-1,
+                minHeight:128,
+                maxHeight:-1,
             },
             resizing:
             {
@@ -196,7 +211,7 @@ export default {
         zIndex(newZ, /*oldZ*/) { this.$refs.container.style.zIndex = newZ; },
         icon(newIcon, /*oldIcon*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, icon:newIcon}); },
         title(newTitle, /*oldTitle*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, title:newTitle}); },
-        isActive(isActive, /*wasActive*/) { this.$emit('window-active', isActive); },
+        isActive(isActive, /*wasActive*/) { this.$emit(EVENT.WINDOW_ACTIVE, isActive); },
         desktopBounds(/*newBounds, oldBounds*/) { this._handleScreenSizeChange(); },
         isFullscreen(isFullscreen, /*wasFullscreen*/) { this._handleFullScreenChange(isFullscreen); },
     },
@@ -213,6 +228,23 @@ export default {
     },
     mounted()
     {
+        this.status.minWidth = this._processWidth(this.minWidth);
+        this.status.maxWidth = this._processWidth(this.maxWidth);
+        if(this.status.maxWidth>=0 &&this.status.minWidth > this.status.maxWidth)
+        {
+            const temp = this.status.minWidth;
+            this.status.minWidth = this.status.maxWidth;
+            this.status.maxWidth = temp;
+        }
+        this.status.minHeight = this._processHeight(this.minHeight);
+        this.status.maxHeight = this._processHeight(this.maxHeight);
+        if(this.status.maxHeight>=0 && this.status.minHeight > this.status.maxHeight)
+        {
+            const temp = this.status.minHeight;
+            this.status.minHeight = this.status.maxHeight;
+            this.status.maxHeight = temp;
+        }
+
         const xywh = this._processPositionAndSize(this.x, this.y, this.width, this.height);
         this.status.x = xywh.x;
         this.status.y = xywh.y;
@@ -241,7 +273,7 @@ export default {
     },
     beforeDestroy()
     {
-        this.$emit('window-closed');
+        this.$emit(EVENT.WINDOW_CLOSED);
         window.removeEventListener('resize', this._handleScreenSizeChange);
         this.$store.commit(DESKTOP_MUTATION.DEREGISTER_WINDOW, {id: this.id});
     },
@@ -267,11 +299,12 @@ export default {
             if(this.status.maximized)
                 this.status.minimized = { ...this.status.maximized };
             else
-                this.status.minimized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
+                this.status.minimized = this._getBounds();
             this.$store.commit(DESKTOP_MUTATION.WINDOW_TO_BACK, {id: this.id});
 
-            this.$emit('window-minimized');
-            this.$emit('window-resized', {x: -1, y: -1, w: 0, h: 0});
+            const bounds = {x: -1, y: -1, w: 0, h: 0};
+            this.$emit(EVENT.WINDOW_MINIMIZED, bounds);
+            this.$emit(EVENT.WINDOW_RESIZED, bounds);
         },
         toggleMinimize()
         {
@@ -285,15 +318,15 @@ export default {
             if(this.status.maximized || !this.maximizable)
                 return;
 
-            this.status.maximized = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
+            this.status.maximized = this._getBounds();
             this.status.x = this.desktopBounds.x;
             this.status.y = this.desktopBounds.y;
             this.status.w = this.desktopBounds.w;
             this.status.h = this.desktopBounds.h;
 
-            const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
-            this.$emit('window-maximized', bounds);
-            this.$emit('window-resized', bounds);
+            const bounds = this._getBounds();
+            this.$emit(EVENT.WINDOW_MAXIMIZED, bounds);
+            this.$emit(EVENT.WINDOW_RESIZED, bounds);
         },
         toggleMaximize()
         {
@@ -334,9 +367,9 @@ export default {
             }
             if(restored)
             {
-                const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
-                this.$emit('window-restored', bounds);
-                this.$emit('window-resized', bounds);
+                const bounds = this._getBounds();
+                this.$emit(EVENT.WINDOW_RESTORED, bounds);
+                this.$emit(EVENT.WINDOW_RESIZED, bounds);
             }
         },
         _handleFullScreenChange(isFullscreen)
@@ -346,15 +379,15 @@ export default {
 
             if(isFullscreen)
             {
-                this.status.fullscreen = { x: this.status.x, y: this.status.y, w: this.status.w, h: this.status.h };
+                this.status.fullscreen = this._getBounds();
                 this.status.x = this.desktopBounds.x;
                 this.status.y = this.desktopBounds.y;
                 this.status.w = this.desktopBounds.w;
                 this.status.h = this.desktopBounds.h;
 
-                const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
-                this.$emit('window-fullscreened', bounds);
-                this.$emit('window-resized', bounds);
+                const bounds = this._getBounds();
+                this.$emit(EVENT.WINDOW_FULLSCREENED, bounds);
+                this.$emit(EVENT.WINDOW_RESIZED, bounds);
             }
             else
             {
@@ -368,6 +401,18 @@ export default {
             // not the most "Vue" thing to do here since we should be letting
             // Vue manage the DOM... we should watch out for side effects
             this.$el.parentNode.removeChild(this.$el);
+        },
+        _getBounds()
+        {
+            if(this.status.minimized)
+                return {x: -1, y: -1, w: 0, h: 0};
+
+            return {
+                x: this.status.x,
+                y: this.status.y,
+                w: this.status.w,
+                h: this.status.h,
+            };
         },
         _onMouseMove(evt)
         {
@@ -397,9 +442,9 @@ export default {
                 {
                     resizeType = { e: isE, w: isW, n: isN, s: isS };
                     if(isW)
-                        cursor = isN ? 'nw' : (isS ? 'sw' : 'ew');
+                        cursor = isN ? 'nwse' : (isS ? 'nesw' : 'ew');
                     else if(isE)
-                        cursor = isN ? 'ne' : (isS ? 'se' : 'ew');
+                        cursor = isN ? 'nesw' : (isS ? 'nwse' : 'ew');
                     else if (isN || isS)
                         cursor = 'ns';
                     cursor += '-resize';
@@ -459,9 +504,9 @@ export default {
                     x += dragDeltaX;
                     w -= dragDeltaX;
                 }
-                w = Math.max(this.minWidth, w);
-                if(this.maxWidth > 0)
-                    w = Math.min(this.maxWidth, w);
+                w = Math.max(this.status.minWidth, w);
+                if(this.status.maxWidth > 0)
+                    w = Math.min(this.status.maxWidth, w);
                 this.status.x = x;
                 this.status.w = w;
             }
@@ -477,15 +522,15 @@ export default {
                     y += dragDeltaY;
                     h -= dragDeltaY;
                 }
-                h = Math.max(this.minHeight, h);
-                if(this.maxHeight > 0)
-                    h = Math.min(this.maxWidth, h);
+                h = Math.max(this.status.minHeight, h);
+                if(this.status.maxHeight > 0)
+                    h = Math.min(this.status.maxHeight, h);
                 this.status.y = y;
                 this.status.h = h;
             }
 
-            const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
-            this.$emit('window-resized', bounds);
+            const bounds = this._getBounds();
+            this.$emit(EVENT.WINDOW_RESIZED, bounds);
         },
         _handleDragEnd(/*evt*/)
         {
@@ -513,50 +558,52 @@ export default {
             this.status.w = this.desktopBounds.w;
             this.status.h = this.desktopBounds.h;
 
-            const bounds = { x:this.status.x, y:this.status.y, w:this.status.w, h:this.status.h};
-            this.$emit('window-resized', bounds);
+            const bounds = this._getBounds();
+            this.$emit(EVENT.WINDOW_RESIZED, bounds);
         },
         _processPositionAndSize(x, y, width, height)
         {
             width = this._processWidth(width);
+            // constrain width according to limits
+            width = Math.max(this.status.minWidth, width);
+            if(this.status.maxWidth > 0)
+                width = Math.min(this.status.maxWidth, width);
+
             height = this._processHeight(height);
+            // constrain width according to limits
+            height = Math.max(this.status.minHeight, height);
+            if(this.status.maxHeight > 0)
+                height = Math.min(this.status.maxHeight, height);
+
             x = this._processX(x, height);
             y = this._processY(y, height);
             return {x,y,width,height};
         },
-        _processWidth(windowWidth)
+        _processWidth(width)
         {
-            if(typeof windowWidth !== 'number')
+            if(typeof width !== 'number')
             {
                 // convert from percent, pixels as required
-                if(windowWidth.endsWith('%'))
-                    windowWidth = (this._parseFloatSafe(windowWidth, 0) / 100.0) * this.desktopBounds.w;
+                if(width.endsWith('%'))
+                    width = (this._parseFloatSafe(width, 0) / 100.0) * this.desktopBounds.w;
                 else
-                    windowWidth = this._parseFloatSafe(windowWidth, 0);
+                    width = this._parseFloatSafe(width, 0);
             }
-            // constrain width according to limits
-            windowWidth = Math.max(this.minWidth, windowWidth);
-            if(this.maxWidth > 0)
-                windowWidth = Math.min(this.maxWidth, windowWidth);
 
-            return windowWidth;
+            return width;
         },
-        _processHeight(windowHeight)
+        _processHeight(height)
         {
-            if(typeof windowHeight !== 'number')
+            if(typeof height !== 'number')
             {
                 // convert from percent, pixels as required
-                if(windowHeight.endsWith('%'))
-                    windowHeight = (this._parseFloatSafe(windowHeight, 0) / 100.0) * this.desktopBounds.h;
+                if(height.endsWith('%'))
+                    height = (this._parseFloatSafe(height, 0) / 100.0) * this.desktopBounds.h;
                 else
-                    windowHeight = this._parseFloatSafe(windowHeight, 0);
+                    height = this._parseFloatSafe(height, 0);
             }
-            // constrain width according to limits
-            windowHeight = Math.max(this.minHeight, windowHeight);
-            if(this.maxHeight > 0)
-                windowHeight = Math.min(this.maxHeight, windowHeight);
 
-            return windowHeight;
+            return height;
         },
         _processX(windowX, windowWidth)
         {

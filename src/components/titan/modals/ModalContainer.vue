@@ -1,5 +1,10 @@
 <template>
-    <div class="modal-container-mask" :class="{active: isVisible}">
+    <div
+        ref="container"
+        class="modal-container-mask"
+        :class="{active: isVisible}"
+        @click="_watchForClick"
+    >
         <slot />
     </div>
 </template>
@@ -10,6 +15,14 @@ export default {
     props:{
         isVisible: {type: Boolean, default:false},
     },
+    methods:
+    {
+        _watchForClick(evt)
+        {
+            if(evt.target === this.$refs.container)
+                this.$emit(evt.type, evt);
+        }
+    }
 };
 </script>
 
