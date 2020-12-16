@@ -4,6 +4,14 @@ import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
 
-const opts = {};
+const opts = {
+    theme: {
+        themes: {
+            light: {
+                accent: '#024',
+            },
+        },
+    }
+};
 
 export default new Vuetify(opts);
