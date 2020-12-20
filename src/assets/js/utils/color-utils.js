@@ -93,10 +93,16 @@ export class Color
 
     toHexString()
     {
-        var r = Color.toHex(this.red);
-        var g = Color.toHex(this.green);
-        var b = Color.toHex(this.blue);
+        const r = Color.toHex(this.red);
+        const g = Color.toHex(this.green);
+        const b = Color.toHex(this.blue);
         return '#' + r + g + b;
+    }
+
+    toHexAlphaString()
+    {
+        const a = Color.toHex(Math.round(this.alpha * 255));
+        return this.toHexString() + a;
     }
 
     toRgb()
@@ -105,6 +111,13 @@ export class Color
             r: this.red,
             g: this.green,
             b: this.blue,
+        };
+    }
+
+    toRgba()
+    {
+        return {
+            ...this.toRgb(),
             a: this.opacity
         };
     }
@@ -115,6 +128,13 @@ export class Color
             r: this.red / 255.0,
             g: this.green / 255.0,
             b: this.blue / 255.0,
+        };
+    }
+
+    toRgbaNormalized()
+    {
+        return {
+            ...this.toRgbNormalized(),
             a: this.opacity
         };
     }
@@ -125,6 +145,13 @@ export class Color
             h: this.hue,
             s: this.sat,
             l: this.lightness,
+        };
+    }
+
+    toHsla()
+    {
+        return {
+            ...this.toHsl(),
             a: this.opacity
         };
     }
@@ -135,6 +162,13 @@ export class Color
             h: this.hue,
             w: this.whiteness,
             b: this.blackness,
+        };
+    }
+
+    toHwba()
+    {
+        return {
+            ...this.toHwb(),
             a: this.opacity
         };
     }
@@ -146,6 +180,13 @@ export class Color
             m: this.magenta,
             y: this.yellow,
             k: this.black,
+        };
+    }
+
+    toCmyka()
+    {
+        return {
+            ...this.toCmyk(),
             a: this.opacity
         };
     }
@@ -160,27 +201,36 @@ export class Color
         };
     }
 
+    toNcola()
+    {
+        return {
+            ...this.toNcol(),
+            a: this.opacity
+        };
+    }
+
     isDark(n)
     {
-        var m = (n || 128);
+        const m = (n || 128);
         return (((this.red * 299 + this.green * 587 + this.blue * 114) / 1000) < m);
     }
 
     saturate(n)
     {
-        var x, rgb, color;
-        x = (n / 100 || 0.1);
+        n = n || 0;
+        const x = (n / 100 || 0.1);
         this.sat += x;
         if(this.sat > 1)
             this.sat = 1;
-        rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
-        color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
+        const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
+        const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
         this._attachValues(color);
         return this;
     }
 
     desaturate(n)
     {
+        n = n || 0;
         const x = (n / 100 || 0.1);
         this.sat -= x;
         if(this.sat < 0)
@@ -193,6 +243,7 @@ export class Color
 
     lighter(n)
     {
+        n = n || 0;
         const x = (n / 100 || 0.1);
         this.lightness += x;
         if(this.lightness > 1)
@@ -205,12 +256,26 @@ export class Color
 
     darker(n)
     {
+        n = n || 0;
         const x = (n / 100 || 0.1);
         this.lightness -= x;
         if(this.lightness < 0)
             this.lightness = 0;
         const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
         const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
+        this._attachValues(color);
+        return this;
+    }
+
+    scale(n)
+    {
+        n = n || 0;
+        const rgb = {
+            r: Math.max(0, Math.min(255, this.r * n)),
+            g: Math.max(0, Math.min(255, this.g * n)),
+            b: Math.max(0, Math.min(255, this.b * n)),
+        };
+        const color = Color.colorObject(rgb, this.opacity);
         this._attachValues(color);
         return this;
     }
@@ -231,6 +296,37 @@ export class Color
         while(hue < 0)
             hue += 360;
         this.hue = hue;
+        const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
+        const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
+        this._attachValues(color);
+        return this;
+    }
+
+    setHue(angle)
+    {
+        while(angle >= 360)
+            angle -= 360;
+        while(angle < 0)
+            angle += 360;
+        this.hue = angle;
+        const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
+        const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
+        this._attachValues(color);
+        return this;
+    }
+
+    setSaturation(sat)
+    {
+        this.sat = Math.min(1.0, Math.max(0.0, sat));
+        const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
+        const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
+        this._attachValues(color);
+        return this;
+    }
+
+    setLightness(lightness)
+    {
+        this.lightness = Math.min(1.0, Math.max(0.0, lightness));
         const rgb = Color.hslToRgb(this.hue, this.sat, this.lightness);
         const color = Color.colorObject(rgb, this.opacity, this.hue, this.sat);
         this._attachValues(color);
@@ -629,18 +725,18 @@ export class Color
 
     static hslToRgb(hue, sat, light)
     {
-        var t1, t2, r, g, b;
         hue = hue / 60;
 
+        let t2 = 0;
         if(light <= 0.5)
             t2 = light * (sat + 1);
         else
             t2 = light + sat - (light * sat);
 
-        t1 = light * 2 - t2;
-        r = Color.hueToRgb(t1, t2, hue + 2) * 255;
-        g = Color.hueToRgb(t1, t2, hue) * 255;
-        b = Color.hueToRgb(t1, t2, hue - 2) * 255;
+        const t1 = light * 2 - t2;
+        const r = Color.hueToRgb(t1, t2, hue + 2) * 255;
+        const g = Color.hueToRgb(t1, t2, hue) * 255;
+        const b = Color.hueToRgb(t1, t2, hue - 2) * 255;
         return {
             r: r,
             g: g,
@@ -686,10 +782,9 @@ export class Color
 
     static cmykToRgb(c, m, y, k)
     {
-        var r, g, b;
-        r = 255 - ((Math.min(1, c * (1 - k) + k)) * 255);
-        g = 255 - ((Math.min(1, m * (1 - k) + k)) * 255);
-        b = 255 - ((Math.min(1, y * (1 - k) + k)) * 255);
+        const r = 255 - ((Math.min(1, c * (1 - k) + k)) * 255);
+        const g = 255 - ((Math.min(1, m * (1 - k) + k)) * 255);
+        const b = 255 - ((Math.min(1, y * (1 - k) + k)) * 255);
         return {
             r: r,
             g: g,
@@ -1001,7 +1096,7 @@ export class Color
 
     static toHex(n)
     {
-        var hex = n.toString(16);
+        let hex = n.toString(16);
         while (hex.length < 2)
             hex = '0' + hex;
         return hex;

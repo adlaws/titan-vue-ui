@@ -4,8 +4,8 @@
         icon="draw"
         :x="150"
         :y="150"
-        :width="224"
-        :height="170"
+        :width="320"
+        :height="580"
         :resizable="true"
         @window-active="windowActiveChanged"
         @window-closed="beforeCloseCleanup"
@@ -16,7 +16,6 @@
                     <v-row>
                         <v-btn-toggle
                             v-model="currentTool"
-                            mandatory
                         >
                             <v-btn
                                 v-for="(tool, idx) in tools"
@@ -28,25 +27,13 @@
                         </v-btn-toggle>
                     </v-row>
                     <v-row>
-                        <v-btn-toggle
+                        <v-color-picker
                             v-model="currentFill"
-                            mandatory
-                        >
-                            <v-btn
-                                v-for="(swatch, idx) in palette"
-                                :key="`swatch-${idx}`"
-                                :style="`background-color:${swatch.color.toRgbaString()};`"
-                                :value="swatch.id"
-                            />
-                        </v-btn-toggle>
-                        <!-- div
-                            v-for="(swatch, idx) in palette"
-                            :key="`swatch-${idx}`"
-                            class="swatch"
-                            :class="{selected:(currentFill && currentFill.id===swatch.id)}"
-                            :style="`background-color:${swatch.color.toRgbaString()};`"
-                            @click="setFillColor(swatch)"
-                        / -->
+                            canvas-height="100"
+                            show-swatches
+                            swatches-max-height="300"
+                            :swatches="palette"
+                        />
                     </v-row>
                 </v-container>
             </titan-window-content>
@@ -65,8 +52,6 @@ import DataUtils from '@/assets/js/utils/data-utils.js';
 import TitanWindow from '@/components/common/titan/TitanWindow.vue';
 import TitanWindowContent from '@/components/common/titan/TitanWindowContent.vue';
 
-// import TitanIcon from '@/components/titan/core/TitanIcon.vue';
-
 const HANDLED_MOUSE_EVENTS = new Set([
     'mousedown', 'mousemove',
     'click',
@@ -77,27 +62,17 @@ export default {
     components:
     {
         TitanWindow, TitanWindowContent,
-        // TitanIcon,
     },
     data()
     {
-        // just make a nice palette of 5 colors - should be plenty
-        const palette = [];
-        const colorCount = 5;
-        for(let idx=0; idx<colorCount;idx++)
-        {
-            const color = new Color('#F00').adjustHue(idx*360/colorCount);
-            palette.push({id:idx, color:color});
-        }
-        // 5 shades of grey
-        for(let idx=0; idx<colorCount;idx++)
-        {
-            const color = new Color(`hsl(0,0,${1-((1/(colorCount-1))*idx)})`);
-            palette.push({id:idx+colorCount, color:color});
-        }
-
         return {
-            palette,
+            palette:[
+                ['#FF0000','#FFC000','#FFFF00','#00CC00','#0088FF','#0000FF','#8800FF','#FF00FF'],
+                ['#CC0000','#FF8800','#CCAA00','#009900','#0044CC','#000099','#6600AA','#CC00AA'],
+                ['#880000','#CC6600','#AA8800','#005500','#0022AA','#000055','#330088','#880088',],
+                ['#dc322f','#cb4b16','#b58900','#859900','#2aa198','#268bd2','#6c71c4','#d33682',],
+                ['#FFFFFF','#DDDDDD','#BBBBBB','#888888','#666666','#444444','#222222','#000000',],
+            ],
             tools:[
                 {type: 'rectangle', icon: 'mdi-shape-square-plus', tooltip: 'Square'},
                 {type: 'ellipse', icon: 'mdi-shape-circle-plus', tooltip: 'Circle'},
@@ -106,7 +81,7 @@ export default {
                 mightDrag: false,
                 isDrawingShape: false,
             },
-            currentTool: null,
+            currentTool: undefined,
             currentFill: null,
             currentStroke: null,
         };
@@ -119,10 +94,14 @@ export default {
     {
         currentTool(newTool, /*oldTool*/)
         {
-            if(newTool === null)
+            if(!newTool)
                 this.$store.commit(TITAN_MUTATION.EXIT_UI_MODE, TITAN_UI_MODE.Drawing);
             else if(!this.isUiModeDrawing)
                 this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, TITAN_UI_MODE.Drawing);
+        },
+        currentFill(newValue)
+        {
+            this.currentStroke = newValue;
         }
     },
     mounted()
@@ -140,33 +119,6 @@ export default {
     },
     methods:
     {
-        /**
-         * Set the tool. If the same tool is set twice it is turned off (i.e., toggles if the same tool is
-         * set).
-         *
-         * @param {object} tool the tool definition
-         */
-        setTool(tool)
-        {
-            if(this.currentTool === null || tool === null)
-                this.currentTool = tool;
-            else
-            {
-                // change if different tool, turn off if same tool again
-                this.currentTool = this.currentTool.type === tool.type ? null : tool;
-            }
-        },
-        /**
-         * Sets the fill and stroke color
-         *
-         * @param {object} swatch the swatch color definition, expected to be an object of the
-         *        form {name:{String}, color: {Color}}
-         */
-        setFillColor(swatch)
-        {
-            this.currentFill = swatch;
-            this.currentStroke = swatch;
-        },
         /**
          * Handle activities required as this window becomes active/inactive
          *
@@ -237,6 +189,10 @@ export default {
          */
         _handleLeftMouseDown(evt)
         {
+            // do we need to do anything with the mouse movement?
+            if(!this.currentTool)
+                return; // no tool selected - we're not doing any drawing
+
             // NOTE: we need to inject the mouse position otherwise Outerra
             //       doesn't have any awareness of where the mouse is and can't
             //       detect whether selectable items are "under the mouse" etc.
@@ -262,8 +218,10 @@ export default {
         _handleMouseMove(evt)
         {
             // do we need to do anything with the mouse movement?
+            if(!this.currentTool)
+                return; // no tool selected - we're not doing any drawing
             if(!this.drag.isDrawingShape && !this.drag.mightDrag)
-                return;
+                return; // we're not doing anything at the moment
 
             const winXY = Vec2.fromObj( TitanUtils.domEventXYtoOuterraXY(evt) );
 
@@ -278,12 +236,11 @@ export default {
                 TitanUtils.injectMousePosition(this.drag.lastWinXY);
                 TitanUtils.showGizmoAt(this.drag.lastEcef);
 
-                const titanColor = this._toRenderToolboxColor(this.currentFill ? this.currentFill.color : null);
-                const toolType = this.currentTool ? this.currentTool.type : 'ellipse';
+                const titanColor = this._toRenderToolboxColor(this.currentFill);
 
                 $tRenderToolbox.setShapeFillColor(titanColor);
                 $tRenderToolbox.setShapeBorderColor(titanColor);
-                $tRenderToolbox.setTool('shape', {type: toolType});
+                $tRenderToolbox.setTool('shape', {type: this.currentTool});
                 $tRenderToolbox.setDefaultStartHeight(0.5);
                 $tRenderToolbox.setPenPosition(winXY);
                 $tRenderToolbox.penDown();
@@ -341,16 +298,18 @@ export default {
          * Titan render toolbox colors are expressed as {x:R,y:G,z:B,w:A} with
          * the RGBA values being between 0.0 and 1.0
          *
-         * @param {Color} a Color instance (see color-utils.js)
+         * @param {Object} color the Vuetify color picker value (ref: https://vuetifyjs.com/en/api/v-color-picker/#update:color)
          * @returns {Object} an object of the form {x:R,y:G,z:B,w:A} suitable for
-         * use with the Titan render toolbox
+         *          use with the Titan render toolbox
          */
         _toRenderToolboxColor(color)
         {
+            // convert to rgba string
+            const rgbaStr = `rgba(${color.rgba.r},${color.rgba.g},${color.rgba.b},${color.rgba.a})`;
             // get the normalized RGBA values
-            const rgbNormalized = color ? color.toRgbNormalized() : {r:0,g:0,b:0,a:1};
-            // remap RGBA to XYZW
-            return DataUtils.remap(rgbNormalized, {r:'x', g:'y', b:'z', a:'w'});
+            const rgbaNormalized = new Color(rgbaStr).toRgbaNormalized();
+            // remap RGBA to XYZW for render toolbox usage
+            return DataUtils.remap(rgbaNormalized, {r:'x', g:'y', b:'z', a:'w'});
         }
     }
 };

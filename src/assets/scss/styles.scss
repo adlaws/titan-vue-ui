@@ -304,7 +304,7 @@ pre, code, .monospace
     justify-content: flex-start;
     align-items: center;
 
-    @include transition($transition-duration-medium, (box-shadow, color, background-color));
+    @include transition($transition-duration-medium, (box-shadow, color, opacity, background-color));
 
     cursor: move;
     &.maximized, &.nodrag
@@ -319,11 +319,6 @@ pre, code, .monospace
 
     background-color: $menu-bg-inactive;
     color: $menu-fg-inactive;
-    &.active
-    {
-        background-color: $menu-bg-active;
-        color: $menu-fg-active;
-    }
 
     .title-icon
     {
@@ -332,6 +327,7 @@ pre, code, .monospace
         font-size: 24px;
         line-height: 24px;
         margin: 2px;
+        opacity: 0.5;
     }
 
     .title-text
@@ -341,11 +337,23 @@ pre, code, .monospace
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        opacity: 0.5;
     }
 
     .control-btn
     {
         cursor: pointer;
+        opacity: 0.5;
+    }
+
+    &.active
+    {
+        background-color: $menu-bg-active;
+        color: $menu-fg-active;
+        .title-icon, .title-text, .control-btn
+        {
+            opacity: 1.0;
+        }
     }
 }
 
@@ -359,13 +367,13 @@ pre, code, .monospace
 
     @include transition($transition-duration-fast, (box-shadow, color, background-color));
 
-    background-color: $window-bg-inactive;
-    color: $window-fg-inactive;
-    &.active
-    {
-        color: $window-fg-active;
-        background-color: $window-bg-active;
-    }
+    background-color: $window-bg-active;
+    color: $window-fg-active;
+    // &.active
+    // {
+    //     color: $window-fg-active;
+    //     background-color: $window-bg-active;
+    // }
 }
 
 .titan--dropdown-toolbar

@@ -10,17 +10,49 @@
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
-                <v-text-field
-                    v-model="filterText"
-                    label="Search:"
-                    clearable
-                    clear-icon="mdi-close"
-                    @input="debouncedFilterUpdate"
-                >
-                    <template slot="append">
-                        <titan-icon icon="magnify" />
-                    </template>
-                </v-text-field>
+                <v-container>
+                    <v-row>
+                        <v-col cols="12">
+                            <v-text-field
+                                v-model="filters.text"
+                                label="Search:"
+                                clearable
+                                clear-icon="mdi-close"
+                                @input="debouncedFilterUpdate"
+                            >
+                                <template slot="append">
+                                    <titan-icon icon="magnify" />
+                                </template>
+                            </v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="4">
+                            <v-select
+                                v-model="filters.country"
+                                label="Country"
+                                placeholder="Any"
+                                attach
+                                chips
+                                multiple
+                                clearable
+                                :items="countries"
+                            >
+                                <template v-slot:selection="{ item, index }">
+                                    <v-chip v-if="index === 0">
+                                        <span>{{ item }}</span>
+                                    </v-chip>
+                                    <span
+                                        v-if="index === 1"
+                                        class="grey--text caption"
+                                    >
+                                        (and {{ filters.country.length - 1 }} others)
+                                    </span>
+                                </template>
+                            </v-select>
+                        </v-col>
+                    </v-row>
+                </v-container>
 
                 <v-data-table
                     dense
@@ -30,7 +62,9 @@
                     :headers="table.headers"
                     :items="entityDescriptors"
                     :items-per-page="5"
-                    :search="filterText"
+                    :search="filters.text"
+                    :custom-filter="doFilter"
+                    :footer-props="{'items-per-page-options': [10,25,50]}"
                     @item-selected="selectEntity"
                     @click:row="selectRow"
                 >
@@ -57,7 +91,7 @@
 <script>
 import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
 
-import { PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
+import { PACKAGES_PATH, $tLogger } from '@/assets/js/titan/titan-utils.js';
 import UiUtils from '@/assets/js/utils/ui-utils.js';
 
 import TitanWindow from '@/components/common/titan/TitanWindow.vue';
@@ -89,7 +123,13 @@ export default {
                     { text: 'Image', value: 'Path', sortable: false },
                 ],
             },
-            filterText: '',
+            filters:
+            {
+                text:'',
+                country:[],
+                domain:[],
+            },
+            countries:["Afghanistan","Ariana","Australia","Austria","Belgium","Canada","China","Colombia","Czech Republic","Denmark","Egypt","Finland","France","Germany","Hong Kong","Iran","Israel","Mexico","Netherlands","New Zealand","Poland","Russia","Slovakia","Sweden","UK","USA","Usa","Yemen","afghanistan","australia","bestfit","canada","china","egypt","russia","spain","uk","usa"],
             PACKAGES_PATH,
         };
     },
@@ -100,7 +140,15 @@ export default {
     },
     mounted()
     {
+        //   0          1       2          3       4      5
+        //   kind       domain  type       country force  alliance
+        // [ "vehicle", "land", "tracked", "USA", "Army", "blue"]
+        const foo = Array.from(new Set(this.entityDescriptors.map((ed)=>ed.BlueprintArr[3])));
+        foo.sort();
+        $tLogger.info(foo);
+
         this.updateFilteredEntities();
+
     },
     beforeDestroy()
     {
@@ -108,6 +156,18 @@ export default {
     },
     methods:
     {
+        // Ref: https://front.id/en/articles/vuetify-achieve-multiple-filtering-data-table-component
+        doFilter(value, filter, item)
+        {
+            if(value.contains(filter))
+                return true;
+            if(this.filters.length>0)
+            {
+                if(item.Blueprint.contains(this.filters.country[0]))
+                    return true;
+            }
+            return false;
+        },
         selectRow(item, row)
         {
             row.select(true);
@@ -141,13 +201,13 @@ export default {
         }, 250, {onLeadIn: false, onTrailOut: true}),
         updateFilteredEntities()
         {
-            if(this.filterText.length === 0)
+            if(this.filters.text.length === 0)
                 this.filteredEntities = this.entityDescriptors;
             else
             {
                 const filtered = this.entityDescriptors.filter(x =>
                 {
-                    return x.Name.toLowerCase().indexOf(this.filterText)>=0;
+                    return x.Name.toLowerCase().indexOf(this.filters.text)>=0;
                 });
                 this.filteredEntities = filtered;
             }
