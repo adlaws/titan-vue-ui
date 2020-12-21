@@ -4,9 +4,11 @@
         icon="draw"
         :x="150"
         :y="150"
-        :width="320"
-        :height="580"
+        :width="185"
+        :min-width="175"
+        :height="32"
         :resizable="true"
+        :closable="false"
         @window-active="windowActiveChanged"
         @window-closed="beforeCloseCleanup"
     >
@@ -21,19 +23,99 @@
                                 v-for="(tool, idx) in tools"
                                 :key="`tool-${idx}`"
                                 :value="tool.type"
+                                small
                             >
-                                <v-icon>{{ tool.icon }}</v-icon>
+                                <v-icon
+                                    small
+                                >
+                                    {{ tool.icon }}
+                                </v-icon>
                             </v-btn>
                         </v-btn-toggle>
                     </v-row>
                     <v-row>
-                        <v-color-picker
-                            v-model="currentFill"
-                            canvas-height="100"
-                            show-swatches
-                            swatches-max-height="300"
-                            :swatches="palette"
-                        />
+                        <v-menu
+                            v-model="colorPicker.visible"
+                            :close-on-content-click="false"
+                            :nudge-width="200"
+                            offset-x
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    :color="fill.active?fill.color.hexa:'#AAA'"
+                                    dark
+                                    small
+                                    v-bind="attrs"
+                                    v-on="on"
+                                >
+                                    <v-icon
+                                        :color="fill.active?fillContrast:'#888'"
+                                    >
+                                        mdi-shape
+                                    </v-icon>
+                                </v-btn>
+                            </template>
+                            <v-color-picker
+                                v-model="fill.color"
+                                canvas-height="100"
+                                show-swatches
+                                swatches-max-height="300"
+                                :swatches="colorPicker.palette"
+                            />
+                        </v-menu>
+                        <v-menu
+                            v-model="colorPicker.stroke"
+                            :close-on-content-click="false"
+                            :nudge-width="200"
+                            offset-x
+                        >
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    :color="stroke.active?stroke.color.hexa:'#AAA'"
+                                    dark
+                                    small
+                                    v-bind="attrs"
+                                    v-on="on"
+                                >
+                                    <v-icon
+                                        :color="stroke.active?strokeContrast:'#888'"
+                                    >
+                                        mdi-shape-outline
+                                    </v-icon>
+                                </v-btn>
+                            </template>
+                            <v-color-picker
+                                v-model="stroke.color"
+                                canvas-height="100"
+                                show-swatches
+                                swatches-max-height="300"
+                                :swatches="colorPicker.palette"
+                            />
+                            <v-slider
+                                v-model="stroke.width"
+                                label="Width:"
+                                class="pr-4 pl-4"
+                                min="0"
+                                max="10"
+                                step="0.1"
+                                thumb-label
+                            >
+                                <template v-slot:append>
+                                    <v-text-field
+                                        v-model="stroke.width"
+                                        class="mt-0 pt-0"
+                                        dense
+                                        hide-details
+                                        single-line
+                                        type="number"
+                                        min="0"
+                                        max="10"
+                                        style="width: 70px"
+                                        suffix="px"
+                                    />
+                                </template>
+                            </v-slider>
+                        </v-menu>
                     </v-row>
                 </v-container>
             </titan-window-content>
@@ -57,6 +139,9 @@ const HANDLED_MOUSE_EVENTS = new Set([
     'click',
 ]);
 
+const RED = { "alpha": 1, "hex": "#FF0000", "hexa": "#FF0000FF", "hsla": { "h": 0, "s": 1, "l": 0.5, "a": 1 }, "hsva": { "h": 0, "s": 1, "v": 1, "a": 1 }, "hue": 0, "rgba": { "r": 255, "g": 0, "b": 0, "a": 1 } };
+const BLACK = { "alpha": 1, "hex": "#000000", "hexa": "#000000FF", "hsla": { "h": 0, "s": 0, "l": 0.0, "a": 1 }, "hsva": { "h": 0, "s": 0, "v": 0, "a": 1 }, "hue": 0, "rgba": { "r": 0, "g": 0, "b": 0, "a": 1 } };
+
 export default {
     name: 'editor-ui',
     components:
@@ -66,13 +151,18 @@ export default {
     data()
     {
         return {
-            palette:[
-                ['#FF0000','#FFC000','#FFFF00','#00CC00','#0088FF','#0000FF','#8800FF','#FF00FF'],
-                ['#CC0000','#FF8800','#CCAA00','#009900','#0044CC','#000099','#6600AA','#CC00AA'],
-                ['#880000','#CC6600','#AA8800','#005500','#0022AA','#000055','#330088','#880088',],
-                ['#dc322f','#cb4b16','#b58900','#859900','#2aa198','#268bd2','#6c71c4','#d33682',],
-                ['#FFFFFF','#DDDDDD','#BBBBBB','#888888','#666666','#444444','#222222','#000000',],
-            ],
+            colorPicker:
+            {
+                fill: false,
+                stroke: false,
+                palette:[
+                    ['#FF0000','#FFC000','#FFFF00','#00CC00','#0088FF','#0000FF','#8800FF','#FF00FF'],
+                    ['#CC0000','#FF8800','#CCAA00','#009900','#0044CC','#000099','#6600AA','#CC00AA'],
+                    ['#880000','#CC6600','#AA8800','#005500','#0022AA','#000055','#330088','#880088',],
+                    ['#dc322f','#cb4b16','#b58900','#859900','#2aa198','#268bd2','#6c71c4','#d33682',],
+                    ['#FFFFFF','#DDDDDD','#BBBBBB','#888888','#666666','#444444','#222222','#000000',],
+                ],
+            },
             tools:[
                 {type: 'rectangle', icon: 'mdi-shape-square-plus', tooltip: 'Square'},
                 {type: 'ellipse', icon: 'mdi-shape-circle-plus', tooltip: 'Circle'},
@@ -82,13 +172,24 @@ export default {
                 isDrawingShape: false,
             },
             currentTool: undefined,
-            currentFill: null,
-            currentStroke: null,
+            fill:{
+                active: true,
+                color: RED,
+            },
+            stroke:{
+                active: true,
+                color:BLACK,
+                width:1,
+            }
         };
     },
     computed:
     {
         isUiModeDrawing() { return this.$store.getters.isUiMode(TITAN_UI_MODE.Drawing); },
+        currentFillRgba() { return this.asRgbaColor(this.fill.color); },
+        currentStrokeRgba() { return this.asRgbaColor(this.stroke.color); },
+        fillContrast() { return this.contrastFor(this.fill.color); },
+        strokeContrast() { return this.contrastFor(this.stroke.color); },
     },
     watch:
     {
@@ -99,10 +200,6 @@ export default {
             else if(!this.isUiModeDrawing)
                 this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, TITAN_UI_MODE.Drawing);
         },
-        currentFill(newValue)
-        {
-            this.currentStroke = newValue;
-        }
     },
     mounted()
     {
@@ -119,6 +216,16 @@ export default {
     },
     methods:
     {
+        contrastFor(pickerColor)
+        {
+            pickerColor = pickerColor || BLACK;
+            return new Color(pickerColor.hex).findContrastColor().toRgbString();
+        },
+        asRgbaColor(pickerColor)
+        {
+            pickerColor = pickerColor || BLACK;
+            return `rgba(${pickerColor.r},${pickerColor.g},${pickerColor.b},${pickerColor.a})`;
+        },
         /**
          * Handle activities required as this window becomes active/inactive
          *

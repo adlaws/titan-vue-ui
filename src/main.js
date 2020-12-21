@@ -3,11 +3,12 @@ import App from './App.vue';
 
 Vue.config.productionTip = false;
 
-// application state store and routing
+// application state store and routing ----------------------------------------
 import store from '@/assets/js/store/store.js';
 import router from '@/assets/js/router/router.js';
+// ----------------------------------------------------------------------------
 
-// internationalisation
+// internationalisation -------------------------------------------------------
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
 import { LANGUAGE, DEFAULT_LOCALE } from '@/locales';
@@ -16,8 +17,11 @@ const i18n = new VueI18n({
     locale: DEFAULT_LOCALE,
     messages,
 });
+// ----------------------------------------------------------------------------
 
-import vuetify from '@/plugins/vuetify';
+// Vuetify UI framework -------------------------------------------------------
+import vuetify from '@/plugins/vuetify/vuetify';
+// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 // This is necessary so that TitanEventInterface works correctly

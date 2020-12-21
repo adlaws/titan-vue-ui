@@ -6,37 +6,36 @@
         :y="50"
         :width="600"
         :height="500"
-        :start-minimized="true"
+        :closable="false"
     >
         <template #default="context">
             <titan-window-content :titan-window="context.titanWindow">
                 <v-container>
                     <v-row>
-                        <v-col cols="12">
+                        <v-col cols="4">
                             <v-text-field
-                                v-model="filters.text"
+                                v-model="filters.name"
                                 label="Search:"
+                                dense
                                 clearable
                                 clear-icon="mdi-close"
-                                @input="debouncedFilterUpdate"
                             >
                                 <template slot="append">
                                     <titan-icon icon="magnify" />
                                 </template>
                             </v-text-field>
                         </v-col>
-                    </v-row>
-                    <v-row>
                         <v-col cols="4">
                             <v-select
                                 v-model="filters.country"
                                 label="Country"
                                 placeholder="Any"
+                                dense
                                 attach
                                 chips
                                 multiple
                                 clearable
-                                :items="countries"
+                                :items="filters.countryOpts"
                             >
                                 <template v-slot:selection="{ item, index }">
                                     <v-chip v-if="index === 0">
@@ -47,6 +46,31 @@
                                         class="grey--text caption"
                                     >
                                         (and {{ filters.country.length - 1 }} others)
+                                    </span>
+                                </template>
+                            </v-select>
+                        </v-col>
+                        <v-col cols="4">
+                            <v-select
+                                v-model="filters.domain"
+                                label="Domain"
+                                placeholder="Any"
+                                dense
+                                attach
+                                chips
+                                multiple
+                                clearable
+                                :items="filters.domainOpts"
+                            >
+                                <template v-slot:selection="{ item, index }">
+                                    <v-chip v-if="index === 0">
+                                        <span>{{ item }}</span>
+                                    </v-chip>
+                                    <span
+                                        v-if="index === 1"
+                                        class="grey--text caption"
+                                    >
+                                        (and {{ filters.domain.length - 1 }} others)
                                     </span>
                                 </template>
                             </v-select>
@@ -62,14 +86,26 @@
                     :headers="table.headers"
                     :items="entityDescriptors"
                     :items-per-page="5"
-                    :search="filters.text"
-                    :custom-filter="doFilter"
                     :footer-props="{'items-per-page-options': [10,25,50]}"
                     @item-selected="selectEntity"
                     @click:row="selectRow"
                 >
                     <template
-                        v-slot:[`item.Path`]="{ item }"
+                        v-slot:[`item.country`]="{ item }"
+                    >
+                        <span
+                            class="flag-icon"
+                            :class="`flag-icon-${alphaCodeLookup(item)}`"
+                            :title="item.BlueprintArr[3]"
+                        />
+                    </template>
+                    <template
+                        v-slot:[`item.domain`]="{ item }"
+                    >
+                        {{ item.BlueprintArr[2] }}
+                    </template>
+                    <template
+                        v-slot:[`item.icon`]="{ item }"
                     >
                         <img-fallback
                             :src="`${PACKAGES_PATH}${item.Path}.gif`"
@@ -89,15 +125,16 @@
 </template>
 
 <script>
+import 'flag-icon-css/sass/flag-icon.scss';
+
 import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
 
-import { PACKAGES_PATH, $tLogger } from '@/assets/js/titan/titan-utils.js';
-import UiUtils from '@/assets/js/utils/ui-utils.js';
+import { PACKAGES_PATH/*, $tLogger*/} from '@/assets/js/titan/titan-utils.js';
+import { COUNTRY } from '@/assets/js/utils/countries.js';
 
 import TitanWindow from '@/components/common/titan/TitanWindow.vue';
 import TitanWindowContent from '@/components/common/titan/TitanWindowContent.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
-// import TitanInput from '@/components/common/titan/forms/fields/basic/TitanInput.vue';
 import ImgFallback from '@/components/titan/core/ImgFallback.vue';
 
 export default {
@@ -106,7 +143,6 @@ export default {
     {
         TitanWindow, TitanWindowContent,
         TitanIcon,
-        // TitanInput,
         ImgFallback
     },
     data()
@@ -119,17 +155,39 @@ export default {
                         align: 'start',
                         sortable: true,
                         value: 'Name',
+                        filter: this.nameFilter
                     },
-                    { text: 'Image', value: 'Path', sortable: false },
+                    {
+                        text: 'Country',
+                        value: 'country',
+                        sortable: true,
+                        filter: this.countryFilter
+                    },
+                    {
+                        text: 'Domain',
+                        value: 'domain',
+                        sortable: true,
+                        filter: this.domainFilter
+                    },
+                    {
+                        text: 'Image',
+                        value: 'icon',
+                        sortable: false
+                    },
                 ],
             },
             filters:
             {
-                text:'',
+                name:'',
                 country:[],
-                domain:[],
+                countryOpts:["Afghanistan","Ariana","Australia","Austria","Belgium","Canada","China","Colombia","Czech Republic","Denmark","Egypt","Finland","France","Germany","Hong Kong","Iran","Israel","Mexico","Netherlands","New Zealand","Poland","Russia","Slovakia","Sweden","UK","USA","Usa","Yemen","afghanistan","australia","bestfit","canada","china","egypt","russia","spain","uk","usa"],
+                kind: [],
+                kindOpts: ["","Vehicle","character","group","item","items","misc","null","scenery","vehicle","virtual"],
+                domain: [],
+                domainOpts: ["Building","Infrastructure","afghan","air","animals","barrier","building","civilian","clutter","effect","equipment","household","infrastructure","land","landmark","landscape","military","munition","nature","null","object","sea","tools","weapon","weapons","wrecked","wrecks"],
+                subType: [],
+                subTypeOpts: ["african","amphibious","artillery","ballistic","boat","bridge","building","chock","civilian","communication","countermeasure","electronic","explosive","female","fixedWing","flashlight","flattener","furniture","garbage","groupmarker","itsec","launcher","machinery","magazine","male","marine","medical","military","moon","navy","null","office","parachute","primaryWeapon","rescue","rotaryWing","rotorWing","rural","scenery","secondaryWeapon","sensor","smoke","space","static","strop","subsurface","surface","tail_hook","targets","towed","track_link_33_8","track_link_42_24","track_link_56_26","track_link_62_28","tracked","transport","trigger","turretWeapon","urban","vehicle","wand","waypoint","weapon","weaponAttachment","wheeled"]            ,
             },
-            countries:["Afghanistan","Ariana","Australia","Austria","Belgium","Canada","China","Colombia","Czech Republic","Denmark","Egypt","Finland","France","Germany","Hong Kong","Iran","Israel","Mexico","Netherlands","New Zealand","Poland","Russia","Slovakia","Sweden","UK","USA","Usa","Yemen","afghanistan","australia","bestfit","canada","china","egypt","russia","spain","uk","usa"],
             PACKAGES_PATH,
         };
     },
@@ -143,12 +201,9 @@ export default {
         //   0          1       2          3       4      5
         //   kind       domain  type       country force  alliance
         // [ "vehicle", "land", "tracked", "USA", "Army", "blue"]
-        const foo = Array.from(new Set(this.entityDescriptors.map((ed)=>ed.BlueprintArr[3])));
-        foo.sort();
-        $tLogger.info(foo);
-
-        this.updateFilteredEntities();
-
+        // let foo = Array.from(new Set(this.entityDescriptors.map((ed)=>ed.BlueprintArr[0]))).filter(x => x !== undefined);
+        // foo.sort();
+        // $tLogger.info(foo);
     },
     beforeDestroy()
     {
@@ -156,17 +211,41 @@ export default {
     },
     methods:
     {
-        // Ref: https://front.id/en/articles/vuetify-achieve-multiple-filtering-data-table-component
-        doFilter(value, filter, item)
+        nameFilter(value, /*filter, item*/)
         {
-            if(value.contains(filter))
+            if(!this.filters.name || this.filters.name.length === 0)
                 return true;
-            if(this.filters.length>0)
+
+            return (value.indexOf(this.filters.name) !== -1);
+        },
+        countryFilter(value, filter, item)
+        {
+            if(!this.filters.country || this.filters.country.length === 0)
+                return true;
+
+            for(let idx=0; idx<this.filters.country.length; idx++)
             {
-                if(item.Blueprint.contains(this.filters.country[0]))
+                if(item.Blueprint.indexOf(this.filters.country[idx]) !== -1)
                     return true;
             }
             return false;
+        },
+        domainFilter(value, filter, item)
+        {
+            if(!this.filters.domain || this.filters.domain.length === 0)
+                return true;
+
+            for(let idx=0; idx<this.filters.domain.length; idx++)
+            {
+                if(item.Blueprint.indexOf(this.filters.domain[idx]) !== -1)
+                    return true;
+            }
+            return false;
+        },
+        alphaCodeLookup(item)
+        {
+            const entry = COUNTRY.NAME[item.BlueprintArr[3]];
+            return entry ? entry.alpha2 : null;
         },
         selectRow(item, row)
         {
@@ -185,16 +264,7 @@ export default {
                 this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_CLEAR_SELECTION);
             }
         },
-        previousPage()
-        {
-            if(this.page>0)
-                this.page--;
-        },
-        nextPage()
-        {
-            if(this.page<this.pageCount)
-                this.page++;
-        },
+        /*
         debouncedFilterUpdate: UiUtils.debounce(function()
         {
             this.updateFilteredEntities();
@@ -211,8 +281,8 @@ export default {
                 });
                 this.filteredEntities = filtered;
             }
-            this.page = 0;
         }
+        */
     }
 };
 </script>

@@ -20,7 +20,8 @@
     "vue2-leaflet": "^2.6.0",
     "gsap": "3.5.1",
     "tz-lookup": "6.1.25",
-    "luxon": "1.25.0"
+    "luxon": "1.25.0",
+    "flag-icon-css": "3.5.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.9",
