@@ -381,10 +381,11 @@ export default {
                 TitanUtils.injectMousePosition(this.drag.lastWinXY);
                 TitanUtils.showGizmoAt(this.drag.lastEcef);
 
-                const titanColor = this._toRenderToolboxColor(this.currentFill);
+                const titanFillColor = this.fill.active ? this._toRenderToolboxColor(this.fill.color) : {x:0,y:0,z:0,w:0};
+                const titanStrokeColor = this.stroke.active ? this._toRenderToolboxColor(this.stroke.color) : {x:0,y:0,z:0,w:0};
 
-                $tRenderToolbox.setShapeFillColor(titanColor);
-                $tRenderToolbox.setShapeBorderColor(titanColor);
+                $tRenderToolbox.setShapeFillColor(titanFillColor);
+                $tRenderToolbox.setShapeBorderColor(titanStrokeColor);
                 $tRenderToolbox.setTool('shape', {type: this.currentTool});
                 $tRenderToolbox.setDefaultStartHeight(0.5);
                 $tRenderToolbox.setPenPosition(winXY);
