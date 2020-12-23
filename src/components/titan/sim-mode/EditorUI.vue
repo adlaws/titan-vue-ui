@@ -17,7 +17,10 @@
             <component :is="pluginWindow" />
         </div>
 
-        <transition name="fade" mode="out-in">
+        <transition
+            name="fade"
+            mode="out-in"
+        >
             <titan-context-menu
                 v-if="contextMenu.show"
                 :items="contextMenu.items"
@@ -25,6 +28,21 @@
                 :y="contextMenu.y"
                 @selected="contextMenuSelection"
                 @cancelled="hideContextMenu"
+            />
+        </transition>
+
+        <transition
+            name="fade"
+            mode="out-in"
+        >
+            <titan-radial-menu
+                v-if="radialMenu.show"
+                :size="300"
+                :items="radialMenu.items"
+                :x="radialMenu.x"
+                :y="radialMenu.y"
+                @selected="radialMenuSelection"
+                @cancelled="hideRadialMenu"
             />
         </transition>
     </div>
@@ -45,6 +63,7 @@ import MapOverlay from '@/components/titan/sim-mode/MapOverlay.vue';
 import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 import TitanContextMenu from '@/components/titan/core/TitanContextMenu.vue';
+import TitanRadialMenu from '@/components/titan/core/TitanRadialMenu.vue';
 
 const HANDLED_KEY_EVENTS = new Set([
     'keyup'
@@ -60,12 +79,19 @@ export default {
     {
         LinearCompass, DropdownToolbar,
         EntitySelector, MapOverlay, DrawingTools,
-        TitanIcon, TitanContextMenu,
+        TitanIcon,
+        TitanContextMenu, TitanRadialMenu,
     },
     data()
     {
         return {
             contextMenu:{
+                show: false,
+                x: 0,
+                y: 0,
+                items: []
+            },
+            radialMenu:{
                 show: false,
                 x: 0,
                 y: 0,
@@ -165,6 +191,8 @@ export default {
             {
                 // hide the context menu
                 this.hideContextMenu();
+                // hide the radial menu
+                this.hideRadialMenu();
             }
 
             if(!$isInsideTitan)
@@ -356,6 +384,7 @@ export default {
         _handleLeftClick(evt)
         {
             this.hideContextMenu();
+            this.hideRadialMenu();
 
             // NOTE: we need to inject the mouse position otherwise Outerra
             //       doesn't have any awareness of where the mouse is and can't
@@ -405,6 +434,7 @@ export default {
         _handleLeftDblClick(evt)
         {
             this.hideContextMenu();
+            this.hideRadialMenu();
 
             // NOTE: we need to inject the mouse position otherwise Outerra
             //       doesn't have any awareness of where the mouse is and can't
@@ -436,6 +466,7 @@ export default {
         _handleContextMenu(evt)
         {
             this.hideContextMenu();
+            this.hideRadialMenu();
 
             if(!$isInsideTitan)
             {
@@ -444,22 +475,47 @@ export default {
                     {id:0, text: 'Option A', tooltip:'A is for Apple', icon:'apple', disabled:false,},
                     {id:1, text: 'Option B', tooltip:'B is for Baguette', icon:'baguette', disabled:false,},
                     {separator:true},
-                    {id:2, text: 'Option B', tooltip:'B is for Baguette', icon:'fruit-cherries', disabled:false,},
+                    {id:2, text: 'Option C', tooltip:'C is for Cherry', icon:'fruit-cherries', disabled:false,},
                     {
-                        id:9, text:'Option C', tooltip:'C is for Cherry', disabled:false,
+                        id:9, text:'Option D', tooltip:'D is for Dog', disabled:false,
                         items:[
                             {id:'a', text:'Sub menu 1'},
                             {id:'b', text:'Sub menu 2'},
                         ]
                     },
                     {
-                        id:4, text:'Option D', tooltip:'D is for Dog', disabled:false,
+                        id:4, text:'Option E', tooltip:'E is for Elderberry', disabled:false,
                         items:[
                             {id:'X', text:'Sub menu X'},
                             {id:'Y', text:'Sub menu Y',
                                 items:[
                                     {id:'Y-a', text:'Sub Y-A'},
                                     {id:'Y-b', text:'Sub Y-B'},
+                                ]}
+                        ],
+                    },
+                ];
+
+                this.radialMenu.items = [
+                    {id:0, text: 'A', tooltip:'A is for Apple', disabled:false,},
+                    {id:1, text: 'Baguette', tooltip:'B is for Baguette', icon:'baguette', disabled:false,},
+                    {id:2, text: 'Cherry', tooltip:'C is for Cherry', icon:'fruit-cherries', disabled:false,},
+                    {
+                        id:9, text:'Pencil', icon:'pencil', tooltip:'D is for Dog', disabled:false,
+                        items:[
+                            {id:'a', text:'Airplane', icon:'airplane'},
+                            {id:'b', text:'Wrench', icon:'wrench'},
+                        ]
+                    },
+                    {
+                        id:4, text:'Weather', icon:'weather-windy', tooltip:'E is for Elderberry', disabled:false,
+                        items:[
+                            {id:'X', text:'Showers', icon:'weather-pouring'},
+                            {id:'Y', text:'Fine', icon:'weather-sunny',
+                                items:[
+                                    {id:'Y-a', text:'USB', icon:'usb'},
+                                    {id:'Y-b', text:'Van', icon:'van-passenger'},
+                                    {id:'Y-c', text:'Stuff', icon:'lock'},
                                 ]}
                         ],
                     },
@@ -483,14 +539,36 @@ export default {
                     {id:'raise-entity', text: 'Raise by 10m', tooltip:'Raise entity', icon:'arrow-expand-up', entity:uuid },
                     {id:'snap-to-ground', text:'Snap To Ground', icon:'arrow-collapse-down', tooltip:'Place entity on the ground', entity:uuid },
                 ];
+                this.radialMenu.items = [
+                    {id:'move-entity', text: 'Move', tooltip:'Move entity', icon:'arrow-expand-up', entity:uuid },
+                    {id:'destroy-entity', text:'Destroy', icon:'bomb', tooltip:'Destroy Entity', entity:uuid },
+                    {
+                        id:'repair-entity', text:'Repair', icon:'wrench', tooltip:'Repair Entity', entity:uuid,
+                        items:[
+                            {id:'repair-entity-full', text:'All', icon:'heart', tooltip:'Repair All', entity:uuid },
+                            {id:'repair-entity-head', text:'Head', icon:'head', tooltip:'Repair Head', entity:uuid },
+                            {id:'repair-entity-arms', text:'Arms', icon:'hand', tooltip:'Repair Arms', entity:uuid },
+                            {id:'repair-entity-feet', text:'Feet', icon:'foot-print', tooltip:'Repair Feet', entity:uuid },
+                        ]
+                    },
+                ];
             }
 
             this.$nextTick(()=>
             {
-                // wait until next tick so that this.contextMenu.show = false can take effect and reset the menu
-                this.contextMenu.x = evt.clientX-32;
-                this.contextMenu.y = evt.clientY-8;
-                this.contextMenu.show = true;
+                if(this.$store.getters.modifierKeys.shift)
+                {
+                    this.radialMenu.x = evt.clientX - 150;
+                    this.radialMenu.y = evt.clientY - 150;
+                    this.radialMenu.show = true;
+                }
+                else
+                {
+                    // wait until next tick so that this.contextMenu.show = false can take effect and reset the menu
+                    this.contextMenu.x = evt.clientX-32;
+                    this.contextMenu.y = evt.clientY-8;
+                    this.contextMenu.show = true;
+                }
             });
         },
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -550,6 +628,18 @@ export default {
                     entity.snapToGround();
                 }
             }
+        },
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // RADIAL MENU MANAGEMENT
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        hideRadialMenu()
+        {
+            this.radialMenu.show = false;
+        },
+        radialMenuSelection(item)
+        {
+            this.hideRadialMenu();
+            console.log('RADIAL MENU SELECTED:', item);
         },
     }
 };

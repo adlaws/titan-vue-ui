@@ -1,5 +1,6 @@
+/* eslint-disable vue/no-v-html */
 <!-- ------------------------------------------------------------------------------------------
-A context menu component, allows nested sub-menus
+A radial menu component, allows nested sub-menus
 
 @param {Number} x the preferred x position on the screen (may be adjusted due to proximity to edges of screen)
 @param {Number} y the preferred y position on the screen (may be adjusted due to proximity to edges of screen)
@@ -71,62 +72,103 @@ Example use:
 <template>
     <div
         ref="container"
-        class="titan--context-menu"
+        class="titan--radial-menu"
         :style="`left:${pos.x}px;top:${pos.y}px;`"
     >
-        <ul>
-            <template
-                v-for="(item, idx) in items"
-            >
-                <li
-                    v-if="item.separator"
-                    :key="`item-${idx}`"
-                    class="separator"
+        <svg
+            :width="size"
+            :height="size"
+            :class="{'fast-spin':spinAnimation}"
+        >
+            <circle
+                :cx="centerXY.x"
+                :cy="centerXY.y"
+                :r="radius"
+                fill="#fff"
+                opacity="0.666"
+                stroke="#000"
+                stroke-width="8"
+                stroke-opacity="0.333"
+                paint-order="stroke"
+            />
+            <template v-if="currentHover">
+                <text
+                    :font-size="centerTextSize"
+                    text-anchor="middle"
+                    fill="#000"
+                    stroke="#FFF"
+                    stroke-width="2"
+                    paint-order="stroke"
+                    :x="centerXY.x"
+                    :y="currentHover.tooltip?(centerXY.y):(centerXY.y+centerTextSize*0.333)"
                 >
-                    <hr>
-                </li>
-                <li
-                    v-else-if="item.items"
-                    :ref="`submenu-${idx}`"
-                    :key="`item-${idx}`"
-                    :class="{disabled:item.disabled===true}"
-                    @click="_revealSubmenu(idx)"
+                    {{ currentHover.text }}
+                </text>
+                <text
+                    v-if="currentHover.tooltip"
+                    text-anchor="middle"
+                    fill="#000"
+                    stroke="#FFF"
+                    stroke-width="2"
+                    paint-order="stroke"
+                    :font-size="tooltipTextSize"
+                    :x="centerXY.x"
+                    :y="centerXY.y+tooltipTextSize"
                 >
-                    <titan-icon v-if="item[iconKey]" :icon="item[iconKey]" />
-                    <span v-else style="width:1em;display:inline-block;" />
-                    <span class="ml-1 mr-2">{{ item[textKey] }}</span>
-                    <span class="spacer" />
-                    <titan-icon icon="chevron-right" />
-                    <transition name="fade" mode="out-in">
-                        <titan-context-menu
-                            v-if="submenu.idx === idx"
-                            :x="submenu.x"
-                            :y="submenu.y"
-                            :items="item.items"
-                            @selected="_handleItemClicked(item)"
-                        />
-                    </transition>
-                </li>
-                <li
-                    v-else
-                    :key="`item-${idx}`"
-                    :class="{disabled:item.disabled===true}"
-                    @click.stop="_handleItemClicked(item)"
-                >
-                    <titan-icon v-if="item[iconKey]" :icon="item[iconKey]||'blank'" />
-                    <span v-else style="width:1em;display:inline-block;" />
-                    <span class="ml-1 mr-2">{{ item[textKey] }}</span>
-                </li>
+                    {{ currentHover.tooltip }}
+                </text>
             </template>
-        </ul>
+            <g
+                v-for="(item, idx) in currentItems"
+                :key="`item-${idx}-${item.id}`"
+                class="wedge"
+                fill="#002e57"
+                opacity="0.8"
+                @click="_handleItemClicked(item)"
+                @mouseover="currentHover=item"
+                @mouseout="currentHover=null"
+            >
+                <path
+                    :d="_makeWedge(centerXY.x, centerXY.y, radius, idx, currentItems.length)"
+                />
+                <g
+                    class="wedge-text"
+                    fill="#FFF"
+                    @mouseover="currentHover=item"
+                >
+                    <text
+                        :font-size="iconSize"
+                        :font-family="item.icon?'Material Design Icons':'inherit'"
+                        text-anchor="middle"
+                        :x="centerXY.x+(_itemNormX(idx, currentItems.length)*(radius*.75))"
+                        :y="centerXY.y+(_itemNormY(idx, currentItems.length)*(radius*.75))+(iconSize*.333)"
+                        v-html="item.icon?MDI_ICON[item.icon]:item.text"
+                    />
+                </g>
+                <polygon
+                    v-if="item.items"
+                    :points="_makeArrow(idx, currentItems.length)"
+                />
+                <path
+                    v-if="item.items"
+                    fill="none"
+                    stroke="#FFF"
+                    :stroke-width="radius*.025"
+                    :d="_makeArc(centerXY.x, centerXY.y, radius*0.95, idx, currentItems.length)"
+                />
+            </g>
+        </svg>
     </div>
 </template>
 
 <script>
+import { MDI_ICON } from '@/assets/js/utils/mdi-icon-utils.js';
 import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
+import SVGUtils from '@/assets/js/utils/svg-utils.js';
 
-import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+const _360DEG = (Math.PI * 2.0);
+const _90DEG = _360DEG / 4.0;
 
 // the context menu can be dismissed without making a selection by clicking
 // anywhere outside the bounds of the context menu, or by pressing the ESCAPE
@@ -134,11 +176,7 @@ import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 const CANCELLATION_EVENTS = ['keydown', 'mousedown'];
 
 export default {
-    name:'titan-context-menu',
-    components:
-    {
-        TitanIcon,
-    },
+    name:'titan-radial-menu',
     props:
     {
         // the preferred x position on the screen - may be adjusted due to proximity to edges of screen
@@ -152,6 +190,11 @@ export default {
         {
             type:Number,
             default:0
+        },
+        size:
+        {
+            type:Number,
+            default: 400,
         },
         items:
         {
@@ -183,16 +226,25 @@ export default {
                 x:0,
                 y:0
             },
-            submenu:{
-                idx:-1,
-                x:0,
-                y:0,
-            },
+            currentItems: [],
+            currentHover: null,
+            spinAnimation: false,
             selected: null,
+            MDI_ICON,
         };
+    },
+    computed:
+    {
+        diameter() { return this.size * 0.9; },
+        radius() { return this.diameter / 2.0; },
+        centerXY() { return {x: this.size/2, y: this.size/2 }; },
+        iconSize() { return this.size * 0.15; },
+        centerTextSize() { return this.iconSize * 0.6; },
+        tooltipTextSize() { return this.centerTextSize * 0.5; },
     },
     mounted()
     {
+        this.currentItems = this.items;
         // need to make sure we keep the context menu inside the available screen space - we can
         // also opt to ignore the taskbar and appear over the top of it if desired, but generally
         // we don't want to do that
@@ -204,46 +256,15 @@ export default {
         this.pos.x = MathUtils.clamp(this.x, desktopBounds.left, desktopBounds.right - bounds.width);
         this.pos.y = MathUtils.clamp(this.y, desktopBounds.top, desktopBounds.bottom - bounds.height);
 
-        this.$nextTick(() =>
+        this.$refs.container.addEventListener('animationend', this._resetSpinAnimationClass);
+        CANCELLATION_EVENTS.forEach((evtName) =>
         {
-            // once the positions are all updated, wait for the next 'tick' to correct
-            // any problems with disappearing off the edge of the screen; we don't know
-            // if this happens until after the location/size of the container has been
-            // updated and the component has been rendered, hence the need to wait for
-            // the tick.
-            const parentMenu = container.parentElement;
-            if(!parentMenu)
-                return; // we are not a sub-menu, so everything is cool
-
-            // get our *absolute* position on the screen and our *current* bounds
-            // now that we are rendered
-            const absolutePosition = this._getAbsolutePosition(container);
-            const bounds2 = container.getBoundingClientRect();
-            // check the right edge and bottom to see if we go off the screen
-            const rightEdge = absolutePosition.x + bounds2.width;
-            const bottomEdge = absolutePosition.y + bounds2.height;
-            if( rightEdge > desktopBounds.right)
-            {
-                // we're off the right edge of the screen - reposition so we are aligned
-                // with the left side of the parent menu
-                const parentBounds = parentMenu.getBoundingClientRect();
-                this.pos.x -= (parentBounds.width + bounds2.width);
-            }
-            if(bottomEdge > desktopBounds.bottom)
-            {
-                // we're off the bottom edge of the screen - reposition so we are aligned
-                // with the bottom edge of the screen
-                this.pos.y -= (bottomEdge - desktopBounds.bottom);
-            }
-
-            CANCELLATION_EVENTS.forEach((evtName) =>
-            {
-                document.addEventListener(evtName, this._watchForClickOutsideOrEscape);
-            });
+            document.addEventListener(evtName, this._watchForClickOutsideOrEscape);
         });
     },
     beforeDestroy()
     {
+        this.$refs.container.removeEventListener('animationend', this._resetSpinAnimationClass);
         CANCELLATION_EVENTS.forEach((evtName) =>
         {
             document.removeEventListener(evtName, this._watchForClickOutsideOrEscape);
@@ -251,24 +272,59 @@ export default {
     },
     methods:
     {
-        _revealSubmenu(idx)
+        _itemNormX(idx, count)
         {
-            const container = this.$refs[`submenu-${idx}`][0];
-            const bounds = container.getBoundingClientRect();
-
-            this.submenu.x = bounds.width;
-            this.submenu.y = container.offsetTop;
-
-
-            this.submenu.idx = idx;
+            const step = _360DEG / count;
+            return Math.cos((step * idx) - _90DEG);
+        },
+        _itemNormY(idx, count)
+        {
+            const step = _360DEG / count;
+            return Math.sin((step * idx)  - _90DEG);
+        },
+        _makeWedge(cx, cy, radius, idx, count)
+        {
+            const wedgeSize = 360.0 / count;
+            const wedgeAngle = (idx * wedgeSize) - (wedgeSize / 2.0);
+            return SVGUtils.describeSvgArc(cx, cy, radius/2, radius, wedgeAngle, wedgeAngle + wedgeSize);
+        },
+        _makeArc(cx, cy, radius, idx, count)
+        {
+            const portion = 0.8;
+            const wedgeSize = 360.0 / count;
+            const arcAngle = wedgeSize * portion;
+            const arcOffset = (wedgeSize * (1.0-portion)) / 2.0;
+            const wedgeAngle = (idx * wedgeSize) - (wedgeSize / 2.0);
+            return SVGUtils.describeSvgArc(cx, cy, radius, radius, wedgeAngle + arcOffset, wedgeAngle + arcOffset + arcAngle);
+        },
+        _makeArrow(idx, count)
+        {
+            const cx = this.centerXY.x + this._itemNormX(idx, count) * this.radius;
+            const cy = this.centerXY.y + this._itemNormY(idx, count) * this.radius;
+            const wedgeSize = 360.0 / count;
+            const wedgeAngle = (idx * wedgeSize);
+            return SVGUtils.describeRegularPolygon(cx, cy, this.radius * 0.1, 3, wedgeAngle);
         },
         _handleItemClicked(item)
         {
             if(item.disabled)
                 return;
 
-            this.selected = item;
-            this.$emit('selected', this.selected);
+            const hasSubmenu = item.items && item.items.length > 0;
+            if(hasSubmenu)
+            {
+                this.spinAnimation = true;
+                this.currentItems = item.items;
+            }
+            else
+            {
+                this.selected = item;
+                this.$emit('selected', this.selected);
+            }
+        },
+        _resetSpinAnimationClass()
+        {
+            this.spinAnimation = false;
         },
         /**
          * This method checks for clicks outside the context menu or pressing
