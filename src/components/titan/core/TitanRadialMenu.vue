@@ -1,4 +1,4 @@
-/* eslint-disable vue/no-v-html */
+<!-- eslint-disable vue/no-v-html -->
 <!-- ------------------------------------------------------------------------------------------
 A radial menu component, allows nested sub-menus
 
@@ -74,6 +74,9 @@ Example use:
         ref="container"
         class="titan--radial-menu"
         :style="`left:${pos.x}px;top:${pos.y}px;`"
+        @animationend="_resetSpinAnimationClass"
+        @mousemove="_handleMouseMove"
+        @mouseleave="_handleMouseLeave"
     >
         <svg
             :width="size"
@@ -91,11 +94,16 @@ Example use:
                 stroke-opacity="0.333"
                 paint-order="stroke"
             />
+            <path
+                stroke="#002e57"
+                stroke-width="subMenuArcThickness"
+                :d="mouseArc"
+            />
             <template v-if="currentHover">
                 <text
                     :font-size="centerTextSize"
                     text-anchor="middle"
-                    fill="#000"
+                    :fill="currentHover.disabled?'#888':'#000'"
                     stroke="#FFF"
                     stroke-width="2"
                     paint-order="stroke"
@@ -107,13 +115,13 @@ Example use:
                 <text
                     v-if="currentHover.tooltip"
                     text-anchor="middle"
-                    fill="#000"
+                    :fill="currentHover.disabled?'#888':'#000'"
                     stroke="#FFF"
                     stroke-width="2"
                     paint-order="stroke"
                     :font-size="tooltipTextSize"
                     :x="centerXY.x"
-                    :y="centerXY.y+tooltipTextSize"
+                    :y="centerXY.y+tooltipTextSize*1.5"
                 >
                     {{ currentHover.tooltip }}
                 </text>
@@ -122,26 +130,27 @@ Example use:
                 v-for="(item, idx) in currentItems"
                 :key="`item-${idx}-${item.id}`"
                 class="wedge"
-                fill="#002e57"
+                :class="{disabled:item.disabled}"
+                :fill="item.disabled?'#AAA':'#002e57'"
                 opacity="0.8"
                 @click="_handleItemClicked(item)"
                 @mouseover="currentHover=item"
                 @mouseout="currentHover=null"
             >
                 <path
-                    :d="_makeWedge(centerXY.x, centerXY.y, radius, idx, currentItems.length)"
+                    :d="_makeWedge(idx)"
                 />
                 <g
                     class="wedge-text"
-                    fill="#FFF"
+                    :fill="item.disabled?'#888':'#FFF'"
                     @mouseover="currentHover=item"
                 >
                     <text
                         :font-size="iconSize"
                         :font-family="item.icon?'Material Design Icons':'inherit'"
                         text-anchor="middle"
-                        :x="centerXY.x+(_itemNormX(idx, currentItems.length)*iconPosRadius)"
-                        :y="centerXY.y+(_itemNormY(idx, currentItems.length)*iconPosRadius)+(iconSize*.333)"
+                        :x="centerXY.x+(_itemNormX(idx)*iconPosRadius)"
+                        :y="centerXY.y+(_itemNormY(idx)*iconPosRadius)+(iconSize*.333)"
                         v-html="item.icon?MDI_ICON[item.icon]:item.text"
                     />
                 </g>
@@ -152,9 +161,9 @@ Example use:
                 <path
                     v-if="item.items"
                     fill="none"
-                    stroke="#FFF"
+                    :stroke="item.disabled?'#888':'#FFF'"
                     :stroke-width="subMenuArcThickness"
-                    :d="_makeArc(centerXY.x, centerXY.y, subMenuArcRadius, idx, currentItems.length)"
+                    :d="_makeArc(idx)"
                 />
             </g>
         </svg>
@@ -167,8 +176,7 @@ import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 import SVGUtils from '@/assets/js/utils/svg-utils.js';
 
-const _360DEG = (Math.PI * 2.0);
-const _90DEG = _360DEG / 4.0;
+const DEG2RAD = Math.PI / 180.0;
 
 // the context menu can be dismissed without making a selection by clicking
 // anywhere outside the bounds of the context menu, or by pressing the ESCAPE
@@ -228,6 +236,7 @@ export default {
             },
             currentItems: [],
             currentHover: null,
+            mouseArc: '',
             spinAnimation: false,
             selected: null,
             MDI_ICON,
@@ -242,10 +251,12 @@ export default {
         centerXY() { return {x: this.size/2, y: this.size/2 }; },
         iconSize() { return this.size * 0.15; },
         iconPosRadius() { return this.radius*.75; },
-        centerTextSize() { return this.iconSize * 0.6; },
+        centerTextSize() { return this.iconSize * 0.55; },
         tooltipTextSize() { return this.centerTextSize * 0.5; },
         subMenuArcRadius() { return this.radius*0.95; },
         subMenuArcThickness() { return this.radius*0.025; },
+        itemCount() { return this.currentItems.length; },
+        wedgeSize() { return 360.0 / this.itemCount; },
     },
     mounted()
     {
@@ -261,7 +272,6 @@ export default {
         this.pos.x = MathUtils.clamp(this.x, desktopBounds.left, desktopBounds.right - bounds.width);
         this.pos.y = MathUtils.clamp(this.y, desktopBounds.top, desktopBounds.bottom - bounds.height);
 
-        this.$refs.container.addEventListener('animationend', this._resetSpinAnimationClass);
         CANCELLATION_EVENTS.forEach((evtName) =>
         {
             document.addEventListener(evtName, this._watchForClickOutsideOrEscape);
@@ -269,7 +279,6 @@ export default {
     },
     beforeDestroy()
     {
-        this.$refs.container.removeEventListener('animationend', this._resetSpinAnimationClass);
         CANCELLATION_EVENTS.forEach((evtName) =>
         {
             document.removeEventListener(evtName, this._watchForClickOutsideOrEscape);
@@ -277,39 +286,116 @@ export default {
     },
     methods:
     {
-        _itemNormX(idx, count)
+        /**
+         * Calculate the angle that a radial menu wedge is oriented
+         *
+         * @param {number} idx the index of the wedge
+         * @returns {number} the angle of the wedge in degrees
+         */
+        _wedgeAngle(idx)
         {
-            const step = _360DEG / count;
-            return Math.cos((step * idx) - _90DEG);
+            return this.wedgeSize * idx;
         },
-        _itemNormY(idx, count)
+        _itemNormX(idx)
         {
-            const step = _360DEG / count;
-            return Math.sin((step * idx)  - _90DEG);
+            return Math.cos((this._wedgeAngle(idx)-90) * DEG2RAD);
         },
-        _makeWedge(cx, cy, radius, idx, count)
+        _itemNormY(idx)
         {
-            const wedgeSize = 360.0 / count;
-            const wedgeAngle = (idx * wedgeSize) - (wedgeSize / 2.0);
-            return SVGUtils.describeSvgArc(cx, cy, radius * 0.55, radius, wedgeAngle, wedgeAngle + wedgeSize);
+            return Math.sin((this._wedgeAngle(idx)-90) * DEG2RAD);
         },
-        _makeArc(cx, cy, radius, idx, count)
+        /**
+         * Creates the SVG <path> string which describes a wedge in the radial menu
+         *
+         * @param {number} idx the index of the wedge
+         * @returns {string} the path description for the SVG <path> `d` attribute
+         */
+        _makeWedge(idx)
+        {
+            const wedgeAngle = this._wedgeAngle(idx) - (this.wedgeSize / 2.0);
+            return SVGUtils.describeSvgArc(
+                this.centerXY.x,
+                this.centerXY.y,
+                this.radius * 0.55,
+                this.radius,
+                wedgeAngle,
+                wedgeAngle + this.wedgeSize
+            );
+        },
+        /**
+         * Creates the SVG <path> string which describes an arc at the outer
+         * edge of a wedge in the radial menu to indicate that there is a
+         * submenu off that item.
+         *
+         * @param {number} idx the index of the wedge
+         * @returns {string} the path description for the SVG
+         *          <path> `d` attribute
+         */
+        _makeArc(idx)
         {
             const portion = 0.8;
-            const wedgeSize = 360.0 / count;
-            const arcAngle = wedgeSize * portion;
-            const arcOffset = (wedgeSize * (1.0-portion)) / 2.0;
-            const wedgeAngle = (idx * wedgeSize) - (wedgeSize / 2.0);
-            return SVGUtils.describeSvgArc(cx, cy, radius, radius, wedgeAngle + arcOffset, wedgeAngle + arcOffset + arcAngle);
+            const arcAngle = this.wedgeSize * portion;
+            const arcOffset = (this.wedgeSize * (1.0-portion)) * 0.5;
+            const wedgeAngle = this._wedgeAngle(idx) - (this.wedgeSize * 0.5);
+            const radius = this.radius * 0.95;
+            return SVGUtils.describeSvgArc(
+                this.centerXY.x,
+                this.centerXY.y,
+                radius,
+                radius,
+                wedgeAngle + arcOffset,
+                wedgeAngle + arcOffset + arcAngle
+            );
         },
-        _makeArrow(idx, count)
+        /**
+         * Creates the SVG <polygon> string which describes a triangle/arrow at
+         * the outer edge of a wedge in the radial menu to indicate that there
+         * is a submenu off that item.
+         *
+         * @param {number} idx the index of the wedge
+         * @returns {string} the path description for the SVG <polygon>
+         *          `points` attribute
+         */
+        _makeArrow(idx)
         {
-            const cx = this.centerXY.x + this._itemNormX(idx, count) * this.radius;
-            const cy = this.centerXY.y + this._itemNormY(idx, count) * this.radius;
-            const wedgeSize = 360.0 / count;
-            const wedgeAngle = (idx * wedgeSize);
-            return SVGUtils.describeRegularPolygon(cx, cy, this.radius * 0.1, 3, wedgeAngle);
+            const cx = this.centerXY.x + this._itemNormX(idx) * this.radius;
+            const cy = this.centerXY.y + this._itemNormY(idx) * this.radius;
+            const wedgeAngle = this._wedgeAngle(idx);
+            return SVGUtils.describeRegularPolygon(
+                cx,
+                cy,
+                this.radius * 0.1,
+                3,
+                wedgeAngle
+            );
         },
+        _handleMouseLeave(/*evt*/)
+        {
+            this.mouseArc = '';
+        },
+        _handleMouseMove(evt)
+        {
+            if(!this.currentHover || this.currentHover.disabled)
+            {
+                this.mouseArc = '';
+                return;
+            }
+
+            const relX = evt.clientX-this.pos.x-this.centerXY.x;
+            const relY = evt.clientY-this.pos.y-this.centerXY.y;
+            const angle = Math.atan2(relY,relX) / DEG2RAD + 90 - (this.wedgeSize * 0.25);
+            this.mouseArc = SVGUtils.describeSvgArc(
+                this.centerXY.x,
+                this.centerXY.y,
+                this.radius * 0.525,
+                this.radius * 0.5,
+                angle,
+                angle + this.wedgeSize * 0.25
+            );
+        },
+        /**
+         * Carry out steps required when a wedge is clicked
+         */
         _handleItemClicked(item)
         {
             if(item.disabled)

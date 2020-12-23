@@ -494,9 +494,8 @@ export default {
                 this.radialMenu.items = [
                     {id:0, text: 'A', tooltip:'A is for Apple', disabled:false,},
                     {id:1, text: 'Baguette', tooltip:'B is for Baguette', icon:'baguette', disabled:false,},
-                    {id:2, text: 'Cherry', tooltip:'C is for Cherry', icon:'fruit-cherries', disabled:false,},
                     {
-                        id:9, text:'Pencil', icon:'pencil', tooltip:'D is for Dog', disabled:false,
+                        id:9, text:'Pencil', icon:'pencil', tooltip:'D is for Dog',
                         items:[
                             {id:'a', text:'Airplane', icon:'airplane'},
                             {id:'b', text:'Wrench', icon:'wrench'},
@@ -513,7 +512,7 @@ export default {
                                     {id: '', text: 'Cloudy', icon: 'weather-cloudy',},
                                     {id: '', text: 'Rain', icon: 'weather-pouring',},
                                     {id: '', text: 'Snow', icon: 'weather-snowy-heavy',},
-                                    {id: '', text: 'Hail', icon: 'weather-hail',},
+                                    {id: '', text: 'Hail', icon: 'weather-hail', disabled:true,},
                                     {id: '', text: 'Storm', icon: 'weather-lightning',},
                                     {id: '', text: 'Fog', icon: 'weather-fog',},
                                     {id: '', text: 'Haze', icon: 'weather-hazy',},
@@ -521,6 +520,7 @@ export default {
                             }
                         ],
                     },
+                    {id:2, text: 'Cherry', tooltip:'C is for Cherry', icon:'fruit-cherries', disabled:false,},
                 ];
             }
             else
