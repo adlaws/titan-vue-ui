@@ -140,8 +140,8 @@ Example use:
                         :font-size="iconSize"
                         :font-family="item.icon?'Material Design Icons':'inherit'"
                         text-anchor="middle"
-                        :x="centerXY.x+(_itemNormX(idx, currentItems.length)*(radius*.75))"
-                        :y="centerXY.y+(_itemNormY(idx, currentItems.length)*(radius*.75))+(iconSize*.333)"
+                        :x="centerXY.x+(_itemNormX(idx, currentItems.length)*iconPosRadius)"
+                        :y="centerXY.y+(_itemNormY(idx, currentItems.length)*iconPosRadius)+(iconSize*.333)"
                         v-html="item.icon?MDI_ICON[item.icon]:item.text"
                     />
                 </g>
@@ -153,8 +153,8 @@ Example use:
                     v-if="item.items"
                     fill="none"
                     stroke="#FFF"
-                    :stroke-width="radius*.025"
-                    :d="_makeArc(centerXY.x, centerXY.y, radius*0.95, idx, currentItems.length)"
+                    :stroke-width="subMenuArcThickness"
+                    :d="_makeArc(centerXY.x, centerXY.y, subMenuArcRadius, idx, currentItems.length)"
                 />
             </g>
         </svg>
@@ -235,12 +235,17 @@ export default {
     },
     computed:
     {
+        // these are the locations and sizes of the various components, all calculated
+        // relative to the `size` property
         diameter() { return this.size * 0.9; },
-        radius() { return this.diameter / 2.0; },
+        radius() { return this.diameter * 0.5; },
         centerXY() { return {x: this.size/2, y: this.size/2 }; },
         iconSize() { return this.size * 0.15; },
+        iconPosRadius() { return this.radius*.75; },
         centerTextSize() { return this.iconSize * 0.6; },
         tooltipTextSize() { return this.centerTextSize * 0.5; },
+        subMenuArcRadius() { return this.radius*0.95; },
+        subMenuArcThickness() { return this.radius*0.025; },
     },
     mounted()
     {
@@ -286,7 +291,7 @@ export default {
         {
             const wedgeSize = 360.0 / count;
             const wedgeAngle = (idx * wedgeSize) - (wedgeSize / 2.0);
-            return SVGUtils.describeSvgArc(cx, cy, radius/2, radius, wedgeAngle, wedgeAngle + wedgeSize);
+            return SVGUtils.describeSvgArc(cx, cy, radius * 0.55, radius, wedgeAngle, wedgeAngle + wedgeSize);
         },
         _makeArc(cx, cy, radius, idx, count)
         {

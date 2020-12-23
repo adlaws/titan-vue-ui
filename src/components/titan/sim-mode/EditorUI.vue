@@ -29,12 +29,7 @@
                 @selected="contextMenuSelection"
                 @cancelled="hideContextMenu"
             />
-        </transition>
 
-        <transition
-            name="fade"
-            mode="out-in"
-        >
             <titan-radial-menu
                 v-if="radialMenu.show"
                 :size="300"
@@ -508,15 +503,22 @@ export default {
                         ]
                     },
                     {
-                        id:4, text:'Weather', icon:'weather-windy', tooltip:'E is for Elderberry', disabled:false,
+                        id:4, text:'Weather', icon:'weather-partly-cloudy', disabled:false,
                         items:[
-                            {id:'X', text:'Showers', icon:'weather-pouring'},
-                            {id:'Y', text:'Fine', icon:'weather-sunny',
-                                items:[
-                                    {id:'Y-a', text:'USB', icon:'usb'},
-                                    {id:'Y-b', text:'Van', icon:'van-passenger'},
-                                    {id:'Y-c', text:'Stuff', icon:'lock'},
-                                ]}
+                            {id:'X', text:'Fine', icon:'weather-sunny'},
+                            {id:'Y', text:'Other', icon:'weather-cloudy',
+                                items: [
+                                    {id: '', text: 'Fine', icon: 'weather-sunny',},
+                                    {id: '', text: 'Light Cloud', icon: 'weather-partly-cloudy',},
+                                    {id: '', text: 'Cloudy', icon: 'weather-cloudy',},
+                                    {id: '', text: 'Rain', icon: 'weather-pouring',},
+                                    {id: '', text: 'Snow', icon: 'weather-snowy-heavy',},
+                                    {id: '', text: 'Hail', icon: 'weather-hail',},
+                                    {id: '', text: 'Storm', icon: 'weather-lightning',},
+                                    {id: '', text: 'Fog', icon: 'weather-fog',},
+                                    {id: '', text: 'Haze', icon: 'weather-hazy',},
+                                ]
+                            }
                         ],
                     },
                 ];
