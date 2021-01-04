@@ -66,7 +66,6 @@ export default {
             if(overflowRule === 'hidden')
                 return; // never any scroll bars
 
-            console.log();
             this.isScroll = overflowRule === 'scroll';
             this.isHorzScroll = this.isScroll || this.container.scrollWidth > this.container.clientWidth;
             this.isVertScroll = this.isScroll || this.container.scrollHeight > this.container.clientHeight;

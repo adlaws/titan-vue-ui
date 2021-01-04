@@ -9,6 +9,7 @@
         <entity-selector />
         <map-overlay />
         <drawing-tools />
+        <world-state />
 
         <div
             v-for="(pluginWindow, idx) in pluginWindows"
@@ -56,6 +57,7 @@ import EntitySelector from '@/components/titan/sim-mode/EntitySelector.vue';
 import DropdownToolbar from '@/components/titan/sim-mode/DropdownToolbar.vue';
 import MapOverlay from '@/components/titan/sim-mode/MapOverlay.vue';
 import DrawingTools from '@/components/titan/sim-mode/DrawingTools.vue';
+import WorldState from '@/components/titan/sim-mode/WorldState.vue';
 import TitanIcon from '@/components/titan/core/TitanIcon.vue';
 import TitanContextMenu from '@/components/titan/core/TitanContextMenu.vue';
 import TitanRadialMenu from '@/components/titan/core/TitanRadialMenu.vue';
@@ -73,7 +75,7 @@ export default {
     components:
     {
         LinearCompass, DropdownToolbar,
-        EntitySelector, MapOverlay, DrawingTools,
+        EntitySelector, MapOverlay, DrawingTools, WorldState,
         TitanIcon,
         TitanContextMenu, TitanRadialMenu,
     },

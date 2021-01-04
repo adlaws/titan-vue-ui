@@ -45,6 +45,139 @@ body {
     //       anti-aliasing (or lack thereof for fonts) issue is resolved
     font-family: Verdana, Geneva, "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
+
+form.compact
+{
+    .row
+    {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+    .col
+    {
+        padding: 4px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+    .v-input__slot
+    {
+        margin-bottom: 0px;
+    }
+    .v-text-field
+    {
+        padding: 0px !important;
+        input
+        {
+            padding: 0px !important;
+        }
+    }
+    .v-messages, .v-messages__message, .v-text-field__details
+    {
+        // display: none;
+        font-size: 87.5% !important;
+        line-height: 87.5% !important;
+        min-height: auto !important;
+    }
+}
+
+$scale-factor: 0.75;
+$scale-pct: percentage($scale-factor);
+form.super-compact
+{
+
+    .row
+    {
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+    .col
+    {
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+    label
+    {
+        margin: 0 4px 0 0 !important;
+        font-size: $scale-pct !important;
+    }
+
+    input
+    {
+        padding: 0px !important;
+        max-height: 32px * $scale-factor !important;
+    }
+
+    .v-input
+    {
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+    .v-input__slot
+    {
+        margin-bottom: 1px !important;
+        .v-text-field__slot
+        {
+            font-size: $scale-pct !important;
+        }
+    }
+
+
+    .v-select
+    {
+        .v-input__slot
+        {
+            &:before, &:after
+            {
+                bottom: 1px !important;
+            }
+        }
+
+        .v-select__slot
+        {
+            label
+            {
+                &.v-label--active
+                {
+                    margin-top: 4px !important;
+                }
+            }
+
+            .v-input__append-inner
+            {
+                margin: 0px !important;
+                padding: 0px !important;
+            }
+
+            .v-select__selections
+            {
+                font-size: $scale-pct !important;
+                .v-select__selection
+                {
+                    margin: 0px !important;
+                    padding: 0px !important;
+                }
+            }
+
+            .v-menu__content
+            {
+                font-size: 8px;
+            }
+        }
+    }
+
+    .v-slider--horizontal
+    {
+        min-height: 32px * $scale-factor !important;
+    }
+
+    .v-messages, .v-messages__message
+    {
+        min-height: auto !important;
+        font-size: 75% !important;
+    }
+}
 // ------------------------------------------------------------------------------------------------
 
 pre, code, .monospace
