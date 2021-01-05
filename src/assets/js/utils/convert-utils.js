@@ -53,11 +53,16 @@ export const SPEED_UNITS = {
 export const SPEED_UNIT_OPTIONS = DataUtils.dictToList(SPEED_UNITS, 'id', 'unit');
 
 export const PRESSURE_UNITS = {
-    PASCAL:                 {id: 'pascal',                 full: 'Pascal',                 abbr: 'Pa', isSIUnit: true },
-    KILOPASCAL:             {id: 'kilopascal',             full: 'kilopascal',             abbr: 'kPa'},
-    POUNDS_PER_SQUARE_INCH: {id: 'pounds-per-square-inch', full: 'pounds per square inch', abbr: 'psi'},
-    BAR:                    {id: 'bar',                    full: 'bar',                    abbr: 'bar'},
-    ATMOSPHERES:            {id: 'atmospheres',            full: 'atmospheres',            abbr: 'atm'},
+    PASCAL:                          {id: 'pascal',                 full: 'Pascal',                 abbr: 'Pa', isSIUnit: true },
+    KILOPASCAL:                      {id: 'kilopascal',             full: 'kilopascal',             abbr: 'kPa'},
+    HECTOPASCAL:                     {id: 'hectopascal',            full: 'hectopascal',            abbr: 'hPa'},
+    POUNDS_PER_SQUARE_INCH:          {id: 'pounds-per-square-inch', full: 'pounds per square inch', abbr: 'psi'},
+    KILOGRAMS_PER_SQUARE_CENTIMETER: {id: 'kilograms-per-square-centimeter', full: 'kilograms per square centimeter', abbr: 'kg/cm2'},
+    BAR:                             {id: 'bar',                    full: 'bar',                    abbr: 'bar'},
+    MILLIBAR:                        {id: 'millibar',               full: 'millibar',               abbr: 'mBar'},
+    ATMOSPHERES:                     {id: 'atmospheres',            full: 'atmospheres',            abbr: 'atm'},
+    CENTIMETER_MERCURY:              {id: 'centimeter-mercury',     full: 'centimeter mercury',     abbr: 'cmHg'},
+    INCH_MERCURY:                    {id: 'inch-mercury',           full: 'inch mercury',           abbr: 'inHg'},
 };
 export const PRESSURE_UNIT_OPTIONS = DataUtils.dictToList(PRESSURE_UNITS, 'id', 'unit');
 
@@ -169,20 +174,30 @@ export const Conversions =
         toStandard:
         {
             // convert pressure in some unit into standard units (pascal)
-            [PRESSURE_UNITS.PASCAL.id]:                 (x) => x,
-            [PRESSURE_UNITS.KILOPASCAL.id]:             (x) => x * 1000.0,
-            [PRESSURE_UNITS.POUNDS_PER_SQUARE_INCH.id]: (x) => x * 6894.76,
-            [PRESSURE_UNITS.BAR.id]:                    (x) => x * 100000,
-            [PRESSURE_UNITS.ATMOSPHERES.id]:            (x) => x * 101325,
+            [PRESSURE_UNITS.PASCAL.id]:                          (x) => x,
+            [PRESSURE_UNITS.KILOPASCAL.id]:                      (x) => x * 1000.0,
+            [PRESSURE_UNITS.HECTOPASCAL.id]:                     (x) => x * 100.0,
+            [PRESSURE_UNITS.POUNDS_PER_SQUARE_INCH.id]:          (x) => x * 6894.76,
+            [PRESSURE_UNITS.KILOGRAMS_PER_SQUARE_CENTIMETER.id]: (x) => x * 98066.5,
+            [PRESSURE_UNITS.BAR.id]:                             (x) => x * 100000,
+            [PRESSURE_UNITS.MILLIBAR.id]:                        (x) => x * 100,
+            [PRESSURE_UNITS.ATMOSPHERES.id]:                     (x) => x * 101325,
+            [PRESSURE_UNITS.CENTIMETER_MERCURY.id]:              (x) => x * 1333.22368,
+            [PRESSURE_UNITS.INCH_MERCURY.id]:                    (x) => x * 3386.38816,
         },
         fromStandard:
         {
             // convert pressure from standard units (pascal) into some other unit
-            [PRESSURE_UNITS.PASCAL.id]:                 (x) => x,
-            [PRESSURE_UNITS.KILOPASCAL.id]:             (x) => x / 1000.0,
-            [PRESSURE_UNITS.POUNDS_PER_SQUARE_INCH.id]: (x) => x / 6894.76,
-            [PRESSURE_UNITS.BAR.id]:                    (x) => x / 100000,
-            [PRESSURE_UNITS.ATMOSPHERES.id]:            (x) => x / 101325,
+            [PRESSURE_UNITS.PASCAL.id]:                          (x) => x,
+            [PRESSURE_UNITS.KILOPASCAL.id]:                      (x) => x / 1000.0,
+            [PRESSURE_UNITS.HECTOPASCAL.id]:                     (x) => x / 100.0,
+            [PRESSURE_UNITS.POUNDS_PER_SQUARE_INCH.id]:          (x) => x / 6894.76,
+            [PRESSURE_UNITS.KILOGRAMS_PER_SQUARE_CENTIMETER.id]: (x) => x / 98066.5,
+            [PRESSURE_UNITS.BAR.id]:                             (x) => x / 100000,
+            [PRESSURE_UNITS.MILLIBAR.id]:                        (x) => x / 100,
+            [PRESSURE_UNITS.ATMOSPHERES.id]:                     (x) => x / 101325,
+            [PRESSURE_UNITS.CENTIMETER_MERCURY.id]:              (x) => x / 1333.22368,
+            [PRESSURE_UNITS.INCH_MERCURY.id]:                    (x) => x / 3386.38816,
         },
     },
 };
