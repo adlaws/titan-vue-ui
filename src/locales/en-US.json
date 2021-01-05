@@ -25,5 +25,34 @@
             "abbr": "W"
         }
     },
+    "worldSettings":
+    {
+        "atmosphere":
+        {
+            "Atmosphere": "Atmosphere",
+            "Clouds": "Clouds",
+            "Fog": "Fog",
+            "Haze": "Haze",
+            "Precipitation": "Precipitation",
+            "Lower Altitude": "Lower Altitude",
+            "Upper Altitude": "Upper Altitude",
+            "Lightning": "Lightning",
+            "Density": "Density",
+            "Height": "Height",
+            "Scattering": "Scattering",
+            "Type": "Type",
+            "Rate": "Rate",
+            "None": "None",
+            "Rain": "Rain",
+            "Snow": "Snow"
+        },
+        "water":{
+            "Water": "Water"
+        },
+        "wind":{
+            "Wind": "Wind"
+
+        }
+    },
     "":""
 }

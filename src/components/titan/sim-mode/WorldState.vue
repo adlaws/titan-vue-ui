@@ -18,10 +18,10 @@
                 >
                     <v-tabs-slider color="accent" />
                     <v-tab key="Atmosphere">
-                        Atmosphere
+                        {{ $t('worldSettings.atmosphere.Atmosphere', languageID) }}
                     </v-tab>
                     <v-tab key="Water">
-                        Water
+                        {{ $t('worldSettings.water.Water', languageID) }}
                     </v-tab>
                 </v-tabs>
                 <v-tabs-items
@@ -30,17 +30,19 @@
                     <v-tab-item
                         key="Atmosphere"
                     >
-                        <v-form class="super-compact no-messages">
+                        <v-form class="compact no-messages">
                             <v-container>
                                 <v-row>
                                     <v-col class="font-weight-bold">
                                         <v-icon>mdi-weather-cloudy</v-icon>
-                                        Clouds
+                                        {{ $t('worldSettings.atmosphere.Clouds', languageID) }}
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <v-label>Density</v-label>
+                                        <v-label>
+                                            {{ $t('worldSettings.atmosphere.Density', languageID) }}
+                                        </v-label>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-slider
@@ -51,18 +53,21 @@
                                             hide-details="auto"
                                         />
                                     </v-col>
-                                    <v-col>
+                                    <v-col cols="3">
                                         <v-text-field
                                             v-model="tabs.atmosphere.cloud.density"
-                                            type="number"
-                                            suffix="%"
+                                            reverse
+                                            prefix="%"
                                             hide-details="auto"
+                                            :rules="[percentValidator,]"
                                         />
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <v-label>Lower Altitude</v-label>
+                                        <v-label>
+                                            {{ $t('worldSettings.atmosphere.Lower Altitude', languageID) }}
+                                        </v-label>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-slider
@@ -76,14 +81,17 @@
                                         <v-text-field
                                             v-model="tabs.atmosphere.cloud.altitude"
                                             type="number"
-                                            suffix="m"
+                                            reverse
+                                            prefix="m"
                                             hide-details="auto"
                                         />
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <v-label>Upper Altitude</v-label>
+                                        <v-label>
+                                            {{ $t('worldSettings.atmosphere.Upper Altitude', languageID) }}
+                                        </v-label>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-slider
@@ -97,14 +105,17 @@
                                         <v-text-field
                                             v-model="tabs.atmosphere.cloud.height"
                                             type="number"
-                                            suffix="m"
+                                            reverse
+                                            prefix="m"
                                             hide-details="auto"
                                         />
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <v-label>Lightning</v-label>
+                                        <v-label>
+                                            {{ $t('worldSettings.atmosphere.Lightning', languageID) }}
+                                        </v-label>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-slider
@@ -113,13 +124,15 @@
                                             max="10"
                                             step="0.1"
                                             hide-details="auto"
+                                            hint="Strikes per minute per 100km2"
+                                            persistent-hint
                                         />
                                     </v-col>
                                     <v-col cols="3">
                                         <v-text-field
                                             v-model="tabs.atmosphere.cloud.lightning"
                                             type="number"
-                                            suffix="/min"
+                                            reverse
                                             hide-details="auto"
                                         />
                                     </v-col>
@@ -127,19 +140,19 @@
                             </v-container>
                         </v-form>
 
-                        <v-form class="super-compact no-messages">
+                        <v-form class="compact no-messages">
                             <v-container>
                                 <v-row>
                                     <v-col class="font-weight-bold">
                                         <v-icon>mdi-weather-fog</v-icon>
-                                        Fog
+                                        {{ $t('worldSettings.atmosphere.Fog', languageID) }}
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="9">
                                         <v-slider
                                             v-model="tabs.atmosphere.fog.density"
-                                            label="Density"
+                                            :label="$t('worldSettings.atmosphere.Density', languageID)"
                                             persistent-hint
                                             min="0"
                                             max="100"
@@ -147,19 +160,22 @@
                                             hide-details="auto"
                                         />
                                     </v-col>
-                                    <v-col>
+                                    <v-col cols="3">
                                         <v-text-field
                                             v-model="tabs.atmosphere.fog.density"
                                             persistent-hint
-                                            type="number"
-                                            suffix="%"
+                                            reverse
+                                            prefix="%"
                                             hide-details="auto"
+                                            :rules="[percentValidator,]"
                                         />
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <label>Height</label>
+                                        <label>
+                                            {{ $t('worldSettings.atmosphere.Height', languageID) }}
+                                        </label>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-slider
@@ -173,14 +189,17 @@
                                         <v-text-field
                                             v-model="tabs.atmosphere.fog.height"
                                             type="number"
-                                            suffix="m"
+                                            reverse
+                                            prefix="m"
                                             hide-details="auto"
                                         />
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <v-label>Scattering</v-label>
+                                        <v-label>
+                                            {{ $t('worldSettings.atmosphere.Scattering', languageID) }}
+                                        </v-label>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-slider
@@ -193,25 +212,28 @@
                                     <v-col cols="3">
                                         <v-text-field
                                             v-model="tabs.atmosphere.fog.scattering"
-                                            type="number"
-                                            suffix="%"
+                                            reverse
+                                            prefix="%"
+                                            :rules="[percentValidator,]"
                                         />
                                     </v-col>
                                 </v-row>
                             </v-container>
                         </v-form>
 
-                        <v-form class="super-compact">
+                        <v-form class="compact">
                             <v-container>
                                 <v-row>
                                     <v-col class="font-weight-bold">
                                         <v-icon>mdi-weather-hazy</v-icon>
-                                        Haze
+                                        {{ $t('worldSettings.atmosphere.Haze', languageID) }}
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <v-label>Density</v-label>
+                                        <v-label>
+                                            {{ $t('worldSettings.atmosphere.Density', languageID) }}
+                                        </v-label>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-slider
@@ -235,29 +257,33 @@
                             </v-container>
                         </v-form>
 
-                        <v-form class="super-compact no-messages">
+                        <v-form class="compact no-messages">
                             <v-container>
                                 <v-row>
                                     <v-col class="font-weight-bold">
                                         <v-icon>mdi-weather-pouring</v-icon>
-                                        Precipitation
+                                        {{ $t('worldSettings.atmosphere.Precipitation', languageID) }}
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <v-label>Type</v-label>
+                                        <v-label>
+                                            {{ $t('worldSettings.atmosphere.Type', languageID) }}
+                                        </v-label>
                                     </v-col>
-                                    <v-col>
+                                    <v-col cols="9">
                                         <v-select
                                             v-model="tabs.atmosphere.precipitation.type"
                                             :items="precipitationTypes"
-                                            label="Type"
+                                            :label="$t('worldSettings.atmosphere.Type', languageID)"
                                         />
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <v-label>Rate</v-label>
+                                        <v-label>
+                                            {{ $t('worldSettings.atmosphere.Rate', languageID) }}
+                                        </v-label>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-slider
@@ -272,8 +298,9 @@
                                         <v-text-field
                                             v-model="tabs.atmosphere.precipitation.rate"
                                             :disabled="tabs.atmosphere.precipitation.type==='none'"
-                                            type="number"
-                                            suffix="%"
+                                            reverse
+                                            prefix="%"
+                                            :rules="[percentValidator,]"
                                         />
                                     </v-col>
                                 </v-row>
@@ -285,7 +312,18 @@
                         key="Water"
                     >
                         <v-card flat>
-                            <v-card-text>Water</v-card-text>
+                            <speed-field
+                                value="theSpeed"
+                                :display-units="SPEED_UNITS.KILOMETERS_PER_HOUR"
+                                @input="updateTheSpeed"
+                            />
+                            {{ theSpeed.toFixed(3) }}{{ SPEED_UNITS.METERS_PER_SECOND.abbr }}
+                            <temperature-field
+                                value="theTemp"
+                                :display-units="TEMPERATURE_UNITS.FAHRENHEIT"
+                                @input="updateTheTemp"
+                            />
+                            {{ theTemp.toFixed(3) }}{{ TEMPERATURE_UNITS.CELSIUS.abbr }}
                         </v-card>
                     </v-tab-item>
                 </v-tabs-items>
@@ -297,16 +335,29 @@
 <script>
 import TitanWindow from '@/components/common/titan/TitanWindow.vue';
 import TitanWindowContent from '@/components/common/titan/TitanWindowContent.vue';
+import SpeedField from '@/components/titan/core/field/SpeedField.vue';
+import TemperatureField from '@/components/titan/core/field/TemperatureField.vue';
+
+import { TEMPERATURE_UNITS, SPEED_UNITS } from '@/assets/js/utils/convert-utils.js';
+
+const PRECIPITATION_TYPES = [
+    {text:'worldSettings.atmosphere.None', value:'none'},
+    {text:'worldSettings.atmosphere.Rain', value:'rain'},
+    {text:'worldSettings.atmosphere.Snow', value:'snow'},
+];
 
 export default {
     name: 'editor-ui',
     components:
     {
         TitanWindow, TitanWindowContent,
+        SpeedField, TemperatureField
     },
     data()
     {
         return {
+            theSpeed: 0,
+            theTemp: 0,
             tabs:
             {
                 current: 'Atmosphere',
@@ -332,11 +383,6 @@ export default {
                     },
                 }
             },
-            precipitationTypes:[
-                {text:'None', value:'none'},
-                {text:'Rain', value:'rain'},
-                {text:'Snow', value:'snow'},
-            ],
             percentValidator(val)
             {
                 const isPositiveInt = /^\d*$/.test(val);
@@ -348,11 +394,32 @@ export default {
                         return true;
                 }
                 return 'Percentage required';
-            }
+            },
+            SPEED_UNITS,
+            TEMPERATURE_UNITS,
         };
+    },
+    computed:
+    {
+        languageID() {return this.$store.getters.language.id; },
+        precipitationTypes()
+        {
+            return PRECIPITATION_TYPES.map((item)=>
+            {
+                return {text: this.$t(item.text, this.languageID), value: item.value};
+            });
+        }
     },
     methods:
     {
+        updateTheSpeed(speed)
+        {
+            this.theSpeed = speed;
+        },
+        updateTheTemp(temp)
+        {
+            this.theTemp = temp;
+        },
         applyPreset()
         {
 
@@ -360,6 +427,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss">
-</style>
