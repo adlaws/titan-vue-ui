@@ -314,12 +314,14 @@
                         <v-card flat>
                             <speed-field
                                 value="theSpeed"
+                                show-unit-options
                                 :display-units="SPEED_UNITS.KILOMETERS_PER_HOUR"
                                 @input="updateTheSpeed"
                             />
                             {{ theSpeed.toFixed(3) }}{{ SPEED_UNITS.METERS_PER_SECOND.abbr }}
                             <temperature-field
                                 value="theTemp"
+                                show-unit-options
                                 :display-units="TEMPERATURE_UNITS.FAHRENHEIT"
                                 @input="updateTheTemp"
                             />

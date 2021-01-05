@@ -107,17 +107,17 @@ export default class DataUtils
      * NOTE: ordering of pairs is not guaranteed to be consistent
      *
      * @param {Object} obj the object to be converted
-     * @param {String} keyKey the key to use for keys (optional)
+     * @param {String} idKey the key to use for keys (optional)
      * @param {String} valueKey the key to use for values (optional)
      * @return {Array} the array of pairs
      */
-    static dictToList(obj, keyKey = 'id', valueKey = 'value')
+    static dictToList(obj, idKey = 'id', valueKey = 'value')
     {
-        return Object.getOwnPropertyNames(obj).map(key =>
+        return Object.getOwnPropertyNames(obj).map(id =>
         {
             const entry = {};
-            entry[keyKey] = key;
-            entry[valueKey] = obj[key];
+            entry[idKey] = id;
+            entry[valueKey] = obj[id];
             return entry;
         });
     }

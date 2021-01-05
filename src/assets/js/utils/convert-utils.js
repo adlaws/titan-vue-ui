@@ -1,3 +1,5 @@
+import DataUtils from './data-utils.js';
+
 // Standard International Units
 //------------------------
 // Unit:       Quantity:
@@ -15,6 +17,7 @@ export const DURATION_UNITS = {
     DAYS:         {id: 'days',         full: 'days',         abbr: 'd'},
     WEEKS:        {id: 'weeks',        full: 'weeks',        abbr: 'w'},
 };
+export const DURATION_UNIT_OPTIONS = DataUtils.dictToList(DURATION_UNITS, 'id', 'unit');
 
 export const LENGTH_UNITS = {
     METERS:         {id: 'meters',        full: 'meters',         abbr: 'm', isSIUnit: true },
@@ -25,17 +28,20 @@ export const LENGTH_UNITS = {
     MILES:          {id: 'miles',         full: 'miles',          abbr: 'ml'},
     NAUTICAL_MILES: {id: 'nauticalmiles', full: 'nautical miles', abbr: 'nm'},
 };
+export const LENGTH_UNIT_OPTIONS = DataUtils.dictToList(LENGTH_UNITS, 'id', 'unit');
 
 export const TEMPERATURE_UNITS = {
     CELSIUS:    {id: 'celsius',    full: 'Celsius',    abbr:'°C', isSIUnit: true },
     FAHRENHEIT: {id: 'fahrenheit', full: 'Fahrenheit', abbr:'°F'},
     KELVIN:     {id: 'kelvin',     full: 'Kelvin',     abbr:'°K'},
 };
+export const TEMPERATURE_UNIT_OPTIONS = DataUtils.dictToList(TEMPERATURE_UNITS, 'id', 'unit');
 
 export const MASS_UNITS = {
     KILOGRAMS: {id: 'kilograms', full: 'kilograms', abbr: 'kg', isSIUnit: true },
     POUNDS:    {id: 'pounds',    full: 'pounds',    abbr: 'lb'},
 };
+export const MASS_UNIT_OPTIONS = DataUtils.dictToList(MASS_UNITS, 'id', 'unit');
 
 export const SPEED_UNITS = {
     METERS_PER_SECOND:   {id: 'meters-per-second',   full: 'meters per second',   abbr: 'm/s', isSIUnit: true },
@@ -44,6 +50,7 @@ export const SPEED_UNITS = {
     MILES_PER_HOUR:      {id: 'miles-per-hour',      full: 'miles per hour',      abbr: 'mph'},
     KNOTS:               {id: 'knots',               full: 'knots',               abbr: 'kt'},
 };
+export const SPEED_UNIT_OPTIONS = DataUtils.dictToList(SPEED_UNITS, 'id', 'unit');
 
 export const PRESSURE_UNITS = {
     PASCAL:                 {id: 'pascal',                 full: 'Pascal',                 abbr: 'Pa', isSIUnit: true },
@@ -52,6 +59,7 @@ export const PRESSURE_UNITS = {
     BAR:                    {id: 'bar',                    full: 'bar',                    abbr: 'bar'},
     ATMOSPHERES:            {id: 'atmospheres',            full: 'atmospheres',            abbr: 'atm'},
 };
+export const PRESSURE_UNIT_OPTIONS = DataUtils.dictToList(PRESSURE_UNITS, 'id', 'unit');
 
 export const Conversions =
 {

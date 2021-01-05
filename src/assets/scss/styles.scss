@@ -46,6 +46,17 @@ body {
     font-family: Verdana, Geneva, "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
+.v-input__append-outer
+{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    .v-select
+    {
+        margin: 0px;
+        padding: 0px;
+    }
+}
+
 // The following is to provide styling to make forms and form fields more compact in their
 // presentation than the Vuetify default. Simply add a 'compact' class to a <v-form> component
 // to apply the visual style.
@@ -88,6 +99,14 @@ form.compact
             label
             {
                 font-size: 100% !important;
+            }
+        }
+
+        .v-input__append-outer
+        {
+            .v-select
+            {
+                bottom: 2px;
             }
         }
     }
