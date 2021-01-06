@@ -6,9 +6,13 @@ Vue.use(Vuetify);
 
 const opts = {
     theme: {
+        dark: true,
         themes: {
             light: {
                 accent: '#024',
+            },
+            dark: {
+                accent: '#08F',
             },
         },
     }

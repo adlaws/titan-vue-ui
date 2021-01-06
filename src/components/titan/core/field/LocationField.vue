@@ -1,9 +1,9 @@
 <template>
     <span>
-        <input
+        <v-text-field
             v-model="location"
             @input="parseLocation"
-        >
+        />
         <latitude class="ml-1" :latitude="latLng?latLng.latitude:0" />
         <longitude class="ml-1" :longitude="latLng?latLng.longitude:0" />
     </span>

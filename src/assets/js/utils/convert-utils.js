@@ -201,7 +201,6 @@ export const Conversions =
         },
     },
 };
-
 export default class Convert
 {
     static time(value, fromUnits, toUnits)

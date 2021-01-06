@@ -15,6 +15,7 @@
                 <v-tabs
                     v-model="tabs.current"
                     align-with-title
+                    class="compact"
                 >
                     <v-tabs-slider color="accent" />
                     <v-tab key="Atmosphere">
@@ -54,13 +55,7 @@
                                         />
                                     </v-col>
                                     <v-col cols="3">
-                                        <v-text-field
-                                            v-model="tabs.atmosphere.cloud.density"
-                                            reverse
-                                            prefix="%"
-                                            hide-details="auto"
-                                            :rules="[percentValidator,]"
-                                        />
+                                        <percent-field v-model="tabs.atmosphere.cloud.density" />
                                     </v-col>
                                 </v-row>
                                 <v-row>
@@ -161,14 +156,7 @@
                                         />
                                     </v-col>
                                     <v-col cols="3">
-                                        <v-text-field
-                                            v-model="tabs.atmosphere.fog.density"
-                                            persistent-hint
-                                            reverse
-                                            prefix="%"
-                                            hide-details="auto"
-                                            :rules="[percentValidator,]"
-                                        />
+                                        <percent-field v-model="tabs.atmosphere.fog.density" />
                                     </v-col>
                                 </v-row>
                                 <v-row>
@@ -210,12 +198,7 @@
                                         />
                                     </v-col>
                                     <v-col cols="3">
-                                        <v-text-field
-                                            v-model="tabs.atmosphere.fog.scattering"
-                                            reverse
-                                            prefix="%"
-                                            :rules="[percentValidator,]"
-                                        />
+                                        <percent-field v-model="tabs.atmosphere.fog.scattering" />
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -245,13 +228,7 @@
                                         />
                                     </v-col>
                                     <v-col cols="3">
-                                        <v-text-field
-                                            v-model="tabs.atmosphere.haze.density"
-                                            reverse
-                                            prefix="%"
-                                            hide-details="auto"
-                                            :rules="[percentValidator,]"
-                                        />
+                                        <percent-field v-model="tabs.atmosphere.haze.density" />
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -295,12 +272,9 @@
                                         />
                                     </v-col>
                                     <v-col cols="3">
-                                        <v-text-field
+                                        <percent-field
                                             v-model="tabs.atmosphere.precipitation.rate"
                                             :disabled="tabs.atmosphere.precipitation.type==='none'"
-                                            reverse
-                                            prefix="%"
-                                            :rules="[percentValidator,]"
                                         />
                                     </v-col>
                                 </v-row>
@@ -337,8 +311,9 @@
 <script>
 import TitanWindow from '@/components/common/titan/TitanWindow.vue';
 import TitanWindowContent from '@/components/common/titan/TitanWindowContent.vue';
-import SpeedField from '@/components/titan/core/field/SpeedField.vue';
+import SpeedField from '@/components/titan/core/field/SpeedField2.vue';
 import TemperatureField from '@/components/titan/core/field/TemperatureField.vue';
+import PercentField from '@/components/titan/core/field/PercentField.vue';
 
 import { TEMPERATURE_UNITS, SPEED_UNITS } from '@/assets/js/utils/convert-utils.js';
 
@@ -353,7 +328,7 @@ export default {
     components:
     {
         TitanWindow, TitanWindowContent,
-        SpeedField, TemperatureField
+        SpeedField, TemperatureField, PercentField,
     },
     data()
     {
@@ -422,10 +397,6 @@ export default {
         {
             this.theTemp = temp;
         },
-        applyPreset()
-        {
-
-        }
     }
 };
 </script>

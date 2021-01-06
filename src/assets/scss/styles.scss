@@ -46,6 +46,7 @@ body {
     font-family: Verdana, Geneva, "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
+// make <v-select> components appended to the outside of a <v-input> components line up correctly
 .v-input__append-outer
 {
     margin-top: 0px !important;
@@ -57,6 +58,32 @@ body {
     }
 }
 
+// The following is to provide styling to make <v-tabs> more compact in their presentation than
+// the Vuetify default. Simply add a 'compact' class to a <v-tabs> component to apply the visual
+// style.
+.v-application--is-ltr
+{
+    .v-tabs
+    {
+        &.compact
+        {
+            .v-tabs-bar
+            {
+                height: 32px;
+            }
+            .v-tab
+            {
+                padding: 0 8px;
+            }
+            &.v-tabs--align-with-title>.v-tabs-bar:not(.v-tabs-bar--show-arrows):not(.v-slide-group--is-overflowing)>.v-slide-group__wrapper>.v-tabs-bar__content>.v-tab:first-child,
+            &.v-tabs--align-with-title>.v-tabs-bar:not(.v-tabs-bar--show-arrows):not(.v-slide-group--is-overflowing)>.v-slide-group__wrapper>.v-tabs-bar__content>.v-tabs-slider-wrapper+.v-tab
+            {
+                margin-left: 12px !important; // 42px in Vuetify - overly large
+            }
+        }
+    }
+}
+
 // The following is to provide styling to make forms and form fields more compact in their
 // presentation than the Vuetify default. Simply add a 'compact' class to a <v-form> component
 // to apply the visual style.
@@ -64,7 +91,6 @@ $scale-factor: 0.75;
 $scale-pct: percentage($scale-factor);
 form.compact
 {
-
     .row
     {
         margin: 0px !important;
@@ -493,7 +519,7 @@ pre, code, .monospace
 {
     height: 100%;
     overflow: scroll;
-    padding: 8px;
+    padding: 4px;
     margin: 0px;
     margin-top: 0;
 
@@ -501,11 +527,11 @@ pre, code, .monospace
 
     background-color: $window-bg-active;
     color: $window-fg-active;
-    // &.active
-    // {
-    //     color: $window-fg-active;
-    //     background-color: $window-bg-active;
-    // }
+    &.dark
+    {
+        color: $window-bg-active;
+        background-color: $window-fg-active;
+    }
 }
 
 .titan--dropdown-toolbar

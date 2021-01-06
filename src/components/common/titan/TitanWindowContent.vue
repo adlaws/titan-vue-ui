@@ -1,7 +1,7 @@
 <template>
     <div
         ref="container"
-        class="titan-desktop--window-content"
+        class="titan-desktop--window-content dark"
         :class="{active: titanWindow.isActive}"
     >
         <!-- Active Window: {{ windowContext }} -->
