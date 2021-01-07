@@ -16,144 +16,148 @@
             <titan-window-content :titan-window="context.titanWindow">
                 <v-container>
                     <v-row>
-                        <v-btn-toggle
-                            v-model="currentTool"
-                        >
-                            <v-btn
-                                v-for="(tool, idx) in tools"
-                                :key="`tool-${idx}`"
-                                :value="tool.type"
-                                small
+                        <v-col cols="12">
+                            <v-btn-toggle
+                                v-model="currentTool"
                             >
-                                <v-icon
+                                <v-btn
+                                    v-for="(tool, idx) in tools"
+                                    :key="`tool-${idx}`"
+                                    :value="tool.type"
                                     small
                                 >
-                                    {{ tool.icon }}
-                                </v-icon>
-                            </v-btn>
-                        </v-btn-toggle>
+                                    <v-icon
+                                        small
+                                    >
+                                        {{ tool.icon }}
+                                    </v-icon>
+                                </v-btn>
+                            </v-btn-toggle>
+                        </v-col>
                     </v-row>
                     <v-row>
-                        <v-menu
-                            v-model="colorPicker.visible"
-                            :close-on-content-click="false"
-                            :nudge-width="200"
-                            offset-x
-                        >
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
-                                    :color="fill.active?fill.color.hexa:'#AAA'"
-                                    dark
-                                    small
-                                    v-bind="attrs"
-                                    v-on="on"
-                                >
-                                    <v-icon
-                                        :color="fill.active?fillContrast:'#888'"
+                        <v-col cols="12">
+                            <v-menu
+                                v-model="colorPicker.visible"
+                                :close-on-content-click="false"
+                                :nudge-width="200"
+                                offset-x
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        :color="fill.active?fill.color.hexa:'#AAA'"
+                                        dark
+                                        small
+                                        v-bind="attrs"
+                                        v-on="on"
                                     >
-                                        mdi-shape
-                                    </v-icon>
-                                </v-btn>
-                            </template>
-                            <v-card>
-                                <v-list-item class="pb-0">
-                                    <v-list-item-content>
-                                        <v-list-item-title>
-                                            <v-checkbox
-                                                v-model="fill.active"
-                                                label="Fill Shapes"
-                                                class="pa-0 ma-0"
-                                                hide-details="true"
-                                                dense
-                                            />
-                                        </v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-expand-transition>
-                                    <div v-show="fill.active">
-                                        <v-color-picker
-                                            v-model="fill.color"
-                                            canvas-height="100"
-                                            show-swatches
-                                            swatches-max-height="300"
-                                            :swatches="colorPicker.palette"
-                                        />
-                                    </div>
-                                </v-expand-transition>
-                            </v-card>
-                        </v-menu>
-                        <v-menu
-                            v-model="colorPicker.stroke"
-                            :close-on-content-click="false"
-                            :nudge-width="200"
-                            offset-x
-                        >
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
-                                    :color="stroke.active?stroke.color.hexa:'#AAA'"
-                                    dark
-                                    small
-                                    v-bind="attrs"
-                                    v-on="on"
-                                >
-                                    <v-icon
-                                        :color="stroke.active?strokeContrast:'#888'"
-                                    >
-                                        mdi-shape-outline
-                                    </v-icon>
-                                </v-btn>
-                            </template>
-                            <v-card>
-                                <v-list-item class="pb-0">
-                                    <v-list-item-content>
-                                        <v-list-item-title>
-                                            <v-checkbox
-                                                v-model="stroke.active"
-                                                label="Stroke Shapes"
-                                                class="pa-0 ma-0"
-                                                hide-details="true"
-                                                dense
-                                            />
-                                        </v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-expand-transition>
-                                    <div v-show="stroke.active">
-                                        <v-slider
-                                            v-model="stroke.width"
-                                            label="Width:"
-                                            class="pr-4 pl-4"
-                                            min="0"
-                                            max="10"
-                                            step="0.1"
-                                            thumb-label
+                                        <v-icon
+                                            :color="fill.active?fillContrast:'#888'"
                                         >
-                                            <template v-slot:append>
-                                                <v-text-field
-                                                    v-model="stroke.width"
-                                                    class="mt-0 pt-0"
+                                            mdi-shape
+                                        </v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-card>
+                                    <v-list-item class="pb-0">
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-checkbox
+                                                    v-model="fill.active"
+                                                    label="Fill Shapes"
+                                                    class="pa-0 ma-0"
+                                                    hide-details="true"
                                                     dense
-                                                    hide-details
-                                                    single-line
-                                                    type="number"
-                                                    min="0"
-                                                    max="10"
-                                                    style="width: 70px"
-                                                    suffix="px"
                                                 />
-                                            </template>
-                                        </v-slider>
-                                        <v-color-picker
-                                            v-model="stroke.color"
-                                            canvas-height="100"
-                                            show-swatches
-                                            swatches-max-height="300"
-                                            :swatches="colorPicker.palette"
-                                        />
-                                    </div>
-                                </v-expand-transition>
-                            </v-card>
-                        </v-menu>
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-expand-transition>
+                                        <div v-show="fill.active">
+                                            <v-color-picker
+                                                v-model="fill.color"
+                                                canvas-height="100"
+                                                show-swatches
+                                                swatches-max-height="300"
+                                                :swatches="colorPicker.palette"
+                                            />
+                                        </div>
+                                    </v-expand-transition>
+                                </v-card>
+                            </v-menu>
+                            <v-menu
+                                v-model="colorPicker.stroke"
+                                :close-on-content-click="false"
+                                :nudge-width="200"
+                                offset-x
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        :color="stroke.active?stroke.color.hexa:'#AAA'"
+                                        dark
+                                        small
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    >
+                                        <v-icon
+                                            :color="stroke.active?strokeContrast:'#888'"
+                                        >
+                                            mdi-shape-outline
+                                        </v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-card>
+                                    <v-list-item class="pb-0">
+                                        <v-list-item-content>
+                                            <v-list-item-title>
+                                                <v-checkbox
+                                                    v-model="stroke.active"
+                                                    label="Stroke Shapes"
+                                                    class="pa-0 ma-0"
+                                                    hide-details="true"
+                                                    dense
+                                                />
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                    <v-expand-transition>
+                                        <div v-show="stroke.active">
+                                            <v-slider
+                                                v-model="stroke.width"
+                                                label="Width:"
+                                                class="pr-4 pl-4"
+                                                min="0"
+                                                max="10"
+                                                step="0.1"
+                                                thumb-label
+                                            >
+                                                <template v-slot:append>
+                                                    <v-text-field
+                                                        v-model="stroke.width"
+                                                        class="mt-0 pt-0"
+                                                        dense
+                                                        hide-details
+                                                        single-line
+                                                        type="number"
+                                                        min="0"
+                                                        max="10"
+                                                        style="width: 70px"
+                                                        suffix="px"
+                                                    />
+                                                </template>
+                                            </v-slider>
+                                            <v-color-picker
+                                                v-model="stroke.color"
+                                                canvas-height="100"
+                                                show-swatches
+                                                swatches-max-height="300"
+                                                :swatches="colorPicker.palette"
+                                            />
+                                        </div>
+                                    </v-expand-transition>
+                                </v-card>
+                            </v-menu>
+                        </v-col>
                     </v-row>
                 </v-container>
             </titan-window-content>
