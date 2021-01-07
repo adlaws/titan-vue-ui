@@ -249,7 +249,7 @@ pre, code, .monospace
     }
 }
 
-.titan--splash
+.cse-splash
 {
     display: flex;
     justify-content:center;
@@ -273,7 +273,7 @@ pre, code, .monospace
     border-radius: 4px;
 }
 
-.titan-desktop
+.cse-desktop
 {
     overflow: hidden;
     top: 0;
@@ -283,7 +283,7 @@ pre, code, .monospace
     background-color: $transparent-black;
 }
 
-.titan-desktop--task-bar
+.cse-desktop--task-bar
 {
     position: absolute;
     bottom: 0;
@@ -314,7 +314,7 @@ pre, code, .monospace
     {
         margin-left: 24px;
 
-        .startitan-button
+        .start-cse-button
         {
             display: flex;
             flex-wrap: nowrap;
@@ -373,7 +373,7 @@ pre, code, .monospace
     }
 }
 
-.titan-desktop--taskbar-window-tile
+.cse-desktop--taskbar-window-tile
 {
     width: 48px;
     height: 48px;
@@ -415,7 +415,7 @@ pre, code, .monospace
     }
 }
 
-.titan-desktop--window
+.cse-desktop--window
 {
     position: absolute;
 
@@ -453,7 +453,7 @@ pre, code, .monospace
     }
 }
 
-.titan-desktop--window-title-bar
+.cse-desktop--window-title-bar
 {
     margin: 0;
     padding: 0;
@@ -516,7 +516,7 @@ pre, code, .monospace
     }
 }
 
-.titan-desktop--window-content
+.cse-desktop--window-content
 {
     height: 100%;
     overflow: scroll;
@@ -535,7 +535,7 @@ pre, code, .monospace
     }
 }
 
-.titan--dropdown-toolbar
+.cse-desktop--dropdown-toolbar
 {
     position:absolute;
 
@@ -613,7 +613,7 @@ pre, code, .monospace
     }
 }
 
-.titan--context-menu
+.cse--context-menu
 {
     z-index: 1024;
 
@@ -680,7 +680,7 @@ pre, code, .monospace
     }
 }
 
-.titan--radial-menu
+.cse--radial-menu
 {
     z-index: 1024;
 

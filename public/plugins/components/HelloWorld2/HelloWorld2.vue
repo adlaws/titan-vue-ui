@@ -1,5 +1,5 @@
 <template>
-    <titan-window
+    <cse-desktop-window
         title="Hello World"
         icon="hand-okay"
         :x="300"
@@ -8,7 +8,7 @@
         :height="160"
     >
         <template #default="context">
-            <titan-window-content :titan-window="context.titanWindow">
+            <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
                 <h1>
                     {{ greetings[greetingIdx] }}
                 </h1>
@@ -22,9 +22,9 @@
                         mdi-earth
                     </v-icon>
                 </v-btn>
-            </titan-window-content>
+            </cse-desktop-window-content>
         </template>
-    </titan-window>
+    </cse-desktop-window>
 </template>
 
 <script>

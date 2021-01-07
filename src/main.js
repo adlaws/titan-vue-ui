@@ -40,11 +40,11 @@ require('@/../public/js/titanEventListener.js');
 // ----------------------------------------------------------------------------
 const requireComponent = require.context(
     // The relative path of the components folder
-    './components/common/titan',
+    './components/common/cse',
     // Whether or not to look in subfolders
     true,
     // The regular expression used to match base component filenames
-    /Titan[A-Z]\w+\.(vue|js)$/
+    /Cse[A-Z]\w+\.(vue|js)$/
 );
 
 requireComponent.keys().forEach(fileName =>

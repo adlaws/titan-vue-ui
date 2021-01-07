@@ -7,9 +7,9 @@ import Http404 from '@/components/error/404';
 import Http500 from '@/components/error/500';
 
 import Root from '@/components/common/Root.vue';
-import TitanLoginPage from '@/components/titan/core/TitanLoginPage.vue';
-import TitanDesktop from '@/components/titan/core/TitanDesktop.vue';
-import TitanFps from '@/components/titan/core/TitanFps.vue';
+import CseLoginPage from '@/components/cse/core/CseLoginPage.vue';
+import CseDesktop from '@/components/cse/core/CseDesktop.vue';
+import CseFpsOverlay from '@/components/cse/core/CseFpsOverlay.vue';
 
 Vue.use(VueRouter);
 
@@ -30,7 +30,7 @@ var router = new VueRouter({
             redirect: {name: 'login'}
         },
         // login/authorization page
-        { path: '/login', name: 'login', component: TitanLoginPage },
+        { path: '/login', name: 'login', component: CseLoginPage },
         // logout URL (no actual page, just visiting this URL causes an immediate logout)
         {
             path: '/logout',
@@ -55,8 +55,8 @@ var router = new VueRouter({
             component: Root,
             // here we try very hard to keep the paths and route names sensibly organised
             children: [
-                { path: 'desktop', name: 'desktop', component: TitanDesktop },
-                { path: 'fps', name: 'fps', component: TitanFps },
+                { path: 'desktop', name: 'desktop', component: CseDesktop },
+                { path: 'fps', name: 'fps', component: CseFpsOverlay },
             ]
         },
         // error pages - 500, 403 and 404 for everything else

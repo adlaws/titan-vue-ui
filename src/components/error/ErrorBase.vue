@@ -24,20 +24,20 @@
         </div>
         <div class="screen-centered-icon">
             <slot name="icon">
-                <titan-icon icon="alert" />
+                <cse-icon icon="alert" />
             </slot>
         </div>
     </div>
 </template>
 
 <script>
-import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+import CseIcon from '@/components/cse/core/CseIcon.vue';
 
 export default {
     name: 'error-base',
     components:
     {
-        TitanIcon,
+        CseIcon,
     },
     props: {
         error: {

@@ -1,4 +1,4 @@
-import { $isInsideTitan, $tFileInterface } from '../titan/titan-utils.js';
+import { $isInOuterra, $tFileInterface } from '../titan/titan-utils.js';
 
 const PLUGIN_FOLDER = './gui/adlaws/titan-gui-js/dist/';
 
@@ -59,9 +59,9 @@ export default class VueUtils
     static async injectScript(url)
     {
         const script = document.createElement('script');
-        if($isInsideTitan)
+        if($isInOuterra)
         {
-            // in Titan we need to read source from file system
+            // in Outerra we need to read source from file system
             // TODO: can we read from the Node.js server or something instead...?
             const pluginPathParts = url.split('/');
             const pluginComponentPath = pluginPathParts.slice(0,-1).join('/');

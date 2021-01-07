@@ -39,9 +39,9 @@ export const $got = _GLOBAL.$got || {}; // NOTE: not currently used
 // Determine if we are running in a production environment (as opposed to development)
 export const $isProduction = process.env.NODE_ENV === 'production';
 // Determine if we are running in Titan
-export const $isInsideTitan = window.$eview !== undefined;
+export const $isInOuterra = window.$eview !== undefined;
 // Determine if we are running in Outerra
-export const $isInsideOuterra = /Outerra\/c4e/g.test(window.navigator.userAgent); // true if inside OUTERRA
+// export const $isInsideOuterra = /Outerra\/c4e/g.test(window.navigator.userAgent); // true if inside OUTERRA
 
 // take $eview from the window, otherwise make up dummy implementation
 // for use when developing widgets in browsers
@@ -284,7 +284,7 @@ export default class TitanUtils
      */
     static isInsideTitan()
     {
-        return $isInsideTitan;
+        return $isInOuterra;
     }
 
     static getWindowSize()
@@ -297,7 +297,7 @@ export default class TitanUtils
 
     static quitApplication()
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         // shut down NodeJS before exit
@@ -402,7 +402,7 @@ export default class TitanUtils
     {
         // $tWorldInterface.injectMousePosition(winXY, range);
         // return $tWorldInterface.getWorldPositionUnderMouse();
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.getWorldPosFromScreenPix(winXY);
         return {x:0, y:0, z:0};
     }
@@ -415,7 +415,7 @@ export default class TitanUtils
      */
     static worldPosUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.getWorldPositionUnderMouse();
         return {x:0, y:0, z:0};
     }
@@ -427,7 +427,7 @@ export default class TitanUtils
      */
     static showGizmoAt(ecef)
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.showGizmoAt(ecef);
     }
 
@@ -438,7 +438,7 @@ export default class TitanUtils
      */
     static getObjectUUIDUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.getObjectUUIDUnderMouse();
         return -1;
     }
@@ -450,7 +450,7 @@ export default class TitanUtils
      */
     static isObjectUnderMouseSelected()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isObjectUnderMouseSelected();
         return false;
     }
@@ -462,7 +462,7 @@ export default class TitanUtils
      */
     static isSelectableObjectUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isSelectableObjectUnderMouse();
         return false;
     }
@@ -475,7 +475,7 @@ export default class TitanUtils
      */
     static isSelectableShapeObjectUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isSelectableShapeObjectUnderMouse();
         return false;
     }
@@ -488,7 +488,7 @@ export default class TitanUtils
      */
     static isSelectableTriggerUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isSelectableTriggerUnderMouse();
         return false;
     }
@@ -501,7 +501,7 @@ export default class TitanUtils
      */
     static isSelectableWaypointUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isSelectableWaypointUnderMouse();
         return false;
     }
@@ -513,7 +513,7 @@ export default class TitanUtils
      */
     static select()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.select();
     }
 
@@ -522,7 +522,7 @@ export default class TitanUtils
      */
     static clearSelection()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.clearSelection();
     }
 
@@ -535,7 +535,7 @@ export default class TitanUtils
      */
     static injectMousePosition(winXY, limit=15000)
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.injectMousePosition(winXY, limit);
     }
 
@@ -562,7 +562,7 @@ export default class TitanUtils
      */
     static beginAreaDragSelect()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.beginAreaDragSelect();
     }
 
@@ -571,7 +571,7 @@ export default class TitanUtils
      */
     static endAreaDragSelect()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.endAreaDragSelect();
     }
 
@@ -582,7 +582,7 @@ export default class TitanUtils
      */
     static set_undo_redo_keypress_monitoring_active(isActive)
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.set_undo_redo_keypress_monitoring_active(isActive===true);
     }
 
@@ -698,7 +698,7 @@ export default class TitanUtils
 
     static launchPluginExecutable(cmdLineStr)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tWorldInterface.launchPluginExecutable(cmdLineStr);
     }
@@ -743,7 +743,7 @@ export default class TitanUtils
     **/
     static bindEventHandlers()
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         let eventHandlers = $tGlobalStorage.eventHandlers;
         window.onblur                    = eventHandlers.handleMouseDownEvent.bind(window);
@@ -768,7 +768,7 @@ export default class TitanUtils
 
     static setUndoRedoKeyMonitoringState(isActive)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tWorldInterface.set_undo_redo_keypress_monitoring_active(isActive);
     }
@@ -789,21 +789,21 @@ export default class TitanUtils
 
     static addEventListener(name, handler)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tGlobalStorage.TitanEvent.addListener(name, handler);
     }
 
     static removeEventListener(name, handler)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tGlobalStorage.TitanEvent.removeListener(name, handler);
     }
 
     static addGlobalEventListener(handler)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         TitanUtils.GLOBAL_LISTENERS.push(handler);
         $tGlobalStorage.TitanEvent.addGlobalListener(handler);
@@ -811,7 +811,7 @@ export default class TitanUtils
 
     static removeGlobalEventListener(handler)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         // TODO: remove from TitanUtils.GLOBAL_LISTENERS
         $tGlobalStorage.TitanEvent.removeGlobalListener(handler);
@@ -819,7 +819,7 @@ export default class TitanUtils
 
     static removeAllGlobalEventListeners()
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         TitanUtils.GLOBAL_LISTENERS.forEach(handler =>
         {
@@ -829,7 +829,7 @@ export default class TitanUtils
 
     static closeWindow()
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tGlobalStorage.closeWindow( window.name );
     }
@@ -894,7 +894,7 @@ export default class TitanUtils
 
     static _loadJsonData(path, defaultData={})
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return {...defaultData};
 
         let data = {...defaultData};
@@ -911,7 +911,7 @@ export default class TitanUtils
 
     static _saveJsonData(path, data={})
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         $tWorldInterface.writeJsonData(path, data);
@@ -920,7 +920,7 @@ export default class TitanUtils
     // persistent state storage, restoration, setters and getters ----------------------------------
     static loadState(stateID, defaultState={})
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return {...defaultState};
 
         // load in persisted state
@@ -936,7 +936,7 @@ export default class TitanUtils
 
     static saveState(stateID, state={})
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         $tGlobalStorage.saveState(stateID, state);
@@ -961,7 +961,7 @@ export default class TitanUtils
     static outerraTabHack(evt, opts)
     {
         // no need to do anything if we are just in a browser
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         const defaultOpts = {
@@ -1027,7 +1027,7 @@ export default class TitanUtils
      */
     static outerraDropdownHack(el, maxHeight)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         if (!el || el.__ddhack !== undefined || el.children.length < 2 )

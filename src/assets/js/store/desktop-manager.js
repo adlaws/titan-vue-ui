@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
+import { $isInOuterra } from '@/assets/js/titan/titan-utils.js';
 
 Vue.use(Vuex);
 
@@ -30,12 +30,12 @@ const DesktopManager =
         // available to the browser
         screen: {
             size:{
-                w: $isInsideTitan ? screen.availWidth : document.body.clientWidth,
-                h: $isInsideTitan ? screen.availHeight : document.body.clientHeight,
+                w: $isInOuterra ? screen.availWidth : document.body.clientWidth,
+                h: $isInOuterra ? screen.availHeight : document.body.clientHeight,
                 x: 0,
                 y: 0,
-                midX: ($isInsideTitan ? screen.availWidth : document.body.clientWidth) / 2.0,
-                midY: ($isInsideTitan ? screen.availHeight : document.body.clientHeight) / 2.0,
+                midX: ($isInOuterra ? screen.availWidth : document.body.clientWidth) / 2.0,
+                midY: ($isInOuterra ? screen.availHeight : document.body.clientHeight) / 2.0,
             }
         },
         // Outerra events are not reliable in isolation to gather mouse button and modifier
@@ -176,7 +176,7 @@ const DesktopManager =
     },
     mutations: {
         /**
-         * Updates the current screen size - should only happen in a browser, Titan window remains
+         * Updates the current screen size - should only happen in a browser, the Outerra window remains
          * the same size for the current execution cycle
          *
          * @param {object} state the store state object
@@ -217,7 +217,7 @@ const DesktopManager =
             const isMouseDown = evtType === 'mousedown';
             let isMouseUp = !isMouseDown && evtType === 'mouseup';
 
-            if($isInsideTitan && (!(isMouseDown || isMouseUp)) && evtType === 'mousemove')
+            if($isInOuterra && (!(isMouseDown || isMouseUp)) && evtType === 'mousemove')
             {
                 // A bit of a nasty workaround to address the fact that a
                 // `mousedown` event which is marked as unhandled with

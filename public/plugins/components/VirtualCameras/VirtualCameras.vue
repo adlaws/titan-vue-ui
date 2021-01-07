@@ -1,5 +1,5 @@
 <template>
-    <titan-window
+    <cse-desktop-window
         title="Virtual Cameras"
         icon="camera"
         :x="600"
@@ -8,7 +8,7 @@
         :height="160"
     >
         <template #default="context">
-            <titan-window-content :titan-window="context.titanWindow">
+            <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
                 <v-select
                     v-model="selectedCameraMode"
                     :items="cameraOptions"
@@ -30,13 +30,13 @@
                 >
                     Create
                 </v-btn>
-            </titan-window-content>
+            </cse-desktop-window-content>
         </template>
-    </titan-window>
+    </cse-desktop-window>
 </template>
 
 <script>
-import { $isInsideTitan, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
+import { $isInOuterra, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
 import LatLongUtils from './latlong-utils.js';
 
 const REFRESH_RATE = 1000.0 * (1.0 / 30.0); // try to update at 30 frames per second
@@ -72,7 +72,7 @@ export default {
     {
         // cache the active scenario's camera on startup so we don't have to look
         // it up all the time
-        if($isInsideTitan)
+        if($isInOuterra)
             this.scenarioCamera = $tWorldInterface.getActiveScenario().getActiveCamera();
 
         // set up updater function factory methods

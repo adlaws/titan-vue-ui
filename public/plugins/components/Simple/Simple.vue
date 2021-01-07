@@ -1,5 +1,5 @@
 <template>
-    <titan-window
+    <cse-desktop-window
         title="Simple"
         icon="emoticon-happy"
         :x="0"
@@ -8,7 +8,7 @@
         :height="160"
     >
         <template #default="context">
-            <titan-window-content :titan-window="context.titanWindow">
+            <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
                 <v-select
                     v-model="selectedOption"
                     label="Entity Type:"
@@ -22,13 +22,13 @@
                 >
                     Create
                 </v-btn>
-            </titan-window-content>
+            </cse-desktop-window-content>
         </template>
-    </titan-window>
+    </cse-desktop-window>
 </template>
 
 <script>
-import { $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
+import { $isInOuterra, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
 
 export default {
     name: 'simple',
@@ -48,9 +48,9 @@ export default {
     {
         createEntity()
         {
-            if(!$isInsideTitan)
+            if(!$isInOuterra)
             {
-                console.log('Not inside Titan - would have created a '+this.selectedOption);
+                console.log('Not inside Outerra - would have created a '+this.selectedOption);
                 return;
             }
 

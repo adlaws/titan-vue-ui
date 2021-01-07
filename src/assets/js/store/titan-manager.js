@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import TitanUtils, { SIM_MODE, SIM_MODES, FREE_CAMERA_MODE, $isInsideTitan, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { SIM_MODE, SIM_MODES, FREE_CAMERA_MODE, $isInOuterra, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
 import FetchUtils from '@/assets/js/utils/fetch-utils.js';
 import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-dev.js';
 
@@ -32,7 +32,7 @@ export const TITAN_UI_MODE = {
     Drawing: 'Drawing',
 };
 
-const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
+const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
     .map(e=>
     {
         // the `Blueprint` field value is a comma delimited string, which is not particularly useful,
@@ -61,7 +61,7 @@ const TitanManager =
             height: window.screen.availHeight,
         },
         // current titan simulation mode - starts in 'SimMode_Menu'
-        simMode: ($isInsideTitan ? $tWorldInterface.getSimulationMode() : SIM_MODE.MENU),
+        simMode: ($isInOuterra ? $tWorldInterface.getSimulationMode() : SIM_MODE.MENU),
         // a cached list of all entity descriptors - since this doesn't change
         // during the lifetime of a Titan execution cycle, we just ask for it
         // once here to avoid constantly querying the C++ back end
@@ -115,7 +115,7 @@ const TitanManager =
             if(!SIM_MODES.has(mode))
                 return;
 
-            if(!$isInsideTitan)
+            if(!$isInOuterra)
             {
                 state.simMode = mode;
             }
@@ -239,7 +239,7 @@ const TitanManager =
         [TITAN_ACTION.INIT_PLUGIN_CONFIG]: ({commit}) =>
         {
             const pluginsConfigFile = '/plugins/config.json';
-            if($isInsideTitan)
+            if($isInOuterra)
             {
                 const cachedPath = $tFileInterface.getCurrentDir();
                 $tFileInterface.switchProgramPath();

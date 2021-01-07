@@ -7,7 +7,7 @@ module.exports = {
     //    <script src=/js/chunk-vendors.6cd7c224.js>
     //                ^
     //
-    // ...which won't work inside Titan as it's file based, so we need...
+    // ...which won't work inside Outerra as it's file based, so we need...
     //
     //    <script src=js/chunk-vendors.6cd7c224.js>
     //                ^
@@ -15,7 +15,7 @@ module.exports = {
     publicPath: '',
     // do/don't produce JavaScript source map files for production, which
     // would tend to massively increase the size of the deployed resources.
-    // Since we are deploying into Titan, the map files are effectively of
+    // Since we are deploying into Outerra, the map files are effectively of
     // no use in any case.
     productionSourceMap: true,
     devServer: {

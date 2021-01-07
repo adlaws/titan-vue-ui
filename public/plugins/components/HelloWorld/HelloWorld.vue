@@ -1,5 +1,5 @@
 <template>
-    <titan-window
+    <cse-desktop-window
         title="Hello World"
         icon="hand"
         :x="0"
@@ -8,9 +8,9 @@
         :height="160"
     >
         <template #default="context">
-            <titan-window-content :titan-window="context.titanWindow">
+            <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
                 <h1>Hello World</h1>
-            </titan-window-content>
+            </cse-desktop-window-content>
         </template>
-    </titan-window>
+    </cse-desktop-window>
 </template>

@@ -10,7 +10,7 @@
             You don't have permission to view this.
         </template>
         <template #icon>
-            <titan-icon icon="lock" />
+            <cse-icon icon="lock" />
         </template>
     </error-base>
 </template>
@@ -18,13 +18,13 @@
 <script>
 import { Color } from '@/assets/js/utils/color-utils.js';
 
-import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+import CseIcon from '@/components/cse/core/CseIcon.vue';
 import ErrorBase from './ErrorBase.vue';
 
 export default {
     name: 'http401',
     components: {
-        ErrorBase, TitanIcon,
+        ErrorBase, CseIcon,
     },
     data()
     {
