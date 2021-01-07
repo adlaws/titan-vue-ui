@@ -4,7 +4,7 @@
 -->
 <template>
     <v-text-field
-        v-model="currentValue"
+        v-model.trim.number="currentValue"
         reverse
         prefix="%"
         hide-details="auto"
@@ -36,17 +36,20 @@ export default {
         value:
         {
             type: [Number, String,],
-            default: 0.0
+            default: 0.0,
+            validator: (value) => !isNaN(parseFloat(value))
         },
         min:
         {
-            type: Number,
-            default: 0.0
+            type: [Number, String,],
+            default: 0.0,
+            validator: (value) => !isNaN(parseFloat(value))
         },
         max:
         {
-            type: Number,
-            default: 100.0
+            type: [Number, String,],
+            default: 100.0,
+            validator: (value) => !isNaN(parseFloat(value))
         },
         // these are Vuetify <v-text-field> properties which we allow and pass through
         //   Ref: https://vuetifyjs.com/en/api/v-text-field/#props
@@ -94,13 +97,14 @@ export default {
         value(newValue)
         {
             // if the prop changes from outside
-            this.currentValue = newValue;
+            const asFloat = parseFloat(newValue);
+            this.currentValue = isNaN(asFloat) ? 0 : asFloat;
         },
         currentValue(newValue)
         {
             // emit new value as a float if valid
             if(this.isValid)
-                this.$emit('input', parseFloat(newValue));
+                this.$emit('input', newValue);
         }
     },
     beforeMounted()

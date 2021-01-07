@@ -21,7 +21,7 @@
                 :items="UNIT_OPTIONS"
                 item-text="unit.abbr"
                 item-value="unit"
-                style="max-width:3.5em;min-width:3.5em;"
+                style="max-width:2.75em;min-width:2.75em;"
                 :disabled="disabled"
                 :readonly="readonly"
             />
@@ -30,17 +30,17 @@
 </template>
 
 <script>
-import Convert, { TEMPERATURE_UNITS, TEMPERATURE_UNIT_OPTIONS } from '@/assets/js/utils/convert-utils.js';
+import Convert, { LENGTH_UNITS, LENGTH_UNIT_OPTIONS } from '@/assets/js/utils/convert-utils.js';
 
-const CONVERTER = Convert.temperature;
-const UNIT_OPTIONS = TEMPERATURE_UNIT_OPTIONS;
-const SI_UNITS = TEMPERATURE_UNITS.CELSIUS;
+const CONVERTER = Convert.length;
+const UNIT_OPTIONS = LENGTH_UNIT_OPTIONS;
+const SI_UNITS = LENGTH_UNITS.METERS;
 
 const POSITIVE_FLOAT_REGEX = /^\d+(\.\d+)?$/;
 const FLOAT_REGEX = /^[+-]?\d+(\.\d+)?$/;
 
 export default {
-    name: 'speed-field',
+    name: 'length-field',
     props:
     {
         value:

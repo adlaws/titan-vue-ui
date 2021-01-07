@@ -69,16 +69,15 @@
                                             v-model="tabs.atmosphere.cloud.altitude"
                                             min="0"
                                             max="20000"
+                                            step="1"
                                             hide-details="auto"
                                         />
                                     </v-col>
                                     <v-col cols="3">
-                                        <v-text-field
+                                        <length-field
                                             v-model="tabs.atmosphere.cloud.altitude"
-                                            type="number"
-                                            reverse
-                                            prefix="m"
-                                            hide-details="auto"
+                                            :show-unit-options="false"
+                                            :display-units="LENGTH_UNITS.METERS"
                                         />
                                     </v-col>
                                 </v-row>
@@ -97,12 +96,10 @@
                                         />
                                     </v-col>
                                     <v-col cols="3">
-                                        <v-text-field
+                                        <length-field
                                             v-model="tabs.atmosphere.cloud.height"
-                                            type="number"
-                                            reverse
-                                            prefix="m"
-                                            hide-details="auto"
+                                            :show-unit-options="false"
+                                            :display-units="LENGTH_UNITS.METERS"
                                         />
                                     </v-col>
                                 </v-row>
@@ -174,12 +171,10 @@
                                         />
                                     </v-col>
                                     <v-col cols="3">
-                                        <v-text-field
+                                        <length-field
                                             v-model="tabs.atmosphere.fog.height"
-                                            type="number"
-                                            reverse
-                                            prefix="m"
-                                            hide-details="auto"
+                                            :show-unit-options="false"
+                                            :display-units="LENGTH_UNITS.METERS"
                                         />
                                     </v-col>
                                 </v-row>
@@ -287,17 +282,15 @@
                     >
                         <v-card flat>
                             <speed-field
-                                value="theSpeed"
+                                v-model="theSpeed"
                                 show-unit-options
                                 :display-units="SPEED_UNITS.KILOMETERS_PER_HOUR"
-                                @input="updateTheSpeed"
                             />
                             {{ theSpeed.toFixed(3) }}{{ SPEED_UNITS.METERS_PER_SECOND.abbr }}
                             <temperature-field
-                                value="theTemp"
+                                v-model="theTemp"
                                 show-unit-options
                                 :display-units="TEMPERATURE_UNITS.FAHRENHEIT"
-                                @input="updateTheTemp"
                             />
                             {{ theTemp.toFixed(3) }}{{ TEMPERATURE_UNITS.CELSIUS.abbr }}
                         </v-card>
@@ -311,11 +304,12 @@
 <script>
 import TitanWindow from '@/components/common/titan/TitanWindow.vue';
 import TitanWindowContent from '@/components/common/titan/TitanWindowContent.vue';
-import SpeedField from '@/components/titan/core/field/SpeedField2.vue';
+import SpeedField from '@/components/titan/core/field/SpeedField.vue';
 import TemperatureField from '@/components/titan/core/field/TemperatureField.vue';
+import LengthField from '@/components/titan/core/field/LengthField.vue';
 import PercentField from '@/components/titan/core/field/PercentField.vue';
 
-import { TEMPERATURE_UNITS, SPEED_UNITS } from '@/assets/js/utils/convert-utils.js';
+import { TEMPERATURE_UNITS, SPEED_UNITS, LENGTH_UNITS } from '@/assets/js/utils/convert-utils.js';
 
 const PRECIPITATION_TYPES = [
     {text:'worldSettings.atmosphere.None', value:'none'},
@@ -328,7 +322,7 @@ export default {
     components:
     {
         TitanWindow, TitanWindowContent,
-        SpeedField, TemperatureField, PercentField,
+        SpeedField, TemperatureField, LengthField, PercentField,
     },
     data()
     {
@@ -374,6 +368,7 @@ export default {
             },
             SPEED_UNITS,
             TEMPERATURE_UNITS,
+            LENGTH_UNITS,
         };
     },
     computed:
