@@ -89,12 +89,10 @@ export default {
     transform: translate(-50%, -50%);
     h1{
         font-size:800%;
-        line-height:50%;
         text-align: center;
     }
     h2{
         font-size:200%;
-        line-height:50%;
         text-align: center;
     }
     p{
