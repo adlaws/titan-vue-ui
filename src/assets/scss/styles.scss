@@ -438,6 +438,7 @@ pre, code, .monospace
     &.active
     {
         @include box-shadow($drop-shadow-large);
+        // box-shadow: 0 0 4px #FFFFFF, 0 0 10px black;
     }
 
     &.fullscreen
