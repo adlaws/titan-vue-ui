@@ -103,6 +103,12 @@ export default {
 
             return isValid;
         },
+        siValue()
+        {
+            if(!this.isValid)
+                return 0;
+            return CONVERTER(this.currentValue, this.currentUnits.id, SI_UNITS.id);
+        },
         validationRegex()
         {
             // choose validation regex based on allowed range of values
@@ -125,21 +131,20 @@ export default {
             let siFloat = parseFloat(siValue);
             siFloat = isNaN(siFloat) ? 0 : siFloat;
             const unitsValue = CONVERTER(siFloat, SI_UNITS.id, this.currentUnits.id);
-            this.currentValue = parseFloat(unitsValue.toFixed(5));
+            this.currentValue = parseFloat(unitsValue);
         },
         currentUnits(newUnits, oldUnits)
         {
-            const newUnitsValue = CONVERTER(parseFloat(this.currentValue), oldUnits.id, newUnits.id).toFixed(5);
+            const newUnitsValue = CONVERTER(parseFloat(this.currentValue), oldUnits.id, newUnits.id);
             // this strips insignificant trailing zeros
             this.currentValue = parseFloat(newUnitsValue);
         },
-        currentValue(newValue)
+        currentValue()
         {
             // emit new value as a float in SI Units if valid
             if(this.isValid)
             {
-                const siValue = CONVERTER(newValue, this.currentUnits.id, SI_UNITS.id);
-                this.$emit('input', siValue);
+                this.$emit('input', this.siValue);
             }
         }
     },

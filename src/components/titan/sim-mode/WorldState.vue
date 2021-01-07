@@ -286,13 +286,13 @@
                                 show-unit-options
                                 :display-units="SPEED_UNITS.KILOMETERS_PER_HOUR"
                             />
-                            {{ theSpeed.toFixed(3) }}{{ SPEED_UNITS.METERS_PER_SECOND.abbr }}
+                            {{ theSpeed }}{{ SPEED_UNITS.METERS_PER_SECOND.abbr }}
                             <temperature-field
                                 v-model="theTemp"
                                 show-unit-options
                                 :display-units="TEMPERATURE_UNITS.FAHRENHEIT"
                             />
-                            {{ theTemp.toFixed(3) }}{{ TEMPERATURE_UNITS.CELSIUS.abbr }}
+                            {{ theTemp }}{{ TEMPERATURE_UNITS.CELSIUS.abbr }}
                         </v-card>
                     </v-tab-item>
                 </v-tabs-items>
@@ -382,16 +382,5 @@ export default {
             });
         }
     },
-    methods:
-    {
-        updateTheSpeed(speed)
-        {
-            this.theSpeed = speed;
-        },
-        updateTheTemp(temp)
-        {
-            this.theTemp = temp;
-        },
-    }
 };
 </script>
