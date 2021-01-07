@@ -36,6 +36,20 @@ module.exports = {
     // eslint-disable-next-line no-unused-vars
     chainWebpack: config =>
     {
+        // Prevent multiple SVG files of the same name (but in different paths) exporting
+        // on top of each other by including the path as well as the filename in the built
+        // files. Necessary for `flag-icon-css` package to prevent warnings.
+        //     ref: https://cli.vuejs.org/guide/webpack.html#modifying-options-of-a-loader
+        config.module
+            .rule('svg')
+            .test(/\.svg$/)
+            .use('file-loader')
+            // eslint-disable-next-line no-unused-vars
+            .tap(options =>
+            {
+                return { name: "[path][name].[ext]" };
+            });
+
         // WebPack shim to bring in TitanEventHandlers / TitanEvent globals
         // Ref: https://webpack.js.org/guides/shimming/
         //      https://jamesscheller.com/tag/nuxt-js/
