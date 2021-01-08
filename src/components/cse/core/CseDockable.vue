@@ -16,6 +16,7 @@
             ref="handle"
             v-ripple
             class="dockable-handle clickable"
+            :class="{draggable: draggable}"
             @click="collapsed=!collapsed"
         >
             <v-icon
@@ -29,11 +30,22 @@
             <v-icon v-if="icon">
                 {{ icon }}
             </v-icon>
+            <v-spacer v-if="draggable" />
+            <v-icon
+                v-if="draggable"
+                class="drag-handle"
+                @mousedown="handleDragStart"
+                @click.stop
+            >
+                mdi-dots-{{ isDockEW?'vertical':'horizontal' }}
+            </v-icon>
         </div>
     </div>
 </template>
 
 <script>
+import MathUtils from '@/assets/js/utils/math-utils.js';
+
 export default {
     name:'',
     props:{
@@ -54,39 +66,64 @@ export default {
         },
         width:
         {
-            type: [String, Number,],
+            type: Number,
             default: 200,
         },
         height:
         {
-            type: [String, Number,],
+            type: Number,
             default: 200,
         },
         offset:
         {
-            type: [String, Number,],
+            type: Number,
             default: 200,
+        },
+        draggable:
+        {
+            type: Boolean,
+            default: false,
+        },
+        ignoreTaskbar:
+        {
+            type: Boolean,
+            default: false,
         },
     },
     data()
     {
         return {
             collapsed: true,
+            currentOffset: 0,
+            dragStart: { x: 0, y: 0 },
         };
     },
     computed:
     {
-        _width() { return this._cssSize(this.width); },
-        _height() { return this._cssSize(this.height); },
-        _offset() { return this._cssSize(this.offset); },
-        _dock() { return ''+this.dock.toLowerCase(); },
+        desktopBounds() { return this.ignoreTaskbar ? this.$store.getters.screenBounds : this.$store.getters.desktopBounds; },
+        bounds()
+        {
+            let width = this.width;
+            let height = this.height;
+            if(this.collapsed)
+            {
+                const bounds = this.handle.getBoundingClientRect();
+                width = bounds.width;
+                height = bounds.height;
+            }
+            return {width, height};
+        },
+        minXoffset() { return this.desktopBounds.left; },
+        maxYoffset() { return this.desktopBounds.bottom - (this.collapsed ? this.bounds.height : this.height); },
+        minYoffset() { return this.desktopBounds.top; },
+        maxXoffset() { return this.desktopBounds.right - (this.collapsed ? this.bounds.width : this.width); },
+        _dock() { return '' + this.dock.toLowerCase().charAt(0); },
         isDockEast() { return this._dock === 'e'; },
         isDockWest() { return this._dock === 'w'; },
         isDockNorth() { return this._dock === 'n'; },
         isDockSouth() { return this._dock === 's'; },
         isDockEW() { return this.isDockEast || this.isDockWest; },
         isDockNS() { return !this.isDockEW; },
-        desktopBounds() { return this.ignoreTaskbar ? this.$store.getters.screenBounds : this.$store.getters.desktopBounds; },
         chevronDirection()
         {
             if(this.isDockEast)
@@ -102,16 +139,20 @@ export default {
     watch:
     {
         dock() { this.updateStyles(); },
+        collapsed() { this.updateStyles(); },
+        offset(newOffset) { this.currentOffset = newOffset; this.updateStyles(); },
+        currentOffset() { this.updateStyles(); },
         desktopBounds() { this.updateStyles(); },
-        collapsed() { this.$nextTick(this.updateStyles); },
-        _width() { this.updateStyles(); },
-        _height() { this.updateStyles(); },
-        _offset() { this.updateStyles(); },
+        width() { this.updateStyles(); },
+        height() { this.updateStyles(); },
     },
     mounted()
     {
         this.container = this.$refs.container;
         this.handle = this.$refs.handle;
+
+        this.currentOffset = this.offset;
+
         this.updateStyles();
     },
     methods:
@@ -123,49 +164,69 @@ export default {
 
             const style = this.container.style;
 
-            style.height = this.collapsed ? 'auto' : this._height;
-            style.width = this.collapsed ? 'auto' : this._width;
-            style.maxWidth = this._width;
+            style.height = this.collapsed ? 'auto' : this.height + 'px';
+            style.width = this.collapsed ? 'auto' : this.width + 'px';
+            style.maxWidth = this.width + 'px';
 
             if(this.isDockEW)
             {
-                style.top = this._offset;
+                // constrain so it fits with screen bounds
+                style.top = MathUtils.clamp(this.currentOffset, this.minYoffset, this.maxYoffset) + 'px';
 
-                if(this.isDockWest)
+                let xPos = 0;
+                if(this.isDockEast)
                 {
-                    style.left = '0px';
+                    xPos = this.desktopBounds.right - (this.collapsed ? this.bounds.width : this.width);
                 }
-                else
-                {
-                    const handleBounds = this.handle.getBoundingClientRect();
-                    const width = this.collapsed ? handleBounds.width : this.width;
-                    let xPos = this.desktopBounds.right - width;
-                    style.left = xPos + 'px';
-                }
+                style.left = xPos + 'px';
             }
-            else
+            else // if(this.isDockNS)
             {
-                style.left = this._offset;
+                // constrain so it fits with screen bounds
+                style.left = MathUtils.clamp(this.currentOffset, this.minXoffset, this.maxXoffset) + 'px';
 
-                if(this.isDockNorth)
+                let yPos = 0;
+                if(this.isDockSouth)
                 {
-                    style.top = '0px';
+                    yPos = this.desktopBounds.bottom - (this.collapsed ? this.bounds.height : this.height);
                 }
-                else
-                {
-                    const handleBounds = this.handle.getBoundingClientRect();
-                    const height = this.collapsed ? handleBounds.height : this.height;
-                    let yPos = this.desktopBounds.bottom - height;
-                    style.top = yPos + 'px';
-                }
+                style.top = yPos + 'px';
             }
         },
-        _cssSize(size, defaultUnit='px')
+        handleDragStart(evt)
         {
-            if(/^.*[a-zA-Z]+/.test(size))
-                return size;
-            return size + defaultUnit;
-        }
+            if(!this.draggable)
+                return;
+
+            evt.preventDefault();
+
+            this.dragStart.x = evt.clientX;
+            this.dragStart.y = evt.clientY;
+            document.onmousemove = this.handleDrag;
+            document.onmouseup = this.handleDragEnd;
+        },
+        handleDrag(evt)
+        {
+            evt.preventDefault();
+
+            const dragX = MathUtils.clamp(evt.clientX, this.desktopBounds.left, this.desktopBounds.right);
+            const dragY = MathUtils.clamp(evt.clientY, this.desktopBounds.top, this.desktopBounds.bottom);
+            const dragDeltaX = dragX - this.dragStart.x;
+            const dragDeltaY = dragY - this.dragStart.y;
+            this.dragStart.x = dragX;
+            this.dragStart.y = dragY;
+
+            if(this.isDockEW)
+                this.currentOffset = this.currentOffset += dragDeltaY;
+            else // if(this.isDockNS)
+                this.currentOffset = this.currentOffset += dragDeltaX;
+        },
+        handleDragEnd(/*evt*/)
+        {
+            this.isDragging = false;
+            document.onmouseup = null;
+            document.onmousemove = null;
+        },
     }
 };
 </script>

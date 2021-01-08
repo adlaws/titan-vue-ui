@@ -764,7 +764,7 @@ pre, code, .monospace
         {
             padding: 8px;
         }
-}
+    }
 
     &.dock-e, &.dock-w
     {
@@ -790,8 +790,15 @@ pre, code, .monospace
                 text-orientation: upright;
                 letter-spacing: -0.15em; // decrease(vertical) spacing between letters
             }
+
+            .drag-handle
+            {
+                margin-top: 8px;
+                cursor: ns-resize;
+            }
         }
     }
+
     &.dock-n, &.dock-s
     {
         .dockable-handle
@@ -809,6 +816,12 @@ pre, code, .monospace
             {
                 padding-left: 4px;
                 text-align: left;
+            }
+
+            .drag-handle
+            {
+                margin-left: 8px;
+                cursor: ew-resize;
             }
         }
     }

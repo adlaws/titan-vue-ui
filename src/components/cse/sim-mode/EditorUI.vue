@@ -15,7 +15,11 @@
             :width="300"
             :height="300"
             :offset="100"
+            dock="w"
+            title="WEST DOCK"
+            icon="mdi-ferry"
         />
+
         <cse-dockable
             :width="300"
             :height="400"
