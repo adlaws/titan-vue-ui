@@ -3,19 +3,20 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <linear-compass v-if="!isAnyWindowFullscreen" />
+        <!-- linear-compass v-if="!isAnyWindowFullscreen" />
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
         <entity-selector />
         <map-overlay />
         <drawing-tools />
-        <world-state />
+        <world-state / -->
 
         <cse-dockable
             :width="300"
             :height="300"
             :offset="100"
             dock="w"
+            draggable
             title="WEST DOCK"
             icon="mdi-ferry"
         />
@@ -36,6 +37,7 @@
             :height="500"
             :offset="400"
             dock="n"
+            draggable
             title="NORTH DOCK"
             icon="mdi-ferry"
         >
