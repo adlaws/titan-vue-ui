@@ -11,6 +11,44 @@
         <drawing-tools />
         <world-state />
 
+        <cse-dockable
+            :width="300"
+            :height="300"
+            :offset="100"
+        />
+        <cse-dockable
+            :width="300"
+            :height="400"
+            :offset="100"
+            dock="e"
+            title="EAST DOCK"
+            icon="mdi-ferry"
+        >
+            Welcome to the East Dock.
+        </cse-dockable>
+
+        <cse-dockable
+            :width="500"
+            :height="500"
+            :offset="400"
+            dock="n"
+            title="NORTH DOCK"
+            icon="mdi-ferry"
+        >
+            Welcome to the North Dock.
+        </cse-dockable>
+
+        <cse-dockable
+            :width="500"
+            :height="500"
+            :offset="400"
+            dock="s"
+            title="SOUTH DOCK"
+            icon="mdi-ferry"
+        >
+            Welcome to the South Dock.
+        </cse-dockable>
+
         <div
             v-for="(pluginWindow, idx) in pluginWindows"
             :key="`pluginWindow${idx}`"
@@ -61,6 +99,7 @@ import WorldState from '@/components/cse/sim-mode/WorldState.vue';
 import CseIcon from '@/components/cse/core/CseIcon.vue';
 import CseContextMenu from '@/components/cse/core/CseContextMenu.vue';
 import CseRadialMenu from '@/components/cse/core/CseRadialMenu.vue';
+import CseDockable from '@/components/cse/core/CseDockable.vue';
 
 const HANDLED_KEY_EVENTS = new Set([
     'keyup'
@@ -77,7 +116,7 @@ export default {
         LinearCompass, DropdownToolbar,
         EntitySelector, MapOverlay, DrawingTools, WorldState,
         CseIcon,
-        CseContextMenu, CseRadialMenu,
+        CseContextMenu, CseRadialMenu, CseDockable,
     },
     data()
     {

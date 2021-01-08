@@ -192,6 +192,14 @@ form.compact
     }
 }
 // ------------------------------------------------------------------------------------------------
+.clickable
+{
+    cursor: pointer;
+    &:disabled
+    {
+        cursor: not-allowed;
+    }
+}
 
 pre, code, .monospace
 {
@@ -704,6 +712,103 @@ pre, code, .monospace
             &.disabled
             {
                 cursor: not-allowed;
+            }
+        }
+    }
+}
+
+.cse-desktop--dockable
+{
+    $handle-size: 32px;
+
+    z-index: 1024;
+
+    margin: 0;
+    padding: 0;
+
+    min-width: $handle-size;
+
+    color: $window-bg-active;
+    background-color: $window-fg-active;
+    @include box-shadow($drop-shadow-medium);
+
+    position: absolute;
+
+    display: flex;
+    &.dock-w { flex-direction: row; }
+    &.dock-e { flex-direction: row-reverse; }
+    &.dock-n { flex-direction: column; }
+    &.dock-s { flex-direction: column-reverse; }
+
+    .dockable-content
+    {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    .dockable-handle
+    {
+        background-color: $menu-bg-active;
+        color: $menu-fg-active;
+
+        display: flex;
+        align-content: flex-start;
+        align-items: center;
+
+        .dockable-trigger
+        {
+            align-items: flex-start;
+            margin: 4px;
+        }
+        .title-text
+        {
+            padding: 8px;
+        }
+}
+
+    &.dock-e, &.dock-w
+    {
+        .dockable-handle
+        {
+            flex-direction: column;
+
+            padding-bottom: 4px;
+
+            min-width: $handle-size;
+            max-width: $handle-size;
+            width: $handle-size;
+            height: 100%;
+
+            .title-text
+            {
+                padding-top: 4px;
+                text-align: center;
+                line-height: 100%;
+
+                // make the text vertical
+                writing-mode: vertical-lr;
+                text-orientation: upright;
+                letter-spacing: -0.15em; // decrease(vertical) spacing between letters
+            }
+        }
+    }
+    &.dock-n, &.dock-s
+    {
+        .dockable-handle
+        {
+            flex-direction: row;
+
+            padding-right: 4px;
+
+            min-height: $handle-size;
+            max-height: $handle-size;
+            height: $handle-size;
+            width: 100%;
+
+            .title-text
+            {
+                padding-left: 4px;
+                text-align: left;
             }
         }
     }

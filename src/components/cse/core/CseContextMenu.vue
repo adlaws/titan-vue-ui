@@ -259,7 +259,6 @@ export default {
             this.submenu.x = bounds.width;
             this.submenu.y = container.offsetTop;
 
-
             this.submenu.idx = idx;
         },
         _handleItemClicked(item)
