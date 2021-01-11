@@ -728,8 +728,6 @@ pre, code, .monospace
 
     min-width: $handle-size;
 
-    color: $window-bg-active;
-    background-color: $window-fg-active;
     @include box-shadow($drop-shadow-medium);
 
     position: absolute;
@@ -744,6 +742,9 @@ pre, code, .monospace
     {
         flex-grow: 1;
         overflow-y: auto;
+
+        color: $window-bg-active;
+        background-color: $window-fg-active;
     }
 
     .dockable-handle
