@@ -14,45 +14,24 @@
         <cse-dockable
             :width="300"
             :height="300"
-            :offset="100"
+            offset="end"
             dock="w"
             draggable
-            title="WEST DOCK"
-            icon="mdi-ferry"
-        />
+            title="OBJECTS"
+            icon="mdi-cube"
+        >
+            Entity list
+        </cse-dockable>
 
         <cse-dockable
-            :width="300"
+            :width="500"
             :height="400"
-            :offset="100"
+            offset="end"
             dock="e"
-            title="EAST DOCK"
-            icon="mdi-ferry"
+            title="ACTIVE"
+            icon="mdi-cube-send"
         >
-            Welcome to the East Dock.
-        </cse-dockable>
-
-        <cse-dockable
-            :width="500"
-            :height="500"
-            :offset="400"
-            dock="n"
-            draggable
-            title="NORTH DOCK"
-            icon="mdi-ferry"
-        >
-            Welcome to the North Dock.
-        </cse-dockable>
-
-        <cse-dockable
-            :width="500"
-            :height="500"
-            :offset="400"
-            dock="s"
-            title="SOUTH DOCK"
-            icon="mdi-ferry"
-        >
-            Welcome to the South Dock.
+            Active items
         </cse-dockable>
 
         <div
