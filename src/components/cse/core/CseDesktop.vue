@@ -1,6 +1,7 @@
 <template>
     <div
         v-show="desktopVisible"
+        ref="container"
         class="cse-desktop pass-through"
     >
         <transition
@@ -81,6 +82,14 @@ export default {
     mounted()
     {
         this.$store.commit(TITAN_MUTATION.ENTER_UI_MODE, TITAN_UI_MODE.Desktop);
+
+        if(!$isInOuterra)
+        {
+            // if we are not in Outerra, amek the backrgound something other
+            // than white so we can see elements that are rendered in white
+            // to contrast with the renderde environment in Outerra
+            this.$refs.container.style.background = 'linear-gradient(to bottom, #7ccaf9 0%,#79bdf2 10%,#71aae2 25%,#74aee8 37%,#77b3ef 48%,#559646 52%,#7ea06b 83%,#a8987e 100%)';
+        }
 
         // bind event handlers
         // NOTE: binding event handlers to `window` or `document` both

@@ -3,13 +3,13 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <!-- linear-compass v-if="!isAnyWindowFullscreen" />
+        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
         <entity-selector />
         <map-overlay />
         <drawing-tools />
-        <world-state / -->
+        <world-state />
 
         <cse-dockable
             :width="300"
@@ -29,7 +29,7 @@
             offset="end"
             dock="e"
             title="ACTIVE"
-            icon="mdi-cube-send"
+            icon="mdi-lightning-bolt"
         >
             Active items
         </cse-dockable>
@@ -75,7 +75,7 @@ import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
-import LinearCompass from '@/components/cse/core/display/LinearCompass.vue';
+import LinearCompass2 from '@/components/cse/core/display/LinearCompass2.vue';
 import EntitySelector from '@/components/cse/sim-mode/EntitySelector.vue';
 import DropdownToolbar from '@/components/cse/sim-mode/DropdownToolbar.vue';
 import MapOverlay from '@/components/cse/sim-mode/MapOverlay.vue';
@@ -98,7 +98,7 @@ export default {
     name: 'editor-ui',
     components:
     {
-        LinearCompass, DropdownToolbar,
+        LinearCompass2, DropdownToolbar,
         EntitySelector, MapOverlay, DrawingTools, WorldState,
         CseIcon,
         CseContextMenu, CseRadialMenu, CseDockable,

@@ -1,0 +1,3233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="compass2.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg1621"
+   version="1.1"
+   viewBox="0 0 450 40"
+   height="40"
+   width="450">
+  <defs
+     id="defs1615" />
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-11"
+     inkscape:window-x="2869"
+     inkscape:window-height="2080"
+     inkscape:window-width="3840"
+     inkscape:bbox-nodes="true"
+     inkscape:bbox-paths="false"
+     inkscape:snap-bbox="true"
+     inkscape:snap-nodes="false"
+     inkscape:snap-grids="true"
+     viewbox-height="40"
+     units="px"
+     showgrid="true"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     inkscape:cy="3.113384"
+     inkscape:cx="270.60383"
+     inkscape:zoom="5.6"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base">
+    <inkscape:grid
+       id="grid2184"
+       type="xygrid" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata1618">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <rect
+       y="11"
+       x="223"
+       height="18"
+       width="4"
+       id="rect2186"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text2194"
+       y="39.270508"
+       x="225.00488"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'"
+         y="39.270508"
+         x="225.00488"
+         id="tspan2192"
+         sodipodi:role="line">N</tspan></text>
+    <rect
+       y="14"
+       x="299"
+       height="12"
+       width="2"
+       id="rect2208"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="299.68018"
+       y="39.270508"
+       id="text2226"><tspan
+         sodipodi:role="line"
+         id="tspan2224"
+         x="299.68018"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:conso;-inkscape-font-specification:conso">15</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect2240"
+       width="2"
+       height="8"
+       x="249"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="230"
+       id="path2500"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle2502"
+       cx="235"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="240"
+       id="circle2504"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle2506"
+       cx="245"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="274"
+       height="8"
+       width="2"
+       id="rect3025"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3027"
+       cx="255"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="260"
+       id="circle3029"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3031"
+       cx="265"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="270"
+       id="circle3033"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="280"
+       id="circle3037"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3039"
+       cx="285"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="290"
+       id="circle3041"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3043"
+       cx="295"
+       cy="20"
+       r="1" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3045"
+       width="2"
+       height="12"
+       x="374"
+       y="14" />
+    <rect
+       y="16"
+       x="324"
+       height="8"
+       width="2"
+       id="rect3047"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3049"
+       cx="305"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="310"
+       id="circle3051"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3053"
+       cx="315"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="320"
+       id="circle3055"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3057"
+       width="2"
+       height="8"
+       x="349"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="330"
+       id="circle3059"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3061"
+       cx="335"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="340"
+       id="circle3063"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3065"
+       cx="345"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3067"
+       cx="355"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="360"
+       id="circle3069"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3071"
+       cx="365"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="370"
+       id="circle3073"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text3077"
+       y="39.270508"
+       x="374.68018"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         id="tspan3079"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="374.68018"
+         sodipodi:role="line">30</tspan></text>
+    <rect
+       y="12.000001"
+       x="449"
+       height="15.999999"
+       width="2"
+       id="rect3083"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3085"
+       width="2"
+       height="8"
+       x="399"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="380"
+       id="circle3087"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3089"
+       cx="385"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="390"
+       id="circle3091"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3093"
+       cx="395"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="424"
+       height="8"
+       width="2"
+       id="rect3095"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3097"
+       cx="405"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="410"
+       id="circle3099"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3101"
+       cx="415"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="420"
+       id="circle3103"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="430"
+       id="circle3105"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3107"
+       cx="435"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="440"
+       id="circle3109"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3111"
+       cx="445"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="450.00488"
+       y="39.270508"
+       id="text3115"><tspan
+         sodipodi:role="line"
+         id="tspan3113"
+         x="450.00488"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'">NE</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3117"
+       width="2"
+       height="12"
+       x="524"
+       y="14" />
+    <text
+       id="text3121"
+       y="39.270508"
+       x="524.68018"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="524.68018"
+         id="tspan3119"
+         sodipodi:role="line">60</tspan></text>
+    <rect
+       y="16"
+       x="474"
+       height="8"
+       width="2"
+       id="rect3123"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3125"
+       cx="455"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="460"
+       id="circle3127"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3129"
+       cx="465"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="470"
+       id="circle3131"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3133"
+       width="2"
+       height="8"
+       x="499"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="480"
+       id="circle3135"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3137"
+       cx="485"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="490"
+       id="circle3139"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3141"
+       cx="495"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3143"
+       cx="505"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="510"
+       id="circle3145"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3147"
+       cx="515"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="520"
+       id="circle3149"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       y="14"
+       x="599"
+       height="12"
+       width="2"
+       id="rect3151"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3153"
+       width="2"
+       height="8"
+       x="549"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="530"
+       id="circle3155"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3157"
+       cx="535"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="540"
+       id="circle3159"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3161"
+       cx="545"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="574"
+       height="8"
+       width="2"
+       id="rect3163"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3165"
+       cx="555"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="560"
+       id="circle3167"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3169"
+       cx="565"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="570"
+       id="circle3171"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="580"
+       id="circle3173"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3175"
+       cx="585"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="590"
+       id="circle3177"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3179"
+       cx="595"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="599.68018"
+       y="39.270508"
+       id="text3183"><tspan
+         sodipodi:role="line"
+         x="599.68018"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         id="tspan3181">75</tspan></text>
+    <rect
+       y="16"
+       x="624"
+       height="8"
+       width="2"
+       id="rect3187"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3189"
+       cx="605"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="610"
+       id="circle3191"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3193"
+       cx="615"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="620"
+       id="circle3195"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3197"
+       width="2"
+       height="8"
+       x="649"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="630"
+       id="circle3199"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3201"
+       cx="635"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="640"
+       id="circle3203"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3205"
+       cx="645"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3207"
+       cx="655"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="660"
+       id="circle3209"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3211"
+       cx="665"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="670"
+       id="circle3213"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text3217"
+       y="39.270508"
+       x="675.00488"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'"
+         y="39.270508"
+         x="675.00488"
+         id="tspan3215"
+         sodipodi:role="line">E</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3219"
+       width="4"
+       height="18"
+       x="673"
+       y="11" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3221"
+       width="2"
+       height="12"
+       x="749"
+       y="14" />
+    <text
+       id="text3225"
+       y="39.270508"
+       x="749.68018"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="749.68018"
+         id="tspan3223"
+         sodipodi:role="line">105</tspan></text>
+    <rect
+       y="16"
+       x="699"
+       height="8"
+       width="2"
+       id="rect3227"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3229"
+       cx="680"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="685"
+       id="circle3231"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3233"
+       cx="690"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="695"
+       id="circle3235"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3237"
+       width="2"
+       height="8"
+       x="724"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="705"
+       id="circle3239"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3241"
+       cx="710"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="715"
+       id="circle3243"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3245"
+       cx="720"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3247"
+       cx="730"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="735"
+       id="circle3249"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3251"
+       cx="740"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="745"
+       id="circle3253"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       y="14"
+       x="824"
+       height="12"
+       width="2"
+       id="rect3255"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3257"
+       width="2"
+       height="8"
+       x="774"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="755"
+       id="circle3259"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3261"
+       cx="760"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="765"
+       id="circle3263"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3265"
+       cx="770"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="799"
+       height="8"
+       width="2"
+       id="rect3267"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3269"
+       cx="780"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="785"
+       id="circle3271"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3273"
+       cx="790"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="795"
+       id="circle3275"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="805"
+       id="circle3277"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3279"
+       cx="810"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="815"
+       id="circle3281"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3283"
+       cx="820"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="824.68018"
+       y="39.270508"
+       id="text3287"><tspan
+         sodipodi:role="line"
+         x="824.68018"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         id="tspan3285">120</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3289"
+       width="2"
+       height="15.999999"
+       x="899"
+       y="12.000001" />
+    <rect
+       y="16"
+       x="849"
+       height="8"
+       width="2"
+       id="rect3291"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3293"
+       cx="830"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="835"
+       id="circle3295"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3297"
+       cx="840"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="845"
+       id="circle3299"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3301"
+       width="2"
+       height="8"
+       x="874"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="855"
+       id="circle3303"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3305"
+       cx="860"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="865"
+       id="circle3307"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3309"
+       cx="870"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3311"
+       cx="880"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="885"
+       id="circle3313"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3315"
+       cx="890"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="895"
+       id="circle3317"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text3321"
+       y="39.270508"
+       x="900.00488"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'"
+         y="39.270508"
+         x="900.00488"
+         id="tspan3319"
+         sodipodi:role="line">SE</tspan></text>
+    <rect
+       y="14"
+       x="974"
+       height="12"
+       width="2"
+       id="rect3323"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="974.68018"
+       y="39.270508"
+       id="text3327"><tspan
+         sodipodi:role="line"
+         id="tspan3325"
+         x="974.68018"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana">150</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3329"
+       width="2"
+       height="8"
+       x="924"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="905"
+       id="circle3331"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3333"
+       cx="910"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="915"
+       id="circle3335"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3337"
+       cx="920"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="949"
+       height="8"
+       width="2"
+       id="rect3339"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3341"
+       cx="930"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="935"
+       id="circle3343"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3345"
+       cx="940"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="945"
+       id="circle3347"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="955"
+       id="circle3349"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3351"
+       cx="960"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="965"
+       id="circle3353"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3355"
+       cx="970"
+       cy="20"
+       r="1" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3357"
+       width="2"
+       height="12"
+       x="1049"
+       y="14" />
+    <rect
+       y="16"
+       x="999"
+       height="8"
+       width="2"
+       id="rect3359"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3361"
+       cx="980"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="985"
+       id="circle3363"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3365"
+       cx="990"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="995"
+       id="circle3367"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3369"
+       width="2"
+       height="8"
+       x="1024"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1005"
+       id="circle3371"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3373"
+       cx="1010"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1015"
+       id="circle3375"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3377"
+       cx="1020"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3379"
+       cx="1030"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1035"
+       id="circle3381"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3383"
+       cx="1040"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1045"
+       id="circle3385"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text3389"
+       y="39.270508"
+       x="1049.6802"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         id="tspan3387"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="1049.6802"
+         sodipodi:role="line">165</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3391"
+       width="2"
+       height="8"
+       x="1074"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1055"
+       id="circle3393"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3395"
+       cx="1060"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1065"
+       id="circle3397"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3399"
+       cx="1070"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="1099"
+       height="8"
+       width="2"
+       id="rect3401"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3403"
+       cx="1080"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1085"
+       id="circle3405"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3407"
+       cx="1090"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1095"
+       id="circle3409"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1105"
+       id="circle3411"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3413"
+       cx="1110"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1115"
+       id="circle3415"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3417"
+       cx="1120"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="1125.0049"
+       y="39.270508"
+       id="text3421"><tspan
+         sodipodi:role="line"
+         id="tspan3419"
+         x="1125.0049"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'">S</tspan></text>
+    <rect
+       y="11"
+       x="1123"
+       height="18"
+       width="4"
+       id="rect3423"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       y="14"
+       x="1199"
+       height="12"
+       width="2"
+       id="rect3425"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="1199.6802"
+       y="39.270508"
+       id="text3429"><tspan
+         sodipodi:role="line"
+         id="tspan3427"
+         x="1199.6802"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana">195</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3431"
+       width="2"
+       height="8"
+       x="1149"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1130"
+       id="circle3433"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3435"
+       cx="1135"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1140"
+       id="circle3437"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3439"
+       cx="1145"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="1174"
+       height="8"
+       width="2"
+       id="rect3441"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3443"
+       cx="1155"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1160"
+       id="circle3445"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3447"
+       cx="1165"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1170"
+       id="circle3449"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1180"
+       id="circle3451"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3453"
+       cx="1185"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1190"
+       id="circle3455"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3457"
+       cx="1195"
+       cy="20"
+       r="1" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3459"
+       width="2"
+       height="12"
+       x="1274"
+       y="14" />
+    <rect
+       y="16"
+       x="1224"
+       height="8"
+       width="2"
+       id="rect3461"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3463"
+       cx="1205"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1210"
+       id="circle3465"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3467"
+       cx="1215"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1220"
+       id="circle3469"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3471"
+       width="2"
+       height="8"
+       x="1249"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1230"
+       id="circle3473"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3475"
+       cx="1235"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1240"
+       id="circle3477"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3479"
+       cx="1245"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3481"
+       cx="1255"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1260"
+       id="circle3483"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3485"
+       cx="1265"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1270"
+       id="circle3487"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text3491"
+       y="39.270508"
+       x="1274.6802"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         id="tspan3489"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="1274.6802"
+         sodipodi:role="line">210</tspan></text>
+    <rect
+       y="12.000001"
+       x="1349"
+       height="15.999999"
+       width="2"
+       id="rect3493"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3495"
+       width="2"
+       height="8"
+       x="1299"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1280"
+       id="circle3497"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3499"
+       cx="1285"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1290"
+       id="circle3501"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3503"
+       cx="1295"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="1324"
+       height="8"
+       width="2"
+       id="rect3505"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3507"
+       cx="1305"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1310"
+       id="circle3509"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3511"
+       cx="1315"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1320"
+       id="circle3513"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1330"
+       id="circle3515"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3517"
+       cx="1335"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1340"
+       id="circle3519"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3521"
+       cx="1345"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="1350.0049"
+       y="39.270508"
+       id="text3525"><tspan
+         sodipodi:role="line"
+         id="tspan3523"
+         x="1350.0049"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'">SW</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3527"
+       width="2"
+       height="12"
+       x="1424"
+       y="14" />
+    <text
+       id="text3531"
+       y="39.270508"
+       x="1424.6802"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="1424.6802"
+         id="tspan3529"
+         sodipodi:role="line">240</tspan></text>
+    <rect
+       y="16"
+       x="1374"
+       height="8"
+       width="2"
+       id="rect3533"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3535"
+       cx="1355"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1360"
+       id="circle3537"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3539"
+       cx="1365"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1370"
+       id="circle3541"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3543"
+       width="2"
+       height="8"
+       x="1399"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1380"
+       id="circle3545"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3547"
+       cx="1385"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1390"
+       id="circle3549"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3551"
+       cx="1395"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3553"
+       cx="1405"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1410"
+       id="circle3555"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3557"
+       cx="1415"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1420"
+       id="circle3559"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       y="14"
+       x="1499"
+       height="12"
+       width="2"
+       id="rect3561"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3563"
+       width="2"
+       height="8"
+       x="1449"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1430"
+       id="circle3565"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3567"
+       cx="1435"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1440"
+       id="circle3569"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3571"
+       cx="1445"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="1474"
+       height="8"
+       width="2"
+       id="rect3573"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3575"
+       cx="1455"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1460"
+       id="circle3577"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3579"
+       cx="1465"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1470"
+       id="circle3581"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1480"
+       id="circle3583"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3585"
+       cx="1485"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1490"
+       id="circle3587"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3589"
+       cx="1495"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="1499.6802"
+       y="39.270508"
+       id="text3593"><tspan
+         sodipodi:role="line"
+         x="1499.6802"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         id="tspan3591">255</tspan></text>
+    <rect
+       y="16"
+       x="1524"
+       height="8"
+       width="2"
+       id="rect3595"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3597"
+       cx="1505"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1510"
+       id="circle3599"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3601"
+       cx="1515"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1520"
+       id="circle3603"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3605"
+       width="2"
+       height="8"
+       x="1549"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1530"
+       id="circle3607"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3609"
+       cx="1535"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1540"
+       id="circle3611"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3613"
+       cx="1545"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3615"
+       cx="1555"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1560"
+       id="circle3617"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3619"
+       cx="1565"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1570"
+       id="circle3621"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text3625"
+       y="39.270508"
+       x="1575.0049"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'"
+         y="39.270508"
+         x="1575.0049"
+         id="tspan3623"
+         sodipodi:role="line">W</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3627"
+       width="4"
+       height="18"
+       x="1573"
+       y="11" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3629"
+       width="2"
+       height="12"
+       x="1649"
+       y="14" />
+    <text
+       id="text3633"
+       y="39.270508"
+       x="1649.6802"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="1649.6802"
+         id="tspan3631"
+         sodipodi:role="line">285</tspan></text>
+    <rect
+       y="16"
+       x="1599"
+       height="8"
+       width="2"
+       id="rect3635"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3637"
+       cx="1580"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1585"
+       id="circle3639"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3641"
+       cx="1590"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1595"
+       id="circle3643"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3645"
+       width="2"
+       height="8"
+       x="1624"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1605"
+       id="circle3647"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3649"
+       cx="1610"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1615"
+       id="circle3651"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3653"
+       cx="1620"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3655"
+       cx="1630"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1635"
+       id="circle3657"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3659"
+       cx="1640"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1645"
+       id="circle3661"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       y="14"
+       x="1724"
+       height="12"
+       width="2"
+       id="rect3663"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3665"
+       width="2"
+       height="8"
+       x="1674"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1655"
+       id="circle3667"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3669"
+       cx="1660"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1665"
+       id="circle3671"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3673"
+       cx="1670"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="1699"
+       height="8"
+       width="2"
+       id="rect3675"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3677"
+       cx="1680"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1685"
+       id="circle3679"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3681"
+       cx="1690"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1695"
+       id="circle3683"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1705"
+       id="circle3685"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3687"
+       cx="1710"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1715"
+       id="circle3689"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3691"
+       cx="1720"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="1724.6802"
+       y="39.270508"
+       id="text3695"><tspan
+         sodipodi:role="line"
+         x="1724.6802"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         id="tspan3693">300</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3697"
+       width="2"
+       height="15.999999"
+       x="1799"
+       y="12.000001" />
+    <rect
+       y="16"
+       x="1749"
+       height="8"
+       width="2"
+       id="rect3699"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3701"
+       cx="1730"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1735"
+       id="circle3703"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3705"
+       cx="1740"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1745"
+       id="circle3707"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3709"
+       width="2"
+       height="8"
+       x="1774"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1755"
+       id="circle3711"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3713"
+       cx="1760"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1765"
+       id="circle3715"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3717"
+       cx="1770"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3719"
+       cx="1780"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1785"
+       id="circle3721"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3723"
+       cx="1790"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1795"
+       id="circle3725"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text3729"
+       y="39.270508"
+       x="1800.0049"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'"
+         y="39.270508"
+         x="1800.0049"
+         id="tspan3727"
+         sodipodi:role="line">SW</tspan></text>
+    <rect
+       y="14"
+       x="1874"
+       height="12"
+       width="2"
+       id="rect3731"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="1874.6802"
+       y="39.270508"
+       id="text3735"><tspan
+         sodipodi:role="line"
+         id="tspan3733"
+         x="1874.6802"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana">330</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3737"
+       width="2"
+       height="8"
+       x="1824"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1805"
+       id="circle3739"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3741"
+       cx="1810"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1815"
+       id="circle3743"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3745"
+       cx="1820"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="1849"
+       height="8"
+       width="2"
+       id="rect3747"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3749"
+       cx="1830"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1835"
+       id="circle3751"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3753"
+       cx="1840"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1845"
+       id="circle3755"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1855"
+       id="circle3757"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3759"
+       cx="1860"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1865"
+       id="circle3761"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3763"
+       cx="1870"
+       cy="20"
+       r="1" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3765"
+       width="2"
+       height="12"
+       x="1949"
+       y="14" />
+    <rect
+       y="16"
+       x="1899"
+       height="8"
+       width="2"
+       id="rect3767"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3769"
+       cx="1880"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1885"
+       id="circle3771"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3773"
+       cx="1890"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1895"
+       id="circle3775"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3777"
+       width="2"
+       height="8"
+       x="1924"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1905"
+       id="circle3779"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3781"
+       cx="1910"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1915"
+       id="circle3783"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3785"
+       cx="1920"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3787"
+       cx="1930"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1935"
+       id="circle3789"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3791"
+       cx="1940"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1945"
+       id="circle3793"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text3797"
+       y="39.270508"
+       x="1949.6802"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         id="tspan3795"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="1949.6802"
+         sodipodi:role="line">345</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3799"
+       width="2"
+       height="8"
+       x="1974"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1955"
+       id="circle3801"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3803"
+       cx="1960"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1965"
+       id="circle3805"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3807"
+       cx="1970"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="1999"
+       height="8"
+       width="2"
+       id="rect3809"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3811"
+       cx="1980"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1985"
+       id="circle3813"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3815"
+       cx="1990"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="1995"
+       id="circle3817"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2005"
+       id="circle3819"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3821"
+       cx="2010"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2015"
+       id="circle3823"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3825"
+       cx="2020"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="2025.0049"
+       y="39.270508"
+       id="text3829"><tspan
+         sodipodi:role="line"
+         id="tspan3827"
+         x="2025.0049"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'">N</tspan></text>
+    <rect
+       y="11"
+       x="2023"
+       height="18"
+       width="4"
+       id="rect3831"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       y="12.000001"
+       x="-1"
+       height="15.999999"
+       width="2"
+       id="rect3909"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3937"
+       cx="-5"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="0.0048828125"
+       y="39.270508"
+       id="text3941"><tspan
+         sodipodi:role="line"
+         id="tspan3939"
+         x="0.0048828125"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'">SW</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect3943"
+       width="2"
+       height="12"
+       x="74"
+       y="14" />
+    <text
+       id="text3947"
+       y="39.270508"
+       x="74.680176"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="74.680176"
+         id="tspan3945"
+         sodipodi:role="line">330</tspan></text>
+    <rect
+       y="16"
+       x="24"
+       height="8"
+       width="2"
+       id="rect3949"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3951"
+       cx="5"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="10"
+       id="circle3953"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3955"
+       cx="15"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="20"
+       id="circle3957"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3959"
+       width="2"
+       height="8"
+       x="49"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="30"
+       id="circle3961"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3963"
+       cx="35"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="40"
+       id="circle3965"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3967"
+       cx="45"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3969"
+       cx="55"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="60"
+       id="circle3971"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3973"
+       cx="65"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="70"
+       id="circle3975"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       y="14"
+       x="149"
+       height="12"
+       width="2"
+       id="rect3977"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect3979"
+       width="2"
+       height="8"
+       x="99"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="80"
+       id="circle3981"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3983"
+       cx="85"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="90"
+       id="circle3985"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3987"
+       cx="95"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="124"
+       height="8"
+       width="2"
+       id="rect3989"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3991"
+       cx="105"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="110"
+       id="circle3993"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle3995"
+       cx="115"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="120"
+       id="circle3997"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="130"
+       id="circle3999"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4001"
+       cx="135"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="140"
+       id="circle4003"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4005"
+       cx="145"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="149.68018"
+       y="39.270508"
+       id="text4009"><tspan
+         sodipodi:role="line"
+         x="149.68018"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         id="tspan4007">345</tspan></text>
+    <rect
+       y="16"
+       x="174"
+       height="8"
+       width="2"
+       id="rect4011"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4013"
+       cx="155"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="160"
+       id="circle4015"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4017"
+       cx="165"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="170"
+       id="circle4019"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect4021"
+       width="2"
+       height="8"
+       x="199"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="180"
+       id="circle4023"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4025"
+       cx="185"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="190"
+       id="circle4027"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4029"
+       cx="195"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4031"
+       cx="205"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="210"
+       id="circle4033"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4035"
+       cx="215"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="220"
+       id="circle4037"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect4271"
+       width="2"
+       height="12"
+       x="2099"
+       y="14" />
+    <text
+       id="text4275"
+       y="39.270508"
+       x="2099.6802"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         y="39.270508"
+         x="2099.6802"
+         id="tspan4273"
+         sodipodi:role="line">15</tspan></text>
+    <rect
+       y="16"
+       x="2049"
+       height="8"
+       width="2"
+       id="rect4277"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4279"
+       cx="2030"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2035"
+       id="circle4281"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4283"
+       cx="2040"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2045"
+       id="circle4285"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect4287"
+       width="2"
+       height="8"
+       x="2074"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2055"
+       id="circle4289"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4291"
+       cx="2060"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2065"
+       id="circle4293"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4295"
+       cx="2070"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4297"
+       cx="2080"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2085"
+       id="circle4299"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4301"
+       cx="2090"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2095"
+       id="circle4303"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       y="14"
+       x="2174"
+       height="12"
+       width="2"
+       id="rect4305"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect4307"
+       width="2"
+       height="8"
+       x="2124"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2105"
+       id="circle4309"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4311"
+       cx="2110"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2115"
+       id="circle4313"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4315"
+       cx="2120"
+       cy="20"
+       r="1" />
+    <rect
+       y="16"
+       x="2149"
+       height="8"
+       width="2"
+       id="rect4317"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4319"
+       cx="2130"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2135"
+       id="circle4321"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4323"
+       cx="2140"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2145"
+       id="circle4325"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2155"
+       id="circle4327"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4329"
+       cx="2160"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2165"
+       id="circle4331"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4333"
+       cx="2170"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="2174.6802"
+       y="39.270508"
+       id="text4337"><tspan
+         sodipodi:role="line"
+         x="2174.6802"
+         y="39.270508"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:verdana;-inkscape-font-specification:verdana"
+         id="tspan4335">30</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="rect4339"
+       width="2"
+       height="15.999999"
+       x="2249"
+       y="12.000001" />
+    <rect
+       y="16"
+       x="2199"
+       height="8"
+       width="2"
+       id="rect4341"
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4343"
+       cx="2180"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2185"
+       id="circle4345"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4347"
+       cx="2190"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2195"
+       id="circle4349"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke-width:9.99998;stroke-linecap:round;stop-color:#000000"
+       id="rect4351"
+       width="2"
+       height="8"
+       x="2224"
+       y="16" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2205"
+       id="circle4353"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4355"
+       cx="2210"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2215"
+       id="circle4357"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4359"
+       cx="2220"
+       cy="20"
+       r="1" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4361"
+       cx="2230"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2235"
+       id="circle4363"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4365"
+       cx="2240"
+       cy="20"
+       r="1" />
+    <circle
+       r="1"
+       cy="20"
+       cx="2245"
+       id="circle4367"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <text
+       id="text4371"
+       y="39.270508"
+       x="2250.0049"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold'"
+         y="39.270508"
+         x="2250.0049"
+         id="tspan4369"
+         sodipodi:role="line">NE</tspan></text>
+    <circle
+       r="1"
+       cy="20"
+       cx="2255"
+       id="circle4381"
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000" />
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke-width:10;stroke-linecap:round;stop-color:#000000"
+       id="circle4383"
+       cx="2260"
+       cy="20"
+       r="1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:1.25;font-family:Echolot;-inkscape-font-specification:Echolot;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="224.89453"
+       y="9.90625"
+       id="text4479"><tspan
+         sodipodi:role="line"
+         x="224.89453"
+         y="9.90625"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12px;font-family:verdana;-inkscape-font-specification:'verdana Bold'"
+         id="tspan4477">0</tspan></text>
+  </g>
+</svg>

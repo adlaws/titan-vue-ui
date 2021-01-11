@@ -216,7 +216,7 @@ export default {
             if(!this.filters.name || this.filters.name.length === 0)
                 return true;
 
-            return (value.indexOf(this.filters.name) !== -1);
+            return (value.toLowerCase().indexOf(this.filters.name.toLowerCase()) !== -1);
         },
         countryFilter(value, filter, item)
         {
