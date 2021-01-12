@@ -1,3 +1,5 @@
+@import '~vuetify/src/styles/styles.sass';
+
 @import './utilities/_all.scss';
 
 @import './fonts.scss';
@@ -823,6 +825,67 @@ pre, code, .monospace
             {
                 margin-left: 8px;
                 cursor: ew-resize;
+            }
+        }
+    }
+}
+
+.cse-desktop--notifications-area
+{
+    z-index: 1024;
+
+    background-color: rgba(255,255,255,0.25);
+    box-shadow: 0 0 4px rgba(255,255,255,0.5);
+
+    margin: 0;
+    padding: 4px;
+
+    position: absolute;
+
+    .notification-items
+    {
+        padding: 0 !important;
+
+        display:flex;
+        flex-direction: column;
+
+        .cse-desktop--notification
+        {
+            display:flex;
+            align-items: center;
+
+            font-size: 80%;
+            height:3em; // 2 lines tall - see -webkit-line-clamp below
+
+            &:not(:last-child)
+            {
+                margin-bottom: 4px;
+            }
+
+            color: var(--v-success-base);
+            border: 1px solid var(--v-info-base);
+            border-radius: 4px;
+
+            // use CSS variables provided by Vuetify framework to get colors
+            // Ref: https://vuetifyjs.com/en/features/theme/#custom-properties
+            @each $name in (primary, secondary, accent, info, error, success, warning) {
+                &.#{$name}, &.#{$name} > .v-icon {
+                    $varNameBase: --v-#{unquote($name)}-base;
+                    background-color: rgba(255,255,255,0.8) !important;
+                    border-color: var($varNameBase);
+                    color: var($varNameBase);
+                }
+            }
+
+            .notification-content
+            {
+                flex-grow: 1;
+                margin:0 0.25em;
+
+                display: -webkit-box;
+                -webkit-line-clamp: 2; // clamp after 2 lines - see height declaration above
+                -webkit-box-orient: vertical;
+                overflow: hidden;
             }
         }
     }

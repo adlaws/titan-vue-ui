@@ -3,6 +3,7 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
+        <!--
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
@@ -33,6 +34,13 @@
         >
             Active items
         </cse-dockable>
+        -->
+
+        <cse-notifications-area
+            dock="w"
+            offset="-32"
+            :width="300"
+        />
 
         <div
             v-for="(pluginWindow, idx) in pluginWindows"
@@ -85,6 +93,7 @@ import CseIcon from '@/components/cse/core/CseIcon.vue';
 import CseContextMenu from '@/components/cse/core/CseContextMenu.vue';
 import CseRadialMenu from '@/components/cse/core/CseRadialMenu.vue';
 import CseDockable from '@/components/cse/core/CseDockable.vue';
+import CseNotificationsArea from '../core/CseNotificationsArea.vue';
 
 const HANDLED_KEY_EVENTS = new Set([
     'keyup'
@@ -101,7 +110,7 @@ export default {
         LinearCompass2, DropdownToolbar,
         EntitySelector, MapOverlay, DrawingTools, WorldState,
         CseIcon,
-        CseContextMenu, CseRadialMenu, CseDockable,
+        CseContextMenu, CseRadialMenu, CseDockable, CseNotificationsArea
     },
     data()
     {

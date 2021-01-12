@@ -6,6 +6,9 @@ Vue.use(Vuetify);
 
 const opts = {
     theme: {
+        options: {
+            customProperties: true, // create CSS variables for theme colors
+        },
         dark: true,
         themes: {
             light: {
