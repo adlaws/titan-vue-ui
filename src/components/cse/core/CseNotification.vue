@@ -4,21 +4,29 @@
         :class="type"
         @click="expire"
     >
-        <v-icon v-if="_icon">
-            {{ _icon }}
-        </v-icon>
         <div class="notification-content">
-            {{ content }}
+            <v-icon v-if="_icon">
+                {{ _icon }}
+            </v-icon>
+            <div class="notification-text">
+                {{ content }}
+            </div>
         </div>
+        <div
+            v-if="lifetime>0"
+            ref="lifetimeBar"
+            class="lifetime-bar"
+            :style="`transition: width ${lifetime/1000}s linear;`"
+        />
     </div>
 </template>
 
 <script>
 const TYPE_ICON = {
     info: 'mdi-information',
-    error: 'mdi-alert-octagon-outline',
-    success: 'mdi-check-bold',
     warning: 'mdi-alert',
+    error: 'mdi-alert-octagon',
+    success: 'mdi-check-circle',
 };
 
 export default {
@@ -37,7 +45,7 @@ export default {
         icon:
         {
             type: String,
-            default: 'mdi-information',
+            default: null,
         },
         lifetime:
         {
@@ -47,13 +55,17 @@ export default {
     },
     computed:
     {
-        _icon() {return this.icon || TYPE_ICON[this.type] || false; }
+        _icon() {return this.icon || TYPE_ICON[this.type.toLowerCase()] || false; }
     },
     mounted()
     {
         if(this.lifetime >= 0)
         {
             setTimeout(this.expire, this.lifetime);
+            this.$nextTick(()=>
+            {
+                this.$refs.lifetimeBar.style.width = '0%';
+            });
         }
     },
     methods:

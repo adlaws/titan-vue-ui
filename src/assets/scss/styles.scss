@@ -834,11 +834,8 @@ pre, code, .monospace
 {
     z-index: 1024;
 
-    background-color: rgba(255,255,255,0.25);
-    box-shadow: 0 0 4px rgba(255,255,255,0.5);
-
     margin: 0;
-    padding: 4px;
+    padding: 0;
 
     position: absolute;
 
@@ -851,41 +848,60 @@ pre, code, .monospace
 
         .cse-desktop--notification
         {
-            display:flex;
-            align-items: center;
+            @include box-shadow($drop-shadow-large, $menu-bg-inactive, 1.0);
 
-            font-size: 80%;
-            height:3em; // 2 lines tall - see -webkit-line-clamp below
+            display:flex;
+            flex-direction: column;
 
             &:not(:last-child)
             {
                 margin-bottom: 4px;
             }
 
-            color: var(--v-success-base);
-            border: 1px solid var(--v-info-base);
-            border-radius: 4px;
+            background-color: $menu-bg-inactive;
+            color: $menu-fg-inactive;
 
             // use CSS variables provided by Vuetify framework to get colors
             // Ref: https://vuetifyjs.com/en/features/theme/#custom-properties
             @each $name in (primary, secondary, accent, info, error, success, warning) {
-                &.#{$name}, &.#{$name} > .v-icon {
-                    $varNameBase: --v-#{unquote($name)}-base;
-                    background-color: rgba(255,255,255,0.8) !important;
+                $varNameBase: --v-#{unquote($name)}-base;
+                &.#{$name}, &.#{$name} .v-icon {
+                    background-color: $menu-bg-inactive !important;
                     border-color: var($varNameBase);
                     color: var($varNameBase);
                 }
+                &.#{$name} .lifetime-bar
+                {
+                    background-color: var($varNameBase);
+                }
             }
+
+            font-size: 80%;
+            height:3.2em; // 2 lines tall - see -webkit-line-clamp below
 
             .notification-content
             {
+                display:flex;
+                align-items: center;
                 flex-grow: 1;
-                margin:0 0.25em;
 
-                display: -webkit-box;
-                -webkit-line-clamp: 2; // clamp after 2 lines - see height declaration above
-                -webkit-box-orient: vertical;
-                overflow: hidden;
+                .notification-text
+                {
+                    flex-grow: 1;
+                    margin:0 0.25em;
+
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2; // clamp after 2 lines - see height declaration above
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+            }
+
+            .lifetime-bar
+            {
+                width:100%;
+                height:2px;
+                min-height:2px;
             }
         }
     }

@@ -1,27 +1,30 @@
 <template>
-    <div
-        v-show="notifications.length"
-        ref="container"
-        class="cse-desktop--notifications-area"
-        :class="`dock-${_dock}`"
-        @click="addNotification()"
-    >
-        <transition-group
-            name="fade-slow"
-            mode="out-in"
-            tag="div"
-            class="notification-items"
+    <transition name="fade" mode="out-in">
+        <div
+            v-show="notifications.length"
+            ref="container"
+            class="cse-desktop--notifications-area"
+            :class="`dock-${_dock}`"
+            @click="addNotification()"
         >
-            <cse-notification
-                v-for="notification in notifications"
-                :key="`notification-${notification.id}`"
-                :content="notification.content"
-                :icon="notification.icon"
-                :lifetime="notification.lifetime"
-                @expired="removeNotification(notification)"
-            />
-        </transition-group>
-    </div>
+            <transition-group
+                name="fade"
+                mode="out-in"
+                tag="div"
+                class="notification-items"
+            >
+                <cse-notification
+                    v-for="notification in notifications"
+                    :key="`notification-${notification.id}`"
+                    :type="notification.type"
+                    :content="notification.content"
+                    :icon="notification.icon"
+                    :lifetime="notification.lifetime"
+                    @expired="removeNotification(notification)"
+                />
+            </transition-group>
+        </div>
+    </transition>
 </template>
 
 <script>
@@ -69,10 +72,11 @@ export default {
             resizeObserver: null,
             bounds:{width:0, height:0},
             notifications: [
-                {id: 1, content:'Alpha beta gamma delta epsilon theta phi omicron omega', lifetime: -2000, type:'info'},
-                {id: 2, content:'B', lifetime: -4000, type:'info'},
-                {id: 3, content:'C', lifetime: -6000, type:'info'},
-                {id: 4, content:'D', lifetime: -8000, type:'info'},
+                {id: 1, content:'Alpha beta gamma delta epsilon theta phi omicron omega', lifetime: 10000, type:'info'},
+                {id: 2, content:'B', lifetime: 12000, type:'success'},
+                {id: 3, content:'C', lifetime: 14000, type:'warning'},
+                {id: 4, content:'D', lifetime: 16000, type:'error'},
+                {id: 5, content:'E', lifetime: 18000, type:'info'},
             ],
         };
     },
