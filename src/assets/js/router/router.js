@@ -49,8 +49,8 @@ var router = new VueRouter({
         {
             // must be authenticated to access this page or any child pages
             // beforeEnter: authenticationGuard,
-            path: '/titan',
-            name: 'titan',
+            path: '/cse',
+            name: 'cse',
             redirect: {name: 'desktop'},
             component: Root,
             // here we try very hard to keep the paths and route names sensibly organised

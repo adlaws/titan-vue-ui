@@ -1,26 +1,22 @@
 <!-- ------------------------------------------------------------------------------------------
 A linear compass:
 
+                                 0
                    SW   W   NW   N   NE   E   SE   S
                  ----------------^-------------------
 
-..or (inverted presentation)
 
-                 ----------------v-------------------
-                   SW   W   NW   N   NE   E   SE   S
-
-@param {String} color the color of the compass ticks and cardinals (default is black)
+@param {String} color the color of the compass ticks and cardinals (default is white)
 @param {String} needle the color of the compass needle (default is red)
-@param {Number} size the width of the linear compass in pixels (default is 360px)
+@param {Number} size the width of the linear compass in pixels (default is 450px)
 @param {Number, String} x the preferred x position on the screen (offset from left of screen) or one of 'left','right' or 'center'
 @param {Number, String} y the preferred y position on the screen (offset from top of screen) or one of 'top','bottom' or 'center'
-@param {Boolean, String} inverted inverted compasss representation
 @param {Number} updateInterval the update interval in milliseconds (obtains heading from current scenario camera)
 
 Example use:
 
     <template>
-        <linear-compass:needle="#08f" :update-interval="1000" inverted/>
+        <linear-compass2 :needle="#08f" :update-interval="1000" inverted/>
     </template>
 ----------------------------------------------------------------------------------------------- -->
 <template>
@@ -58,16 +54,14 @@ Example use:
         <rect width="100%" height="100%" fill="url(#a)" clip-path="url(#b)" />
         <text
             x="224.895"
-            y="9.906"
-            :fill="color"
+            y="10"
             font-family="Verdana"
-            font-size="12"
-            font-weight="700"
-            letter-spacing="0"
+            font-size="10"
+            font-weight="400"
             text-anchor="middle"
-            word-spacing="0"
+            :fill="color"
         >
-            {{ Math.floor(clampedTweenedCompaseRotation) }}
+            {{ Math.floor(clampedTweenedCompaseRotation) }}&deg;
         </text>
     </svg>
 </template>
@@ -88,7 +82,7 @@ export default {
         color:
         {
             type: String,
-            default: 'white',
+            default: '#FFF',
         },
         needle:
         {
