@@ -1,6 +1,28 @@
 export default class DataUtils
 {
     /**
+     * Generate a random integer in the given range
+     *
+     * @param {Number} min the minimum value
+     * @param {Number} min the maximum value (exclusive)
+     * @return {Number} a random integer in the given range
+     */
+    static randInt(min, max)
+    {
+        return Math.round(min + (Math.random() * (max-min)));
+    }
+
+    /**
+     * Choose a random item from an array
+     *
+     * @param {Array} arr
+     */
+    static randChoice(arr)
+    {
+        return arr[DataUtils.randInt(0,arr.length-1)];
+    }
+
+    /**
      * Remaps the values associated with keys in the source to new keys in the
      * output object.
      *

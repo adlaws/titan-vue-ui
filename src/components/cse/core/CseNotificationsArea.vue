@@ -1,5 +1,5 @@
 <template>
-    <transition name="fade" mode="out-in">
+    <transition name="fade-slow" mode="out-in">
         <div
             v-show="notifications.length"
             ref="container"
@@ -8,7 +8,7 @@
             @click="addNotification()"
         >
             <transition-group
-                name="fade"
+                name="fade-slow"
                 mode="out-in"
                 tag="div"
                 class="notification-items"
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import DataUtils from '@/assets/js/utils/data-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
 import CseNotification from '@/components/cse/core/CseNotification.vue';
@@ -72,11 +73,11 @@ export default {
             resizeObserver: null,
             bounds:{width:0, height:0},
             notifications: [
-                {id: 1, content:'Alpha beta gamma delta epsilon theta phi omicron omega', lifetime: 10000, type:'info'},
-                {id: 2, content:'B', lifetime: 12000, type:'success'},
-                {id: 3, content:'C', lifetime: 14000, type:'warning'},
-                {id: 4, content:'D', lifetime: 16000, type:'error'},
-                {id: 5, content:'E', lifetime: 18000, type:'info'},
+                {id: 1, content:'frame test should tales spread task alike badly trade am zoo lost pine could series gave person rays citizen leader upward bit mill vowel', lifetime: 10000, type:'info'},
+                {id: 2, content:'Lucille has joined', lifetime: 12000, type:'success'},
+                {id: 3, content:'Michael has left', lifetime: 14000, type:'warning'},
+                {id: 4, content:'Host 85.67.31.141 is not reachable', lifetime: 16000, type:'error'},
+                {id: 5, content:'Today is '+['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()], lifetime: 18000, type:'info'},
             ],
         };
     },
@@ -126,7 +127,9 @@ export default {
         {
             if(!notification)
             {
-                notification = {id:Date.now(), content:''+Date.now(), icon:'mdi-ferry'};
+                const type = DataUtils.randChoice(['info','success','warning','error','primary','secondary','accent']);
+                notification = {id:Date.now(), content:''+Date.now(), lifetime:2000 + Math.random()*5000, type};
+                setTimeout(this.addNotification, 3000+Math.random()*5000);
             }
             this.notifications.push(notification);
         },

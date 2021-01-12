@@ -870,7 +870,7 @@ pre, code, .monospace
                     border-color: var($varNameBase);
                     color: var($varNameBase);
                 }
-                &.#{$name} .lifetime-bar
+                &.#{$name} .lifetime-bar, &.#{$name} .icon-spacer
                 {
                     background-color: var($varNameBase);
                 }
@@ -884,6 +884,13 @@ pre, code, .monospace
                 display:flex;
                 align-items: center;
                 flex-grow: 1;
+
+                .icon-spacer
+                {
+                    width: 2em;
+                    height: 2em;
+                    opacity: 50%;
+                }
 
                 .notification-text
                 {
@@ -902,6 +909,22 @@ pre, code, .monospace
                 width:100%;
                 height:2px;
                 min-height:2px;
+            }
+        }
+    }
+
+    // reversal of icon/text positioning when docked to the right hand
+    // side of the desktop
+    &.dock-e
+    {
+        .notification-items
+        {
+            .cse-desktop--notification
+            {
+                .notification-content
+                {
+                    flex-direction: row-reverse;
+                }
             }
         }
     }
