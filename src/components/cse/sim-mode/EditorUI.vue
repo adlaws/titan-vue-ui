@@ -3,8 +3,8 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <!--
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+        <!--
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
         <entity-selector />

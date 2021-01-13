@@ -13,14 +13,14 @@
                 class="icon-spacer"
             />
             <div class="notification-text">
-                {{ content }}
+                {{ content }} {{ lifetime }}
             </div>
         </div>
         <div
-            v-if="_showProgress"
+            v-if="!noProgress"
             ref="lifetimeBar"
             class="lifetime-bar"
-            :style="`transition: width ${lifetime/1000}s linear;`"
+            :style="`transition-duration:${lifetime/1000}s;`"
         />
     </div>
 </template>
@@ -62,6 +62,12 @@ export default {
             default: false,
         },
     },
+    data()
+    {
+        return {
+            lifetimeBarElm: null,
+        };
+    },
     computed:
     {
         _icon()
@@ -76,24 +82,40 @@ export default {
             }
             return TYPE_ICON[this.type.toLowerCase()] || false;
         },
-        _showProgress() { return !this.noProgress && this.lifetime > 0; },
+    },
+    watch:
+    {
+        width(newValue)
+        {
+            console.log('width changed', newValue);
+            if(newValue==='100%')this.width='0%';
+        }
     },
     mounted()
     {
+        this.lifetimeBarElm = this.$refs.lifetimeBar;
         if(this.lifetime >= 0)
         {
             setTimeout(this.expire, this.lifetime);
-            if(this._showProgress)
+            if(this.lifetimeBarElm)
             {
-                this.$nextTick(()=>
-                {
-                    this.$refs.lifetimeBar.style.width = '0%';
-                });
+                this.reset();
+                setTimeout(this.start, 100);
             }
         }
     },
     methods:
     {
+        reset()
+        {
+            if(this.lifetimeBarElm)
+                this.lifetimeBarElm.style.width = '100%';
+        },
+        start()
+        {
+            if(this.lifetimeBarElm)
+                this.lifetimeBarElm.style.width = '0%';
+        },
         expire()
         {
             this.$emit('expired');

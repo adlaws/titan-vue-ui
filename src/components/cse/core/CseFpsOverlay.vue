@@ -1,41 +1,66 @@
 <template>
     <div
+        style="width:100%;height:100%;"
         class="titan--fps pass-through"
+        :class="{'faux-outerra-background': !isInOuterra}"
     >
         {{ currentSimMode }}
         <br>
+        <router-link :to="{name:'desktop'}">
+            EXIT FPS
+        </router-link>
 
-        <div style="position:absolute;display:block;width:8em;height:2.25em;right:16px;bottom:96px;background-color:black;color:#08f;padding: 0 5px;">
-            <span style="font-size:200%">31</span>
-            AUTO
-        </div>
+        <linear-compass2
+            ignore-taskbar
+            :y="-10"
+        />
 
-        <div
-            style="position:absolute;display:block;width:8em;height:1.25em;right:16px;bottom:148px;background-color:black;color:#08f;padding: 0 5px;"
-            @click="status.health.head=Math.random()*100.0"
-        >
-            F-88 A2 (ACOG)
-        </div>
+        <cse-notifications-area
+            ignore-taskbar
+            dock="w"
+            offset="-16"
+            :width="300"
+        />
 
         <character-damage
-            :size="128"
+            :size="64"
             :head="status.health.head"
             :torso="100"
             :left-arm="100"
             :right-arm="100"
             :left-leg="100"
             :right-leg="100"
-            style="position:absolute;bottom:96px;left:16px;"
+            style="position:absolute;bottom:96px;right:100px;"
         />
 
         <character-posture
             :posture="status.posture"
-            style="position:absolute;bottom:96px;left:64px;"
+            :lean="'left'"
+            :size="64"
+            style="position:absolute;bottom:96px;right:16px;"
         />
 
-        <router-link :to="{name:'desktop'}">
-            EXIT FPS
-        </router-link>
+        <div
+            style="position:absolute;display:block;width:auto;height:auto;padding: 2px 5px 2px 5px;text-align:right;font-size:80%;text-shadow:0 0 2px black, 0 0 4px black;color:white;right:16px;bottom:40px;"
+            @click="status.health.head=Math.random()*100.0"
+        >
+            AK-74M Tracer + 1P78<br>
+            <v-icon>mdi-ammunition</v-icon>&times;16
+        </div>
+        <div
+            style="position:absolute;display:block;width:auto;height:auto;right:16px;bottom:0px;"
+        >
+            <svg
+                v-for="x in 4"
+                :key="x"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                height="24"
+            >
+                <path fill="white" d="M6 1v1h1v10l-3 6 9 4 4-10V2h1V1zm2 1h8v1h-6v8l-2 4H7l2-4V3H8z" />
+                <path fill="grey" d="m 6,1 v 3 h 1 v 9 l -3,6 1,1 9,4 1,-1 4,-10 V 4 h 1 V 1 Z M 7,2 H 19 V 3 H 18 V 13 L 14,23 5,19 8,13 V 3 H 7 Z" />
+            </svg>
+        </div>
     </div>
 </template>
 
@@ -45,6 +70,8 @@ import TitanUtils, { $tWorldInterface, /*$tEventInterface,*/ $isInOuterra, $tLog
 
 import CharacterDamage from './character/CharacterDamage.vue';
 import CharacterPosture from './character/CharacterPosture.vue';
+import LinearCompass2 from '@/components/cse/core/display/LinearCompass2.vue';
+import CseNotificationsArea from '@/components/cse/core/CseNotificationsArea.vue';
 
 // ref: src\titan_module_hyperion\interfaces\EntityInterface.cpp: getCharacterPose()
 const POSTURE = {
@@ -60,7 +87,7 @@ const POSTURE = {
 export default {
     name: 'cse-fps-overlay',
     components:{
-        CharacterDamage, CharacterPosture,
+        CharacterDamage, CharacterPosture, LinearCompass2, CseNotificationsArea
     },
     data()
     {
@@ -80,6 +107,7 @@ export default {
     },
     computed:
     {
+        isInOuterra() { return $isInOuterra; },
         currentSimMode() { return this.$store.getters.titanSimMode; },
     },
     mounted()
@@ -107,17 +135,20 @@ export default {
 
             // create an entity at the location in the middle of the screen
             const worldPos = TitanUtils.worldPosForWindowCoords({x:screen.availWidth/2, y:screen.availHeight/2});
-            this.entity = TitanUtils.createEntity('aus_soldier_camcu', worldPos);
-            // control the created entity
-            this.entity.enableDirectControl();
+            if(worldPos)
+            {
+                this.entity = TitanUtils.createEntity('aus_soldier_camcu', worldPos);
+                // control the created entity
+                this.entity.enableDirectControl();
 
-            // get notified of entity changes to stuff
-            this.entityEventSystem = this.entity.getEventSystem();
-            this.entityEventSystem.bindCallbackFunction('CharacterPostureChanged_EventInstant', this.updateCharacterPosture);
+                // get notified of entity changes to stuff
+                this.entityEventSystem = this.entity.getEventSystem();
+                this.entityEventSystem.bindCallbackFunction('CharacterPostureChanged_EventInstant', this.updateCharacterPosture);
 
-            this.activeCamera.setCameraMode( CAMERA_MODE.FIRST_PERSON );
-            this.activeScenario.scenarioEntered(true);
-            $tWorldInterface.pause(false);
+                this.activeCamera.setCameraMode( CAMERA_MODE.FIRST_PERSON );
+                this.activeScenario.scenarioEntered(true);
+                $tWorldInterface.pause(false);
+            }
 
             // NOTE: the $global.TitanEvent thing is a holdover from how TitanEventInterface.cpp
             //       works and hopefully will turn into something more like...
@@ -134,27 +165,31 @@ export default {
         // clean up after ourselves
         if($isInOuterra)
         {
-            $tWorldInterface.pause(true);
-            this.activeScenario.scenarioEntered(false);
-
-            this.entityEventSystem.removeCallbackFunction(this.updateCharacterPosture);
-
-            const controlledEntity = this.activeScenario.get_direct_control_vehicle();
-            if( controlledEntity )
-                controlledEntity.disableDirectControl();
-            this.entity.remove();
-
-            // NOTE: for some reason cant' immediately set the free camera mode after
-            // setting the camera mode, so we have to do a little 100ms wait here.
-            this.activeCamera.setCameraMode( CAMERA_MODE.FREEVIEW );
-            setTimeout(()=>
+            if(this.entity)
             {
-                this.activeCamera.setFreeCameraMode( FREE_CAMERA_MODE.AUTO_ROLL );
+                $tWorldInterface.pause(true);
+                this.activeScenario.scenarioEntered(false);
 
-                // restore the cached position of the standard camera
-                this.activeCamera.setPosition(this.cachedCameraPosRot.position);
-                this.activeCamera.setRotation(this.cachedCameraPosRot.orientation);
-            }, 100);
+                this.entityEventSystem.removeCallbackFunction(this.updateCharacterPosture);
+
+                const controlledEntity = this.activeScenario.get_direct_control_vehicle();
+                if( controlledEntity )
+                    controlledEntity.disableDirectControl();
+
+                this.entity.remove();
+
+                // NOTE: for some reason cant' immediately set the free camera mode after
+                // setting the camera mode, so we have to do a little 100ms wait here.
+                this.activeCamera.setCameraMode( CAMERA_MODE.FREEVIEW );
+                setTimeout(()=>
+                {
+                    this.activeCamera.setFreeCameraMode( FREE_CAMERA_MODE.AUTO_ROLL );
+
+                    // restore the cached position of the standard camera
+                    this.activeCamera.setPosition(this.cachedCameraPosRot.position);
+                    this.activeCamera.setRotation(this.cachedCameraPosRot.orientation);
+                }, 100);
+            }
         }
 
         this.$store.commit(TITAN_MUTATION.CHANGE_SIM_MODE, SIM_MODE.MENU);

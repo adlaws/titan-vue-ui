@@ -72,6 +72,7 @@ export default {
             currentOffset: 0,
             resizeObserver: null,
             bounds:{width:0, height:0},
+            autoAddNotifications: null,
             notifications: [
                 {id: 1, content:'frame test should tales spread task alike badly trade am zoo lost pine could series gave person rays citizen leader upward bit mill vowel', lifetime: 10000, type:'info'},
                 {id: 2, content:'Lucille has joined', lifetime: 12000, type:'success', icon:'mdi-login'},
@@ -79,6 +80,7 @@ export default {
                 {id: 4, content:'Host 85.67.31.141 is not reachable', lifetime: 16000, type:'error'},
                 {id: 5, content:'Today is '+['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()], lifetime: 18000, type:'info'},
             ],
+            nextId:6,
         };
     },
     computed:
@@ -116,9 +118,12 @@ export default {
 
         this.updateBounds();
         this.updateStyles();
+
+        this.autoAddNotifications = setTimeout(this.addNotification, 5000+Math.random()*5000);
     },
     destroyed()
     {
+        clearTimeout(this.autoAddNotifications);
         delete this.resizeObserver;
     },
     methods:
@@ -127,9 +132,14 @@ export default {
         {
             if(!notification)
             {
+                if(this.autoAddNotifications!==null)
+                    clearTimeout(this.autoAddNotifications);
+
                 const type = DataUtils.randChoice(['info','success','warning','error','primary','secondary','accent']);
-                notification = {id:Date.now(), content:''+Date.now(), lifetime:2000 + Math.random()*5000, type};
-                setTimeout(this.addNotification, 3000+Math.random()*5000);
+                notification = {id:this.nextId, content:''+this.nextId, lifetime:2000 + Math.random()*5000, type};
+                this.nextId ++;
+
+                this.autoAddNotifications = setTimeout(this.addNotification, 1000+Math.random()*5000);
             }
             this.notifications.push(notification);
         },

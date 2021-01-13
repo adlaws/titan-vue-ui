@@ -74,6 +74,6 @@ export default {
             type: String,
             default: '#001020',
         }
-    }
+    },
 };
 </script>
