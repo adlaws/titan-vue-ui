@@ -870,9 +870,13 @@ pre, code, .monospace
                     border-color: var($varNameBase);
                     color: var($varNameBase);
                 }
-                &.#{$name} .lifetime-bar, &.#{$name} .icon-spacer
+                &.#{$name} .lifetime-bar
                 {
                     background-color: var($varNameBase);
+                }
+                &.#{$name} .icon-spacer
+                {
+                    border-left: 1em solid var($varNameBase);
                 }
             }
 
@@ -888,7 +892,7 @@ pre, code, .monospace
                 .icon-spacer
                 {
                     width: 2em;
-                    height: 2em;
+                    height: 100%;
                     opacity: 50%;
                 }
 

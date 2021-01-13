@@ -74,8 +74,8 @@ export default {
             bounds:{width:0, height:0},
             notifications: [
                 {id: 1, content:'frame test should tales spread task alike badly trade am zoo lost pine could series gave person rays citizen leader upward bit mill vowel', lifetime: 10000, type:'info'},
-                {id: 2, content:'Lucille has joined', lifetime: 12000, type:'success'},
-                {id: 3, content:'Michael has left', lifetime: 14000, type:'warning'},
+                {id: 2, content:'Lucille has joined', lifetime: 12000, type:'success', icon:'mdi-login'},
+                {id: 3, content:'Michael has left', lifetime: 14000, type:'warning', icon:'mdi-logout'},
                 {id: 4, content:'Host 85.67.31.141 is not reachable', lifetime: 16000, type:'error'},
                 {id: 5, content:'Today is '+['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()], lifetime: 18000, type:'info'},
             ],

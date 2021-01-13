@@ -15,7 +15,7 @@
             </p>
             <p>
                 <router-link
-                    :to="{ name: 'titan', params: {}}"
+                    :to="{ name: 'cse', params: {}}"
                     style="color:white;text-decoration:none;"
                 >
                     Back to Home

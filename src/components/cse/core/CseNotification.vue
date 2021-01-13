@@ -49,7 +49,7 @@ export default {
         icon:
         {
             type: String,
-            default: null,
+            default: '',
         },
         lifetime:
         {
@@ -64,7 +64,18 @@ export default {
     },
     computed:
     {
-        _icon() {return this.icon || TYPE_ICON[this.type.toLowerCase()] || false; },
+        _icon()
+        {
+            if(this.icon === null)
+                return false;
+            if(this.icon.length>0)
+            {
+                if(this.icon.toLowerCase === 'false' || this.icon.toLowerCase === 'none')
+                    return false;
+                return this.icon;
+            }
+            return TYPE_ICON[this.type.toLowerCase()] || false;
+        },
         _showProgress() { return !this.noProgress && this.lifetime > 0; },
     },
     mounted()

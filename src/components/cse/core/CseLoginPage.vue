@@ -66,7 +66,7 @@
                 <v-card-actions>
                     <v-btn
                         secondary
-                        @click="$router.push({name:'titan'})"
+                        @click="_doCancel()"
                     >
                         Work Offline
                         <v-icon right>
@@ -220,7 +220,7 @@ export default {
             if(this.form.username==='admin' && this.form.password==='password')
             {
                 this.isVisible = false;
-                this.$router.push({name:'titan'});
+                this.$router.push({name:'cse'});
             }
             else
             {
@@ -229,7 +229,7 @@ export default {
         },
         _doCancel()
         {
-            this.$router.push({name:'titan'});
+            this.$router.push({name:'cse'});
         },
         /**
          * Binds all necessary events
