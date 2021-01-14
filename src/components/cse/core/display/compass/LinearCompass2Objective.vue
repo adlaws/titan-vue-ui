@@ -1,3 +1,20 @@
+<!--
+For use with LinearCompass2, creates an SVG group for an objective displayed
+on the compass, which consists of a downward pointing triangle displayed
+at the top of the compass, along with the objective name overlayed, something
+like this:
+
+    +-------+
+     \     /
+      Bravo
+       \ /
+        V
+
+NOTE: This relies on the LinearCompass2 SVG to be in a viewbox 90 wide by
+      8 high, such that the 0°/North position is at x=45, and each degree
+      on the compass is equal to 1 viewbox unit. If the LinearCompass2 is
+      modified this component will also need to be updated.
+-->
 <template>
     <g v-if="isVisible">
         <path

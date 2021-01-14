@@ -91,7 +91,7 @@ body {
 // to apply the visual style.
 $scale-factor: 0.75;
 $scale-pct: percentage($scale-factor);
-form.compact
+.compact
 {
     .row
     {
@@ -130,8 +130,28 @@ form.compact
             }
         }
 
-        .v-input__append-outer
+        .v-input__prepend-inner, .v-input__append-inner
         {
+            margin: 0px;
+            .v-input__icon
+            {
+                height:auto;
+            }
+            .v-icon
+            {
+                margin-top: 4px;
+                font-size: 100% !important;
+            }
+        }
+
+        .v-input__prepend-outer, .v-input__append-outer
+        {
+            margin:0px;
+            .v-icon
+            {
+                margin-top: 0px;
+                font-size: 100% !important;
+            }
             .v-select
             {
                 bottom: 2px;
@@ -155,7 +175,7 @@ form.compact
             {
                 &.v-label--active
                 {
-                    margin-top: 4px !important;
+                    margin-top: 0px !important;
                 }
             }
 
@@ -193,6 +213,7 @@ form.compact
         font-size: 75% !important;
     }
 }
+
 // ------------------------------------------------------------------------------------------------
 .clickable
 {

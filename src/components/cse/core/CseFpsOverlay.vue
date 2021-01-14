@@ -70,7 +70,7 @@ import TitanUtils, { $tWorldInterface, /*$tEventInterface,*/ $isInOuterra, $tLog
 
 import CharacterDamage from './character/CharacterDamage.vue';
 import CharacterPosture from './character/CharacterPosture.vue';
-import LinearCompass2 from '@/components/cse/core/display/LinearCompass2.vue';
+import LinearCompass2 from '@/components/cse/core/display/compass/LinearCompass2.vue';
 import CseNotificationsArea from '@/components/cse/core/CseNotificationsArea.vue';
 
 // ref: src\titan_module_hyperion\interfaces\EntityInterface.cpp: getCharacterPose()

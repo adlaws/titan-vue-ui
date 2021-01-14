@@ -6,6 +6,8 @@
         <cse-icon icon="clock" class="mr-1" /><span class="monospace">{{ time }}</span>
         <br>
         <cse-icon icon="calendar-month" class="mr-1" /><span class="monospace">{{ date }}</span>
+
+        <!-- date-time-widget / -->
     </div>
 </template>
 
@@ -17,12 +19,14 @@
 
 import CseIcon from '@/components/cse/core/CseIcon.vue';
 
+// import DateTimeWidget from '@/components/cse/core/clock/DateTimeWidget.vue';
+
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default {
     name: 'cse-clock',
     components: {
-        CseIcon,
+        CseIcon, // DateTimeWidget,
     },
     data()
     {

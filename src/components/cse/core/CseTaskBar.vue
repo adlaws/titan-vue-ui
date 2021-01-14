@@ -73,7 +73,7 @@ import { TITAN_MUTATION } from '@/assets/js/store/titan-manager.js';
 import TitanUtils, { SIM_MODE } from '@/assets/js/titan/titan-utils.js';
 
 import CseTaskbarWindowTile from '@/components/cse/core/CseTaskbarWindowTile.vue';
-import CseClock from '@/components/cse/core/CseClock.vue';
+import CseClock from '@/components/cse/core/clock/CseClock.vue';
 import CseLocation from '@/components/cse/core/CseLocation.vue';
 import CseLocale from '@/components/cse/core/CseLocale.vue';
 import CseIcon from '@/components/cse/core/CseIcon.vue';

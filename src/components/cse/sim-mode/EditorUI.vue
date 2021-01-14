@@ -4,13 +4,14 @@
         style="width:100%;height:100%;overflow:hidden;"
     >
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+        <world-state />
+        <time-slider />
         <!--
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
         <entity-selector />
         <map-overlay />
         <drawing-tools />
-        <world-state />
 
         <cse-dockable
             :width="300"
@@ -83,7 +84,7 @@ import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
-import LinearCompass2 from '@/components/cse/core/display/LinearCompass2.vue';
+import LinearCompass2 from '@/components/cse/core/display/compass/LinearCompass2.vue';
 import EntitySelector from '@/components/cse/sim-mode/EntitySelector.vue';
 import DropdownToolbar from '@/components/cse/sim-mode/DropdownToolbar.vue';
 import MapOverlay from '@/components/cse/sim-mode/MapOverlay.vue';
@@ -94,6 +95,7 @@ import CseContextMenu from '@/components/cse/core/CseContextMenu.vue';
 import CseRadialMenu from '@/components/cse/core/CseRadialMenu.vue';
 import CseDockable from '@/components/cse/core/CseDockable.vue';
 import CseNotificationsArea from '../core/CseNotificationsArea.vue';
+import TimeSlider from '@/components/cse/core/clock/TimeSlider.vue';
 
 const HANDLED_KEY_EVENTS = new Set([
     'keyup'
@@ -110,7 +112,8 @@ export default {
         LinearCompass2, DropdownToolbar,
         EntitySelector, MapOverlay, DrawingTools, WorldState,
         CseIcon,
-        CseContextMenu, CseRadialMenu, CseDockable, CseNotificationsArea
+        CseContextMenu, CseRadialMenu, CseDockable, CseNotificationsArea,
+        TimeSlider,
     },
     data()
     {

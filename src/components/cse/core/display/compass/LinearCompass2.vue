@@ -93,7 +93,7 @@ import gsap from 'gsap'; // provides tweening functions
 import MathUtils from '@/assets/js/utils/math-utils.js';
 import { $tWorldInterface, $isInOuterra } from '@/assets/js/titan/titan-utils.js';
 
-import LinearCompass2Objective from '@/components/cse/core/display/LinearCompass2Objective.vue';
+import LinearCompass2Objective from '@/components/cse/core/display/compass/LinearCompass2Objective.vue';
 
 const DEFAULT_UPDATE_INTERVAL_MS = 125; // update every 125ms (8x per second)
 const MIN_UPDATE_INTERVAL = 100; // at most update 10x per second
