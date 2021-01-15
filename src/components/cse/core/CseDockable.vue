@@ -3,7 +3,7 @@
 An component which can be "docked" to an edge of the screen taking up minimal
 space, and expanded to reveal the full content inside.
 
-Collapsed:       Expanded:
+isCollapsed:       Expanded:
 |                |
 +-+              +------------+-+
 |»|              | CONTENT    |«|
@@ -60,7 +60,7 @@ Properties:
 
 Events:
     expanded: fired when the dockable is expanded
-    collapsed: fired when the dockable is collapsed
+    isCollapsed: fired when the dockable is isCollapsed
 -->
 <template>
     <div
@@ -69,7 +69,7 @@ Events:
         :class="`dock-${_dock}`"
     >
         <div
-            v-if="!collapsed"
+            v-if="!isCollapsed"
             class="dockable-content"
         >
             <slot>
@@ -81,7 +81,7 @@ Events:
             v-ripple
             class="dockable-handle clickable"
             :class="{draggable: draggable}"
-            @click="collapsed=!collapsed"
+            @click="isCollapsed=!isCollapsed"
         >
             <v-icon
                 class="dockable-trigger"
@@ -112,7 +112,7 @@ import MathUtils from '@/assets/js/utils/math-utils.js';
 
 const EVENT = {
     EXPANDED: 'expanded',
-    COLLAPSED: 'collapsed',
+    isCollapsed: 'isCollapsed',
 };
 
 export default {
@@ -148,6 +148,11 @@ export default {
             type: [Number, String],
             default: 200,
         },
+        collapsed:
+        {
+            type: Boolean,
+            default: true,
+        },
         draggable:
         {
             type: Boolean,
@@ -162,7 +167,7 @@ export default {
     data()
     {
         return {
-            collapsed: true,
+            isCollapsed: true,
             currentOffset: 0,
             dragStart: { x: 0, y: 0 },
         };
@@ -174,7 +179,7 @@ export default {
         {
             let width = this.width;
             let height = this.height;
-            if(this.collapsed)
+            if(this.isCollapsed)
             {
                 const bounds = this.handle.getBoundingClientRect();
                 width = bounds.width;
@@ -183,9 +188,9 @@ export default {
             return {width, height};
         },
         minXoffset() { return this.desktopBounds.left; },
-        maxYoffset() { return this.desktopBounds.bottom - (this.collapsed ? this.bounds.height : this.height); },
+        maxYoffset() { return this.desktopBounds.bottom - (this.isCollapsed ? this.bounds.height : this.height); },
         minYoffset() { return this.desktopBounds.top; },
-        maxXoffset() { return this.desktopBounds.right - (this.collapsed ? this.bounds.width : this.width); },
+        maxXoffset() { return this.desktopBounds.right - (this.isCollapsed ? this.bounds.width : this.width); },
         _dock() { return '' + this.dock.toLowerCase().charAt(0); },
         isDockEast() { return this._dock === 'e'; },
         isDockWest() { return this._dock === 'w'; },
@@ -197,22 +202,23 @@ export default {
         {
             // this is for the expand/collapse trigger icon
             if(this.isDockEast)
-                return this.collapsed?'left':'right';
+                return this.isCollapsed?'left':'right';
             else if(this.isDockWest)
-                return this.collapsed?'right':'left';
+                return this.isCollapsed?'right':'left';
             else if(this.isDockNorth)
-                return this.collapsed?'down':'up';
+                return this.isCollapsed?'down':'up';
             else//  if(this.isDockSouth)
-                return this.collapsed?'up':'down';
+                return this.isCollapsed?'up':'down';
         },
     },
     watch:
     {
         dock() { this.updateStyles(); },
-        collapsed(isCollapsed)
+        collapsed(isCollapsed) { this.isCollapsed = isCollapsed; },
+        isCollapsed(isCollapsed)
         {
             this.updateStyles();
-            this.$emit(isCollapsed ? EVENT.COLLAPSED : EVENT.EXPANDED);
+            this.$emit(isCollapsed ? EVENT.isCollapsed : EVENT.EXPANDED);
         },
         offset(newOffset) { this.currentOffset = this.parseOffset(newOffset); this.updateStyles(); },
         currentOffset() { this.updateStyles(); },
@@ -226,6 +232,7 @@ export default {
         this.handle = this.$refs.handle;
 
         this.currentOffset = this.parseOffset(this.offset);
+        this.isCollapsed = this.collapsed;
 
         this.updateStyles();
     },
@@ -307,8 +314,8 @@ export default {
 
             const style = this.container.style;
 
-            style.height = this.collapsed ? 'auto' : this.height + 'px';
-            style.width = this.collapsed ? 'auto' : this.width + 'px';
+            style.height = this.isCollapsed ? 'auto' : this.height + 'px';
+            style.width = this.isCollapsed ? 'auto' : this.width + 'px';
             style.maxWidth = this.width + 'px';
 
             if(this.isDockEW)
@@ -319,7 +326,7 @@ export default {
                 let xPos = 0;
                 if(this.isDockEast)
                 {
-                    xPos = this.desktopBounds.right - (this.collapsed ? this.bounds.width : this.width);
+                    xPos = this.desktopBounds.right - (this.isCollapsed ? this.bounds.width : this.width);
                 }
                 style.left = xPos + 'px';
             }
@@ -331,7 +338,7 @@ export default {
                 let yPos = 0;
                 if(this.isDockSouth)
                 {
-                    yPos = this.desktopBounds.bottom - (this.collapsed ? this.bounds.height : this.height);
+                    yPos = this.desktopBounds.bottom - (this.isCollapsed ? this.bounds.height : this.height);
                 }
                 style.top = yPos + 'px';
             }

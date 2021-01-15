@@ -775,10 +775,22 @@ pre, code, .monospace
     position: absolute;
 
     display: flex;
-    &.dock-w { flex-direction: row; }
-    &.dock-e { flex-direction: row-reverse; }
-    &.dock-n { flex-direction: column; }
-    &.dock-s { flex-direction: column-reverse; }
+    &.dock-w {
+        flex-direction: row;
+        .dockable-content { box-shadow: inset -8px 0 8px -8px rgba(0,0,0,0.8); }
+    }
+    &.dock-e {
+        flex-direction: row-reverse;
+        .dockable-content { box-shadow: inset 8px 0 8px -8px rgba(0,0,0,0.8); }
+    }
+    &.dock-n {
+        flex-direction: column;
+        .dockable-content { box-shadow: inset 0 -8px 8px -8px rgba(0,0,0,0.8); }
+    }
+    &.dock-s {
+        .dockable-content { box-shadow: inset 0 8px 8px -8px rgba(0,0,0,0.8); }
+        flex-direction: column-reverse;
+    }
 
     .dockable-content
     {
