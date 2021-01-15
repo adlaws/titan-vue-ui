@@ -293,6 +293,12 @@ pre, code, .monospace
     }
 }
 
+.cse-overlay-text
+{
+    color: #FFF;
+    text-shadow: 0 0 2px black, 0 0 4px black;
+}
+
 .cse-splash
 {
     display: flex;

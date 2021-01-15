@@ -41,7 +41,8 @@
         />
 
         <div
-            style="position:absolute;display:block;width:auto;height:auto;padding: 2px 5px 2px 5px;text-align:right;font-size:80%;text-shadow:0 0 2px black, 0 0 4px black;color:white;right:16px;bottom:40px;"
+            class="cse-overlay-text"
+            style="position:absolute;display:block;width:auto;height:auto;padding: 2px 5px 2px 5px;text-align:right;font-size:80%;right:16px;bottom:40px;"
             @click="status.health.head=Math.random()*100.0"
         >
             AK-74M Tracer + 1P78<br>
