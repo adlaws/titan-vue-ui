@@ -17,6 +17,11 @@
             style="min-height:16px;"
             @input="dayOffsetChanged"
         />
+        <div
+            v-if="daylightGradient"
+            style="position:relative;top:-8px;margin: 0 8px;width:auto;height:5px;"
+            :style="daylightGradient"
+        />
     </div>
 </template>
 
@@ -24,6 +29,7 @@
 import tz from 'tz-lookup';
 import { DateTime } from 'luxon';
 
+import SunCalc from '@/assets/js/utils/suncalc.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 import { $isInOuterra, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
 
@@ -41,7 +47,8 @@ export default {
             useLocalTz: true,
             localTzOffset: 0,
             localTzName: 'UTC',
-            running: false,
+            isUpdating: false,
+            daylightGradient: null,
         };
     },
     computed:
@@ -88,9 +95,8 @@ export default {
             const activeScenario = $tWorldInterface.getActiveScenario();
             this.dayOffset = (activeScenario.getTimeOfDay() / 60000) | 0;
             // start the update cycle
-            if(this.useLocalTz)
-                this.startUpdates();
         }
+        this.startUpdates();
     },
     beforeDestroy()
     {
@@ -112,12 +118,14 @@ export default {
         startUpdates()
         {
             this.stopUpdates();
-            this.running = true;
+            this.isUpdating = true;
             this.update();
         },
         stopUpdates()
         {
-            this.running = false;
+            this.isUpdating = false;
+            this.daylightGradient = null;
+
             if(this.updateTimer !== null)
             {
                 clearTimeout(this.updateTimer);
@@ -126,35 +134,62 @@ export default {
         },
         update()
         {
-            if(!this.running)
+            if(!this.isUpdating)
                 return;
 
+            let lla = {latitude: -41.4354, longitude:173.9198 }; // New Zealand
+            // let lla = {latitude: -73.6931, longitude:42.7235 }; New York
             if($isInOuterra)
             {
                 const scenarioCamera = $tWorldInterface.getActiveScenario().getActiveCamera();
                 if(scenarioCamera)
                 {
-                    const lla = scenarioCamera.getLLA();
-                    const timezone = tz(lla.latitude, lla.longitude);
-                    const dummy = DateTime.local().setZone(timezone);
-                    if(dummy.offset !== this.localTzOffset)
-                    {
-                        const offsetDelta = this.localTzOffset - dummy.offset;
-                        this.dayOffset = MathUtils.wrapClamp(this.dayOffset - offsetDelta, 0, 1440);
-                    }
-                    this.localTzOffset = dummy.offset;
-                    this.localTzName = dummy.offsetNameShort;
+                    lla = scenarioCamera.getLLA();
                 }
             }
-            else
+            const timezone = tz(lla.latitude, lla.longitude);
+            const datetime = DateTime.local().setZone(timezone);
+            // datetime.set({hour:0,minute:0,second:0});
+            // this.daylightGradient = this.makeDaylightGradient(lla.latitude, lla.longitude, datetime);
+            if(datetime.offset !== this.localTzOffset)
             {
-                const timezone = tz(42.7235, -73.6931);
-                const dummy = DateTime.local().setZone(timezone);
-                this.localTzOffset = dummy.offset;
-                this.localTzName = dummy.offsetNameShort;
+                const offsetDelta = this.localTzOffset - datetime.offset;
+                this.dayOffset = MathUtils.wrapClamp(this.dayOffset - offsetDelta, 0, 1440);
             }
+            this.localTzOffset = datetime.offset;
+            this.localTzName = datetime.offsetNameShort;
 
             this.updateTimer = setTimeout(this.update, UPDATE_INTERVAL);
+        },
+        makeDaylightGradient(lat, long, date)
+        {
+            const foo = SunCalc.getSunTimes(date, lat, long);
+            const values = [
+                {name:'nadir', time: foo.nadir, color:'#000000'},
+                {name:'nightEnd', time: foo.nightEnd, color:'#000010'},
+                {name:'dawn', time: foo.dawn, color:'#000040'},
+                {name:'sunrise', time: foo.sunrise, color:'#ff7c30'},
+                {name:'sunriseEnd', time: foo.sunriseEnd, color:'#0080ff'},
+                {name:'solarNoon', time: foo.solarNoon, color:'#00c0ff'},
+                {name:'sunsetStart', time: foo.sunsetStart, color:'#0080ff'},
+                {name:'sunset', time: foo.sunset, color:'#fc412f'},
+                {name:'dusk', time: foo.dusk, color:'#010060'},
+                {name:'night', time: foo.night, color:'#000040'},
+            ];
+
+            //                                       nadir      nightend    dawn        sunrise     sunrise end solar noon  sunsetstart sunset      dusk        night        nadir
+            // background: linear-gradient(to right, #000000 0%,#000010 10%, #000040 18%,#ff7c30 21%,#0080ff 24%,#80c0ff 51%,#0080ff 77%,#fc412f 80%,#010060 83%,#000040 88%,#000000 100%)
+            const nadir = foo.nadir.getTime();
+            const colors = [];
+            for(let i=0; i<values.length; i++)
+            {
+                const value = values[i];
+                const time = value.time.getTime();
+                let relTime = time - nadir;
+                const pct = relTime / (24 * 3600 * 1000) * 100;
+                colors.push(value.color+' '+pct+'%');
+            }
+            return 'background: linear-gradient(to right, '+colors.join(',')+',#000000 100%)';
         },
     }
 };
