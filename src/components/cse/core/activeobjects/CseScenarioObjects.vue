@@ -9,7 +9,7 @@
         :draggable="draggable"
         :collapsed="false"
     >
-        <div style="margin:4px;">
+        <div style="margin:4px;margin-top:16px;">
             <v-row>
                 <v-col cols="12">
                     <v-text-field
@@ -23,6 +23,17 @@
                 </v-col>
             </v-row>
             <v-row>
+                <v-col cols="1">
+                    <v-btn
+                        small
+                        :disabled="!hasFilters()"
+                        @click="clearFilters"
+                    >
+                        <v-icon>
+                            mdi-filter-remove
+                        </v-icon>
+                    </v-btn>
+                </v-col>
                 <v-col cols="1">
                     <v-btn
                         small
@@ -348,6 +359,24 @@ export default {
         countryLookup(alpha2)
         {
             return COUNTRY.ALPHA2[alpha2] || {name: 'UNKNOWN', alpha2: alpha2, alpha3: '---', numeric: -1};
+        },
+        hasFilters()
+        {
+            return this.lockFilter !== null ||
+                this.controlFilter !== null ||
+                this.domainFilter !== null ||
+                this.allianceFilter !== null ||
+                this.countryFilter.length > 0 ||
+                this.textFilter.length > 0;
+        },
+        clearFilters()
+        {
+            this.lockFilter = null;
+            this.controlFilter = null;
+            this.domainFilter = null;
+            this.allianceFilter = null;
+            this.countryFilter = [];
+            this.textFilter = '';
         },
         filterItems(items)
         {
