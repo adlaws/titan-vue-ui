@@ -1,6 +1,6 @@
 <template>
     <cse-dockable
-        title="ACTIVE"
+        title="ACTIVE OBJECTS"
         icon="mdi-lightning-bolt"
         :width="width"
         :height="height"
@@ -9,120 +9,168 @@
         :draggable="draggable"
         :collapsed="false"
     >
-        <v-container>
-            <v-text-field
-                label="Search"
-                dense
-                append-icon="mdi-magnify"
-                clearable
-            />
-            <v-select
-                v-model="filters"
-                dense
-                clearable
-                :items="filterChoices"
-                label="Filters"
-                multiple
-            >
-                <template v-slot:selection="data">
-                    <v-chip
-                        small
-                        close
-                        @click:close="removeFilter(data.item)"
-                    >
-                        <v-icon>{{ data.item.icon }}</v-icon>
-                    </v-chip>
-                </template>
-                <template v-slot:item="data">
-                    <v-checkbox :value="filters.indexOf(data.item.value)!==-1" />
-                    <v-icon class="mr-2">
-                        {{ data.item.icon }}
-                    </v-icon>
-                    {{ data.item.text }}
-                </template>
-            </v-select>
-            <v-data-table
-                dense
-                item-key="uid"
-                :items="scenarioObjects"
-                show-expand
-                single-expand
-                :expanded="table.expanded"
-                :headers="table.headers"
-            >
-                <template v-slot:[`item.country`]="{ item }">
-                    <span
-                        class="flag-icon"
-                        :class="`flag-icon-${item.country}`"
-                        :title="item.country"
+        <div style="margin:4px;">
+            <v-row>
+                <v-col cols="12">
+                    <v-text-field
+                        v-model.trim="textFilter"
+                        trim
+                        label="Search"
+                        dense
+                        append-icon="mdi-magnify"
+                        clearable
                     />
-                    {{ item.country.toUpperCase() }}
-                </template>
-                <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon
-                        :color="item.locked?'warning':'secondary'"
-                        @click="toggleLock(item)"
-                    >
-                        mdi-lock{{ item.locked === false ? '-open-outline' : '' }}
-                    </v-icon>
-                    <v-icon
-                        :color="item.cameraLocked?'primary':'secondary'"
-                        @click="toggleCamera(item)"
-                    >
-                        {{ item.cameraLocked ? 'mdi-camera' : 'mdi-camera-outline' }}
-                    </v-icon>
-                    <v-icon
-                        :color="item.controlledBy === 'player'?'error':'secondary'"
-                        @click="toggleControl(item)"
-                    >
-                        {{ item.controlledBy === 'player' ? 'mdi-google-controller' : 'mdi-robot-outline' }}
-                    </v-icon>
-                </template>
-                <template v-slot:[`item.data-table-expand`]="{ item, isExpanded, expand }">
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="1">
                     <v-btn
-                        v-if="item.crew && item.crew.length>0"
-                        icon
-                        @click="expand(!isExpanded)"
+                        small
+                        @click="updateAllianceFilter"
                     >
                         <v-icon
-                            :class="{'mdi-rotate-180': isExpanded}"
+                            :color="allianceColor(allianceFilter)"
                         >
-                            mdi-chevron-down
+                            mdi-flag{{ allianceFilter === null ? '-outline' : '' }}
                         </v-icon>
                     </v-btn>
-                </template>
-                <template v-slot:expanded-item="{ headers, item }">
-                    <td :colspan="headers.length">
-                        Crew:
-                        <ul>
-                            <!-- eslint-disable-next-line vue/require-v-for-key -->
-                            <li v-for="crew in item.crew">
-                                <crew-entry
-                                    :crew-descriptor="crew"
-                                    :crew-entry="scenarioObjects[scenarioObjectUidToIndex[crew.uid]]"
-                                    @toggle-camera="toggleCamera"
-                                    @toggle-lock="toggleLock"
-                                    @toggle-control="toggleControl"
+                </v-col>
+                <v-col cols="1">
+                    <v-btn
+                        small
+                        @click="updateLockFilter"
+                    >
+                        <v-icon
+                            :color="lockFilter === null ? '' : 'warning'"
+                        >
+                            mdi-lock{{ lockFilter === null ? '-off-outline' : (lockFilter === true ? '' : '-open-variant') }}
+                        </v-icon>
+                    </v-btn>
+                </v-col>
+                <v-col cols="1">
+                    <v-btn
+                        small
+                        @click="updateControlFilter"
+                    >
+                        <v-icon
+                            :color="controlFilter === null ? '' : 'warning'"
+                        >
+                            {{ controlFilter === null ? 'mdi-google-controller-off' : (controlFilter === 'ai' ? 'mdi-robot' : 'mdi-google-controller') }}
+                        </v-icon>
+                    </v-btn>
+                </v-col>
+                <v-col cols="1">
+                    <v-btn
+                        small
+                        @click="updateDomainFilter"
+                    >
+                        <v-icon
+                            :color="domainFilter === null ? '' : 'warning'"
+                        >
+                            mdi-{{ domainIcon(domainFilter) }}
+                        </v-icon>
+                    </v-btn>
+                </v-col>
+                <v-col cols="3">
+                    <v-select
+                        v-model="countryFilter"
+                        dense
+                        clearable
+                        :items="countryFilterOptions"
+                        label="Country"
+                        multiple
+                    >
+                        <template v-slot:selection="data">
+                            <v-chip
+                                small
+                                close
+                                @click:close="removeCountryFilter(data.item)"
+                            >
+                                <country-flag
+                                    :alpha2="data.item"
                                 />
-                            </li>
-                        </ul>
-                    </td>
-                </template>
-            </v-data-table>
-        </v-container>
+                            </v-chip>
+                        </template>
+                        <template v-slot:item="data">
+                            <v-checkbox :value="countryFilter.indexOf(data.item)!==-1" />
+                            <country-flag class="mr-2" :alpha2="data.item" />
+                            {{ countryLookup(data.item).name }}
+                        </template>
+                    </v-select>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12">
+                    <v-tabs
+                        v-model="tab"
+                        vertical
+                    >
+                        <v-tab>
+                            <v-icon left>
+                                mdi-tank
+                            </v-icon>
+                            &times;{{ vehicles.length }}
+                        </v-tab>
+                        <v-tab>
+                            <v-icon left>
+                                mdi-human
+                            </v-icon>
+                            &times;{{ lifeforms.length }}
+                        </v-tab>
+                        <v-tab>
+                            <v-icon left>
+                                mdi-cube
+                            </v-icon>
+                            &times;{{ others.length }}
+                        </v-tab>
+                        <v-tabs-items v-model="tab">
+                            <v-tab-item>
+                                <vehicle-table
+                                    :vehicles="vehicles"
+                                    :scenario-objects="scenarioObjects"
+                                    :scenario-objects-by-uid="scenarioObjectsByUid"
+                                />
+                            </v-tab-item>
+                            <v-tab-item>
+                                <lifeform-table
+                                    :lifeforms="lifeforms"
+                                    :scenario-objects="scenarioObjects"
+                                />
+                            </v-tab-item>
+                            <v-tab-item>
+                                <objects-table
+                                    :objects="others"
+                                    :scenario-objects="scenarioObjects"
+                                />
+                            </v-tab-item>
+                        </v-tabs-items>
+                    </v-tabs>
+                </v-col>
+            </v-row>
+        </div>
     </cse-dockable>
 </template>
 
 <script>
 import { /*$tLogger*/ } from '@/assets/js/titan/titan-utils.js';
+import { COUNTRY } from '@/assets/js/utils/countries.js';
 
 import CseDockable from '@/components/cse/core/CseDockable.vue';
-import CrewEntry from './CrewEntry.vue';
+import CountryFlag from '@/components/cse/core/CountryFlag.vue';
+import VehicleTable from './VehicleTable.vue';
+import LifeformTable from './LifeformTable.vue';
+import ObjectsTable from './ObjectsTable.vue';
+
+const KIND = {
+    VEHICLE:'vehicle',
+    LIFEFORM:'lifeform',
+};
 
 export default {
     name:'cse-scenario-objects',
     components:{
-        CseDockable, CrewEntry
+        CseDockable, CountryFlag,
+        VehicleTable, LifeformTable, ObjectsTable,
     },
     props:
     {
@@ -155,10 +203,16 @@ export default {
     data()
     {
         return {
-            filters: [],
+            tab: null,
+            textFilter:'',
+            countryFilter: [],
+            allianceFilter: null,
+            domainFilter: null,
+            lockFilter: null,
+            controlFilter: null,
             table: {
                 headers:[
-                    { value: 'kind', text: 'Thing', sortable: true, align: 'start', },
+                    { value: 'model', text: 'Model', sortable: true, align: 'start', },
                     { value: 'name', text: 'Callsign', sortable: true, align: 'start', },
                     { value: 'country', text: 'Country', sortable: true, align: 'start', },
                     { value: 'actions', text: 'Actions', sortable: false, align: 'start', },
@@ -169,9 +223,12 @@ export default {
             scenarioObjects: [
                 {
                     uid:1,
-                    kind:'Abrams M1A1',
+                    model:'Abrams M1A1',
+                    kind:KIND.VEHICLE,
+                    domain:'land',
                     name:'Tank A',
                     country:'au',
+                    alliance:'blufor',
                     locked:false,
                     cameraLocked:false,
                     controlledBy:'ai',
@@ -179,104 +236,236 @@ export default {
                         {role: 'Driver', uid: 3},
                         {role: 'Passenger 1', uid: 4},
                     ],
-                    canExpand: true,
                 },
                 {
                     uid:2,
-                    kind:'Bushmaster PMV',
+                    model:'Bushmaster PMV',
                     name:'BushMan',
+                    kind:KIND.VEHICLE,
+                    domain:'land',
                     country:'au',
+                    alliance:'blufor',
                     locked:false,
                     cameraLocked:false,
                     controlledBy:'ai',
                     crew:[],
-                    canExpand: false,
                 },
                 {
                     uid:3,
-                    kind:'CAMCU AU',
+                    model:'CAMCU AU',
+                    kind:KIND.LIFEFORM,
+                    domain:'land',
                     name:'George',
                     country:'au',
+                    alliance:'blufor',
                     locked:false,
                     cameraLocked:false,
                     controlledBy:'ai',
-                    crew:[],
-                    canExpand: false,
                 },
                 {
                     uid:4,
-                    kind:'CAMCU AU',
+                    model:'CAMCU AU',
+                    kind:KIND.LIFEFORM,
+                    domain:'land',
                     name:'Sam',
                     country:'au',
+                    alliance:'blufor',
+                    locked:false,
+                    cameraLocked:false,
+                    controlledBy:'ai',
+                },
+                {
+                    uid:5,
+                    model:'MRH',
+                    name:'Chopper',
+                    kind:KIND.VEHICLE,
+                    domain:'land',
+                    country:'au',
+                    alliance:'blufor',
                     locked:false,
                     cameraLocked:false,
                     controlledBy:'ai',
                     crew:[],
-                    canExpand: false,
+                },
+                {
+                    uid:100,
+                    model:'Abrams M1A1',
+                    kind:KIND.VEHICLE,
+                    domain:'land',
+                    name:'Tankovski',
+                    country:'ru',
+                    alliance:'opfor',
+                    locked:false,
+                    cameraLocked:false,
+                    controlledBy:'ai',
+                    crew:[
+                        {role: 'Driver', uid: 101},
+                    ],
+                },
+                {
+                    uid:101,
+                    model:'CAMCU AU',
+                    kind:KIND.LIFEFORM,
+                    domain:'land',
+                    name:'Yuri',
+                    country:'ru',
+                    alliance:'opfor',
+                    locked:false,
+                    cameraLocked:false,
+                    controlledBy:'ai',
                 },
             ],
-            filterChoices:
-            [
-                {text: 'Human', value: 'human', icon: 'mdi-human'},
-                {text: 'Animal', value: 'animal', icon: 'mdi-dog-side'},
-                {text: 'Vehicle', value: 'vehicle', icon: 'mdi-car'},
-                {text: 'Scenery', value: 'scenery', icon: 'mdi-pine-tree'},
-                {text: 'Civilian', value: 'civilian', icon: 'mdi-account-tie'},
-                {text: 'Military', value: 'military', icon: 'mdi-police-badge'},
-                {text: 'Locked', value: 'locked', icon: 'mdi-lock'},
-            ]
         };
     },
     computed:
     {
-        scenarioObjectUidToIndex()
+        countryFilterOptions()
+        {
+            const countries = Array.from(new Set(this.scenarioObjects.map(x=>x.country)));
+            countries.sort();
+            return countries;
+        },
+        vehicles()
+        {
+            let vehicles = this.scenarioObjects.filter(x => x.kind===KIND.VEHICLE);
+            return this.filterItems(vehicles);
+        },
+        lifeforms()
+        {
+            let lifeforms = this.scenarioObjects.filter(x => x.kind===KIND.LIFEFORM);
+            return this.filterItems(lifeforms);
+        },
+        others() { return this.scenarioObjects.filter(x => !(x.kind===KIND.VEHICLE || x.kind===KIND.LIFEFORM)); },
+        scenarioObjectsByUid()
         {
             return this.scenarioObjects
-                .map((x,idx) => [x.uid, idx])
+                .map((x) => [x.uid, x])
                 .reduce((obj,[key,val]) => (obj[key] = val,obj), {});
-        }
+        },
     },
     methods:
     {
-        removeFilter(filterChoice)
+        countryLookup(alpha2)
         {
-            for(let idx=0;idx<this.filters.length;idx++)
+            return COUNTRY.ALPHA2[alpha2] || {name: 'UNKNOWN', alpha2: alpha2, alpha3: '---', numeric: -1};
+        },
+        filterItems(items)
+        {
+            // cheapest / most likely to knock out the most things goes first
+            if(this.lockFilter !== null)
+                items = items.filter(x => x.locked === this.lockFilter);
+
+            if(this.controlFilter !== null)
+                items = items.filter(x => x.controlledBy === this.controlFilter);
+
+            if(this.domainFilter !== null)
+                items = items.filter(x => x.domain === this.domainFilter);
+
+            if(this.allianceFilter !== null)
+                items = items.filter(x => x.alliance === this.allianceFilter);
+
+            if(this.countryFilter.length>0)
+                items = items.filter(x => this.countryFilter.indexOf(x.country)>=0);
+
+            // most expensive filter goes last
+            if(this.textFilter.length > 0)
             {
-                if(this.filters[idx] === filterChoice.value)
+                const lCaseFilter = this.textFilter.toLowerCase();
+                items = items.filter(x=>
                 {
-                    this.filters.splice(idx, 1);
+                    return x.model.toLowerCase().indexOf(lCaseFilter)>=0 ||
+                        x.name.toLowerCase().indexOf(lCaseFilter)>=0;
+                });
+            }
+
+            return items;
+        },
+        removeCountryFilter(country)
+        {
+            for(let idx=0;idx<this.countryFilter.length;idx++)
+            {
+                if(this.countryFilter[idx] === country)
+                {
+                    this.countryFilter.splice(idx, 1);
                     return;
                 }
             }
         },
-        toggleLock(item)
+        updateAllianceFilter()
         {
-            item.locked = !item.locked;
-        },
-        toggleCamera(item)
-        {
-            if(!item.cameraLocked)
-            {
-                this.scenarioObjects.filter(x => x.cameraLocked).forEach(x => x.cameraLocked = false);
-                item.cameraLocked = true;
-            }
+            if(this.allianceFilter === null)
+                this.allianceFilter = 'blufor';
+            else if(this.allianceFilter === 'blufor')
+                this.allianceFilter = 'opfor';
+            else if(this.allianceFilter === 'opfor')
+                this.allianceFilter = 'civilian';
+            else if(this.allianceFilter === 'civilian')
+                this.allianceFilter = 'neutral';
             else
-            {
-                item.cameraLocked = false;
-            }
+                this.allianceFilter = null;
         },
-        toggleControl(item)
+        allianceColor(alliance)
         {
-            if(item.controlledBy === 'ai')
-            {
-                this.scenarioObjects.filter(x => x.controlledBy === 'player').forEach(x => x.controlledBy = 'ai');
-                item.controlledBy = 'player';
-            }
-            else if(item.controlledBy === 'player')
-            {
-                item.controlledBy = 'ai';
-            }
-        }
+            if(alliance === null)
+                return '';
+            if(alliance === 'blufor')
+                return '#04f';
+            if(alliance === 'opfor')
+                return '#F00';
+            if(alliance === 'civilian')
+                return '#4f4';
+            // neutral
+            return '#Ff0';
+        },
+        updateDomainFilter()
+        {
+            if(this.domainFilter === null)
+                this.domainFilter = 'land';
+            else if(this.domainFilter === 'land')
+                this.domainFilter = 'surface';
+            else if(this.domainFilter === 'surface')
+                this.domainFilter = 'subsurface';
+            else if(this.domainFilter === 'subsurface')
+                this.domainFilter = 'air';
+            else if(this.domainFilter === 'air')
+                this.domainFilter = 'space';
+            else
+                this.domainFilter = null;
+        },
+        domainIcon(domain)
+        {
+            if(domain === null)
+                return 'earth-off';
+            if(domain === 'land')
+                return 'car';
+            if(domain === 'surface')
+                return 'ferry';
+            if(domain === 'subsurface')
+                return 'submarine';
+            if(domain === 'air')
+                return 'airplane';
+            if(domain === 'space')
+                return 'space-station';
+            return 'crosshairs-question';
+        },
+        updateLockFilter()
+        {
+            if(this.lockFilter === null)
+                this.lockFilter = true;
+            else if(this.lockFilter === true)
+                this.lockFilter = false;
+            else
+                this.lockFilter = null;
+        },
+        updateControlFilter()
+        {
+            if(this.controlFilter === null)
+                this.controlFilter = 'ai';
+            else if(this.controlFilter === 'ai')
+                this.controlFilter = 'player';
+            else
+                this.controlFilter = null;
+        },
     }
 };
 </script>

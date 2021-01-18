@@ -93,9 +93,8 @@
                     <template
                         v-slot:[`item.country`]="{ item }"
                     >
-                        <span
-                            class="flag-icon"
-                            :class="`flag-icon-${alphaCodeLookup(item)}`"
+                        <country-flag
+                            :alpha2="alphaCodeLookup(item)"
                             :title="item.BlueprintArr[3]"
                         />
                     </template>
@@ -136,13 +135,14 @@ import CseDesktopWindow from '@/components/common/cse/CseDesktopWindow.vue';
 import CseDesktopWindowContent from '@/components/common/cse/CseDesktopWindowContent.vue';
 import CseIcon from '@/components/cse/core/CseIcon.vue';
 import ImgFallback from '@/components/cse/core/ImgFallback.vue';
+import CountryFlag from '@/components/cse/core/CountryFlag.vue';
 
 export default {
     name: 'editor-ui',
     components:
     {
         CseDesktopWindow, CseDesktopWindowContent,
-        CseIcon,
+        CseIcon, CountryFlag,
         ImgFallback
     },
     data()

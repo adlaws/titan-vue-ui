@@ -268,6 +268,6 @@ COUNTRY_NAME['Moldova'] = COUNTRY_NAME['Moldova (the Republic of)'];
 export const COUNTRY = {
     ALPHA2: DataUtils.objArrayToLookup(COUNTRY_CODES, 'alpha2'),
     ALPHA3: DataUtils.objArrayToLookup(COUNTRY_CODES, 'alpha3'),
-    numeric:  DataUtils.objArrayToLookup(COUNTRY_CODES, 'numeric'),
+    NUMERIC: DataUtils.objArrayToLookup(COUNTRY_CODES, 'numeric'),
     NAME: COUNTRY_NAME,
 };
