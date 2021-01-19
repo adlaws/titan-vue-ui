@@ -173,7 +173,7 @@
                                     <v-col cols="3">
                                         <length-field
                                             v-model="tabs.atmosphere.fog.height"
-                                            :show-unit-options="false"
+                                            show-unit-options
                                             :display-units="LENGTH_UNITS.METERS"
                                         />
                                     </v-col>
@@ -318,7 +318,7 @@ const PRECIPITATION_TYPES = [
 ];
 
 export default {
-    name: 'editor-ui',
+    name: 'world-state',
     components:
     {
         CseDesktopWindow, CseDesktopWindowContent,

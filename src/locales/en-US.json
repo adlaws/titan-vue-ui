@@ -54,5 +54,15 @@
 
         }
     },
+    "waypointSettings":
+    {
+        "waypoints":
+        {
+            "Waypoints": "Waypoints"
+        },
+        "assignments":{
+            "Assignments": "Assignments"
+        }
+    },
     "":""
 }

@@ -5,9 +5,9 @@
 <template>
     <v-text-field
         v-model.trim.number="currentValue"
-        reverse
-        prefix="%"
+        class="input-align-right"
         hide-details="auto"
+        suffix="%"
         :messages="messages"
         :error="!isValid"
         :disabled="disabled"

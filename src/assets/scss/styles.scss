@@ -26,7 +26,6 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
-    font-size: 16px;
     font-family: Verdana, Geneva, "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     // -webkit-font-smoothing: subpixel-antialiased;
@@ -89,28 +88,38 @@ body {
     }
 }
 
+.v-input
+{
+    &.input-align-right
+    {
+        input
+        {
+            text-align:right;
+        }
+    }
+}
 // The following is to provide styling to make forms and form fields more compact in their
 // presentation than the Vuetify default. Simply add a 'compact' class to a <v-form> component
 // to apply the visual style.
 $scale-factor: 0.75;
 $scale-pct: percentage($scale-factor);
-.compact
+.v-form.compact
 {
     .row
     {
         margin: 0px !important;
-        padding: 0px !important;
+        padding: 1px 0 !important;
     }
     .col
     {
         margin: 0px !important;
-        padding: 0px !important;
+        padding: 0 2px !important;
     }
 
     label
     {
         margin: 0 4px 0 0 !important;
-        font-size: $scale-pct !important;
+        font-size: 0.75rem !important;
     }
 
     input
@@ -126,11 +135,7 @@ $scale-pct: percentage($scale-factor);
         .v-input__slot
         {
             margin-bottom: 1px !important;
-            font-size: $scale-pct !important;
-            label
-            {
-                font-size: 100% !important;
-            }
+            font-size: 0.75rem !important;
         }
 
         .v-input__prepend-inner, .v-input__append-inner
@@ -138,12 +143,12 @@ $scale-pct: percentage($scale-factor);
             margin: 0px;
             .v-input__icon
             {
-                height:auto;
+                height: auto;
             }
             .v-icon
             {
                 margin-top: 4px;
-                font-size: 100% !important;
+                font-size: 0.75rem !important;
             }
         }
 
@@ -153,23 +158,20 @@ $scale-pct: percentage($scale-factor);
             .v-icon
             {
                 margin-top: 0px;
-                font-size: 100% !important;
+                font-size: 0.75rem !important;
             }
             .v-select
             {
-                bottom: 2px;
+                padding-left: 0.2em !important;
             }
         }
     }
 
     .v-select
     {
-        .v-input__slot
+        .v-icon
         {
-            &:before, &:after
-            {
-                bottom: 1px !important;
-            }
+            font-size: 1.5em !important;
         }
 
         .v-select__slot
@@ -200,7 +202,7 @@ $scale-pct: percentage($scale-factor);
 
             .v-menu__content
             {
-                font-size: 8px;
+                font-size: 0.5rem;
             }
         }
     }
@@ -217,7 +219,54 @@ $scale-pct: percentage($scale-factor);
     }
 }
 
+.v-data-table.compact
+{
+    .v-icon
+    {
+        font-size: 1.5em;
+    }
+    >.v-data-table__wrapper>table{
+        >tbody>tr>td,
+        >tbody>tr>th,
+        >tfoot>tr>td,
+        >tfoot>tr>th,
+        >thead>tr>td,
+        >thead>tr>th
+        {
+            padding: 0 0.5rem;
+            height: 1.5rem;
+        }
+    }
+    >.v-data-footer>.v-data-footer__select .v-select {
+        margin: 0.25rem 0 0.25rem 0.75rem;
+    }
+}
+
+.container.compact
+{
+    padding:4px;
+}
+
 // ------------------------------------------------------------------------------------------------
+.ellipsis-overflow
+{
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+}
+td.ellipsis-overflow
+{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 8rem;
+}
+
+.maxw-99
+{
+    max-width:99%;
+}
+
 .clickable
 {
     cursor: pointer;

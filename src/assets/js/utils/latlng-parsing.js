@@ -156,11 +156,11 @@ export default class LatLongParser
             format = LatLongParser.DECIMAL;
 
         const formatters = {
-            [LatLongParser.DECIMAL]: LatLongParser.to_decimaldegs_lat_lon,
-            [LatLongParser.DMS]: LatLongParser.to_nsewdms_lat_lon,
-            [LatLongParser.WIKIPEDIA]: LatLongParser.to_wikipedia_lat_lon,
-            [LatLongParser.GOOGLE]: LatLongParser.to_google_lat_lon,
-            [LatLongParser.MGRS]: LatLongParser.to_mgrs,
+            [LATLNG_FORMAT.DECIMAL]: LatLongParser.to_decimaldegs_lat_lon,
+            [LATLNG_FORMAT.DMS]: LatLongParser.to_nsewdms_lat_lon,
+            [LATLNG_FORMAT.WIKIPEDIA]: LatLongParser.to_wikipedia_lat_lon,
+            [LATLNG_FORMAT.GOOGLE]: LatLongParser.to_google_lat_lon,
+            [LATLNG_FORMAT.MGRS]: LatLongParser.to_mgrs,
         };
 
         let formatter = formatters[format] || LatLongParser.to_decimaldegs_lat_lon;
@@ -664,13 +664,13 @@ export default class LatLongParser
         // Create regex patterns to match variations of '34.56N,23.45E' style degrees/mins/seconds
         // Will accept any of the following, which are all equivalent:
         // 34.56N,23.45E        34.56N 23.45E       34.56 N 23.45 E
-        const PATTERN_1 = new RegExp(LATLNG_REGEX.LEADING_SPACES + LATLNG_REGEX.FLOAT_0_90 + '\\s*' + LATLNG_REGEX.NS + '\\s*\\,?\\s*' + LATLNG_REGEX.FLOAT_0_180 + '\\s*' + LATLNG_REGEX.EW + LATLNG_REGEX.TRAILING_SPACES);
+        const PATTERN_1 = new RegExp(LATLNG_REGEX.LEADING_SPACES + LATLNG_REGEX.FLOAT_0_90 + '\\s*' + LATLNG_REGEX.DEG_SYMBOL + '?\\s*' + LATLNG_REGEX.NS + '\\s*\\,?\\s*' + LATLNG_REGEX.FLOAT_0_180 + '\\s*' + LATLNG_REGEX.DEG_SYMBOL + '?\\s*' + LATLNG_REGEX.EW + LATLNG_REGEX.TRAILING_SPACES);
         // N34.56,E23.45        N34.56 E23.45       N 34.56 E 23.45
-        const PATTERN_2 = new RegExp(LATLNG_REGEX.LEADING_SPACES + LATLNG_REGEX.NS + '\\s*' + LATLNG_REGEX.FLOAT_0_90 + '\\s*\\,?\\s*' + LATLNG_REGEX.EW + '\\s*' + LATLNG_REGEX.FLOAT_0_180 + LATLNG_REGEX.TRAILING_SPACES);
+        const PATTERN_2 = new RegExp(LATLNG_REGEX.LEADING_SPACES + LATLNG_REGEX.NS + '\\s*' + LATLNG_REGEX.FLOAT_0_90 + '\\s*' + LATLNG_REGEX.DEG_SYMBOL + '?\\s*\\,?\\s*' + LATLNG_REGEX.EW + '\\s*' + LATLNG_REGEX.FLOAT_0_180 + '\\s*' + LATLNG_REGEX.DEG_SYMBOL + '?' + LATLNG_REGEX.TRAILING_SPACES);
         // 23.45E,34.56N        23.45E 34.56N       23.45 E 34.56 N
-        const PATTERN_3 = new RegExp(LATLNG_REGEX.LEADING_SPACES + LATLNG_REGEX.FLOAT_0_180 + '\\s*' + LATLNG_REGEX.EW + '\\s*\\,?\\s*' + LATLNG_REGEX.FLOAT_0_90 + '\\s*' + LATLNG_REGEX.NS + LATLNG_REGEX.TRAILING_SPACES);
+        const PATTERN_3 = new RegExp(LATLNG_REGEX.LEADING_SPACES + LATLNG_REGEX.FLOAT_0_180 + '\\s*' + LATLNG_REGEX.DEG_SYMBOL + '?\\s*' + LATLNG_REGEX.EW + '\\s*\\,?\\s*' + LATLNG_REGEX.FLOAT_0_90 + '\\s*' + LATLNG_REGEX.DEG_SYMBOL + '?\\s*' + LATLNG_REGEX.NS + LATLNG_REGEX.TRAILING_SPACES);
         // E23.45,N34.56        E23.45 N34.56       E 23.45 N 34.56
-        const PATTERN_4 = new RegExp(LATLNG_REGEX.LEADING_SPACES + LATLNG_REGEX.EW + '\\s*' + LATLNG_REGEX.FLOAT_0_180 + '\\s*\\,?\\s*' + LATLNG_REGEX.NS + '\\s*' + LATLNG_REGEX.FLOAT_0_90 + LATLNG_REGEX.TRAILING_SPACES);
+        const PATTERN_4 = new RegExp(LATLNG_REGEX.LEADING_SPACES + LATLNG_REGEX.EW + '\\s*' + LATLNG_REGEX.FLOAT_0_180 + '\\s*'+ LATLNG_REGEX.DEG_SYMBOL + '?\\s*\\,?\\s*' + LATLNG_REGEX.NS + '\\s*' + LATLNG_REGEX.FLOAT_0_90 + '\\s*' + LATLNG_REGEX.DEG_SYMBOL + '?' + LATLNG_REGEX.TRAILING_SPACES);
         // put the patterns in a dictionary which also defines which regex capture
         // group indices contain the relevant information
         const matchers = [

@@ -5,12 +5,13 @@
     >
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
         <time-slider />
+        <waypoint-settings />
+        <world-state />
 
-        <cse-scenario-objects />
         <!--
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
-        <world-state />
+        <cse-scenario-objects />
         <entity-selector />
         <map-overlay />
         <drawing-tools />
@@ -87,6 +88,7 @@ import CseContextMenu from '@/components/cse/core/CseContextMenu.vue';
 import CseRadialMenu from '@/components/cse/core/CseRadialMenu.vue';
 import CseDockable from '@/components/cse/core/CseDockable.vue';
 import CseScenarioObjects from '@/components/cse/core/activeobjects/CseScenarioObjects.vue';
+import WaypointSettings from '@/components/cse/core/waypointsettings/WaypointSettings.vue';
 import CseNotificationsArea from '../core/CseNotificationsArea.vue';
 import TimeSlider from '@/components/cse/core/clock/TimeSlider.vue';
 
@@ -106,7 +108,7 @@ export default {
         EntitySelector, MapOverlay, DrawingTools, WorldState,
         CseIcon,
         CseContextMenu, CseRadialMenu, CseDockable, CseNotificationsArea,
-        CseScenarioObjects,
+        CseScenarioObjects, WaypointSettings,
         TimeSlider,
     },
     data()

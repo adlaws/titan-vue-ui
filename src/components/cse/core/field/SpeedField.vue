@@ -1,11 +1,11 @@
 <template>
     <v-text-field
         v-model="currentValue"
-        reverse
-        :prefix="showUnitOptions?'':currentUnits.abbr"
+        class="input-align-right"
+        hide-details="auto"
+        :suffix="showUnitOptions?'':currentUnits.abbr"
         :messages="messages"
         :error="!isValid"
-        hide-details="auto"
         :disabled="disabled"
         :hint="hint"
         :label="label"

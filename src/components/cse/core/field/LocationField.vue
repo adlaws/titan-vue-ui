@@ -1,39 +1,96 @@
 <template>
-    <span>
+    <div>
         <v-text-field
-            v-model="location"
+            v-model="currentLocation"
+            :messages="messages"
+            :error="!isValid"
+            :disabled="disabled"
+            :hint="hint"
+            :label="label"
+            :placeholder="placeholder"
+            :readonly="readonly"
             @input="parseLocation"
         />
-        <latitude class="ml-1" :latitude="latLng?latLng.latitude:0" />
-        <longitude class="ml-1" :longitude="latLng?latLng.longitude:0" />
-    </span>
+    </div>
 </template>
 
 <script>
-import LatLongParser from '@/assets/js/utils/latlng-parsing.js';
-
-import Latitude from '@/components/cse/core/display/Latitude.vue';
-import Longitude from '@/components/cse/core/display/Longitude.vue';
+import LatLongParser, { LATLNG_FORMAT } from '@/assets/js/utils/latlng-parsing.js';
 
 export default {
     name: 'location-field',
-    components:{
-        Latitude, Longitude,
+    props:
+    {
+        value: {
+            type: [Object, String],
+            default: null,
+        },
+        // these are Vuetify <v-text-field> properties which we allow and pass through
+        //   Ref: https://vuetifyjs.com/en/api/v-text-field/#props
+        disabled: Boolean,
+        readonly: Boolean,
+        hint: { type: String, default: undefined },
+        label: { type: String, default: undefined },
+        placeholder: { type: String, default: undefined },
     },
     data()
     {
         return {
-            location:'',
-            latLng: null,
+            currentLocation:'0N 0E',
+            latLng: {latitude:0, longitude:0},
         };
+    },
+    computed:
+    {
+        isValid()
+        {
+            return this.latLng !== null;
+        },
+        errorMessage()
+        {
+            return 'A valid location is required';
+        },
+        messages()
+        {
+            return this.isValid ? null : this.errorMessage;
+        }
+    },
+    watch:
+    {
+        value(newLocation) { this.updateLocation(newLocation); }
+    },
+    mounted()
+    {
+        this.updateLocation(this.value);
     },
     methods:
     {
         parseLocation()
         {
-            this.latLng = LatLongParser.fromString(this.location);
+            this.latLng = LatLongParser.fromString(this.currentLocation);
             if(this.latLng !== null)
                 this.$emit('input', this.latLng);
+        },
+        updateLocation(location)
+        {
+            if(!location)
+            {
+                this.latLng = null;
+                return;
+            }
+
+            if(typeof location === 'string')
+            {
+                this.latLng = LatLongParser.fromString(location);
+                if(this.latLng !== null)
+                    this.currentLocation = location;
+            }
+            else if(location.latitude !== undefined && location.longitude !== undefined )
+            {
+                this.latLng = {latitude:location.latitude, longitude: location.longitude};
+                if(this.latLng !== null)
+                    this.currentLocation = LatLongParser.toString(this.latLng.latitude, this.latLng.longitude, LATLNG_FORMAT.WIKIPEDIA);
+            }
         }
     }
 };
