@@ -258,7 +258,8 @@ export default {
             }
             else
             {
-                this.magneticHeading = MathUtils.wrapClamp(this.magneticHeading + (Math.random() * 10.0) -5, -180.0, 180.0);
+                // this.magneticHeading = (FastPerlinNoise.noise(Date.now()/1000) * 180);
+                this.magneticHeading = MathUtils.wrapClamp(this.magneticHeading + (Math.random() * 3.0) -1.5, -180.0, 180.0);
             }
 
             this.updateTimer = setTimeout(this.updateHeading, Math.max(MIN_UPDATE_INTERVAL, this.updateIntervalMs));
