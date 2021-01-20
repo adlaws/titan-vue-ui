@@ -138,9 +138,8 @@ export default {
                         'items-per-page-options':[5,10,25,50,100],
                     },
                     selected: [],
-                    sort(items, sortBy, sortDesc, locale, customSorters)
+                    sort(items, sortBy, sortDesc, /* locale, customSorters*/)
                     {
-                        console.log({items, sortBy, sortDesc, locale, customSorters});
                         sortBy = sortBy[0];
                         sortDesc = sortDesc[0];
 
