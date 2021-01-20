@@ -6,11 +6,11 @@
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
         <time-slider />
         <waypoint-settings />
-        <world-state />
-        <cse-scenario-objects />
 
         <!--
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
+        <world-state />
+        <cse-scenario-objects />
 
         <entity-selector />
         <map-overlay />

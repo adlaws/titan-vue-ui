@@ -4,8 +4,8 @@
         icon="vector-polyline"
         :x="150"
         :y="150"
-        :width="550"
-        :min-width="550"
+        :width="600"
+        :min-width="600"
         :height="500"
         :resizable="true"
         :closable="false"
@@ -39,23 +39,38 @@
                                 v-model="table.selected"
                                 dense
                                 class="compact"
+                                height="10rem"
                                 item-key="uid"
                                 single-select
                                 no-data-text="There are no waypoints"
                                 no-results-text="No waypoints match the filter criteria"
+                                :items-per-page="5"
                                 :headers="table.headers"
+                                :footer-props="table.footerprops"
+                                :options.sync="table.options"
                                 :items="waypointPath.waypoints"
                                 @click:row="handleWaypointRowClicked"
+                                @contextmenu:row="handleWaypointRowContextMenu"
                             >
                                 <!-- eslint-disable-next-line vue/no-unused-vars -->
-                                <template v-slot:[`item.idx`]="{ item, index }">
-                                    {{ index+1 }}
+                                <template v-slot:[`item.idx`]="{ item }">
+                                    {{ waypointIdxLookup[item.uid]+1 }}
+                                </template>
+                                <template v-slot:[`item.name`]="{ item }">
+                                    <span v-if="item.name.length>0">{{ item.name }}</span>
+                                    <span v-else class="secondary--text">&mdash;</span>
                                 </template>
                                 <template v-slot:[`item.type`]="{ item }">
                                     <v-icon>{{ WAYPOINT.TYPE[item.type].icon }}</v-icon>
                                 </template>
                                 <template v-slot:[`item.roe`]="{ item }">
                                     <v-icon>{{ WAYPOINT.ROE[item.roe].icon }}</v-icon>
+                                </template>
+                                <template v-slot:[`item.speed`]="{ item }">
+                                    {{ item.speed }}m/s
+                                </template>
+                                <template v-slot:[`item.wait`]="{ item }">
+                                    {{ item.wait }}s
                                 </template>
                                 <template v-slot:[`item.lla`]="{ item }">
                                     <mgrs v-if="isMGRS" :latitude="item.lla.latitude" :longitude="item.lla.longitude" />
@@ -64,46 +79,93 @@
                                         <longitude class="ml-1" :longitude="item.lla.longitude" />
                                     </span>
                                 </template>
-                                <template v-slot:[`item.speed`]="{ item }">
-                                    {{ item.speed }}m/s
+                                <template v-slot:[`item.altitude`]="{ item }">
+                                    {{ item.lla.altitude }}m
                                 </template>
-                                <template v-slot:[`item.wait`]="{ item }">
-                                    {{ item.wait }}s
-                                </template>
-                                <template v-slot:[`item.actions`]="{ item }">
-                                    <v-icon
-                                        @click="removeWaypoint(item)"
-                                    >
-                                        mdi-trash-can-outline
-                                    </v-icon>
+                                <template v-slot:[`footer.page-text`]="{ pageStart, pageStop, itemsLength }">
+                                    {{ pageStart }} - {{ pageStop }} of {{ itemsLength }} Waypoints
                                 </template>
                             </v-data-table>
                             <v-card
-                                v-if="selectedWaypoint!==null"
-                                min-height="100%"
+                                :class="{secondary: !selectedIsDummy}"
                             >
                                 <v-card-title>
-                                    {{ selectedWaypoint.name }}
+                                    <v-btn
+                                        icon
+                                        :disabled="selectedIsDummy"
+                                        @click="selectWaypointIdx(0)"
+                                    >
+                                        <v-icon>
+                                            mdi-chevron-double-left
+                                        </v-icon>
+                                    </v-btn>
+                                    <v-btn
+                                        icon
+                                        :disabled="selectedIsDummy"
+                                        @click="selectWaypointIdx(waypointIdxLookup[selectedWaypoint.uid]-1)"
+                                    >
+                                        <v-icon>
+                                            mdi-chevron-left
+                                        </v-icon>
+                                    </v-btn>
+                                    <span v-if="selectedIsDummy" class="secondary--text">
+                                        <v-icon class="inherit-color">mdi-map-marker-radius</v-icon>
+                                    </span>
+                                    <span v-else>
+                                        <v-icon>mdi-map-marker-radius</v-icon>
+                                        {{ selectedWaypoint.name }}
+                                    </span>
                                     <v-spacer />
-                                    <div class="subtitle-2">
-                                        Waypoint {{ waypointIdxLookup[selectedWaypoint.uid]+1 }}
+                                    <div
+                                        v-if="!selectedIsDummy"
+                                        class="subtitle-2"
+                                    >
+                                        Waypoint #{{ waypointIdxLookup[selectedWaypoint.uid]+1 }}
                                     </div>
+                                    <v-btn
+                                        icon
+                                        :disabled="selectedIsDummy"
+                                        @click="selectWaypointIdx(waypointIdxLookup[selectedWaypoint.uid]+1)"
+                                    >
+                                        <v-icon>
+                                            mdi-chevron-right
+                                        </v-icon>
+                                    </v-btn>
+                                    <v-btn
+                                        icon
+                                        :disabled="selectedIsDummy"
+                                        @click="selectWaypointIdx(-1)"
+                                    >
+                                        <v-icon>
+                                            mdi-chevron-double-right
+                                        </v-icon>
+                                    </v-btn>
                                 </v-card-title>
                                 <v-card-text>
                                     <v-form
                                         class="compact"
                                     >
                                         <v-row>
-                                            <v-col cols="6">
+                                            <v-col cols="3">
                                                 <v-text-field
                                                     v-model="selectedWaypoint.name"
-                                                    label="Name"
+                                                    :disabled="selectedIsDummy"
+                                                    placeholder="Unnamed"
+                                                    label="Waypoint Name"
                                                 />
                                             </v-col>
                                             <v-col cols="6">
                                                 <location-field
                                                     v-model="selectedWaypoint.lla"
+                                                    :disabled="selectedIsDummy"
                                                     label="Location"
+                                                />
+                                            </v-col>
+                                            <v-col cols="3">
+                                                <length-field
+                                                    v-model="selectedWaypoint.lla.altitude"
+                                                    :disabled="selectedIsDummy"
+                                                    label="Altitude"
                                                 />
                                             </v-col>
                                         </v-row>
@@ -111,6 +173,7 @@
                                             <v-col cols="4">
                                                 <v-select
                                                     v-model="selectedWaypoint.type"
+                                                    :disabled="selectedIsDummy"
                                                     label="Type"
                                                     item-value="id"
                                                     :items="WAYPOINT.TYPE_OPTIONS"
@@ -134,6 +197,7 @@
                                             <v-col cols="4">
                                                 <v-select
                                                     v-model="selectedWaypoint.roe"
+                                                    :disabled="selectedIsDummy"
                                                     label="ROE"
                                                     item-value="id"
                                                     :items="WAYPOINT.ROE_OPTIONS"
@@ -157,14 +221,33 @@
                                             <v-col cols="4">
                                                 <speed-field
                                                     v-model="selectedWaypoint.speed"
+                                                    :disabled="selectedIsDummy"
                                                     label="Speed"
                                                     :display-units="SPEED_UNITS.METERS_PER_SECOND"
                                                 />
                                             </v-col>
                                         </v-row>
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <span
+                                                    class="subtitle-2"
+                                                    :class="{'secondary--text': selectedIsDummy}"
+                                                >
+                                                    Secondary Actions: None
+                                                </span>
+                                            </v-col>
+                                        </v-row>
                                     </v-form>
                                 </v-card-text>
                             </v-card>
+                            <cse-context-menu
+                                v-if="contextMenu.show"
+                                :items="contextMenu.items"
+                                :x="contextMenu.x"
+                                :y="contextMenu.y"
+                                @selected="contextMenuSelection"
+                                @cancelled="hideContextMenu"
+                            />
                         </v-container>
                     </v-tab-item>
 
@@ -187,15 +270,19 @@
 </template>
 
 <script>
+import MathUtils from '@/assets/js/utils/math-utils.js';
 import { POSITION_FORMAT } from '@/assets/js/store/preference-manager.js';
 import { SPEED_UNITS } from '@/assets/js/utils/convert-utils.js';
 
 import CseDesktopWindow from '@/components/common/cse/CseDesktopWindow.vue';
 import CseDesktopWindowContent from '@/components/common/cse/CseDesktopWindowContent.vue';
+import CseContextMenu from '@/components/cse/core/CseContextMenu.vue';
+
 import Latitude from '@/components/cse/core/display/Latitude.vue';
 import Longitude from '@/components/cse/core/display/Longitude.vue';
 import MGRS from '@/components/cse/core/display/MGRS.vue';
 import SpeedField from '@/components/cse/core/field/SpeedField.vue';
+import LengthField from '@/components/cse/core/field/LengthField.vue';
 import LocationField from '@/components/cse/core/field/LocationField.vue';
 
 const WAYPOINT =
@@ -225,13 +312,23 @@ const WAYPOINT =
 WAYPOINT.TYPE_OPTIONS = Object.getOwnPropertyNames(WAYPOINT.TYPE).map(x => WAYPOINT.TYPE[x]);
 WAYPOINT.ROE_OPTIONS = Object.getOwnPropertyNames(WAYPOINT.ROE).map(x => WAYPOINT.ROE[x]);
 
+const DUMMY_WAYPOINT = {
+    uid: 'dummy',
+    name:'',
+    type: WAYPOINT.TYPE.MOVE.id,
+    lla: { latitude: 0, longitude: 0, altitude: 0},
+    speed: 0,
+    wait: 0,
+    roe: WAYPOINT.ROE.NEVER.id,
+};
+
 export default {
     name: 'waypoint-settings',
     components:
     {
-        CseDesktopWindow, CseDesktopWindowContent,
+        CseDesktopWindow, CseDesktopWindowContent, CseContextMenu,
         Latitude, Longitude, 'mgrs':MGRS,
-        SpeedField, LocationField,
+        SpeedField, LocationField, LengthField,
     },
     data()
     {
@@ -244,6 +341,11 @@ export default {
             },
             table:
             {
+                page: 1,
+                options: {
+                    page: 0,
+                    itemsPerPage: 5,
+                },
                 headers:[
                     { value: 'idx', text: '#', sortable: false, align: 'start', width: "1%", },
                     { value: 'name', text: 'Name', sortable: false, align: 'start', width: "1%", cellClass:'ellipsis-overflow' },
@@ -252,9 +354,20 @@ export default {
                     { value: 'speed', text: 'Speed', sortable: false, align: 'start', width: "1%", },
                     { value: 'wait', text: 'Wait', sortable: false, align: 'start', width: "1%", },
                     { value: 'lla', text: 'Location', sortable: false, align: 'start', width: "99%", },
-                    { value: 'actions', text: '', sortable: false, align: 'start', width: "1%", },
+                    { value: 'altitude', text: 'Altitude', sortable: false, align: 'right', width: "1%", },
                 ],
+                footerprops:
+                {
+                    'items-per-page-options':[5],
+                },
                 selected: [],
+            },
+            contextMenu:
+            {
+                show:false,
+                x: 0,
+                y: 0,
+                items: []
             },
             waypointPath:
             {
@@ -288,6 +401,33 @@ export default {
                         wait: 0,
                         roe: WAYPOINT.ROE.UNIT_DEFAULT.id,
                     },
+                    {
+                        uid: 104,
+                        name:'Delta',
+                        type: WAYPOINT.TYPE.CYCLE.id,
+                        lla: { latitude: 12.3423, longitude: 34.563, altitude: 2},
+                        speed: 16,
+                        wait: 0,
+                        roe: WAYPOINT.ROE.UNIT_DEFAULT.id,
+                    },
+                    {
+                        uid: 105,
+                        name:'Echo',
+                        type: WAYPOINT.TYPE.CYCLE.id,
+                        lla: { latitude: 12.344, longitude: 34.564, altitude: 2},
+                        speed: 16,
+                        wait: 0,
+                        roe: WAYPOINT.ROE.UNIT_DEFAULT.id,
+                    },
+                    {
+                        uid: 106,
+                        name:'Foxtrot',
+                        type: WAYPOINT.TYPE.CYCLE.id,
+                        lla: { latitude: 12.345, longitude: 34.565, altitude: 2},
+                        speed: 16,
+                        wait: 0,
+                        roe: WAYPOINT.ROE.UNIT_DEFAULT.id,
+                    },
                 ]
             }
         };
@@ -304,21 +444,70 @@ export default {
         },
         selectedWaypoint()
         {
-            return this.table.selected.length ? this.table.selected[0] : null;
-        }
+            return this.table.selected.length ? this.table.selected[0] : DUMMY_WAYPOINT;
+        },
+        selectedIsDummy()
+        {
+            return this.selectedWaypoint.uid === DUMMY_WAYPOINT.uid;
+        },
     },
     methods:
     {
+        clearWaypointSelection()
+        {
+            this.table.selected.splice(0,this.table.selected.length);
+        },
         handleWaypointRowClicked(evt, row)
         {
             if(!row.isSelected)
                 row.select(true);
             else
-                this.table.selected.splice(0,this.table.selected.length);
+                this.clearWaypointSelection();
+        },
+        handleWaypointRowContextMenu(evt, row)
+        {
+            evt.preventDefault();
+            const waypoint = row.item;
+            const waypointidx = this.waypointIdxLookup[waypoint.uid];
+            this.contextMenu.items = [
+                {id:0, text: 'Move Up', icon:'arrow-up', disabled:waypointidx===0,},
+                {id:1, text: 'Move Down', icon:'arrow-down', disabled:waypointidx>=this.waypointPath.waypoints.length-1,},
+                {id:2, text: 'Insert Before', icon:'table-row-plus-before', disabled:false,},
+                {id:3, text: 'Insert After', icon:'table-row-plus-after', disabled:false,},
+                {id:4, text: 'Attach to Entity', icon:'link-variant', disabled:false,},
+                {id:5, text: 'Detach from Entity', icon:'link-variant-off', disabled:false,},
+                {id:6, text: 'Delete '+waypoint.name, icon:'trash-can', disabled:false,},
+            ];
+
+            // wait until next tick so that this.contextMenu.show = false can take effect and reset the menu
+            this.contextMenu.x = evt.clientX-32;
+            this.contextMenu.y = evt.clientY-8;
+            this.contextMenu.show = true;
+        },
+        contextMenuSelection()
+        {
+            this.hideContextMenu();
+        },
+        hideContextMenu()
+        {
+            this.contextMenu.show = false;
         },
         removeWaypoint()
         {
             // TODO
+        },
+        selectWaypointIdx(idx)
+        {
+            if(this.waypointPath.waypoints.length===0)
+                return;
+
+            let actualIdx = MathUtils.wrapClamp(idx,0,this.waypointPath.waypoints.length);
+            const tablePage = ((actualIdx / this.table.options.itemsPerPage) | 0)+1;
+
+            if(this.table.selected.length>0)
+                this.clearWaypointSelection();
+            this.table.selected.push(this.waypointPath.waypoints[actualIdx]);
+            this.table.options.page = tablePage;
         }
     }
 };

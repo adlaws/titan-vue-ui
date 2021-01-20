@@ -116,7 +116,7 @@ $scale-pct: percentage($scale-factor);
         padding: 0 2px !important;
     }
 
-    label
+    .v-label
     {
         margin: 0 4px 0 0 !important;
         font-size: 0.75rem !important;
@@ -136,6 +136,11 @@ $scale-pct: percentage($scale-factor);
         {
             margin-bottom: 1px !important;
             font-size: 0.75rem !important;
+
+            .v-label:not(.v-label--active)
+            {
+                top: 0.1rem !important;
+            }
         }
 
         .v-input__prepend-inner, .v-input__append-inner
@@ -260,6 +265,11 @@ td.ellipsis-overflow
     white-space: nowrap;
     text-overflow: ellipsis;
     max-width: 8rem;
+}
+
+.inherit-color
+{
+    color: inherit !important;
 }
 
 .maxw-99
@@ -730,7 +740,7 @@ pre, code, .monospace
     margin: 0;
 
     color: $menu-fg-inactive;
-    background-color: rgba($menu-bg-inactive, 0.9);
+    background-color: $menu-bg-inactive;
     @include box-shadow($drop-shadow-medium);
 
     ul
@@ -755,8 +765,7 @@ pre, code, .monospace
 
             &.disabled
             {
-                color: $menu-fg-disabled;
-                background-color: $menu-bg-disabled;
+                color: rgba($menu-fg-inactive, 0.25);
             }
             &.separator
             {

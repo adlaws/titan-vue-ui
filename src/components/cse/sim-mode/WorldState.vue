@@ -158,9 +158,9 @@
                                 </v-row>
                                 <v-row>
                                     <v-col cols="3" class=" my-auto">
-                                        <label>
+                                        <v-label>
                                             {{ $t('worldSettings.atmosphere.Height', languageID) }}
-                                        </label>
+                                        </v-label>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-slider

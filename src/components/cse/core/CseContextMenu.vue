@@ -201,8 +201,22 @@ export default {
         const container = this.$refs.container;
         const bounds = container.getBoundingClientRect();
 
-        this.pos.x = MathUtils.clamp(this.x, desktopBounds.left, desktopBounds.right - bounds.width);
-        this.pos.y = MathUtils.clamp(this.y, desktopBounds.top, desktopBounds.bottom - bounds.height);
+        let x = this.x;
+        let y = this.y;
+        if(this.$parent)
+        {
+            let parentElm = this.$parent.$el;
+            while(parentElm)
+            {
+                const bcRect = parentElm.getBoundingClientRect();
+                x -= bcRect.x;
+                y -= bcRect.y;
+                parentElm = parentElm.$parent && parentElm.$parent.$el || null;
+            }
+        }
+
+        this.pos.x = MathUtils.clamp(x, desktopBounds.left, desktopBounds.right - bounds.width);
+        this.pos.y = MathUtils.clamp(y, desktopBounds.top, desktopBounds.bottom - bounds.height);
 
         this.$nextTick(() =>
         {
