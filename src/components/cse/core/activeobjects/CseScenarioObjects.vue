@@ -221,16 +221,6 @@ export default {
             domainFilter: null,
             lockFilter: null,
             controlFilter: null,
-            table: {
-                headers:[
-                    { value: 'model', text: 'Model', sortable: true, align: 'start', },
-                    { value: 'name', text: 'Callsign', sortable: true, align: 'start', },
-                    { value: 'country', text: 'Country', sortable: true, align: 'start', },
-                    { value: 'actions', text: 'Actions', sortable: false, align: 'start', },
-                    { text: '', value: 'data-table-expand' },
-                ],
-                expanded: [],
-            },
             scenarioObjects: [
                 {
                     uid:1,

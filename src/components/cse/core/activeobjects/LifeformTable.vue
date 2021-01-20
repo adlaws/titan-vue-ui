@@ -2,6 +2,7 @@
     <v-card>
         <v-data-table
             dense
+            class="compact"
             item-key="uid"
             no-data-text="There are no lifeforms"
             no-results-text="No lifeforms match the filter criteria"

@@ -1,6 +1,7 @@
 <template>
     <v-data-table
         dense
+        class="compact"
         item-key="uid"
         no-data-text="There are no vehicles"
         no-results-text="No vehicles match the filter criteria"

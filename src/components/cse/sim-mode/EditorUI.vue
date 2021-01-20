@@ -7,11 +7,11 @@
         <time-slider />
         <waypoint-settings />
         <world-state />
+        <cse-scenario-objects />
 
         <!--
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
-        <cse-scenario-objects />
         <entity-selector />
         <map-overlay />
         <drawing-tools />
