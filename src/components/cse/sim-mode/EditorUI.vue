@@ -5,12 +5,13 @@
     >
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
         <time-slider />
-        <waypoint-settings />
+        <aar-statistics />
 
         <!--
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
         <world-state />
         <cse-scenario-objects />
+        <waypoint-settings />
 
         <entity-selector />
         <map-overlay />
@@ -78,19 +79,23 @@ import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
 import LinearCompass2 from '@/components/cse/core/display/compass/LinearCompass2.vue';
-import EntitySelector from '@/components/cse/sim-mode/EntitySelector.vue';
 import DropdownToolbar from '@/components/cse/sim-mode/DropdownToolbar.vue';
-import MapOverlay from '@/components/cse/sim-mode/MapOverlay.vue';
-import DrawingTools from '@/components/cse/sim-mode/DrawingTools.vue';
-import WorldState from '@/components/cse/sim-mode/WorldState.vue';
+import TimeSlider from '@/components/cse/core/clock/TimeSlider.vue';
+
 import CseIcon from '@/components/cse/core/CseIcon.vue';
 import CseContextMenu from '@/components/cse/core/CseContextMenu.vue';
 import CseRadialMenu from '@/components/cse/core/CseRadialMenu.vue';
 import CseDockable from '@/components/cse/core/CseDockable.vue';
+import CseNotificationsArea from '../core/CseNotificationsArea.vue';
+
+import EntitySelector from '@/components/cse/sim-mode/EntitySelector.vue';
+import MapOverlay from '@/components/cse/sim-mode/MapOverlay.vue';
+import DrawingTools from '@/components/cse/sim-mode/DrawingTools.vue';
+import WorldState from '@/components/cse/sim-mode/WorldState.vue';
 import CseScenarioObjects from '@/components/cse/core/activeobjects/CseScenarioObjects.vue';
 import WaypointSettings from '@/components/cse/core/waypointsettings/WaypointSettings.vue';
-import CseNotificationsArea from '../core/CseNotificationsArea.vue';
-import TimeSlider from '@/components/cse/core/clock/TimeSlider.vue';
+import AarStatistics from '@/components/cse/core/aarstatistics/AarStatistics.vue';
+
 
 const HANDLED_KEY_EVENTS = new Set([
     'keyup'
@@ -105,11 +110,11 @@ export default {
     components:
     {
         LinearCompass2, DropdownToolbar,
-        EntitySelector, MapOverlay, DrawingTools, WorldState,
+        TimeSlider,
+        EntitySelector, MapOverlay, DrawingTools, WorldState, AarStatistics,
+        CseScenarioObjects, WaypointSettings,
         CseIcon,
         CseContextMenu, CseRadialMenu, CseDockable, CseNotificationsArea,
-        CseScenarioObjects, WaypointSettings,
-        TimeSlider,
     },
     data()
     {

@@ -64,5 +64,24 @@
             "Assignments": "Assignments"
         }
     },
+    "aarStatistics":
+    {
+        "units":
+        {
+            "Units": "Units"
+        },
+        "groups":
+        {
+            "Groups": "Groups"
+        },
+        "battleSeeds":
+        {
+            "Battle Seeds": "Battle Seeds"
+        },
+        "winLoseConditions":
+        {
+            "Win/Lose Conditions": "Win/Lose Conditions"
+        }
+    },
     "":""
 }
