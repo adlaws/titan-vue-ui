@@ -630,8 +630,9 @@ pre, code, .monospace
 
 .cse-desktop--window-content
 {
-    height: 100%;
+    flex-grow: 1;
     overflow: scroll;
+
     padding: 4px;
     margin: 0px;
     margin-top: 0;
@@ -644,6 +645,29 @@ pre, code, .monospace
     {
         color: $window-bg-active;
         background-color: $window-fg-active;
+    }
+}
+
+.cse-desktop--window-status-bar
+{
+    flex-grow: 0;
+    overflow: hidden;
+
+    min-height: 24px;
+    height: 24px;
+    max-height: 24px;
+    font-size: 0.75rem;
+
+    padding: 4px;
+    margin: 0px;
+    margin-top: 0;
+
+    background-color: $menu-fg-active;
+    background-color: $menu-bg-active;
+    &.dark
+    {
+        color: $menu-bg-active;
+        background-color: $menu-fg-active;
     }
 }
 

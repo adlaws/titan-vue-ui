@@ -38,13 +38,23 @@
                     <v-tab-item
                         key="Units"
                     >
+                        <v-spacer />
+                        <v-text-field
+                            v-model="tables.units.search"
+                            append-icon="mdi-magnify"
+                            label="Search"
+                            single-line
+                            hide-details
+                            clearable
+                        />
                         <v-data-table
                             dense
-                            class="compact"
+                            class="compact mb-5"
                             :items="tables.units.items"
                             :headers="tables.units.headers"
                             :footer-props="tables.units.footerprops"
-                            :custom-sort="tables.units.sort"
+                            :custom-sort="_unitsTableSort"
+                            :search="tables.units.search"
                         >
                             <template v-slot:[`item.alliance`]="{ item }">
                                 <v-icon :color="item.alliance==='blufor'?'#08f':'red'">
@@ -67,6 +77,35 @@
                                 {{ parseFloat((item.pctHealth*100).toFixed(2)) }}%
                             </template>
                         </v-data-table>
+                        <v-form
+                            class="compact mt-2"
+                        >
+                            <v-row>
+                                <v-col cols="8" />
+                                <v-col cols="3">
+                                    <v-text-field
+                                        v-model="exportFile.filename"
+                                        class="input-align-right"
+                                        label="File"
+                                    >
+                                        <template v-slot:append-outer>
+                                            <v-select
+                                                v-model="exportFile.format"
+                                                label="Format"
+                                                :items="[{text:'.json',value:'json'}, {text:'.csv',value:'csv'}]"
+                                            />
+                                        </template>
+                                    </v-text-field>
+                                </v-col>
+                                <v-col cols="1">
+                                    <v-btn
+                                        small
+                                    >
+                                        Export
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-form>
                     </v-tab-item>
                     <v-tab-item
                         key="Groups"
@@ -102,6 +141,11 @@ export default {
     data()
     {
         return {
+            exportFile:
+            {
+                filename:'aar-statistics',
+                format:'json',
+            },
             tabs:
             {
                 current: 'Units',
@@ -138,43 +182,7 @@ export default {
                         'items-per-page-options':[5,10,25,50,100],
                     },
                     selected: [],
-                    sort(items, sortBy, sortDesc, /* locale, customSorters*/)
-                    {
-                        sortBy = sortBy[0];
-                        sortDesc = sortDesc[0];
-
-                        if(sortBy==='pctHealth')
-                        {
-                            items.sort((a,b)=>a[sortBy]-b[sortBy]);
-                        }
-                        else if(sortBy==='pctHit')
-                        {
-                            items.sort((a,b)=>
-                            {
-                                const aVal = a.hits/a.fired;
-                                const bVal = b.hits/b.fired;
-                                return aVal>bVal?1:-1;
-                            });
-                        }
-                        else if(sortBy==='avgHitRange')
-                        {
-                            items.sort((a,b)=>
-                            {
-                                const aVal = (a.maxHitRange-a.minHitRange)/2;
-                                const bVal = (b.maxHitRange-b.minHitRange)/2;
-                                return aVal>bVal?1:-1;
-                            });
-                        }
-                        else
-                        {
-                            items.sort((a,b)=>a[sortBy]>b[sortBy]?1:-1);
-                        }
-
-                        if(!sortDesc)
-                            items.reverse();
-
-                        return items;
-                    },
+                    search: '',
                     items:[
                         { name:'Myrtle', alliance:'opfor', fired:843, hits:11, wounds:5, kills:9, minHitRange:8608, maxHitRange:7162, fuel:23, ammo:21, pctHealth:0.5274, bleeding:0.4725, killerStation:'Tommy', killerEntity:'Paul',},
                         { name:'Ernest', alliance:'opfor', fired:194, hits:40, wounds:17, kills:33, minHitRange:6909, maxHitRange:2123, fuel:66, ammo:5, pctHealth:0.2828, bleeding:0.5363, killerStation:'Cecilia', killerEntity:'Francis',},
@@ -245,5 +253,45 @@ export default {
     {
         languageID() {return this.$store.getters.language.id; },
     },
+    methods:
+    {
+        _unitsTableSort(items, sortBy, sortDesc, /* locale, customSorters*/)
+        {
+            sortBy = sortBy[0];
+            sortDesc = sortDesc[0];
+
+            if(sortBy==='pctHealth')
+            {
+                items.sort((a,b)=>a[sortBy]-b[sortBy]);
+            }
+            else if(sortBy==='pctHit')
+            {
+                items.sort((a,b)=>
+                {
+                    const aVal = a.hits/a.fired;
+                    const bVal = b.hits/b.fired;
+                    return aVal > bVal ? 1 : -1;
+                });
+            }
+            else if(sortBy==='avgHitRange')
+            {
+                items.sort((a,b)=>
+                {
+                    const aVal = (a.maxHitRange-a.minHitRange)/2;
+                    const bVal = (b.maxHitRange-b.minHitRange)/2;
+                    return aVal > bVal ? 1 : -1;
+                });
+            }
+            else
+            {
+                items.sort((a,b)=>a[sortBy]>b[sortBy]?1:-1);
+            }
+
+            if(!sortDesc)
+                items.reverse();
+
+            return items;
+        }
+    }
 };
 </script>

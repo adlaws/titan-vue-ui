@@ -30,7 +30,11 @@
         />
         <slot
             name="default"
-            :cseDesktopWindow="{id,title,status,isActive,isFullscreen,zIndex}"
+            :cse-desktop-window="{id,title,status,isActive,isFullscreen,zIndex}"
+        />
+        <slot
+            name="status-bar"
+            :cse-desktop-window="{id,title,status,isActive,isFullscreen,zIndex}"
         />
     </div>
 </template>
