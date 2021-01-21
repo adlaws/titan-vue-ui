@@ -383,7 +383,7 @@ export default {
 
                 // update selection if required to ensure that the item under the mouse is selected
                 TitanUtils.injectMousePosition(this.drag.lastWinXY);
-                TitanUtils.showGizmoAt(this.drag.lastEcef);
+                this.updateGizmoPos(this.drag.lastEcef);
 
                 const titanFillColor = this.fill.active ? this._toRenderToolboxColor(this.fill.color) : {x:0,y:0,z:0,w:0};
                 const titanStrokeColor = this.stroke.active ? this._toRenderToolboxColor(this.stroke.color) : {x:0,y:0,z:0,w:0};
@@ -406,7 +406,7 @@ export default {
                 // update the shape as required
                 $tRenderToolbox.setPenPosition(winXY);
                 // show the gizmo where the mouse is
-                TitanUtils.showGizmoAt(ecef);
+                this.updateGizmoPos(ecef);
                 // cache coords for next offset calculation
                 this.drag.lastWinXY = winXY;
                 this.drag.lastECEF = ecef;
@@ -430,7 +430,7 @@ export default {
             const worldPos = TitanUtils.worldPosUnderMouse();
 
             if(TitanUtils.isValidWorldPos(worldPos))
-                TitanUtils.showGizmoAt(worldPos);
+                this.updateGizmoPos(worldPos);
 
             // NOTE: we have to clear `mightDrag` here in case there was no
             //       `mousemove` event to clear it
@@ -460,7 +460,12 @@ export default {
             const rgbaNormalized = new Color(rgbaStr).toRgbaNormalized();
             // remap RGBA to XYZW for render toolbox usage
             return DataUtils.remap(rgbaNormalized, {r:'x', g:'y', b:'z', a:'w'});
-        }
+        },
+        updateGizmoPos(ecef)
+        {
+            TitanUtils.showGizmoAt(ecef);
+            this.$store.commit(TITAN_MUTATION.GIZMO_SET_POSITION, ecef);
+        },
     }
 };
 </script>

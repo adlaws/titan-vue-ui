@@ -18,6 +18,8 @@ export const TITAN_MUTATION = {
     // ENTITY SELECTOR WINDOW
     ENTITY_SELECTOR_SET_SELECTION:'titan::entitySelector::setSelection',
     ENTITY_SELECTOR_CLEAR_SELECTION:'titan::entitySelector::clearSelection',
+    // GIZMO POSITION
+    GIZMO_SET_POSITION:'titan::gizmo::setPosition',
 };
 export const TITAN_ACTION = {
     INIT_PLUGIN_CONFIG:'titan::initPluginConfig',
@@ -78,6 +80,9 @@ const TitanManager =
         {
             selected: null,
         },
+        // The last location that the gizmo was placed - null means the location
+        // is not yet set or otherwise unknown
+        gizmo: null,
     }),
     getters: {
         // --------------------------------------------------------------------
@@ -101,6 +106,11 @@ const TitanManager =
         // ENTITY SELECTOR WINDOW
         // --------------------------------------------------------------------
         getEntitySelectorSelection: (state) => state.entitySelector.selected,
+        // --------------------------------------------------------------------
+        // ENTITY SELECTOR WINDOW
+        // --------------------------------------------------------------------
+        gizmoPos: (state) => state.gizmo,
+        hasGizmoPos: (state, getters) => getters.gizmoPos !== null,
     },
     mutations: {
         // --------------------------------------------------------------------
@@ -220,6 +230,16 @@ const TitanManager =
         [TITAN_MUTATION.ENTITY_SELECTOR_CLEAR_SELECTION](state)
         {
             state.entitySelector.selected = null;
+        },
+        /**
+         * Store the current position of the Titan gizmo pointer.
+         *
+         * @param {object} state the store state object
+         * @param {object} ecef the gizmo position
+         */
+        [TITAN_MUTATION.GIZMO_SET_POSITION](state, ecef)
+        {
+            state.gizmo = ecef;
         },
         /**
          * NOTE: INTERNAL USE ONLY - do not expose via TITAN_MUTATION

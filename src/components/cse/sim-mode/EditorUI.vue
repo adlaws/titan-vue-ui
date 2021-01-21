@@ -3,17 +3,17 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
         <time-slider />
-        <aar-statistics />
 
         <!--
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
+        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+
+        <entity-selector />
+        <aar-statistics />
         <world-state />
         <cse-scenario-objects />
         <waypoint-settings />
-
-        <entity-selector />
         <map-overlay />
         <drawing-tools />
 
@@ -36,13 +36,23 @@
         />
         -->
 
-
         <div
             v-for="(pluginWindow, idx) in pluginWindows"
             :key="`pluginWindow${idx}`"
         >
             <component :is="pluginWindow" />
         </div>
+
+        <transition
+            name="fade"
+            mode="out-in"
+        >
+            <entity-spotlight
+                v-if="spotlight.show"
+                @selected="spotlightSelection"
+                @cancelled="hideSpotlight"
+            />
+        </transition>
 
         <transition
             name="fade"
@@ -56,7 +66,12 @@
                 @selected="contextMenuSelection"
                 @cancelled="hideContextMenu"
             />
+        </transition>
 
+        <transition
+            name="fade"
+            mode="out-in"
+        >
             <cse-radial-menu
                 v-if="radialMenu.show"
                 :size="300"
@@ -73,7 +88,7 @@
 <script>
 import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
 
-import TitanUtils, { $eview, $isInOuterra, $tWorldInterface, /*$tLogger*/ } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $eview, $isInOuterra, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
 import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
@@ -95,6 +110,7 @@ import WorldState from '@/components/cse/sim-mode/WorldState.vue';
 import CseScenarioObjects from '@/components/cse/core/activeobjects/CseScenarioObjects.vue';
 import WaypointSettings from '@/components/cse/core/waypointsettings/WaypointSettings.vue';
 import AarStatistics from '@/components/cse/core/aarstatistics/AarStatistics.vue';
+import EntitySpotlight from '@/components/cse/core/entityspotlight/EntitySpotlight.vue';
 
 
 const HANDLED_KEY_EVENTS = new Set([
@@ -110,7 +126,7 @@ export default {
     components:
     {
         LinearCompass2, DropdownToolbar,
-        TimeSlider,
+        TimeSlider, EntitySpotlight,
         EntitySelector, MapOverlay, DrawingTools, WorldState, AarStatistics,
         CseScenarioObjects, WaypointSettings,
         CseIcon,
@@ -130,6 +146,9 @@ export default {
                 x: 0,
                 y: 0,
                 items: []
+            },
+            spotlight:{
+                show: false,
             },
             // mouse drag interaction state
             drag:
@@ -227,6 +246,12 @@ export default {
                 this.hideContextMenu();
                 // hide the radial menu
                 this.hideRadialMenu();
+                // hide the spotlight search
+                this.hideSpotlight();
+            }
+            else if(EventUtils.isKey(evt, [KEY.KEY_CODE.NUMPADDIVIDE,KEY.KEY_CODE.SLASH]))
+            {
+                this.spotlight.show = true;
             }
 
             if(!$isInOuterra)
@@ -234,12 +259,11 @@ export default {
 
             if(EventUtils.isKey(evt, KEY.KEY_CODE.DELETE))
             {
-
                 // delete anything that's selected
                 const activeScenario = $tWorldInterface.getActiveScenario();
                 activeScenario.removeSelected();
             }
-            else
+            else if(EventUtils.isNotKey(evt, KEY.KEY_CODE.ESCAPE)) // prevent escape key triggering Outerra menus
             {
                 $eview.mark_unhandled();
             }
@@ -362,7 +386,7 @@ export default {
                     {
                         this._doSelection();
                     }
-                    TitanUtils.showGizmoAt(this.drag.lastEcef);
+                    this.updateGizmoPos(this.drag.lastEcef);
                 }
                 else
                 {
@@ -371,7 +395,7 @@ export default {
                     this.drag.isRubberBandSelecting = true;
                     // clicked on nothing - clear the selection (unless CTRL is pressed)
                     this._clearSelection();
-                    TitanUtils.showGizmoAt(this.drag.lastEcef);
+                    this.updateGizmoPos(this.drag.lastEcef);
                     TitanUtils.beginAreaDragSelect();
                 }
             }
@@ -391,7 +415,7 @@ export default {
                     // move the selected items accordingly
                     activeScenario.translateSelected(vecOffset, true);
                     // show the gizmo where the mouse is
-                    TitanUtils.showGizmoAt(ecef);
+                    this.updateGizmoPos(ecef);
                     // cache coords for next offset calculation
                     this.drag.lastWinXY = winXY;
                     this.drag.lastECEF = ecef;
@@ -404,7 +428,7 @@ export default {
                 // the selection box doesn't render, which is a bad user experience
                 TitanUtils.injectMousePosition(winXY);
                 // show the gizmo where the mouse is
-                TitanUtils.showGizmoAt(ecef);
+                this.updateGizmoPos(ecef);
                 // cache coords for next offset calculation
                 this.drag.lastWinXY = winXY;
                 this.drag.lastECEF = ecef;
@@ -431,7 +455,7 @@ export default {
             const worldPos = TitanUtils.worldPosUnderMouse();
 
             if(TitanUtils.isValidWorldPos(worldPos))
-                TitanUtils.showGizmoAt(worldPos);
+                this.updateGizmoPos(worldPos);
 
             // NOTE: we have to clear `mightDrag` here in case there was no
             //       `mousemove` event to clear it
@@ -469,6 +493,7 @@ export default {
         {
             this.hideContextMenu();
             this.hideRadialMenu();
+            this.hideSpotlight();
 
             // NOTE: we need to inject the mouse position otherwise Outerra
             //       doesn't have any awareness of where the mouse is and can't
@@ -612,6 +637,11 @@ export default {
                 }
             });
         },
+        updateGizmoPos(ecef)
+        {
+            TitanUtils.showGizmoAt(ecef);
+            this.$store.commit(TITAN_MUTATION.GIZMO_SET_POSITION, ecef);
+        },
         ////////////////////////////////////////////////////////////////////////////////////////////
         // SELECTION HANDLERS
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -680,7 +710,37 @@ export default {
         radialMenuSelection(item)
         {
             this.hideRadialMenu();
-            console.log('RADIAL MENU SELECTED:', item);
+            $tLogger.info('RADIAL MENU SELECTED:', item);
+        },
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // ENTITY SPOTLIGHT MANAGEMENT
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        hideSpotlight()
+        {
+            this.spotlight.show = false;
+        },
+        spotlightSelection(payload)
+        {
+            this.hideSpotlight();
+            const item = payload.item;
+            const args = payload.args;
+            $tLogger.info('SPOTLIGHT SELECTED:', item, 'with args', args);
+            if($isInOuterra && this.$store.getters.hasGizmoPos)
+            {
+                const entity = TitanUtils.createEntity(item.entityName, this.$store.getters.gizmoPos);
+                // TODO: this is a quickly hacked together parsing of an altitude argument
+                //       for the purposes of prototyping, and needs work if it's to be an
+                //       actual feature
+                if(args.alt)
+                {
+                    const agl = parseFloat(args.alt);
+                    if(!isNaN(agl))
+                    {
+                        const aglPos = entity.getPositionAGL();
+                        entity.setPositionAGL({x:aglPos.x, y:aglPos.y, z:aglPos.z+agl});
+                    }
+                }
+            }
         },
     }
 };

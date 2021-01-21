@@ -178,10 +178,10 @@ import SVGUtils from '@/assets/js/utils/svg-utils.js';
 
 const DEG2RAD = Math.PI / 180.0;
 
-// the context menu can be dismissed without making a selection by clicking
-// anywhere outside the bounds of the context menu, or by pressing the ESCAPE
-// key
-const CANCELLATION_EVENTS = ['keydown', 'mousedown'];
+// the radial menu can be dismissed without making a selection by clicking
+// anywhere outside the bounds of the menu, by pressing the ESCAPE key, or
+// moving the mouse pointer outside the window
+const CANCELLATION_EVENTS = ['keydown', 'mousedown', 'mouseout'];
 
 export default {
     name:'cse-radial-menu',
@@ -419,15 +419,23 @@ export default {
         },
         /**
          * This method checks for clicks outside the context menu or pressing
-         * of the escape key to cancel/dismiss the context menu without making
-         * a selection.
+         * of the escape key, or the mouse moving outside the window to
+         * cancel/dismiss the context menu without making a selection.
          */
         _watchForClickOutsideOrEscape(evt)
         {
             if(this.$refs.container.contains(evt.target))
                 return; // it's on the context menu, don't do anything
 
-            if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY.CODE.ESCAPE))
+            if(EventUtils.isMouseOut(evt))
+            {
+                const from = evt.relatedTarget || evt.toElement;
+                if (!from || from.nodeName === 'HTML')
+                {
+                    this.$emit('cancelled'); // mouse left the window - cancelled
+                }
+            }
+            else if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY.CODE.ESCAPE))
                 this.$emit('cancelled'); // ESC key or click outside - cancelled
         },
         /**

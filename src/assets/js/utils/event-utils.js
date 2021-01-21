@@ -67,6 +67,60 @@ export default class EventUtils
     }
 
     /**
+     * Determine if the event is a mouseover event
+     *
+     * A mouseover event occurs when the pointer is moved onto an element,
+     * or onto one of its children.
+     *
+     * @param evt the event
+     * @returns true if the event is a mouseover event, false otherwise
+     */
+    static isMouseOver(evt)
+    {
+        return EventUtils.isEventType(evt, 'mouseover');
+    }
+
+    /**
+     * Determine if the event is a mouseenter event
+     *
+     * A mouseenter event occurs when the pointer is moved into an element.
+     *
+     * @param evt the event
+     * @returns true if the event is a mouseenter event, false otherwise
+     */
+    static isMouseEnter(evt)
+    {
+        return EventUtils.isEventType(evt, 'mouseenter');
+    }
+
+    /**
+     * Determine if the event is a mouseout event
+     *
+     * A mouseout event occurs when a user moves the mouse pointer out of an
+     * element, or out of one of its children.
+     *
+     * @param evt the event
+     * @returns true if the event is a mouseout event, false otherwise
+     */
+    static isMouseOut(evt)
+    {
+        return EventUtils.isEventType(evt, 'mouseout');
+    }
+
+    /**
+     * Determine if the event is a mouseleave event
+     *
+     * A mouseout event occurs when the pointer is moved out of an element.
+     *
+     * @param evt the event
+     * @returns true if the event is a mouseleave event, false otherwise
+     */
+    static isMouseLeave(evt)
+    {
+        return EventUtils.isEventType(evt, 'mouseleave');
+    }
+
+    /**
      * Determine if the event is a key down event, optionally also verifying
      * the key causing the event
      *
@@ -153,6 +207,19 @@ export default class EventUtils
         if(Array.isArray(keyCode))
             return keyCode.indexOf(evt.keyCode) >= 0;
         return evt.keyCode === keyCode;
+    }
+
+    /**
+     * Determine if the event is NOT for a particular key
+     *
+     * @param evt the event
+     * @param keyCode the keycode to check - may be a single keycode, or an Array
+     *        or Set of keycodes to match
+     * @returns true if the event has the correct keycode, false otherwise
+     */
+    static isNotKey(evt, keyCode)
+    {
+        return !EventUtils.isKey(evt, keyCode);
     }
 
     /**

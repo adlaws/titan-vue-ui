@@ -33,7 +33,7 @@ Example use:
     >
         <defs>
             <linearGradient
-                id="a"
+                id="linearCompass2Gradient"
                 x1="0"
                 x2="90"
                 y1="0"
@@ -46,7 +46,7 @@ Example use:
                 <stop offset=".875" :stop-color="color" stop-opacity=".666" />
                 <stop offset="1" :stop-color="color" stop-opacity="0" />
             </linearGradient>
-            <clipPath id="b" clipPathUnits="userSpaceOnUse">
+            <clipPath id="linearCompass2Clip" clipPathUnits="userSpaceOnUse">
                 <!--
                     this path defines the compass graticle. it's done as a clip path so we can have nice fading
                     transparency effect - we set a gradient on a rectangle and use this clip path on it. By
@@ -83,7 +83,7 @@ Example use:
             {{ (clampedTweenedCompassRotation|0) }}&deg;
         </text>
         <!-- compass graticle -->
-        <rect width="100%" height="100%" fill="url(#a)" clip-path="url(#b)" />
+        <rect width="100%" height="100%" fill="url(#linearCompass2Gradient)" clip-path="url(#linearCompass2Clip)" />
     </svg>
 </template>
 
