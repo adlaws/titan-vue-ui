@@ -102,7 +102,7 @@ export default {
         {
             if(!this.desktopVisible)
             {
-                const isEscapeKey = EventUtils.isKey(evt, KEY.CODE.ESCAPE );
+                const isEscapeKey = EventUtils.isKey(evt, KEY.KEY_CODE.ESCAPE );
                 if((isEscapeKey))
                 {
                     this.desktopVisible = true;
@@ -189,25 +189,41 @@ export default {
         {
             this.$store.commit(DESKTOP_MUTATION.UPDATE_MODIFIER_KEY_STATE, evt);
 
-            if(EventUtils.isNotInFormField(evt))
+            // the rest of this method is only relevant in the Outerra environment
+            if(!$isInOuterra)
+                return;
+
+            if(EventUtils.isKey(evt, KEY.KEY_CODE.ESCAPE))
             {
-                // event is not for a text field, so mark as
-                // unhandled to let Outerra handle the key event
-                if(this.desktopVisible && EventUtils.isKeyDown(evt, [KEY.CODE.F6, KEY.CODE.F7]))
-                {
-                    // hide desktop
-                    $tLogger.info('hide desktop');
-                    this.desktopVisible = false;
-                }
-                else
-                {
-                    $eview.mark_unhandled();
-                }
+                // prevent ESCAPE key triggering Outerra menus
+                return;
             }
-            else if(EventUtils.isKeyDown(evt, KEY.CODE.TAB))
+
+            if(EventUtils.isInFormField(evt))
             {
-                TitanUtils.outerraTabHack(evt);
+                // prevent key presses in INPUT, TEXTAREA etc fields
+                // from being handled by Outerra (which might accidentally
+                // cause the camera to start moviing if you hit WASD etc)
+                if(EventUtils.isKeyDown(evt, KEY.KEY_CODE.TAB))
+                {
+                    // currently require the "tab hack" to navigate between
+                    // fields using the TAB key in Outerra
+                    TitanUtils.outerraTabHack(evt);
+                }
+                return;
             }
+
+            if(this.desktopVisible && EventUtils.isKeyDown(evt, [KEY.KEY_CODE.F6, KEY.KEY_CODE.F7]))
+            {
+                // hide desktop
+                $tLogger.info('hide desktop');
+                this.desktopVisible = false;
+                return;
+            }
+
+            // mark anything else as unhandled to let Outerra handle the
+            // key event as it sees fit
+            $eview.mark_unhandled();
         },
         ////////////////////////////////////////////////////////////////////////////////////////////
         // MOUSE EVENT HANDLERS

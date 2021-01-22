@@ -301,7 +301,7 @@ export default {
                     this.$emit('cancelled'); // mouse left the window - cancelled
                 }
             }
-            else if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY.CODE.ESCAPE))
+            else if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY.KEY_CODE.ESCAPE))
                 this.$emit('cancelled'); // ESC key or click outside - cancelled
         },
         /**

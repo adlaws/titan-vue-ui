@@ -4,12 +4,12 @@
         style="width:100%;height:100%;overflow:hidden;"
     >
         <time-slider />
+        <entity-selector />
 
         <!--
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
 
-        <entity-selector />
         <aar-statistics />
         <world-state />
         <cse-scenario-objects />
@@ -88,7 +88,7 @@
 <script>
 import { TITAN_MUTATION, TITAN_UI_MODE } from '@/assets/js/store/titan-manager.js';
 
-import TitanUtils, { $eview, $isInOuterra, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $isInOuterra, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
 import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import VueUtils from '@/assets/js/utils/vue-utils.js';
 import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
@@ -120,6 +120,8 @@ const HANDLED_MOUSE_EVENTS = new Set([
     'mousedown', 'mousemove',
     'click', 'dblclick', 'contextmenu',
 ]);
+
+const SPOTLIGHT_TRIGGER_KEY = new Set([KEY.KEY_CODE.NUMPADDIVIDE, KEY.KEY_CODE.SLASH]);
 
 export default {
     name: 'editor-ui',
@@ -249,23 +251,22 @@ export default {
                 // hide the spotlight search
                 this.hideSpotlight();
             }
-            else if(EventUtils.isKey(evt, [KEY.KEY_CODE.NUMPADDIVIDE,KEY.KEY_CODE.SLASH]))
+            else if(EventUtils.isKey(evt, SPOTLIGHT_TRIGGER_KEY))
             {
-                this.spotlight.show = true;
+                // trigger spotlight entity search if keypress not
+                // on anything in particular (i.e., the BODY element)
+                if(evt.target.tagName.toLowerCase()==='body')
+                    this.spotlight.show = true;
             }
 
             if(!$isInOuterra)
-                return; // nothing to do if we are in a browser
+                return; // nothing else to do if we are in a browser
 
             if(EventUtils.isKey(evt, KEY.KEY_CODE.DELETE))
             {
                 // delete anything that's selected
                 const activeScenario = $tWorldInterface.getActiveScenario();
                 activeScenario.removeSelected();
-            }
-            else if(EventUtils.isNotKey(evt, KEY.KEY_CODE.ESCAPE)) // prevent escape key triggering Outerra menus
-            {
-                $eview.mark_unhandled();
             }
         },
         ////////////////////////////////////////////////////////////////////////////////////////////
