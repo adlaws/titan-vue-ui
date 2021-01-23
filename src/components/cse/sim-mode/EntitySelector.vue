@@ -138,7 +138,7 @@ import ImgFallback from '@/components/cse/core/ImgFallback.vue';
 import CountryFlag from '@/components/cse/core/CountryFlag.vue';
 
 export default {
-    name: 'editor-ui',
+    name: 'entity-selector',
     components:
     {
         CseDesktopWindow, CseDesktopWindowContent,

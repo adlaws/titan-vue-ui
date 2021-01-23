@@ -167,6 +167,7 @@ export default {
             this.dragStart.y = evt.clientY;
             document.onmousemove = this.handleDrag;
             document.onmouseup = this.handleDragEnd;
+            this.$emit('window-dragstart', {x:this.x, y:this.y});
         },
         handleDrag(evt)
         {
@@ -185,6 +186,7 @@ export default {
         {
             document.onmouseup = null;
             document.onmousemove = null;
+            this.$emit('window-dragend', {x:this.x, y:this.y});
         },
     }
 };

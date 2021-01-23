@@ -4,7 +4,7 @@
         style="width:100%;height:100%;overflow:hidden;"
     >
         <time-slider />
-        <entity-selector />
+        <entity-selector2 />
 
         <!--
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
@@ -103,7 +103,7 @@ import CseRadialMenu from '@/components/cse/core/CseRadialMenu.vue';
 import CseDockable from '@/components/cse/core/CseDockable.vue';
 import CseNotificationsArea from '../core/CseNotificationsArea.vue';
 
-import EntitySelector from '@/components/cse/sim-mode/EntitySelector.vue';
+import EntitySelector2 from '@/components/cse/sim-mode/EntitySelector2.vue';
 import MapOverlay from '@/components/cse/sim-mode/MapOverlay.vue';
 import DrawingTools from '@/components/cse/sim-mode/DrawingTools.vue';
 import WorldState from '@/components/cse/sim-mode/WorldState.vue';
@@ -129,7 +129,7 @@ export default {
     {
         LinearCompass2, DropdownToolbar,
         TimeSlider, EntitySpotlight,
-        EntitySelector, MapOverlay, DrawingTools, WorldState, AarStatistics,
+        EntitySelector2, MapOverlay, DrawingTools, WorldState, AarStatistics,
         CseScenarioObjects, WaypointSettings,
         CseIcon,
         CseContextMenu, CseRadialMenu, CseDockable, CseNotificationsArea,
