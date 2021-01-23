@@ -39,14 +39,25 @@ const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionLi
     {
         // the `Blueprint` field value is a comma delimited string, which is not particularly useful,
         // so convert the string into an array, and additional `Set` to make life simpler
-        const blueprintArray = e.Blueprint.split(',').map(x=>x.trim());
+        const blueprintArray = e.Blueprint.split(',').map(x=>x.trim().toLowerCase());
+        // make the Name field all lower case and get rid of special characters to make filtering simpler
+        e.normalizedName = e.Name.toLowerCase().replace(/[\s\-+()]/g, '');
+        // do some processing on the "blueprint" so that it's easier to use/access
         e.Blueprint = blueprintArray.join(',');
         e.BlueprintArr = blueprintArray;
         e.BlueprintSet = new Set(blueprintArray.filter(x=> x.length > 0 && x !== 'null'));
-
-        // remove unnecessary fields form descriptor - not needed for the UI
+        // NOTE: this next one is not particularly reliable, since people have kind of been doing
+        // whatever they feel like with the ordering of this information
+        e.BlueprintMap = {
+            'type': blueprintArray[0],
+            'subtype': blueprintArray[1],
+            'detail': blueprintArray[2],
+            'country': blueprintArray[3],
+            'force': blueprintArray[4],
+            'alliance': blueprintArray[5]
+        };
+        // remove unnecessary fields from descriptor - not needed for the UI
         ['ClassName', 'Tags', 'Filter', 'draggableLive', 'legacyInitialize', 'visible', 'colliding'].forEach(k => delete e[k]);
-
         return e;
     });
 
