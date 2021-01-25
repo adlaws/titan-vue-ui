@@ -34,6 +34,14 @@
                         Groups
                     </v-btn>
                 </v-btn-toggle>
+                <v-btn
+                    small
+                    class="float-right"
+                    :class="{secondary: verifiedOnly}"
+                    @click="verifiedOnly=!verifiedOnly"
+                >
+                    Verified
+                </v-btn>
                 <hr>
                 <v-btn-toggle
                     v-model="typeFilter"
@@ -366,8 +374,8 @@ export default {
     data()
     {
         return {
-            isDragging: false,
             searchText: '',
+            verifiedOnly: false,
             entityObjectsGroups: 'entities',
             typeFilter: BLUEPRINT_VALUE.TYPE.ANY,
             characterSubtype: null,
@@ -403,9 +411,25 @@ export default {
         allowSceneryTypes() { return this.allowObjects && (this.allowAnyType || this.typeFilter === BLUEPRINT_VALUE.TYPE.SCENERY); },
         allowItemsTypes() { return this.allowObjects && (this.allowAnyType || this.typeFilter === BLUEPRINT_VALUE.TYPE.ITEMS); },
 
-        typeFilteredEntities()
+        vehicleDetailOptions()
+        {
+            return DETAIL_FILTER_OPTIONS[this.vehicleSubtype] ||
+                [{label:'-', value:false},{label:'-', value:false}, {label:'-', value:false}];
+        },
+
+        verificationFilteredEntities()
         {
             let filtered = this.entityDescriptors;
+            if(this.verifiedOnly)
+            {
+                filtered = filtered.filter(x => x.Verification !== undefined && x.Verification > 0);
+            }
+            return filtered;
+        },
+
+        typeFilteredEntities()
+        {
+            let filtered = this.verificationFilteredEntities;
             if(this.allowEntities)
             {
                 filtered = filtered.filter(x =>
@@ -430,6 +454,9 @@ export default {
 
             return filtered;
         },
+        /**
+         * NOTE: chains onward from typeFilteredEntities
+         */
         subtypeFilteredEntities()
         {
             let filtered = this.typeFilteredEntities;
@@ -466,6 +493,9 @@ export default {
 
             return filtered;
         },
+        /**
+         * NOTE: chains onward from subtypeFilteredEntities
+         */
         detailFilteredEntities()
         {
             let filter = [];
@@ -501,6 +531,9 @@ export default {
 
             return filtered;
         },
+        /**
+         * NOTE: chains onward from detailFilteredEntities
+         */
         countryFilteredEntities()
         {
             let filtered = this.detailFilteredEntities;
@@ -517,6 +550,9 @@ export default {
             }
             return filtered;
         },
+        /**
+         * NOTE: chains onward from countryFilteredEntities
+         */
         textFilteredEntities()
         {
             let filtered = this.countryFilteredEntities;
@@ -527,15 +563,12 @@ export default {
             }
             return filtered.sort((a,b)=>a.normalizedName > b.normalizedName ? 1 : -1);
         },
+        /**
+         * NOTE: chains onward from textFilteredEntities
+         */
         filteredEntities()
         {
             return this.textFilteredEntities;
-        },
-        selected() { return this.$store.getters.getEntitySelectorSelection; },
-        vehicleDetailOptions()
-        {
-            return DETAIL_FILTER_OPTIONS[this.vehicleSubtype] ||
-                [{label:'-', value:false},{label:'-', value:false}, {label:'-', value:false}];
         },
     },
     watch:
