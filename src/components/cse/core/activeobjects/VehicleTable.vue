@@ -13,9 +13,9 @@
     >
         <template v-slot:[`item.country`]="{ item }">
             <country-flag
-                :alpha2="item.country"
+                :alpha2="item.country.alpha2"
             />
-            {{ item.country.toUpperCase() }}
+            {{ item.country.alpha2.toUpperCase() }}
             <v-icon :color="item.alliance==='blufor'?'#08f':'red'">
                 mdi-triangle
             </v-icon>

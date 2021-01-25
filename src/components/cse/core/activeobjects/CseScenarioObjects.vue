@@ -87,25 +87,26 @@
                         v-model="countryFilter"
                         dense
                         clearable
-                        :items="countryFilterOptions"
+                        :items="entityCountries"
+                        item-value="numeric"
                         label="Country"
                         multiple
                     >
-                        <template v-slot:selection="data">
+                        <template v-slot:selection="{ item, index }">
                             <v-chip
                                 small
                                 close
-                                @click:close="removeCountryFilter(data.item)"
+                                @click:close="countryFilter.splice(index,1)"
                             >
                                 <country-flag
-                                    :alpha2="data.item"
+                                    :alpha2="item.alpha2"
                                 />
                             </v-chip>
                         </template>
-                        <template v-slot:item="data">
-                            <v-checkbox :value="countryFilter.indexOf(data.item)!==-1" />
-                            <country-flag class="mr-2" :alpha2="data.item" />
-                            {{ countryLookup(data.item).name }}
+                        <template v-slot:item="{ item, attrs }">
+                            <v-checkbox :value="attrs.inputValue" />
+                            <country-flag class="mr-2" :alpha2="item.alpha2" />
+                            {{ item.name }}
                         </template>
                     </v-select>
                 </v-col>
@@ -163,9 +164,6 @@
 </template>
 
 <script>
-import { /*$tLogger*/ } from '@/assets/js/titan/titan-utils.js';
-import { COUNTRY } from '@/assets/js/utils/countries.js';
-
 import CseDockable from '@/components/cse/core/CseDockable.vue';
 import CountryFlag from '@/components/cse/core/CountryFlag.vue';
 import VehicleTable from './VehicleTable.vue';
@@ -228,7 +226,7 @@ export default {
                     kind:KIND.VEHICLE,
                     domain:'land',
                     name:'Tank A',
-                    country:'au',
+                    country:{name: 'Australia', lcasename: 'australia', alpha2: 'au', alpha3: 'aus', numeric: 36},
                     alliance:'blufor',
                     locked:false,
                     cameraLocked:false,
@@ -244,7 +242,7 @@ export default {
                     name:'BushMan',
                     kind:KIND.VEHICLE,
                     domain:'land',
-                    country:'au',
+                    country:{name: 'Australia', lcasename: 'australia', alpha2: 'au', alpha3: 'aus', numeric: 36},
                     alliance:'blufor',
                     locked:false,
                     cameraLocked:false,
@@ -257,7 +255,7 @@ export default {
                     kind:KIND.LIFEFORM,
                     domain:'land',
                     name:'George',
-                    country:'au',
+                    country:{name: 'Australia', lcasename: 'australia', alpha2: 'au', alpha3: 'aus', numeric: 36},
                     alliance:'blufor',
                     locked:false,
                     cameraLocked:false,
@@ -269,7 +267,7 @@ export default {
                     kind:KIND.LIFEFORM,
                     domain:'land',
                     name:'Sam',
-                    country:'au',
+                    country:{name: 'Australia', lcasename: 'australia', alpha2: 'au', alpha3: 'aus', numeric: 36},
                     alliance:'blufor',
                     locked:false,
                     cameraLocked:false,
@@ -281,7 +279,7 @@ export default {
                     name:'Chopper',
                     kind:KIND.VEHICLE,
                     domain:'land',
-                    country:'au',
+                    country:{name: 'Australia', lcasename: 'australia', alpha2: 'au', alpha3: 'aus', numeric: 36},
                     alliance:'blufor',
                     locked:false,
                     cameraLocked:false,
@@ -294,7 +292,7 @@ export default {
                     kind:KIND.VEHICLE,
                     domain:'land',
                     name:'Tankovski',
-                    country:'ru',
+                    country:{name: 'Russia', lcasename: 'russia', alpha2: 'ru', alpha3: 'rus', numeric: 643},
                     alliance:'opfor',
                     locked:false,
                     cameraLocked:false,
@@ -309,7 +307,7 @@ export default {
                     kind:KIND.LIFEFORM,
                     domain:'land',
                     name:'Yuri',
-                    country:'ru',
+                    country:{name: 'Russia', lcasename: 'russia', alpha2: 'ru', alpha3: 'rus', numeric: 643},
                     alliance:'opfor',
                     locked:false,
                     cameraLocked:false,
@@ -320,11 +318,26 @@ export default {
     },
     computed:
     {
-        countryFilterOptions()
+        entityDescriptors() { return this.$store.getters.titanEntityDescriptors; },
+        // create an array containing all (unique) countries referenced by *active* Titan entities
+        //entityCountries() { return this.$store.getters.titanEntityCountries; },
+        entityCountries()
         {
-            const countries = Array.from(new Set(this.scenarioObjects.map(x=>x.country)));
-            countries.sort();
-            return countries;
+            const entitiesWithCountry = this.scenarioObjects.filter(x=>x.country);
+            const uniqueCountries = [];
+            const alpha2codes = new Set();
+            for(let idx=0; idx<entitiesWithCountry.length; idx++)
+            {
+                const entityCountry = entitiesWithCountry[idx].country;
+                if(!alpha2codes.has(entityCountry.alpha2))
+                {
+                    alpha2codes.add(entityCountry.alpha2);
+                    uniqueCountries.push(entityCountry);
+                }
+
+            }
+            uniqueCountries.sort((a,b)=> a.lcasename < b.lcasename ? -1 : 1);
+            return uniqueCountries;
         },
         vehicles()
         {
@@ -346,10 +359,6 @@ export default {
     },
     methods:
     {
-        countryLookup(alpha2)
-        {
-            return COUNTRY.ALPHA2[alpha2] || {name: 'UNKNOWN', alpha2: alpha2, alpha3: '---', numeric: -1};
-        },
         hasFilters()
         {
             return this.lockFilter !== null ||
@@ -384,7 +393,16 @@ export default {
                 items = items.filter(x => x.alliance === this.allianceFilter);
 
             if(this.countryFilter.length>0)
-                items = items.filter(x => this.countryFilter.indexOf(x.country)>=0);
+            {
+                items = items.filter(x =>
+                {
+                    for(let i=0; i<this.countryFilter.length;i++)
+                    {
+                        if(x.country && x.country.numeric === this.countryFilter[i])
+                            return true;
+                    }
+                });
+            }
 
             // most expensive filter goes last
             if(this.textFilter.length > 0)

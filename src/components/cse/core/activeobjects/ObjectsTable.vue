@@ -12,7 +12,7 @@
             <country-flag
                 :alpha2="item.country"
             />
-            {{ item.country.toUpperCase() }}
+            {{ item.country.alpha2.toUpperCase() }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
             <v-icon

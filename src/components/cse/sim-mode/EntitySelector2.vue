@@ -174,7 +174,7 @@
                         chips
                         multiple
                         clearable
-                        :items="countries"
+                        :items="entityCountries"
                     >
                         <template v-slot:selection="{ item, index }">
                             <v-chip
@@ -390,26 +390,8 @@ export default {
     computed:
     {
         entityDescriptors() { return this.$store.getters.titanEntityDescriptors; },
+        entityCountries() { return this.$store.getters.titanEntityCountries; },
         selectedEntity() { return this.$store.getters.getEntitySelectorSelection; },
-
-        countries()
-        {
-            const entitiesWithCountry = this.entityDescriptors.filter(x=>x.country);
-            const uniqueCountries = [];
-            const alpha2codes = new Set();
-            for(let idx=0; idx<entitiesWithCountry.length; idx++)
-            {
-                const entityCountry = entitiesWithCountry[idx].country;
-                if(!alpha2codes.has(entityCountry.alpha2))
-                {
-                    alpha2codes.add(entityCountry.alpha2);
-                    uniqueCountries.push(entityCountry);
-                }
-
-            }
-            uniqueCountries.sort((a,b)=> a.lcasename < b.lcasename ? -1 : 1);
-            return uniqueCountries;
-        },
 
         allowEntities() { return this.entityObjectsGroups === 'entities'; },
         allowObjects() { return this.entityObjectsGroups === 'objects'; },

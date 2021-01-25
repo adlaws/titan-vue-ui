@@ -65,6 +65,27 @@ const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionLi
         return e;
     });
 
+// create an array containing all (unique) countries referenced by Titan entities
+const ENTITY_COUNTRIES = (() =>
+{
+    const entitiesWithCountry = ENTITY_DESCRIPTORS.filter(x=>x.country);
+    const uniqueCountries = [];
+    const alpha2codes = new Set();
+    for(let idx=0; idx<entitiesWithCountry.length; idx++)
+    {
+        const entityCountry = entitiesWithCountry[idx].country;
+        if(!alpha2codes.has(entityCountry.alpha2))
+        {
+            alpha2codes.add(entityCountry.alpha2);
+            uniqueCountries.push(entityCountry);
+        }
+
+    }
+    uniqueCountries.sort((a,b)=> a.lcasename < b.lcasename ? -1 : 1);
+    return uniqueCountries;
+})();
+
+
 // for debugging purposes - find bad/invalid countries ---------------------------------------------------------------
 if(DEBUG)
 {
@@ -104,6 +125,11 @@ const TitanManager =
         // during the lifetime of a Titan execution cycle, we just ask for it
         // once here to avoid constantly querying the C++ back end
         entityDescriptors: ENTITY_DESCRIPTORS,
+        // a cached list of all countries references by the entity descriptors.
+        // Since this doesn't change during the lifetime of a Titan execution
+        // cycle, we just work it out here once here to avoid constantly
+        // computing the list
+        entityCountries: ENTITY_COUNTRIES,
         // current titan UI mode (used to help determine what mouse and
         // keyboard interactions currently "mean" and how to handle them). The
         // current mode is at the top of the 'stack' (i.e., the last item in the
@@ -132,6 +158,7 @@ const TitanManager =
         titanWindow: (state) => state.window,
         titanSimMode: (state) => state.simMode,
         titanEntityDescriptors: (state) => state.entityDescriptors,
+        titanEntityCountries: (state) => state.entityCountries,
         // --------------------------------------------------------------------
         // TITAN UI MODE
         // --------------------------------------------------------------------

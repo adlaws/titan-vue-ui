@@ -5,14 +5,13 @@
     >
         <time-slider />
         <entity-selector2 />
-        <world-state />
 
         <!--
+        <cse-scenario-objects />
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
 
         <aar-statistics />
-        <cse-scenario-objects />
         <waypoint-settings />
         <map-overlay />
         <drawing-tools />
