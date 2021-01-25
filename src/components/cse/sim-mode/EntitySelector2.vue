@@ -4,12 +4,10 @@
         icon="car"
         :x="50"
         :y="50"
-        :width="900"
+        :width="600"
         :height="545"
         :closable="false"
         :resizable="false"
-        @window-dragstart="handleDragStart"
-        @window-dragend="handleDragEnd"
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
@@ -207,12 +205,9 @@
 </template>
 
 <script>
-import 'flag-icon-css/sass/flag-icon.scss';
-
 import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
 
-import { PACKAGES_PATH/*, $tLogger*/} from '@/assets/js/titan/titan-utils.js';
-import { COUNTRY } from '@/assets/js/utils/countries.js';
+import { PACKAGES_PATH} from '@/assets/js/titan/titan-utils.js';
 
 import CseDesktopWindow from '@/components/common/cse/CseDesktopWindow.vue';
 import CseDesktopWindowContent from '@/components/common/cse/CseDesktopWindowContent.vue';
@@ -479,29 +474,35 @@ export default {
     },
     watch:
     {
-        allowEntities(newValue)
+        allowEntities()
         {
-            if(newValue)
-            {
-                this.typeFilter = BLUEPRINT_VALUE.TYPE.ANY;
-                this.characterSubtype = null;
-                this.characterDetailFilter = null;
-                this.vehicleSubtype = null;
-                this.vehicleDetailFilter = null;
-            }
+            this.typeFilter = BLUEPRINT_VALUE.TYPE.ANY;
+            this.characterSubtype = null;
+            this.characterDetailFilter = null;
+            this.vehicleSubtype = null;
+            this.vehicleDetailFilter = null;
+            this.scenerySubtype = null;
+            this.itemSubtype = null;
         },
-        allowObjects(newValue)
+        allowObjects()
         {
-            if(newValue)
-            {
-                this.typeFilter = BLUEPRINT_VALUE.TYPE.ANY;
-                this.scenerySubtype = null;
-                this.itemSubtype = null;
-            }
+            this.typeFilter = BLUEPRINT_VALUE.TYPE.ANY;
+            this.characterSubtype = null;
+            this.characterDetailFilter = null;
+            this.vehicleSubtype = null;
+            this.vehicleDetailFilter = null;
+            this.scenerySubtype = null;
+            this.itemSubtype = null;
         },
         allowGroups()
         {
-
+            this.typeFilter = BLUEPRINT_VALUE.TYPE.ANY;
+            this.characterSubtype = null;
+            this.characterDetailFilter = null;
+            this.vehicleSubtype = null;
+            this.vehicleDetailFilter = null;
+            this.scenerySubtype = null;
+            this.itemSubtype = null;
         },
         entitiesObjectsGroups(newValue)
         {
@@ -551,26 +552,9 @@ export default {
     },
     methods:
     {
-        alphaCodeLookup(item)
-        {
-            const entry = COUNTRY.NAME[item.BlueprintArr[3]];
-            return entry ? entry.alpha2 : null;
-        },
-        selectRow(item, row)
-        {
-            row.select(true);
-        },
         selectEntity(entity)
         {
             this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_SET_SELECTION, entity);
-        },
-        handleDragStart()
-        {
-            this.isDragging = true;
-        },
-        handleDragEnd()
-        {
-            this.isDragging = false;
         },
     }
 };
