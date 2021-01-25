@@ -37,7 +37,7 @@
                 <v-btn
                     small
                     class="float-right"
-                    :class="{secondary: verifiedOnly}"
+                    :class="{'v-btn--active': verifiedOnly}"
                     @click="verifiedOnly=!verifiedOnly"
                 >
                     Verified
