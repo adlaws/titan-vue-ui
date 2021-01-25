@@ -38,7 +38,7 @@
 <script>
 import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 
-const TAB_SYMBOL='\u00BB';
+const TAB_SYMBOL='\u00BB'; // double rightward chevron kinda thing
 
 // the spotlight menu can be dismissed without making a selection by clicking
 // anywhere outside the bounds of the menu, by pressing the ESCAPE key, or
