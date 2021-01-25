@@ -3,6 +3,7 @@
         class="flag-icon"
         :class="`flag-icon-${country.alpha2}`"
         :title="title||country.name"
+        :style="`font-size:${size};`"
     />
 </template>
 
@@ -37,6 +38,11 @@ export default {
         {
             type:String,
             default:null,
+        },
+        size:
+        {
+            type: String,
+            default: 'inherit'
         }
     },
     computed:

@@ -162,7 +162,7 @@ $scale-pct: percentage($scale-factor);
             margin:0px;
             .v-icon
             {
-                margin-top: 0px;
+                margin-top: 0.25rem;
                 font-size: 0.75rem !important;
             }
             .v-select
@@ -183,9 +183,13 @@ $scale-pct: percentage($scale-factor);
         {
             label
             {
+                &.v-label:not(.v-label--active)
+                {
+                    top: 1.3rem !important;
+                }
                 &.v-label--active
                 {
-                    margin-top: 0px !important;
+                    margin-top: 0.95rem !important;
                 }
             }
 
@@ -208,6 +212,25 @@ $scale-pct: percentage($scale-factor);
             .v-menu__content
             {
                 font-size: 0.5rem;
+            }
+        }
+
+        &.v-select--is-multi
+        {
+            .v-input__append-inner
+            {
+                margin-top: 1rem !important;
+            }
+
+            .v-select__selections
+            {
+                .v-chip
+                {
+                    &.v-size--small
+                    {
+                        top: 0.4rem;
+                    }
+                }
             }
         }
     }

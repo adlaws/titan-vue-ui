@@ -253,21 +253,57 @@ const COUNTRY_CODES = [
     {name: 'Åland Islands', alpha2: 'ax', alpha3: 'ala', numeric: 248},
 ];
 
-const COUNTRY_NAME = DataUtils.objArrayToLookup(COUNTRY_CODES, 'name');
-// aliases
-COUNTRY_NAME['USA'] = COUNTRY_NAME['United States of America (the)'];
-COUNTRY_NAME['UK'] = COUNTRY_NAME['United Kingdom of Great Britain and Northern Ireland (the)'];
-COUNTRY_NAME['UAE'] = COUNTRY_NAME['United Arab Emirates (the)'];
-COUNTRY_NAME['Micronesia'] = COUNTRY_NAME['Micronesia (Federated States of)'];
-COUNTRY_NAME['Moldova'] = COUNTRY_NAME['Moldova (the Republic of)'];
-['Cocos Islands', 'Keeling Islands'].forEach((key)=>
+
+function addAliases(key, aliases)
 {
-    COUNTRY_NAME[key] = COUNTRY_NAME['Cocos (Keeling) Islands (the)'];
-});
+    if(!key || !aliases)
+        return;
+    if(typeof aliases === 'string')
+        aliases = [aliases];
+    if(!Array.isArray(aliases))
+        return;
+
+    let idx = 0;
+    let entry = null;
+    while (idx<COUNTRY_CODES.length && entry === null)
+    {
+        const current = COUNTRY_CODES[idx];
+        if(current.name === key)
+            entry = current;
+        idx++;
+    }
+    if(entry)
+    {
+        aliases.forEach(alias =>
+        {
+            COUNTRY_CODES.push({...entry, name:alias});
+        });
+    }
+}
+
+// aliases
+// NOTE: that this is probably a "bad idea", and all countries should
+//       have a canonical name rather than a bunch of options
+// NOTE: Because the aliases are pushed on at the end of the original array,
+//       the subsequently generated alpha2/alpha3 etc lookups will return
+//       the *aliased* entry rather than the original, so bear this in mind.
+addAliases('United States of America (the)', 'USA');
+addAliases('United Kingdom of Great Britain and Northern Ireland (the)', 'UK');
+addAliases('United Arab Emirates (the)', 'UAE');
+addAliases('Russian Federation (the)', 'Russia');
+addAliases('Iran (Islamic Republic of)', 'Iran');
+addAliases('Micronesia (Federated States of)', 'Micronesia');
+addAliases('Moldova (the Republic of)', 'Moldova');
+addAliases('Bolivia (Plurinational State of)', 'Bolivia');
+addAliases('Cocos (Keeling) Islands (the)', ['Keeling Islands', 'Cocos Islands']);
+
+// add a way to do case insensitive name lookups
+COUNTRY_CODES.forEach(x => x.lcasename = x.name.toLowerCase() );
 
 export const COUNTRY = {
-    ALPHA2: DataUtils.objArrayToLookup(COUNTRY_CODES, 'alpha2'),
-    ALPHA3: DataUtils.objArrayToLookup(COUNTRY_CODES, 'alpha3'),
-    NUMERIC: DataUtils.objArrayToLookup(COUNTRY_CODES, 'numeric'),
-    NAME: COUNTRY_NAME,
+    ALPHA2: DataUtils.objArrayToLookup(COUNTRY_CODES, 'alpha2'),       // generated lookups by Alpha2 code
+    ALPHA3: DataUtils.objArrayToLookup(COUNTRY_CODES, 'alpha3'),       // generated lookups by Alpha3 code
+    NUMERIC: DataUtils.objArrayToLookup(COUNTRY_CODES, 'numeric'),     // generated lookups by numeric code
+    LCASENAME: DataUtils.objArrayToLookup(COUNTRY_CODES, 'lcasename'), // generated lookups by lowercase name
+    NAME: DataUtils.objArrayToLookup(COUNTRY_CODES, 'name'),           // generated lookups by original name
 };

@@ -5,7 +5,7 @@
         :x="50"
         :y="50"
         :width="600"
-        :height="545"
+        :height="600"
         :closable="false"
         :resizable="false"
     >
@@ -163,14 +163,52 @@
                         {{ option.label }}
                     </v-btn>
                 </v-btn-toggle>
+                <hr>
+                <v-form dense class="compact">
+                    <v-select
+                        v-model="countryFilter"
+                        label="Countries"
+                        item-value="numeric"
+                        dense
+                        attach
+                        chips
+                        multiple
+                        clearable
+                        :items="countries"
+                    >
+                        <template v-slot:selection="{ item, index }">
+                            <v-chip
+                                v-if="index < 4"
+                                small
+                                close
+                                @click:close="countryFilter.splice(index,1)"
+                            >
+                                <country-flag class="mr-2" :alpha2="item.alpha2" />
+                                {{ item.name }}
+                            </v-chip>
+                            <span
+                                v-if="index > 4"
+                                class="grey--text caption"
+                            >
+                                (and {{ countryFilter.length - 5 }} more)
+                            </span>
+                        </template>
+                        <template v-slot:item="{ item, attrs }">
+                            <v-checkbox
+                                :value="attrs.inputValue"
+                            />
+                            <country-flag class="mr-2" :alpha2="item.alpha2" />
+                            {{ item.name }}
+                        </template>
+                    </v-select>
 
-                <v-text-field
-                    v-model="searchText"
-                    label="Search"
-                    clearable
-                    append-icon="mdi-magnify"
-                />
-
+                    <v-text-field
+                        v-model="searchText"
+                        label="Search"
+                        clearable
+                        append-icon="mdi-magnify"
+                    />
+                </v-form>
                 <v-virtual-scroll
                     :bench="5"
                     :items="filteredEntities"
@@ -180,7 +218,7 @@
                     <template v-slot:default="{ item }">
                         <v-list-item
                             :key="item.entityName"
-                            class="fooglyBoogly"
+                            class="entityListItem"
                             :class="{selected: item.entityName===(selectedEntity&&selectedEntity.entityName)}"
                             @click="selectEntity(item)"
                         >
@@ -193,6 +231,13 @@
                                         height="32"
                                     />
                                     {{ item.Name }}
+                                    <country-flag
+                                        v-if="item.country"
+                                        :alpha2="item.country.alpha2"
+                                        :title="item.country.name"
+                                        class="float-right"
+                                        size="32px"
+                                    />
                                 </v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
@@ -205,13 +250,16 @@
 </template>
 
 <script>
+import 'flag-icon-css/sass/flag-icon.scss';
+
 import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
 
-import { PACKAGES_PATH} from '@/assets/js/titan/titan-utils.js';
+import { PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
 
 import CseDesktopWindow from '@/components/common/cse/CseDesktopWindow.vue';
 import CseDesktopWindowContent from '@/components/common/cse/CseDesktopWindowContent.vue';
 import ImgFallback from '@/components/cse/core/ImgFallback.vue';
+import CountryFlag from '@/components/cse/core/CountryFlag.vue';
 
 const BLUEPRINT_VALUE = {
     TYPE:
@@ -224,19 +272,19 @@ const BLUEPRINT_VALUE = {
     },
     SUBTYPE:
     {
-        // character
+        // character --> ?
         MILITARY: 'military',
         CIVILIAN: 'civilian',
         ANIMAL: 'animal',
-        // vehicle
+        // vehicle --> ?
         AIR: 'air',
         LAND: 'land',
         SEA: 'sea',
-        // scenery
+        // scenery --> ?
         BUILDING: 'building',
         INFRASTRUCTURE: 'infrastructure',
         NATURE: 'nature',
-        // items
+        // items --> ?
         EQUIPMENT: 'equipment',
         HOUSING: 'housing',
         CLUTTER: 'clutter',
@@ -246,15 +294,15 @@ const BLUEPRINT_VALUE = {
         // character -> military / civilian / animal
         MALE: 'male',
         FEMALE: 'female',
-        // vehicle -> air
+        // vehicle -> air --> ?
         ROTORWING: 'rotorwing',
         FIXEDWING: 'fixedwing',
         SPACE: 'space',
-        // vehicle -> land
+        // vehicle -> land --> ?
         WHEELED: 'wheeled',
         TRACKED: 'tracked',
         STATIC: 'static',
-        // vehicle -> sea
+        // vehicle -> sea --> ?
         SURFACE: 'surface',
         SUBSURFACE: 'subsurface',
         AMPHIBIOUS: 'amphibious',
@@ -313,7 +361,7 @@ export default {
     components:
     {
         CseDesktopWindow, CseDesktopWindowContent,
-        ImgFallback,
+        ImgFallback, CountryFlag,
     },
     data()
     {
@@ -334,6 +382,7 @@ export default {
             characterDetailOptions: DETAIL_FILTER_OPTIONS[BLUEPRINT_VALUE.SUBTYPE.CHARACTER],
             vehicleDetailFilter: null,
             // vehicleDetailOptions is a computed value, depends on vehicle subtype
+            countryFilter: [],
             PACKAGES_PATH,
             BLUEPRINT_VALUE,
         };
@@ -342,6 +391,25 @@ export default {
     {
         entityDescriptors() { return this.$store.getters.titanEntityDescriptors; },
         selectedEntity() { return this.$store.getters.getEntitySelectorSelection; },
+
+        countries()
+        {
+            const entitiesWithCountry = this.entityDescriptors.filter(x=>x.country);
+            const uniqueCountries = [];
+            const alpha2codes = new Set();
+            for(let idx=0; idx<entitiesWithCountry.length; idx++)
+            {
+                const entityCountry = entitiesWithCountry[idx].country;
+                if(!alpha2codes.has(entityCountry.alpha2))
+                {
+                    alpha2codes.add(entityCountry.alpha2);
+                    uniqueCountries.push(entityCountry);
+                }
+
+            }
+            uniqueCountries.sort((a,b)=> a.lcasename < b.lcasename ? -1 : 1);
+            return uniqueCountries;
+        },
 
         allowEntities() { return this.entityObjectsGroups === 'entities'; },
         allowObjects() { return this.entityObjectsGroups === 'objects'; },
@@ -451,9 +519,25 @@ export default {
 
             return filtered;
         },
-        textFilteredEntities()
+        countryFilteredEntities()
         {
             let filtered = this.detailFilteredEntities;
+            if(this.countryFilter.length)
+            {
+                filtered = filtered.filter(x =>
+                {
+                    for(let i=0; i<this.countryFilter.length;i++)
+                    {
+                        if(x.country && x.country.numeric === this.countryFilter[i])
+                            return true;
+                    }
+                });
+            }
+            return filtered;
+        },
+        textFilteredEntities()
+        {
+            let filtered = this.countryFilteredEntities;
             if(this.searchText && this.searchText.length > 0)
             {
                 const lCaseFilter = this.searchText.toLowerCase();
@@ -562,7 +646,7 @@ export default {
 
 <style lang="scss">
 @import '@/assets/scss/utilities/_all.scss';
-.fooglyBoogly
+.entityListItem
 {
     &.selected
     {

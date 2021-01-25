@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-
-import TitanUtils, { SIM_MODE, SIM_MODES, FREE_CAMERA_MODE, $isInOuterra, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { SIM_MODE, SIM_MODES, FREE_CAMERA_MODE, $isInOuterra, $tLogger, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
 import FetchUtils from '@/assets/js/utils/fetch-utils.js';
 import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-dev.js';
+import { COUNTRY } from '@/assets/js/utils/countries.js';
 
-Vue.use(Vuex);
+export const DEBUG = false;
 
 export const TITAN_MUTATION = {
     // TITAN STATE MANAGEMENT
@@ -49,17 +47,44 @@ const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionLi
         // NOTE: this next one is not particularly reliable, since people have kind of been doing
         // whatever they feel like with the ordering of this information
         e.BlueprintMap = {
-            'type': blueprintArray[0],
-            'subtype': blueprintArray[1],
-            'detail': blueprintArray[2],
-            'country': blueprintArray[3],
-            'force': blueprintArray[4],
-            'alliance': blueprintArray[5]
+            type: blueprintArray[0],
+            subtype: blueprintArray[1],
+            detail: blueprintArray[2],
+            country: blueprintArray[3],
+            force: blueprintArray[4],
+            alliance: blueprintArray[5]
         };
+
+        // add in country property with reference to full country details so life is simpler
+        const country = COUNTRY.LCASENAME[e.BlueprintMap.country];
+        if(country)
+            e.country = country;
+
         // remove unnecessary fields from descriptor - not needed for the UI
         ['ClassName', 'Tags', 'Filter', 'draggableLive', 'legacyInitialize', 'visible', 'colliding'].forEach(k => delete e[k]);
         return e;
     });
+
+// for debugging purposes - find bad/invalid countries ---------------------------------------------------------------
+if(DEBUG)
+{
+    const entitiesWithNoCountry = ENTITY_DESCRIPTORS.filter(x=>!x.country);
+    if(entitiesWithNoCountry.length)
+    {
+        const badRecords = {};
+        entitiesWithNoCountry.forEach(x =>
+        {
+            const badCountry = x.BlueprintMap.country;
+            (badRecords[badCountry] = badRecords[badCountry] || []).push(x);
+        });
+        $tLogger.warning('titan-manager.js has found unknown/invalid countries in entity descriptors:');
+        for(const badCountry in badRecords)
+        {
+            $tLogger.warning('\t', `'${badCountry}'`, 'x'+badRecords[badCountry].length);
+        }
+    }
+}
+// end ----------------------------------------------------------------------------------------------------------------
 
 const TitanManager =
 {
