@@ -12,7 +12,7 @@
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
                 <v-btn-toggle
-                    v-model="entityObjectsGroups"
+                    v-model="entitiesObjects"
                     mandatory
                 >
                     <v-btn
@@ -26,12 +26,6 @@
                         value="objects"
                     >
                         Objects
-                    </v-btn>
-                    <v-btn
-                        small
-                        value="groups"
-                    >
-                        Groups
                     </v-btn>
                 </v-btn-toggle>
                 <v-btn
@@ -54,32 +48,16 @@
                         All
                     </v-btn>
                     <v-btn
-                        v-if="allowEntities"
                         small
-                        :value="BLUEPRINT_VALUE.TYPE.CHARACTER"
+                        :value="allowEntities?BLUEPRINT_VALUE.TYPE.CHARACTER:BLUEPRINT_VALUE.TYPE.SCENERY"
                     >
-                        Characters
+                        {{ allowEntities?'CHARACTERS':'SCENERY' }}
                     </v-btn>
                     <v-btn
-                        v-if="allowEntities"
                         small
-                        :value="BLUEPRINT_VALUE.TYPE.VEHICLE"
+                        :value="allowEntities?BLUEPRINT_VALUE.TYPE.VEHICLE:BLUEPRINT_VALUE.TYPE.ITEMS"
                     >
-                        Vehicles
-                    </v-btn>
-                    <v-btn
-                        v-if="allowObjects"
-                        small
-                        :value="BLUEPRINT_VALUE.TYPE.SCENERY"
-                    >
-                        Scenery
-                    </v-btn>
-                    <v-btn
-                        v-if="allowObjects"
-                        small
-                        :value="BLUEPRINT_VALUE.TYPE.ITEMS"
-                    >
-                        Items
+                        {{ allowEntities?'VEHICLES':'ITEMS' }}
                     </v-btn>
                 </v-btn-toggle>
                 <hr>
@@ -376,7 +354,7 @@ export default {
         return {
             searchText: '',
             verifiedOnly: false,
-            entityObjectsGroups: 'entities',
+            entitiesObjects: 'entities',
             typeFilter: BLUEPRINT_VALUE.TYPE.ANY,
             characterSubtype: null,
             characterSubtypeOptions: SUBTYPE_FILTER_OPTIONS[BLUEPRINT_VALUE.TYPE.CHARACTER],
@@ -401,9 +379,8 @@ export default {
         entityCountries() { return this.$store.getters.titanEntityCountries; },
         selectedEntity() { return this.$store.getters.getEntitySelectorSelection; },
 
-        allowEntities() { return this.entityObjectsGroups === 'entities'; },
-        allowObjects() { return this.entityObjectsGroups === 'objects'; },
-        allowGroups() { return this.entityObjectsGroups === 'groups'; },
+        allowEntities() { return this.entitiesObjects === 'entities'; },
+        allowObjects() { return this.entitiesObjects === 'objects'; },
 
         allowAnyType() { return this.typeFilter === BLUEPRINT_VALUE.TYPE.ANY; },
         allowCharacterTypes() { return this.allowEntities && (this.allowAnyType || this.typeFilter === BLUEPRINT_VALUE.TYPE.CHARACTER); },
@@ -593,17 +570,7 @@ export default {
             this.scenerySubtype = null;
             this.itemSubtype = null;
         },
-        allowGroups()
-        {
-            this.typeFilter = BLUEPRINT_VALUE.TYPE.ANY;
-            this.characterSubtype = null;
-            this.characterDetailFilter = null;
-            this.vehicleSubtype = null;
-            this.vehicleDetailFilter = null;
-            this.scenerySubtype = null;
-            this.itemSubtype = null;
-        },
-        entitiesObjectsGroups(newValue)
+        entitiesObjects(newValue)
         {
             if(newValue === 'entities')
             {
