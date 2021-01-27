@@ -4,152 +4,184 @@
         icon="car"
         :x="50"
         :y="50"
-        :width="600"
-        :height="600"
+        :width="485"
+        :height="505"
         :closable="false"
-        :resizable="false"
+        :resizable="true"
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-btn-toggle
-                    v-model="entitiesObjects"
-                    mandatory
-                >
-                    <v-btn
-                        small
-                        value="entities"
-                    >
-                        Entities
-                    </v-btn>
-                    <v-btn
-                        small
-                        value="objects"
-                    >
-                        Objects
-                    </v-btn>
-                </v-btn-toggle>
-                <v-btn
-                    small
-                    class="float-right"
-                    :class="{'v-btn--active': verifiedOnly}"
-                    @click="verifiedOnly=!verifiedOnly"
-                >
-                    Verified
-                </v-btn>
-                <hr>
-                <v-btn-toggle
-                    v-model="typeFilter"
-                    mandatory
-                >
-                    <v-btn
-                        small
-                        :value="BLUEPRINT_VALUE.TYPE.ANY"
-                    >
-                        All
-                    </v-btn>
-                    <v-btn
-                        small
-                        :value="allowEntities?BLUEPRINT_VALUE.TYPE.CHARACTER:BLUEPRINT_VALUE.TYPE.SCENERY"
-                    >
-                        {{ allowEntities?'CHARACTERS':'SCENERY' }}
-                    </v-btn>
-                    <v-btn
-                        small
-                        :value="allowEntities?BLUEPRINT_VALUE.TYPE.VEHICLE:BLUEPRINT_VALUE.TYPE.ITEMS"
-                    >
-                        {{ allowEntities?'VEHICLES':'ITEMS' }}
-                    </v-btn>
-                </v-btn-toggle>
-                <hr>
-                <v-btn-toggle
-                    v-if="allowEntities"
-                    v-model="characterSubtype"
-                >
-                    <v-btn
-                        v-for="(option, idx) in characterSubtypeOptions"
-                        :key="`character-subtype-${idx}`"
-                        small
-                        :value="option.value"
-                        :disabled="!allowCharacterTypes"
-                    >
-                        {{ option.label }}
-                    </v-btn>
-                </v-btn-toggle>
-                <v-btn-toggle
-                    v-if="allowEntities"
-                    v-model="vehicleSubtype"
-                    disabled
-                >
-                    <v-btn
-                        v-for="(option, idx) in vehicleSubtypeOptions"
-                        :key="`vehicle-subtype-${idx}`"
-                        small
-                        :value="option.value"
-                        :disabled="!allowVehicleTypes"
-                    >
-                        {{ option.label }}
-                    </v-btn>
-                </v-btn-toggle>
-                <v-btn-toggle
-                    v-if="allowObjects"
-                    v-model="scenerySubtype"
-                    disabled
-                >
-                    <v-btn
-                        v-for="(option, idx) in scenerySubtypeOptions"
-                        :key="`scenery-subtype-${idx}`"
-                        small
-                        :value="option.value"
-                        :disabled="!allowSceneryTypes"
-                    >
-                        {{ option.label }}
-                    </v-btn>
-                </v-btn-toggle>
-                <v-btn-toggle
-                    v-if="allowObjects"
-                    v-model="itemsSubtype"
-                    disabled
-                >
-                    <v-btn
-                        v-for="(option, idx) in itemsSubtypeOptions"
-                        :key="`vehicle-subtype-${idx}`"
-                        small
-                        :value="option.value"
-                        :disabled="!allowItemsTypes"
-                    >
-                        {{ option.label }}
-                    </v-btn>
-                </v-btn-toggle>
-                <hr>
-                <v-btn-toggle
-                    v-if="allowEntities"
-                    v-model="characterDetailFilter"
-                >
-                    <v-btn
-                        v-for="(option, idx) in characterDetailOptions"
-                        :key="`character-detail-${idx}`"
-                        small
-                        :value="option.value"
-                        :disabled="!allowCharacterTypes"
-                    >
-                        {{ option.label }}
-                    </v-btn>
-                </v-btn-toggle>
-                <v-btn-toggle
-                    v-if="allowEntities"
-                    v-model="vehicleDetailFilter"
-                >
-                    <v-btn
-                        v-for="(option, idx) in vehicleDetailOptions"
-                        :key="`vehicle-detail-${idx}`"
-                        small
-                        :value="option.value"
-                        :disabled="!allowVehicleTypes || !vehicleSubtype"
-                    >
-                        {{ option.label }}
-                    </v-btn>
-                </v-btn-toggle>
-                <hr>
+                <div class="grid-container">
+                    <div class="header">
+                        <v-btn-toggle
+                            v-model="entitiesObjects"
+                            mandatory
+                        >
+                            <v-btn
+                                x-small
+                                class="ellipsis-overflow no-text-transform"
+                                :color="(entitiesObjects==='entities')?'primary':''"
+                                value="entities"
+                            >
+                                Entities
+                            </v-btn>
+                            <v-btn
+                                x-small
+                                class="ellipsis-overflow no-text-transform"
+                                :color="(entitiesObjects==='objects')?'primary':''"
+                                value="objects"
+                            >
+                                Objects
+                            </v-btn>
+                        </v-btn-toggle>
+                        <v-btn
+                            x-small
+                            class="float-right"
+                            :color="verifiedOnly?'success':''"
+                            :class="{'v-btn--active': verifiedOnly}"
+                            @click="verifiedOnly=!verifiedOnly"
+                        >
+                            Verified
+                        </v-btn>
+                    </div>
+                    <div class="CharactersScenery">
+                        <v-btn
+                            x-small
+                            class="ellipsis-overflow no-text-transform"
+                            :color="(allowEntities?isTypeCharacter:isTypeScenery)?'primary':''"
+                            :class="{'v-btn--active': (allowEntities?isTypeCharacter:isTypeScenery)}"
+                            @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.CHARACTER:BLUEPRINT_VALUE.TYPE.SCENERY)"
+                        >
+                            {{ allowEntities?'Characters':'Scenery' }}
+                        </v-btn>
+                        <v-btn-toggle
+                            v-if="allowEntities"
+                            v-model="characterSubtype"
+                            style="display:flex;"
+                        >
+                            <v-btn
+                                v-for="(option, idx) in characterSubtypeOptions"
+                                :key="`character-subtype-${idx}`"
+                                x-small
+                                :color="(characterSubtype===option.value)?'primary':''"
+                                class="ellipsis-overflow no-text-transform"
+                                style="flex-grow:1;"
+                                :style="`max-width:${(100/characterSubtypeOptions.length)}%;`"
+                                :value="option.value"
+                                :disabled="!allowCharacterTypes"
+                            >
+                                {{ option.label }}
+                            </v-btn>
+                        </v-btn-toggle>
+                        <v-btn-toggle
+                            v-if="allowObjects"
+                            v-model="scenerySubtype"
+                            style="display:flex;"
+                        >
+                            <v-btn
+                                v-for="(option, idx) in scenerySubtypeOptions"
+                                :key="`scenery-subtype-${idx}`"
+                                x-small
+                                :color="(scenerySubtype===option.value)?'primary':''"
+                                class="ellipsis-overflow no-text-transform"
+                                style="flex-grow:1;"
+                                :style="`max-width:${(100/scenerySubtypeOptions.length)}%;`"
+                                :value="option.value"
+                                :disabled="!allowSceneryTypes"
+                            >
+                                {{ option.label }}
+                            </v-btn>
+                        </v-btn-toggle>
+                        <v-btn-toggle
+                            v-if="allowEntities"
+                            v-model="characterDetailFilter"
+                            style="display:flex;"
+                        >
+                            <v-btn
+                                v-for="(option, idx) in characterDetailOptions"
+                                :key="`character-detail-${idx}`"
+                                x-small
+                                :color="(characterDetailFilter===option.value)?'primary':''"
+                                class="ellipsis-overflow no-text-transform"
+                                style="flex-grow:1;"
+                                :style="`max-width:${(100/characterDetailOptions.length)}%;`"
+                                :value="option.value"
+                                :disabled="!allowCharacterTypes"
+                            >
+                                {{ option.label }}
+                            </v-btn>
+                        </v-btn-toggle>
+                    </div>
+                    <div class="VehiclesItems">
+                        <v-btn
+                            x-small
+                            class="ellipsis-overflow no-text-transform"
+                            :class="{'v-btn--active': (allowEntities?isTypeVehicle:isTypeItem)}"
+                            :color="(allowEntities?isTypeVehicle:isTypeItem)?'primary':''"
+                            @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.VEHICLE:BLUEPRINT_VALUE.TYPE.ITEMS)"
+                        >
+                            {{ allowEntities?'Vehicles':'Items' }}
+                        </v-btn>
+                        <v-btn-toggle
+                            v-if="allowEntities"
+                            v-model="vehicleSubtype"
+                            style="display:flex;"
+                        >
+                            <v-btn
+                                v-for="(option, idx) in vehicleSubtypeOptions"
+                                :key="`vehicle-subtype-${idx}`"
+                                x-small
+                                :color="(vehicleSubtype===option.value)?'primary':''"
+                                class="ellipsis-overflow no-text-transform"
+                                style="flex-grow:1;"
+                                :style="`max-width:${(100/vehicleSubtypeOptions.length)}%;`"
+                                :value="option.value"
+                                :disabled="!allowVehicleTypes"
+                            >
+                                {{ option.label }}
+                            </v-btn>
+                        </v-btn-toggle>
+                        <v-btn-toggle
+                            v-else-if="allowObjects"
+                            v-model="itemsSubtype"
+                            style="display:flex;"
+                        >
+                            <v-btn
+                                v-for="(option, idx) in itemsSubtypeOptions"
+                                :key="`vehicle-subtype-${idx}`"
+                                x-small
+                                :color="(itemsSubtype===option.value)?'primary':''"
+                                class="ellipsis-overflow no-text-transform"
+                                style="flex-grow:1;"
+                                :style="`max-width:${(100/itemsSubtypeOptions.length)}%;`"
+                                :value="option.value"
+                                :disabled="!allowItemsTypes"
+                            >
+                                {{ option.label }}
+                            </v-btn>
+                        </v-btn-toggle>
+                        <v-btn-toggle
+                            v-if="allowEntities"
+                            v-model="vehicleDetailFilter"
+                            style="display:flex;"
+                        >
+                            <v-btn
+                                v-for="(option, idx) in vehicleDetailOptions"
+                                :key="`vehicle-detail-${idx}`"
+                                x-small
+                                :color="(vehicleDetailFilter===option.value)?'primary':''"
+                                class="ellipsis-overflow no-text-transform"
+                                style="flex-grow:1;"
+                                :style="`max-width:${(100/vehicleDetailOptions.length)}%;`"
+                                :value="option.value"
+                                :disabled="!allowVehicleTypes || !vehicleSubtype"
+                            >
+                                {{ option.label }}
+                            </v-btn>
+                        </v-btn-toggle>
+                    </div>
+                </div>
+
                 <v-form dense class="compact">
                     <v-select
                         v-model="countryFilter"
@@ -195,41 +227,67 @@
                         append-icon="mdi-magnify"
                     />
                 </v-form>
+
                 <v-virtual-scroll
-                    :bench="5"
+                    class="no-divider"
+                    :bench="15"
                     :items="filteredEntities"
-                    height="310"
-                    item-height="60"
+                    height="256"
+                    item-height="32px"
                 >
                     <template v-slot:default="{ item }">
                         <v-list-item
                             :key="item.entityName"
+                            dense
                             class="entityListItem"
                             :class="{selected: item.entityName===(selectedEntity&&selectedEntity.entityName)}"
                             @click="selectEntity(item)"
                         >
                             <v-list-item-content>
                                 <v-list-item-title>
-                                    <img-fallback
-                                        :src="`${PACKAGES_PATH}${item.Path}.gif`"
-                                        fallback="images/thumbnail-missing.gif"
-                                        width="64"
-                                        height="32"
-                                    />
-                                    {{ item.Name }}
-                                    <country-flag
-                                        v-if="item.country"
-                                        :alpha2="item.country.alpha2"
-                                        :title="item.country.name"
-                                        class="float-right"
-                                        size="32px"
-                                    />
+                                    <div style="display:flex;align-items: center;">
+                                        <img-fallback
+                                            :src="`${PACKAGES_PATH}${item.Path}.gif`"
+                                            fallback="images/thumbnail-missing.gif"
+                                            width="48"
+                                            height="24"
+                                            class="mr-2"
+                                        />
+                                        <span style="flex-grow:1;max-width:330px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                                            {{ item.Name }}
+                                        </span>
+                                        <v-spacer />
+                                        <country-flag
+                                            v-if="item.country"
+                                            :alpha2="item.country.alpha2"
+                                            :title="item.country.name"
+                                            size="24px"
+                                        />
+                                    </div>
                                 </v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
                         <v-divider />
                     </template>
                 </v-virtual-scroll>
+                <div
+                    class="mt-2"
+                    style="width:100%;display:flex;justify-content: flex-end;"
+                >
+                    <v-btn
+                        color="secondary"
+                        x-small
+                    >
+                        Place Empty
+                    </v-btn>
+                    <v-btn
+                        color="primary"
+                        x-small
+                        class="ml-2"
+                    >
+                        Place
+                    </v-btn>
+                </div>
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>
@@ -382,11 +440,15 @@ export default {
         allowEntities() { return this.entitiesObjects === 'entities'; },
         allowObjects() { return this.entitiesObjects === 'objects'; },
 
-        allowAnyType() { return this.typeFilter === BLUEPRINT_VALUE.TYPE.ANY; },
-        allowCharacterTypes() { return this.allowEntities && (this.allowAnyType || this.typeFilter === BLUEPRINT_VALUE.TYPE.CHARACTER); },
-        allowVehicleTypes() { return this.allowEntities && (this.allowAnyType || this.typeFilter === BLUEPRINT_VALUE.TYPE.VEHICLE ); },
-        allowSceneryTypes() { return this.allowObjects && (this.allowAnyType || this.typeFilter === BLUEPRINT_VALUE.TYPE.SCENERY); },
-        allowItemsTypes() { return this.allowObjects && (this.allowAnyType || this.typeFilter === BLUEPRINT_VALUE.TYPE.ITEMS); },
+        isTypeAny() { return this.typeFilter === BLUEPRINT_VALUE.TYPE.ANY; },
+        isTypeCharacter() { return this.typeFilter === BLUEPRINT_VALUE.TYPE.CHARACTER; },
+        isTypeVehicle() { return this.typeFilter === BLUEPRINT_VALUE.TYPE.VEHICLE; },
+        isTypeScenery() { return this.typeFilter === BLUEPRINT_VALUE.TYPE.SCENERY; },
+        isTypeItem() { return this.typeFilter === BLUEPRINT_VALUE.TYPE.ITEMS; },
+        allowCharacterTypes() { return this.allowEntities && (this.isTypeAny || this.isTypeCharacter); },
+        allowVehicleTypes() { return this.allowEntities && (this.isTypeAny || this.isTypeVehicle ); },
+        allowSceneryTypes() { return this.allowObjects && (this.isTypeAny || this.isTypeScenery); },
+        allowItemsTypes() { return this.allowObjects && (this.isTypeAny || this.isTypeItem); },
 
         vehicleDetailOptions()
         {
@@ -424,7 +486,7 @@ export default {
                 });
             }
 
-            if(!this.allowAnyType)
+            if(!this.isTypeAny)
             {
                 filtered = filtered.filter(x => x.BlueprintMap.type === this.typeFilter);
             }
@@ -618,6 +680,10 @@ export default {
     },
     methods:
     {
+        updateTypeFilter(typeFilterValue)
+        {
+            this.typeFilter = (this.typeFilter !== typeFilterValue) ? typeFilterValue : BLUEPRINT_VALUE.TYPE.ANY;
+        },
         selectEntity(entity)
         {
             this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_SET_SELECTION, entity);
@@ -633,6 +699,41 @@ export default {
     &.selected
     {
         background-color: $menu-bg-active !important;
+    }
+}
+
+.grid-container
+{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 0.25fr 1fr;
+    gap: 2px 2px;
+    grid-template-areas:
+    "header header"
+    "CharactersScenery VehiclesItems";
+
+    .header { grid-area: header; }
+    .CharactersScenery {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 1px 1px;
+        grid-template-areas:
+        "."
+        "."
+        ".";
+        grid-area: CharactersScenery;
+    }
+    .VehiclesItems {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 1px 1px;
+        grid-template-areas:
+        "."
+        "."
+        ".";
+        grid-area: VehiclesItems;
     }
 }
 </style>

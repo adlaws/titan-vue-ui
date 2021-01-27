@@ -275,6 +275,14 @@ $scale-pct: percentage($scale-factor);
     padding:4px;
 }
 
+.no-divider
+{
+    .v-divider
+    {
+        border-color: rgba(0,0,0,0) !important;
+    }
+}
+
 // ------------------------------------------------------------------------------------------------
 .ellipsis-overflow
 {
@@ -288,6 +296,22 @@ td.ellipsis-overflow
     white-space: nowrap;
     text-overflow: ellipsis;
     max-width: 8rem;
+}
+button.ellipsis-overflow
+{
+    display:block;
+    span
+    {
+        display:block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+.no-text-transform
+{
+    text-transform: none !important;
 }
 
 .inherit-color
