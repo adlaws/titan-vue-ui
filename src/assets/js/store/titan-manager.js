@@ -18,6 +18,7 @@ export const TITAN_MUTATION = {
     ENTITY_SELECTOR_CLEAR_SELECTION:'titan::entitySelector::clearSelection',
     // GIZMO POSITION
     GIZMO_SET_POSITION:'titan::gizmo::setPosition',
+    GIZMO_CLEAR_POSITION:'titan::gizmo::clearPosition',
 };
 export const TITAN_ACTION = {
     INIT_PLUGIN_CONFIG:'titan::initPluginConfig',
@@ -35,15 +36,13 @@ export const TITAN_UI_MODE = {
 const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
     .map(e=>
     {
+        // make the Name field all lower case and get rid of special characters to make filtering simpler
+        e.normalizedName = e.Name.toLowerCase(); // .replace(/[\s\-+()]/g, '');
         // the `Blueprint` field value is a comma delimited string, which is not particularly useful,
         // so convert the string into an array, and additional `Set` to make life simpler
         const blueprintArray = e.Blueprint.split(',').map(x=>x.trim().toLowerCase());
-        // make the Name field all lower case and get rid of special characters to make filtering simpler
-        e.normalizedName = e.Name.toLowerCase().replace(/[\s\-+()]/g, '');
         // do some processing on the "blueprint" so that it's easier to use/access
         e.Blueprint = blueprintArray.join(',');
-        e.BlueprintArr = blueprintArray;
-        e.BlueprintSet = new Set(blueprintArray.filter(x=> x.length > 0 && x !== 'null'));
         // NOTE: this next one is not particularly reliable, since people have kind of been doing
         // whatever they feel like with the ordering of this information
         e.BlueprintMap = {
@@ -169,6 +168,7 @@ const TitanManager =
         // ENTITY SELECTOR WINDOW
         // --------------------------------------------------------------------
         getEntitySelectorSelection: (state) => state.entitySelector.selected,
+        hasEntitySelectorSelection: (state, getters) => getters.getEntitySelectorSelection !== null,
         // --------------------------------------------------------------------
         // ENTITY SELECTOR WINDOW
         // --------------------------------------------------------------------
@@ -303,6 +303,16 @@ const TitanManager =
         [TITAN_MUTATION.GIZMO_SET_POSITION](state, ecef)
         {
             state.gizmo = ecef;
+        },
+        /**
+         * Store the current position of the Titan gizmo pointer.
+         *
+         * @param {object} state the store state object
+         * @param {object} ecef the gizmo position
+         */
+        [TITAN_MUTATION.GIZMO_CLEAR_POSITION](state)
+        {
+            state.gizmo = null;
         },
         /**
          * NOTE: INTERNAL USE ONLY - do not expose via TITAN_MUTATION

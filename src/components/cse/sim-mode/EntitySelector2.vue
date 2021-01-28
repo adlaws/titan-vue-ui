@@ -5,13 +5,13 @@
         :x="50"
         :y="50"
         :width="485"
-        :height="505"
+        :height="465"
         :closable="false"
         :resizable="true"
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <div class="grid-container">
+                <div class="filter-buttons-container">
                     <div class="header">
                         <v-btn-toggle
                             v-model="entitiesObjects"
@@ -20,7 +20,7 @@
                             <v-btn
                                 x-small
                                 class="ellipsis-overflow no-text-transform"
-                                :color="(entitiesObjects==='entities')?'primary':''"
+                                :color="(entitiesObjects==='entities')?ACTIVE_FILTER_BUTTON_COLOR:''"
                                 value="entities"
                             >
                                 Entities
@@ -28,7 +28,7 @@
                             <v-btn
                                 x-small
                                 class="ellipsis-overflow no-text-transform"
-                                :color="(entitiesObjects==='objects')?'primary':''"
+                                :color="(entitiesObjects==='objects')?ACTIVE_FILTER_BUTTON_COLOR:''"
                                 value="objects"
                             >
                                 Objects
@@ -37,18 +37,18 @@
                         <v-btn
                             x-small
                             class="float-right"
-                            :color="verifiedOnly?'success':''"
+                            :color="verifiedOnly?ACTIVE_VERIFIED_BUTTON_COLOR:''"
                             :class="{'v-btn--active': verifiedOnly}"
                             @click="verifiedOnly=!verifiedOnly"
                         >
                             Verified
                         </v-btn>
                     </div>
-                    <div class="CharactersScenery">
+                    <div class="left-filters-container">
                         <v-btn
                             x-small
                             class="ellipsis-overflow no-text-transform"
-                            :color="(allowEntities?isTypeCharacter:isTypeScenery)?'primary':''"
+                            :color="(allowEntities?isTypeCharacter:isTypeScenery)?ACTIVE_FILTER_BUTTON_COLOR:''"
                             :class="{'v-btn--active': (allowEntities?isTypeCharacter:isTypeScenery)}"
                             @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.CHARACTER:BLUEPRINT_VALUE.TYPE.SCENERY)"
                         >
@@ -63,7 +63,7 @@
                                 v-for="(option, idx) in characterSubtypeOptions"
                                 :key="`character-subtype-${idx}`"
                                 x-small
-                                :color="(characterSubtype===option.value)?'primary':''"
+                                :color="(characterSubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
                                 :style="`max-width:${(100/characterSubtypeOptions.length)}%;`"
@@ -82,7 +82,7 @@
                                 v-for="(option, idx) in scenerySubtypeOptions"
                                 :key="`scenery-subtype-${idx}`"
                                 x-small
-                                :color="(scenerySubtype===option.value)?'primary':''"
+                                :color="(scenerySubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
                                 :style="`max-width:${(100/scenerySubtypeOptions.length)}%;`"
@@ -101,7 +101,7 @@
                                 v-for="(option, idx) in characterDetailOptions"
                                 :key="`character-detail-${idx}`"
                                 x-small
-                                :color="(characterDetailFilter===option.value)?'primary':''"
+                                :color="(characterDetailFilter===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
                                 :style="`max-width:${(100/characterDetailOptions.length)}%;`"
@@ -112,12 +112,12 @@
                             </v-btn>
                         </v-btn-toggle>
                     </div>
-                    <div class="VehiclesItems">
+                    <div class="right-filters-container">
                         <v-btn
                             x-small
                             class="ellipsis-overflow no-text-transform"
                             :class="{'v-btn--active': (allowEntities?isTypeVehicle:isTypeItem)}"
-                            :color="(allowEntities?isTypeVehicle:isTypeItem)?'primary':''"
+                            :color="(allowEntities?isTypeVehicle:isTypeItem)?ACTIVE_FILTER_BUTTON_COLOR:''"
                             @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.VEHICLE:BLUEPRINT_VALUE.TYPE.ITEMS)"
                         >
                             {{ allowEntities?'Vehicles':'Items' }}
@@ -131,7 +131,7 @@
                                 v-for="(option, idx) in vehicleSubtypeOptions"
                                 :key="`vehicle-subtype-${idx}`"
                                 x-small
-                                :color="(vehicleSubtype===option.value)?'primary':''"
+                                :color="(vehicleSubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
                                 :style="`max-width:${(100/vehicleSubtypeOptions.length)}%;`"
@@ -150,7 +150,7 @@
                                 v-for="(option, idx) in itemsSubtypeOptions"
                                 :key="`vehicle-subtype-${idx}`"
                                 x-small
-                                :color="(itemsSubtype===option.value)?'primary':''"
+                                :color="(itemsSubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
                                 :style="`max-width:${(100/itemsSubtypeOptions.length)}%;`"
@@ -169,7 +169,7 @@
                                 v-for="(option, idx) in vehicleDetailOptions"
                                 :key="`vehicle-detail-${idx}`"
                                 x-small
-                                :color="(vehicleDetailFilter===option.value)?'primary':''"
+                                :color="(vehicleDetailFilter===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
                                 :style="`max-width:${(100/vehicleDetailOptions.length)}%;`"
@@ -182,94 +182,145 @@
                     </div>
                 </div>
 
-                <v-form dense class="compact">
-                    <v-select
-                        v-model="countryFilter"
-                        label="Countries"
-                        item-value="numeric"
-                        dense
-                        attach
-                        chips
-                        multiple
-                        clearable
-                        :items="entityCountries"
+                <!-- NOTE: a lot of inline styles here to make the layout work -->
+                <!--       it's definitely not ideal, -->
+                <v-form
+                    dense
+                    class="compact mt-4"
+                >
+                    <v-row
+                        style="height:32px;"
                     >
-                        <template v-slot:selection="{ item, index }">
-                            <v-chip
-                                v-if="index < 4"
-                                small
-                                close
-                                @click:close="countryFilter.splice(index,1)"
-                            >
-                                <country-flag class="mr-2" :alpha2="item.alpha2" />
-                                {{ item.name }}
-                            </v-chip>
-                            <span
-                                v-if="index > 4"
-                                class="grey--text caption"
-                            >
-                                (and {{ countryFilter.length - 5 }} more)
-                            </span>
-                        </template>
-                        <template v-slot:item="{ item, attrs }">
-                            <v-checkbox
-                                :value="attrs.inputValue"
+                        <v-col cols="6">
+                            <v-text-field
+                                v-model="searchText"
+                                label="Search"
+                                clearable
+                                append-icon="mdi-magnify"
                             />
-                            <country-flag class="mr-2" :alpha2="item.alpha2" />
-                            {{ item.name }}
-                        </template>
-                    </v-select>
-
-                    <v-text-field
-                        v-model="searchText"
-                        label="Search"
-                        clearable
-                        append-icon="mdi-magnify"
-                    />
+                        </v-col>
+                        <v-col cols="6">
+                            <v-select
+                                v-model="countryFilter"
+                                label="Countries"
+                                item-value="numeric"
+                                dense
+                                attach
+                                chips
+                                multiple
+                                clearable
+                                :items="entityCountries"
+                                style="top:-20px;"
+                            >
+                                <template v-slot:selection="{ item, index }">
+                                    <v-chip
+                                        v-if="index < 2"
+                                        small
+                                        close
+                                        @click:close="countryFilter.splice(index,1)"
+                                    >
+                                        <country-flag :alpha2="item.alpha2" />
+                                    </v-chip>
+                                    <span
+                                        v-if="index === 2"
+                                        class="grey--text caption"
+                                        style="margin-top:16px;font-size:0.65rem !important;"
+                                    >
+                                        +{{ countryFilter.length - 2 }} more
+                                    </span>
+                                </template>
+                                <template v-slot:item="{ item, attrs }">
+                                    <v-checkbox
+                                        :value="attrs.inputValue"
+                                    />
+                                    <country-flag class="mr-2" :alpha2="item.alpha2" />
+                                    {{ item.name }}
+                                </template>
+                            </v-select>
+                        </v-col>
+                    </v-row>
                 </v-form>
 
-                <v-virtual-scroll
-                    class="no-divider"
-                    :bench="15"
-                    :items="filteredEntities"
-                    height="256"
-                    item-height="32px"
+                <div
+                    style="display:flex;"
                 >
-                    <template v-slot:default="{ item }">
-                        <v-list-item
-                            :key="item.entityName"
-                            dense
-                            class="entityListItem"
-                            :class="{selected: item.entityName===(selectedEntity&&selectedEntity.entityName)}"
-                            @click="selectEntity(item)"
-                        >
-                            <v-list-item-content>
-                                <v-list-item-title>
-                                    <div style="display:flex;align-items: center;">
-                                        <img-fallback
-                                            :src="`${PACKAGES_PATH}${item.Path}.gif`"
-                                            fallback="images/thumbnail-missing.gif"
-                                            width="48"
-                                            height="24"
-                                            class="mr-2"
-                                        />
-                                        <span style="flex-grow:1;max-width:330px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
-                                            {{ item.Name }}
-                                        </span>
-                                        <v-spacer />
-                                        <country-flag
-                                            v-if="item.country"
-                                            :alpha2="item.country.alpha2"
-                                            :title="item.country.name"
-                                            size="24px"
-                                        />
-                                    </div>
-                                </v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-divider />
-                    </template>
-                </v-virtual-scroll>
+                    <v-virtual-scroll
+                        class="no-divider ml-0 mr-1"
+                        style="flex-grow:0.975;"
+                        :bench="15"
+                        :items="filteredEntities"
+                        height="256"
+                        item-height="32px"
+                    >
+                        <template v-slot:default="{ item }">
+                            <v-list-item
+                                :key="item.entityName"
+                                dense
+                                class="entityListItem px-1"
+                                :class="{selected: item.entityName===(selectedEntity&&selectedEntity.entityName)}"
+                                @click="selectEntity(item)"
+                            >
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        <div style="display:flex;align-items: center;">
+                                            <img-fallback
+                                                :src="`${PACKAGES_PATH}${item.Path}.gif`"
+                                                fallback="images/thumbnail-missing.png"
+                                                width="48"
+                                                height="24"
+                                                class="mr-1"
+                                            />
+                                            <span style="flex-grow:1;max-width:205px;overflow:hidden;white-space:nowrap;font-size:85%;text-overflow:ellipsis;">
+                                                {{ item.Name }}
+                                            </span>
+                                            <v-spacer />
+                                            <country-flag
+                                                v-if="item.country"
+                                                :alpha2="item.country.alpha2"
+                                                :title="item.country.name"
+                                                size="24px"
+                                            />
+                                        </div>
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-divider />
+                        </template>
+                    </v-virtual-scroll>
+                    <div
+                        style="flex-grow:0;width:150px;font-size:85%;display:flex;flex-direction:column;"
+                        class="pl-2"
+                    >
+                        <div v-if="!selectedEntity">
+                            <img-fallback
+                                key="sakjhdkjahskjdhksagdiueqgdi"
+                                src="images/thumbnail-missing.png"
+                                width="130"
+                                height="65"
+                            />
+                        </div>
+                        <div v-else>
+                            <img-fallback
+                                key="sakjhdkjahskjdhksagdiueqgdsadusaodho8qowq"
+                                :src="`${PACKAGES_PATH}${selectedEntity.Path}_rot.gif`"
+                                :fallback="[`${PACKAGES_PATH}${selectedEntity.Path}.gif`,'images/thumbnail-missing.png']"
+                                width="130"
+                                height="65"
+                            />
+                            {{ selectedEntity.Name }}
+                            <v-select
+                                v-if="entityDescriptorCompanion.loadouts.length"
+                                class="mt-4"
+                                dense
+                                label="Loadout"
+                                :items="entityDescriptorCompanion.loadouts"
+                                item-text="name"
+                                return-object
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 <div
                     class="mt-2"
                     style="width:100%;display:flex;justify-content: flex-end;"
@@ -277,6 +328,8 @@
                     <v-btn
                         color="secondary"
                         x-small
+                        :disabled="!canCreateEntity"
+                        @click="placeEntity({empty:true})"
                     >
                         Place Empty
                     </v-btn>
@@ -284,6 +337,8 @@
                         color="primary"
                         x-small
                         class="ml-2"
+                        :disabled="!canCreateEntity"
+                        @click="placeEntity"
                     >
                         Place
                     </v-btn>
@@ -297,8 +352,7 @@
 import 'flag-icon-css/sass/flag-icon.scss';
 
 import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
-
-import { PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $tCrewInterface, PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
 
 import CseDesktopWindow from '@/components/common/cse/CseDesktopWindow.vue';
 import CseDesktopWindowContent from '@/components/common/cse/CseDesktopWindowContent.vue';
@@ -400,6 +454,9 @@ const DETAIL_FILTER_OPTIONS = {
     ],
 };
 
+const ACTIVE_FILTER_BUTTON_COLOR = '#003055';
+const ACTIVE_VERIFIED_BUTTON_COLOR = '#005530';
+
 export default {
     name: 'entity-selector2',
     components:
@@ -426,16 +483,22 @@ export default {
             characterDetailOptions: DETAIL_FILTER_OPTIONS[BLUEPRINT_VALUE.SUBTYPE.CHARACTER],
             vehicleDetailFilter: null,
             // vehicleDetailOptions is a computed value, depends on vehicle subtype
+            entityDescriptorCompanion: {loadouts: [], defaults:{}},
             countryFilter: [],
             PACKAGES_PATH,
             BLUEPRINT_VALUE,
+            ACTIVE_FILTER_BUTTON_COLOR,
+            ACTIVE_VERIFIED_BUTTON_COLOR,
         };
     },
     computed:
     {
         entityDescriptors() { return this.$store.getters.titanEntityDescriptors; },
         entityCountries() { return this.$store.getters.titanEntityCountries; },
+
         selectedEntity() { return this.$store.getters.getEntitySelectorSelection; },
+        gizmoPos() { return this.$store.getters.gizmoPos; },
+        canCreateEntity() { return this.gizmoPos !== null && this.selectedEntity !== null; },
 
         allowEntities() { return this.entitiesObjects === 'entities'; },
         allowObjects() { return this.entitiesObjects === 'objects'; },
@@ -452,8 +515,16 @@ export default {
 
         vehicleDetailOptions()
         {
-            return DETAIL_FILTER_OPTIONS[this.vehicleSubtype] ||
-                [{label:'-', value:false},{label:'-', value:false}, {label:'-', value:false}];
+            if(!this.vehicleSubtype)
+            {
+                // fillers in the case that no vehicle subtype is specified - in this caes
+                // there's no way to determine which detail options to provide. We *could*
+                // show all 9 possible options, but there's screen real estate prevents us
+                // from doing so, at least without switching to a drop-down list or
+                // something like that, and it would probably be ugly if we did.
+                return [{label:'-', value:false},{label:'-', value:false}, {label:'-', value:false}];
+            }
+            return DETAIL_FILTER_OPTIONS[this.vehicleSubtype];
         },
 
         verificationFilteredEntities()
@@ -687,6 +758,24 @@ export default {
         selectEntity(entity)
         {
             this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_SET_SELECTION, entity);
+            this.entityDescriptorCompanion = TitanUtils.makeEntityDescriptorCompanion(entity);
+        },
+        placeEntity(opts={empty:false})
+        {
+            const gizmoPos = this.$store.getters.gizmoPos;
+            if(gizmoPos && this.selectedEntity)
+            {
+                // create an entity at the location
+                const entity =TitanUtils.createEntity(this.selectedEntity.entityName, gizmoPos);
+                if(entity && opts.empty)
+                {
+                    // Ermagerd... this seems bad...? From the original Titan code:
+                    //     this must be called immediately, to prevent crew getting spawned
+                    //     momentarily before being deleted by 'clear' method the 'clear'
+                    //     method may be called before entity loading is complete
+                    $tCrewInterface.clear(entity.getGUID());
+                }
+            }
         },
     }
 };
@@ -702,38 +791,26 @@ export default {
     }
 }
 
-.grid-container
+.filter-buttons-container
 {
+    .header { grid-area: header; }
+    .left-filters-container, .right-filters-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 1px 1px;
+        grid-template-areas: "." "." ".";
+        grid-area: left-filters-container;
+    }
+    .left-filters-container { grid-area: left-filters-container; }
+    .right-filters-container { grid-area: right-filters-container; }
+
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 0.25fr 1fr;
     gap: 2px 2px;
     grid-template-areas:
     "header header"
-    "CharactersScenery VehiclesItems";
-
-    .header { grid-area: header; }
-    .CharactersScenery {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr 1fr;
-        gap: 1px 1px;
-        grid-template-areas:
-        "."
-        "."
-        ".";
-        grid-area: CharactersScenery;
-    }
-    .VehiclesItems {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr 1fr;
-        gap: 1px 1px;
-        grid-template-areas:
-        "."
-        "."
-        ".";
-        grid-area: VehiclesItems;
-    }
+    "left-filters-container right-filters-container";
 }
 </style>

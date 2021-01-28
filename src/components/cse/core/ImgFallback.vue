@@ -26,13 +26,13 @@ export default {
         },
         fallback:
         {
-            type: String,
+            type: [String, Array],
             default: '',
         },
         loading:
         {
             type: String,
-            default: '',
+            default: null,
         }
     },
     data()
@@ -40,6 +40,7 @@ export default {
         return {
             theWidth: '64px',
             theHeight: '64px',
+            imgStyle: null,
         };
     },
     watch:
@@ -51,6 +52,7 @@ export default {
     },
     mounted()
     {
+        this.imgStyle = this.$refs.image.style;
         this._doImage();
     },
     methods:
@@ -59,25 +61,12 @@ export default {
         {
             this._updateSize();
 
-            const imgElm = this.$refs.image;
-            const imgElmStyle = imgElm.style;
-
-            const img = new Image();
-
-            let loading = this.loading;
-            let fallback = this.fallback;
-            let original = this.src;
-
-            imgElmStyle.backgroundUrl = loading;
-            img.onload = () =>
+            if(this.loading)
             {
-                imgElmStyle.backgroundImage = `url(${original})`;
-            };
-            img.onerror = () =>
-            {
-                imgElmStyle.backgroundImage = `url(${fallback})`;
-            };
-            img.src = original;
+                this.imgStyle.backgroundUrl = this.loading;
+            }
+
+            this._tryNextImage();
         },
         _updateSize()
         {
@@ -89,6 +78,29 @@ export default {
             if(/^\d+$/.test(val))
                 return `${val}px`;
             return val;
+        },
+        _tryNextImage(fallbackIdx=-1)
+        {
+            let imgSrc = this.src;
+            if(fallbackIdx>=0)
+            {
+                const isArray = Array.isArray(this.fallback);
+                const hasMoreFallbacks = (isArray && fallbackIdx < this.fallback.length) || fallbackIdx === 0;
+                if(!hasMoreFallbacks)
+                    return;
+                imgSrc = isArray ? this.fallback[fallbackIdx] : this.fallback;
+            }
+
+            const img = new Image();
+            img.onload = () =>
+            {
+                this.imgStyle.backgroundImage = `url(${imgSrc})`;
+            };
+            img.onerror = () =>
+            {
+                this._tryNextImage(fallbackIdx+1);
+            };
+            img.src = imgSrc;
         }
     }
 };

@@ -95,20 +95,20 @@
                     >
                         <country-flag
                             :alpha2="alphaCodeLookup(item)"
-                            :title="item.BlueprintArr[3]"
+                            :title="item.BlueprintMap.country"
                         />
                     </template>
                     <template
                         v-slot:[`item.domain`]="{ item }"
                     >
-                        {{ item.BlueprintArr[2] }}
+                        {{ item.BlueprinttMap.detail }}
                     </template>
                     <template
                         v-slot:[`item.icon`]="{ item }"
                     >
                         <img-fallback
                             :src="`${PACKAGES_PATH}${item.Path}.gif`"
-                            fallback="images/thumbnail-missing.gif"
+                            fallback="images/thumbnail-missing.png"
                             width="64"
                             height="32"
                         />
@@ -201,7 +201,7 @@ export default {
         //   0          1       2          3       4      5
         //   kind       domain  type       country force  alliance
         // [ "vehicle", "land", "tracked", "USA", "Army", "blue"]
-        // let foo = Array.from(new Set(this.entityDescriptors.map((ed)=>ed.BlueprintArr[0]))).filter(x => x !== undefined);
+        // let foo = Array.from(new Set(this.entityDescriptors.map((ed)=>ed.BlueprintMap.type))).filter(x => x !== undefined);
         // foo.sort();
         // $tLogger.info(foo);
     },
@@ -225,7 +225,7 @@ export default {
 
             for(let idx=0; idx<this.filters.country.length; idx++)
             {
-                if(item.Blueprint.indexOf(this.filters.country[idx]) !== -1)
+                if(item.BlueprintMap.country.lcasename===this.filters.country[idx]))
                     return true;
             }
             return false;
@@ -237,14 +237,14 @@ export default {
 
             for(let idx=0; idx<this.filters.domain.length; idx++)
             {
-                if(item.Blueprint.indexOf(this.filters.domain[idx]) !== -1)
+                if(item.BlueprintMap.subtype===this.filters.domain[idx])
                     return true;
             }
             return false;
         },
         alphaCodeLookup(item)
         {
-            const entry = COUNTRY.NAME[item.BlueprintArr[3]];
+            const entry = COUNTRY.NAME[item.BlueprintMap.country];
             return entry ? entry.alpha2 : null;
         },
         selectRow(item, row)
