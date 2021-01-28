@@ -57,6 +57,7 @@
             :items="contextMenu.items"
             :x="contextMenu.x"
             :y="contextMenu.y"
+            use-parent-for-position
             @selected="_contextMenuSelection"
             @cancelled="_hideContextMenu"
         />

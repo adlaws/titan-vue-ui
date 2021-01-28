@@ -5,6 +5,7 @@
     >
         <time-slider />
         <entity-selector2 />
+        <waypoint-settings />
 
         <!--
         <cse-scenario-objects />
@@ -12,7 +13,6 @@
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
 
         <aar-statistics />
-        <waypoint-settings />
         <map-overlay />
         <drawing-tools />
 

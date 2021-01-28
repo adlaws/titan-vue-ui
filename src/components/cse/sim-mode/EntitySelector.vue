@@ -225,7 +225,7 @@ export default {
 
             for(let idx=0; idx<this.filters.country.length; idx++)
             {
-                if(item.BlueprintMap.country.lcasename===this.filters.country[idx]))
+                if(item.BlueprintMap.country.lcasename===this.filters.country[idx])
                     return true;
             }
             return false;

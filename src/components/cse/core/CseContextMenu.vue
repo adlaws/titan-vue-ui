@@ -170,9 +170,15 @@ export default {
         },
         ignoreTaskbar:
         {
-            type:[Boolean, String],
+            type: Boolean,
             default: false,
         },
+        useParentForPosition:
+        {
+            type:Boolean,
+            default: false,
+        },
+
     },
     data()
     {
@@ -203,16 +209,12 @@ export default {
 
         let x = this.x;
         let y = this.y;
-        if(this.$parent)
+
+        if(this.useParentForPosition && this.$parent)
         {
-            let parentElm = this.$parent.$el;
-            while(parentElm)
-            {
-                const bcRect = parentElm.getBoundingClientRect();
-                x -= bcRect.x;
-                y -= bcRect.y;
-                parentElm = parentElm.$parent && parentElm.$parent.$el || null;
-            }
+            let bcRect = this.$parent.$el.getBoundingClientRect();
+            x -= bcRect.x;
+            y -= bcRect.y;
         }
 
         this.pos.x = MathUtils.clamp(x, desktopBounds.left, desktopBounds.right - bounds.width);
