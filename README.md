@@ -51,7 +51,9 @@ reflect your machine's folder structure).
 
 It will copy the entire folder structure of `packages` from Titan into the
 `public\dev\packages` folder, but only include files of the type specified by
-the command's filter (in this case `*.loadout`, `*.gif`, `*.png`, `*.jpeg` and `*.jpg`)
+the command's filter (in this case `*.loadout`, `*.gif`, `*.png`, `*.jpeg` and
+`*.jpg`). Even so, this is about 210MB of data, so it should not be committed
+to the repository and only used for development.
 
 ```
 robocopy c:\TITAN\packages c:\dev\TITAN-UI\SRC-FOLDER\public\dev\packages *.loadout *.gif *.png *.jpeg *.jpg /E
