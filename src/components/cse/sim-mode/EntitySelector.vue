@@ -223,24 +223,14 @@ export default {
             if(!this.filters.country || this.filters.country.length === 0)
                 return true;
 
-            for(let idx=0; idx<this.filters.country.length; idx++)
-            {
-                if(item.BlueprintMap.country.lcasename===this.filters.country[idx])
-                    return true;
-            }
-            return false;
+            return this.filters.country.some(country => country === item.BlueprintMap.country.lcasename);
         },
         domainFilter(value, filter, item)
         {
             if(!this.filters.domain || this.filters.domain.length === 0)
                 return true;
 
-            for(let idx=0; idx<this.filters.domain.length; idx++)
-            {
-                if(item.BlueprintMap.subtype===this.filters.domain[idx])
-                    return true;
-            }
-            return false;
+            return this.filters.domain.some(domain => domain === item.BlueprintMap.subtype);
         },
         alphaCodeLookup(item)
         {

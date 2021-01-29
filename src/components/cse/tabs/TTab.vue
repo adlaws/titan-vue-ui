@@ -18,7 +18,7 @@
  *         <t-tab title="mango" disabled>MANGO TAB CONTENT</t-tab>
  *     </t-tabs>
  */
-import TitanUtils from '@/assets/js/titan/titan-utils';
+import CryptoUtils from '@/assets/js/utils/crypto-utils.js';
 
 export default {
     name: 't-tab',

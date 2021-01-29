@@ -61,6 +61,12 @@ const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionLi
 
         // remove unnecessary fields from descriptor - not needed for the UI
         ['ClassName', 'Tags', 'Filter', 'draggableLive', 'legacyInitialize', 'visible', 'colliding'].forEach(k => delete e[k]);
+
+        // finally, add loadouts (and defaults?)
+        const loadoutsAndDefaults = TitanUtils.getLoadoutsAndDefaultsFor(e);
+        e.loadouts = loadoutsAndDefaults.loadouts;
+        e.defaults = loadoutsAndDefaults.defaults;
+
         return e;
     });
 

@@ -381,10 +381,22 @@ export default class TitanUtils
     /**
      * Mimics the functionality found in the `ti.cc.Descriptor` of ti-service.js`
      * (line #263 onward) of the original Titan source
+     *
+     * NOTE: It seems pretty silly that this is the way to do this - surely it
+     *       should be a single call to the C++ back end for it to manage, rather
+     *       than the JavaScript side of things needing to be aware of the
+     *       underlying folder structure to obtain the loadouts for an entity
+     *       type.
+     * NOTE: the original implemententation also included the full file name (with
+     *       file extension), the file extension and path of the file in the
+     *       results, which seems *completely* unnecessary given that the only
+     *       thing we really need to do is retrieve the file name to use as the
+     *       name of the loadout. This implementation strips the unecessary
+     *       parts out.
      */
-    static makeEntityDescriptorCompanion(descriptor)
+    static getLoadoutsAndDefaultsFor(descriptor)
     {
-        const defaultLoadout = {name:'Default',type:'default', filename:null,filepath:null,ext:null};
+        const defaultLoadout = {name:'Default',type:'default', /*filename:null,filepath:null,ext:null*/};
 
         if(!$isInOuterra)
         {
@@ -409,6 +421,14 @@ export default class TitanUtils
         userLoadouts.forEach(x=>x.type='user');
         const loadouts = [defaultLoadout,...systemLoadouts, ...userLoadouts];
 
+        // remove unnecessary data (see notes above)
+        loadouts.forEach(x=>
+        {
+            ['filename', 'filepath', 'ext'].forEach(k => delete x[k]);
+        });
+
+        // NOTE: This doesn't ever seem to actually retrieve anything, might be zombie code,
+        //       consider deleting
         const defaultsDir = `${entityDir}/defaults`;
         let defaults = $tWorldInterface.readJsonData(TitanUtils.getUserPath() + defaultsDir);
         if(!defaults)

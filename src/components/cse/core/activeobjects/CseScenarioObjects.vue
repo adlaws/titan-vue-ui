@@ -396,11 +396,12 @@ export default {
             {
                 items = items.filter(x =>
                 {
-                    for(let i=0; i<this.countryFilter.length;i++)
+                    if(x.country && x.country.numeric)
                     {
-                        if(x.country && x.country.numeric === this.countryFilter[i])
-                            return true;
+                        // do any of the countries in the filter match the entities country?
+                        return this.countryFilter.some(country => country === x.country.numeric);
                     }
+                    return false;
                 });
             }
 

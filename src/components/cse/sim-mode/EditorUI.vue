@@ -4,13 +4,14 @@
         style="width:100%;height:100%;overflow:hidden;"
     >
         <time-slider />
-        <entity-selector2 />
-        <waypoint-settings />
         <cse-scenario-objects />
-        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
-        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+        <entity-selector2 />
 
         <!--
+        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
+        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+        <waypoint-settings />
+
         <aar-statistics />
         <map-overlay />
         <drawing-tools />

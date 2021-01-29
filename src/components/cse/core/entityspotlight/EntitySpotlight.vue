@@ -81,19 +81,18 @@ export default {
     {
         _updateResults()
         {
-            if(this.search.length > 0)
+            if(this.search.length === 0)
+            {
+                this.results = [];
+            }
+            else
             {
                 const lCaseFilter = this.search.toLowerCase().split(TAB_SYMBOL)[0];
                 this.results = this.entityDescriptors.filter(x=>
                 {
-                    if(x.Name.toLowerCase().indexOf(lCaseFilter)!==-1)
-                        return true;
-                    return false;
+                    const lcasename = x.Name.toLowerCase();
+                    return lcasename.indexOf(lCaseFilter) !== -1;
                 });
-            }
-            else
-            {
-                this.results = [];
             }
 
             this.selectedIdx = this.results.length > 0 ? 0 : -1;

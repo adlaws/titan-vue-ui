@@ -309,11 +309,11 @@
                             />
                             {{ selectedEntity.Name }}
                             <v-select
-                                v-if="entityDescriptorCompanion.loadouts.length"
+                                v-if="selectedEntity.loadouts.length"
                                 class="mt-4"
                                 dense
                                 label="Loadout"
-                                :items="entityDescriptorCompanion.loadouts"
+                                :items="selectedEntity.loadouts"
                                 item-text="name"
                                 return-object
                             />
@@ -483,7 +483,6 @@ export default {
             characterDetailOptions: DETAIL_FILTER_OPTIONS[BLUEPRINT_VALUE.SUBTYPE.CHARACTER],
             vehicleDetailFilter: null,
             // vehicleDetailOptions is a computed value, depends on vehicle subtype
-            entityDescriptorCompanion: {loadouts: [], defaults:{}},
             countryFilter: [],
             PACKAGES_PATH,
             BLUEPRINT_VALUE,
@@ -593,11 +592,7 @@ export default {
             {
                 filtered = filtered.filter(x =>
                 {
-                    for(let i=0; i<filter.length;i++)
-                    {
-                        if(x.BlueprintMap.subtype === filter[i])
-                            return true;
-                    }
+                    return filter.some(subtype => subtype === x.BlueprintMap.subtype);
                 });
             }
 
@@ -631,11 +626,7 @@ export default {
             {
                 filtered = filtered.filter(x =>
                 {
-                    for(let i=0; i<filter.length;i++)
-                    {
-                        if(x.BlueprintMap.detail === filter[i])
-                            return true;
-                    }
+                    return filter.some(detail => detail === x.BlueprintMap.detail);
                 });
             }
 
@@ -651,11 +642,12 @@ export default {
             {
                 filtered = filtered.filter(x =>
                 {
-                    for(let i=0; i<this.countryFilter.length;i++)
+                    if(x.country && x.country.numeric)
                     {
-                        if(x.country && x.country.numeric === this.countryFilter[i])
-                            return true;
+                        // do any of the countries in the filter match the entities country?
+                        return this.countryFilter.some(country => country === x.country.numeric);
                     }
+                    return false;
                 });
             }
             return filtered;
@@ -758,7 +750,6 @@ export default {
         selectEntity(entity)
         {
             this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_SET_SELECTION, entity);
-            this.entityDescriptorCompanion = TitanUtils.makeEntityDescriptorCompanion(entity);
         },
         placeEntity(opts={empty:false})
         {
