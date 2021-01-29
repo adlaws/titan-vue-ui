@@ -39,8 +39,8 @@ export const $isInOuterra = window.$eview !== undefined;
 // Determine if we are running in Outerra
 // export const $isInsideOuterra = /Outerra\/c4e/g.test(window.navigator.userAgent); // true if inside OUTERRA
 
-export const TITAN_ROOT_PATH = '../../../../'; // relative to 'dist' folder (i.e., of packaged app)
-export const PACKAGES_PATH = `${TITAN_ROOT_PATH}packages/`;
+export const TITAN_ROOT_PATH = $isInOuterra?'../../../../':'/'; // relative to 'dist' folder (i.e., of packaged app)
+export const PACKAGES_PATH = `${TITAN_ROOT_PATH}${$isInOuterra?'':'dev/'}packages/`;
 export const DATA_PATH = `${TITAN_ROOT_PATH}data/`;
 
 // take $eview from the window, otherwise make up dummy implementation

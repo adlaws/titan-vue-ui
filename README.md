@@ -33,13 +33,39 @@ Ideally _most_ of your GUI development time will happen in the browser, and you
 will only develop in Titan once you need to verify functionality which can only
 be provided by Titan itself.
 
-> **TIP**: using `TitanUtils.isInsideTitan()` (or `$isInsideTitan`) you can
-also check if your JavaScript is currently being executed inside Titan (or a
-browser) and potentially provide "stub" implementations of Titan functionality
+> **TIP**: using `TitanUtils.isInOuterra()` (or `$isInOuterra`) you can
+also check if your JavaScript is currently being executed inside Outerra (or a
+browser) and potentially provide "stub" implementations of functionality
 in the browser to help mock out interfaces with dummy data and so on.
 
 See `titan-utils.js` below for more details.
 
+Since the 'live' development HTTP server version cannot access the Titan packages
+folder (it's "outside" folder structure the development has access to) it cannot
+display entity thumbnails and so on.
+
+You may wish to create a "minimal" copy of the Titan `packages` folder which
+_can_ be accessed so that the images are displayed. The simplest way to do this
+on Windows is to run the following `robocopy` command (updating the paths to
+reflect your machine's folder structure).
+
+It will copy the entire folder structure of `packages` from Titan into the
+`public\dev\packages` folder, but only include files of the type specified by
+the command's filter (in this case `*.loadout`, `*.gif`, `*.png`, `*.jpeg` and `*.jpg`)
+
+```
+robocopy c:\TITAN\packages c:\dev\TITAN-UI\SRC-FOLDER\public\dev\packages *.loadout *.gif *.png *.jpeg *.jpg /E
+```
+
+In `titan-utils.js` the following lines will determine where the `packages`
+folder is expected to be - the `$isInOuterra` variable can be used to determine
+the current environment, and thus where the `packages` folder is located:
+
+```javascript
+export const TITAN_ROOT_PATH = $isInOuterra?'../../../../':'/'; // relative to 'dist' folder (i.e., of packaged app)
+export const PACKAGES_PATH = `${TITAN_ROOT_PATH}${$isInOuterra?'':'dev/'}packages/`;
+export const DATA_PATH = `${TITAN_ROOT_PATH}data/`;
+```
 #### Working in Titan
 
 Simply run `npm run build` from a command prompt to create the required files

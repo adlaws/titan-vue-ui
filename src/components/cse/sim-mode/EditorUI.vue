@@ -6,12 +6,11 @@
         <time-slider />
         <entity-selector2 />
         <waypoint-settings />
-
-        <!--
         <cse-scenario-objects />
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
 
+        <!--
         <aar-statistics />
         <map-overlay />
         <drawing-tools />

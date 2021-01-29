@@ -91,6 +91,9 @@ export default {
                 imgSrc = isArray ? this.fallback[fallbackIdx] : this.fallback;
             }
 
+            if(fallbackIdx<0)
+                console.log(imgSrc);
+
             const img = new Image();
             img.onload = () =>
             {

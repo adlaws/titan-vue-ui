@@ -56,7 +56,7 @@
             @click.native="focusWindow(window)"
             @dblclick.native="toggleWindow(window)"
         />
-        {{ uiModeState }}
+        <!-- {{ uiModeState }} -->
         <div
             class="spacer"
         />
