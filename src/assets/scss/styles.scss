@@ -66,6 +66,11 @@ body {
 {
     .v-tabs
     {
+        .v-tab--active
+        {
+            background: $menu-bg-active;
+            background: linear-gradient(0deg, $menu-bg-active 0%, $menu-bg-active 7.5%,$menu-bg-active 12.5%, rgba($menu-bg-inactive,1) 16%, rgba($menu-bg-inactive,1) 100%);        }
+
         &.compact
         {
             :not(.v-tabs--vertical)
@@ -1126,15 +1131,18 @@ pre, code, .monospace
 {
     z-index: 1024;
 
-    position:absolute;
+    position: absolute;
 
     top:25vh;
     left:20vw;
     width:60vw;
 
+    --cse-desktop--entity-spotlight-height: 4.5rem;
+    --cse-desktop--entity-spotlight-font-size: calc(var(--cse-desktop--entity-spotlight-height) * 0.666);
+
     .search-box
     {
-        height:4.5rem;
+        height: var(--cse-desktop--entity-spotlight-height);
         padding: 0 1rem;
 
         color: $menu-fg-active;
@@ -1143,6 +1151,16 @@ pre, code, .monospace
 
         @include box-shadow($drop-shadow-large, $menu-bg-inactive, 1.0);
         border-radius: 2px;
+
+        .inline-suggest
+        {
+            position: absolute;
+            z-index: -1;
+            width: 100%;
+            overflow: hidden;
+            color: rgba(255,255,255,0.125);
+            font-size:3rem;
+        }
 
         input
         {
@@ -1155,7 +1173,8 @@ pre, code, .monospace
             border: none;
 
             color: inherit;
-            font-size:3rem;
+            background:transparent;
+            font-size: var(--cse-desktop--entity-spotlight-font-size);
             &:focus
             {
                 outline: none;
@@ -1163,7 +1182,7 @@ pre, code, .monospace
         }
     }
 
-    .results-box
+    .results-box, .command-suggest-box
     {
         @include box-shadow($drop-shadow-large, $menu-bg-inactive, 1.0);
 
@@ -1193,17 +1212,24 @@ pre, code, .monospace
                 align-items: center;
 
                 user-select: none;
-                cursor: pointer;
+                cursor: pointer !important;
 
-                &.active
+                &:hover
+                {
+                    color: $menu-fg-hover;
+                    background-color: rgba($menu-bg-hover, 0.5);
+                }
+                &.active, &.active:hover
                 {
                     color: $menu-fg-hover;
                     background-color: $menu-bg-hover;
                 }
-                &:focus
+
+                b
                 {
-                    outline: none;
-                    user-select: none;
+                    background-color: rgba($menu-bg-hover, 0.5);
+                    border-radius:4px;
+                    padding: 1px;
                 }
             }
         }

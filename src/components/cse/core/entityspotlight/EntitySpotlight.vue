@@ -3,7 +3,14 @@
         ref="container"
         class="cse-desktop--entity-spotlight"
     >
-        <div class="search-box">
+        <div
+            class="search-box"
+        >
+            <div
+                class="inline-suggest"
+            >
+                {{ inlineSuggestion }}
+            </div>
             <input
                 ref="searchField"
                 v-model.trim="search"
@@ -14,7 +21,9 @@
                 @input="_updateResults"
             >
         </div>
-        <div class="results-box">
+        <div
+            class="results-box"
+        >
             <ul>
                 <li
                     v-for="(item, idx) in results"
@@ -28,7 +37,16 @@
                     @keydown.tab.prevent="_handleTab"
                     @keydown.enter="_handleEnter"
                 >
-                    {{ item.Name }}
+                    <img-fallback
+                        :src="`${PACKAGES_PATH}${item.Path}.gif`"
+                        fallback="images/thumbnail-missing.png"
+                        width="64"
+                        height="32"
+                        class="mr-1"
+                    />
+                    <!-- eslint-disable-next-line vue/no-v-html -->
+                    <span v-html="_highlight(item.Name)" />
+                    <v-icon>mdi-camera</v-icon>
                 </li>
             </ul>
         </div>
@@ -37,6 +55,9 @@
 
 <script>
 import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
+import { PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
+
+import ImgFallback from '@/components/cse/core/ImgFallback.vue';
 
 const TAB_SYMBOL='\u00BB'; // double rightward chevron kinda thing
 
@@ -47,12 +68,16 @@ const CANCELLATION_EVENTS = ['keydown', 'mousedown', 'mouseout'];
 
 export default {
     name:'entity-spotlight',
+    components:{
+        ImgFallback
+    },
     data()
     {
         return {
             search: '',
             results: [],
             selectedIdx: -1,
+            PACKAGES_PATH,
         };
     },
     computed:
@@ -61,6 +86,19 @@ export default {
         hasResults() { return this.results.length > 0; },
         hasSelection() { return this.hasResults && this.selectedIdx > -1; },
         selectedItem() { return this.hasSelection ? this.results[this.selectedIdx] : null; },
+        inlineSuggestion()
+        {
+            if(!this.search.length)
+                return 'Search...';
+            if(!this.hasResults)
+                return '';
+
+            const suggestion = this.selectedItem ? this.selectedItem.Name : this.results[0].Name;
+            if(suggestion.toLowerCase().startsWith(this.search.toLowerCase()))
+                return this._blatCase(this.search, suggestion);
+
+            return '';
+        },
     },
     mounted()
     {
@@ -87,12 +125,33 @@ export default {
             }
             else
             {
-                const lCaseFilter = this.search.toLowerCase().split(TAB_SYMBOL)[0];
-                this.results = this.entityDescriptors.filter(x=>
+                const filter = this.search.split(TAB_SYMBOL)[0];
+                const lcaseFilter = filter.toLowerCase();
+                const candidates = this.entityDescriptors.filter(x=>
                 {
                     const lcasename = x.Name.toLowerCase();
-                    return lcasename.indexOf(lCaseFilter) !== -1;
+                    return lcasename.indexOf(lcaseFilter) !== -1;
                 });
+                candidates.sort((a,b) =>
+                {
+                    let aNameStartsWith = a.Name.startsWith(filter);
+                    let bNameStartsWith = b.Name.startsWith(filter);
+                    if(aNameStartsWith && !bNameStartsWith)
+                        return -1;
+                    if(bNameStartsWith && !aNameStartsWith)
+                        return 1;
+                    const aNameLcase = a.Name.toLowerCase();
+                    const bNameLcase = b.Name.toLowerCase();
+                    aNameStartsWith = aNameLcase.startsWith(lcaseFilter);
+                    bNameStartsWith = bNameLcase.startsWith(lcaseFilter);
+                    if(aNameStartsWith && !bNameStartsWith)
+                        return -1;
+                    if(bNameStartsWith && !aNameStartsWith)
+                        return 1;
+
+                    return bNameLcase.indexOf(lcaseFilter) - aNameLcase.indexOf(lcaseFilter);
+                });
+                this.results = candidates;
             }
 
             this.selectedIdx = this.results.length > 0 ? 0 : -1;
@@ -121,35 +180,24 @@ export default {
 
             this.$emit('selected', { item, args: {} });
         },
+        _handleArrowUp()
+        {
+            this._handleArrow(true);
+        },
         _handleArrowDown()
+        {
+            this._handleArrow(false);
+        },
+        _handleArrow(isUp)
         {
             if(!this.hasResults)
                 return;
 
-            this.selectedIdx = Math.min(this.selectedIdx+1, this.results.length -1);
+            const direction = isUp ? -1 : 1;
+            this.selectedIdx = Math.min(Math.max(this.selectedIdx+direction, -1), this.results.length -1);
 
             if(this.selectedIdx>=0)
-            {
-                const selectedItem = this.results[this.selectedIdx];
-                this.search = selectedItem.Name;
-                document.getElementById(`spotlight-result-${this.selectedIdx}`).focus();
-            }
-        },
-        _handleArrowUp()
-        {
-            if(!this.hasResults || this.selectedIdx < 0)
-                return;
-
-            this.selectedIdx = Math.max(this.selectedIdx-1, -1);
-
-            if(this.selectedIdx>=0)
-            {
-                const selectedItem = this.results[this.selectedIdx];
-                this.search = selectedItem.Name;
-                document.getElementById(`spotlight-result-${this.selectedIdx}`).focus();
-            }
-            else
-                this.$refs.searchField.focus();
+                document.getElementById(`spotlight-result-${this.selectedIdx}`).scrollIntoView(false);
         },
         /**
          * TODO: this is a quickly hacked together parsing of an altitude argument
@@ -196,6 +244,63 @@ export default {
             else if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY.KEY_CODE.ESCAPE))
                 this.$emit('cancelled'); // ESC key or click outside - cancelled
         },
+        /**
+         * Forces the casing of alphabetical in the destination string to match those of the
+         * source string where the letters match. For example:
+         *
+         * _blatCase('AbCd','abcF') => 'AbCF'
+         *
+         * Used to match the auto-suggest text match the currently typed search string
+         * so that the suggestion "looks nice" even when casing doesn't match
+         */
+        _blatCase(src, dst)
+        {
+            let working = dst;
+            const minLength = Math.min(src.length, dst.length);
+            for(let idx=0; idx<minLength; idx++)
+            {
+                const srcChar = src.charAt(idx);
+                const dstChar = dst.charAt(idx);
+                if(srcChar !== dstChar)
+                {
+                    const srcCharCode = srcChar.charCodeAt(0);
+                    const dstCharCode = dstChar.charCodeAt(0);
+                    if(this._isAlphaChar(srcCharCode) && this._isAlphaChar(dstCharCode))
+                    {
+                        if(srcChar.toLowerCase() === dstChar.toLowerCase())
+                        {
+                            const srcIsLowerCase = srcCharCode>=97 && srcCharCode <=122;
+                            const convertedChar = srcIsLowerCase ? dstChar.toLowerCase() : dstChar.toUpperCase();
+                            working = working.substring(0,idx) + convertedChar + working.substring(idx+1);
+                        }
+                    }
+                }
+            }
+            return working;
+        },
+        /**
+         * Determine if the given character code corresponds to an upper or lower case
+         * letter of the alphabet
+         *
+         * @param {number} charCode the character code
+         * @return {boolean} true if the character code is a letter, false otherwise
+         */
+        _isAlphaChar(charCode)
+        {
+            //      upper case                         lower case
+            return (charCode>=65 && charCode <=90) || (charCode>=97 && charCode <=122);
+        },
+        /**
+         * Adds <b></b> tags around anything in the provided string that case insensitively matches
+         * the current search string, indicating which part of the text is being matched.
+         *
+         * @param {string} the text to be highlighted
+         * @return the text with <b></b> tags added around matches
+         */
+        _highlight(text)
+        {
+            return text.replace(new RegExp(`(${this.search})`, 'ig'),'<b>$1</b>');
+        }
     },
 };
 </script>

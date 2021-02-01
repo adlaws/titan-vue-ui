@@ -38,13 +38,13 @@ const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionLi
     {
         // make the Name field all lower case and get rid of special characters to make filtering simpler
         e.normalizedName = e.Name.toLowerCase(); // .replace(/[\s\-+()]/g, '');
-        // the `Blueprint` field value is a comma delimited string, which is not particularly useful,
-        // so convert the string into an array, and additional `Set` to make life simpler
+        // the `Blueprint` field value is a comma delimited string, which is not particularly
+        // useful, so convert the string into an array, and from there to a JavaScript object
+        // to make life simpler and code more readable
         const blueprintArray = e.Blueprint.split(',').map(x=>x.trim().toLowerCase());
-        // do some processing on the "blueprint" so that it's easier to use/access
-        e.Blueprint = blueprintArray.join(',');
-        // NOTE: this next one is not particularly reliable, since people have kind of been doing
-        // whatever they feel like with the ordering of this information
+        // NOTE: this next one is not 100% reliable, since people have kind of been doing
+        // whatever they feel like with the ordering of this information, but it mostly
+        // works and since we are standardising this going forward lets just run with it!
         e.BlueprintMap = {
             type: blueprintArray[0],
             subtype: blueprintArray[1],
@@ -53,19 +53,17 @@ const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionLi
             force: blueprintArray[4],
             alliance: blueprintArray[5]
         };
-
         // add in country property with reference to full country details so life is simpler
         const country = COUNTRY.LCASENAME[e.BlueprintMap.country];
         if(country)
             e.country = country;
-
-        // remove unnecessary fields from descriptor - not needed for the UI
-        ['ClassName', 'Tags', 'Filter', 'draggableLive', 'legacyInitialize', 'visible', 'colliding'].forEach(k => delete e[k]);
-
-        // finally, add loadouts (and defaults?)
+        // add loadouts (and defaults? they always seem to be blank/empty)
         const loadoutsAndDefaults = TitanUtils.getLoadoutsAndDefaultsFor(e);
         e.loadouts = loadoutsAndDefaults.loadouts;
         e.defaults = loadoutsAndDefaults.defaults;
+
+        // remove unnecessary fields from descriptor - not needed for the UI
+        ['Blueprint', 'ClassName', 'Tags', 'Filter', 'draggableLive', 'legacyInitialize', 'visible', 'colliding'].forEach(k => delete e[k]);
 
         return e;
     });
