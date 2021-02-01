@@ -14,10 +14,10 @@
             <input
                 ref="searchField"
                 v-model.trim="search"
-                @keydown.down.prevent="_handleArrowDown"
-                @keydown.up.prevent="_handleArrowUp"
-                @keydown.tab.prevent="_handleTab"
-                @keydown.enter="_handleEnter"
+                @keydown.down.prevent="_handleArrowDownKey"
+                @keydown.up.prevent="_handleArrowUpKey"
+                @keydown.tab.prevent="_handleTabKey"
+                @keydown.enter="_handleEnterKey"
                 @input="_updateResults"
             >
         </div>
@@ -30,12 +30,7 @@
                     :id="`spotlight-result-${idx}`"
                     :key="`result-${idx}`"
                     :class="{active: idx===selectedIdx}"
-                    :tabindex="idx"
                     @click="_handleItemClicked(item)"
-                    @keydown.down.prevent="_handleArrowDown"
-                    @keydown.up.prevent="_handleArrowUp"
-                    @keydown.tab.prevent="_handleTab"
-                    @keydown.enter="_handleEnter"
                 >
                     <img-fallback
                         :src="`${PACKAGES_PATH}${item.Path}.gif`"
@@ -127,36 +122,61 @@ export default {
             {
                 const filter = this.search.split(TAB_SYMBOL)[0];
                 const lcaseFilter = filter.toLowerCase();
+
                 const candidates = this.entityDescriptors.filter(x=>
                 {
                     const lcasename = x.Name.toLowerCase();
                     return lcasename.indexOf(lcaseFilter) !== -1;
                 });
+
+                // sort so that we prioritise items as follows:
+                //  ^ - those that start with the search string case sensitively, then
+                //  | - those that start with the search string case insensitively,
+                //  v - those that contain the search string somewhere
+                //      - ...sorted prioritising those that have the search string
+                //        to the front over those where the search string occurs
+                //        toward the end of the text
                 candidates.sort((a,b) =>
                 {
+                    // starts with, case sensitive?
                     let aNameStartsWith = a.Name.startsWith(filter);
                     let bNameStartsWith = b.Name.startsWith(filter);
                     if(aNameStartsWith && !bNameStartsWith)
                         return -1;
-                    if(bNameStartsWith && !aNameStartsWith)
+                    else if(bNameStartsWith && !aNameStartsWith)
                         return 1;
+
+                    // starts with, case insensitive?
                     const aNameLcase = a.Name.toLowerCase();
                     const bNameLcase = b.Name.toLowerCase();
                     aNameStartsWith = aNameLcase.startsWith(lcaseFilter);
                     bNameStartsWith = bNameLcase.startsWith(lcaseFilter);
-                    if(aNameStartsWith && !bNameStartsWith)
+                    if(aNameStartsWith && bNameStartsWith)
+                        return 0;
+                    else if(aNameStartsWith && !bNameStartsWith)
                         return -1;
-                    if(bNameStartsWith && !aNameStartsWith)
+                    else if(!aNameStartsWith && bNameStartsWith)
                         return 1;
 
-                    return bNameLcase.indexOf(lcaseFilter) - aNameLcase.indexOf(lcaseFilter);
+                    // order by where the search term occurs in the word (case insensitive)
+                    const aIndex = aNameLcase.indexOf(lcaseFilter);
+                    const bIndex = bNameLcase.indexOf(lcaseFilter);
+                    if(aIndex === bIndex)
+                        return 0;
+                    else if(aIndex >= 0 && bIndex < 0)
+                        return 1;
+                    else if(aIndex < 0 && bIndex >= 0)
+                        return -1;
+                    else
+                        return aIndex < bIndex ? -1 : 1;
                 });
+
                 this.results = candidates;
             }
 
             this.selectedIdx = this.results.length > 0 ? 0 : -1;
         },
-        _handleEnter()
+        _handleEnterKey()
         {
             if(!this.hasSelection)
                 return;
@@ -164,7 +184,7 @@ export default {
             const payload = this._constructPayload();
             this.$emit('selected', payload);
         },
-        _handleTab()
+        _handleTabKey()
         {
             if(!this.hasSelection)
                 return;
@@ -173,22 +193,15 @@ export default {
             this._updateResults();
             this.$refs.searchField.focus();
         },
-        _handleItemClicked(item)
+        _handleArrowUpKey()
         {
-            if(item.disabled)
-                return;
-
-            this.$emit('selected', { item, args: {} });
+            this._handleArrowKey(true);
         },
-        _handleArrowUp()
+        _handleArrowDownKey()
         {
-            this._handleArrow(true);
+            this._handleArrowKey(false);
         },
-        _handleArrowDown()
-        {
-            this._handleArrow(false);
-        },
-        _handleArrow(isUp)
+        _handleArrowKey(isUp)
         {
             if(!this.hasResults)
                 return;
@@ -198,6 +211,13 @@ export default {
 
             if(this.selectedIdx>=0)
                 document.getElementById(`spotlight-result-${this.selectedIdx}`).scrollIntoView(false);
+        },
+        _handleItemClicked(item)
+        {
+            if(item.disabled)
+                return;
+
+            this.$emit('selected', { item, args: {} });
         },
         /**
          * TODO: this is a quickly hacked together parsing of an altitude argument
