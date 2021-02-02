@@ -7,7 +7,7 @@ module.exports = {
     //    <script src=/js/chunk-vendors.6cd7c224.js>
     //                ^
     //
-    // ...which won't work inside Titan as it's file based, so we need...
+    // ...which won't work inside Outerra as it's file based, so we need...
     //
     //    <script src=js/chunk-vendors.6cd7c224.js>
     //                ^
@@ -15,7 +15,7 @@ module.exports = {
     publicPath: '',
     // do/don't produce JavaScript source map files for production, which
     // would tend to massively increase the size of the deployed resources.
-    // Since we are deploying into Titan, the map files are effectively of
+    // Since we are deploying into Outerra, the map files are effectively of
     // no use in any case.
     productionSourceMap: true,
     devServer: {
@@ -36,6 +36,20 @@ module.exports = {
     // eslint-disable-next-line no-unused-vars
     chainWebpack: config =>
     {
+        // Prevent multiple SVG files of the same name (but in different paths) exporting
+        // on top of each other by including the path as well as the filename in the built
+        // files. Necessary for `flag-icon-css` package to prevent warnings.
+        //     ref: https://cli.vuejs.org/guide/webpack.html#modifying-options-of-a-loader
+        config.module
+            .rule('svg')
+            .test(/\.svg$/)
+            .use('file-loader')
+            // eslint-disable-next-line no-unused-vars
+            .tap(options =>
+            {
+                return { name: "[path][name].[ext]" };
+            });
+
         // WebPack shim to bring in TitanEventHandlers / TitanEvent globals
         // Ref: https://webpack.js.org/guides/shimming/
         //      https://jamesscheller.com/tag/nuxt-js/

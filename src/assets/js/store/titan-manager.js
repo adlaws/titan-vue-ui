@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-
-import TitanUtils, { SIM_MODE, SIM_MODES, FREE_CAMERA_MODE, $isInsideTitan, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { SIM_MODE, SIM_MODES, FREE_CAMERA_MODE, $isInOuterra, $tLogger, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
 import FetchUtils from '@/assets/js/utils/fetch-utils.js';
 import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-dev.js';
+import { COUNTRY } from '@/assets/js/utils/countries.js';
 
-Vue.use(Vuex);
+export const DEBUG = false;
 
 export const TITAN_MUTATION = {
     // TITAN STATE MANAGEMENT
@@ -18,6 +16,9 @@ export const TITAN_MUTATION = {
     // ENTITY SELECTOR WINDOW
     ENTITY_SELECTOR_SET_SELECTION:'titan::entitySelector::setSelection',
     ENTITY_SELECTOR_CLEAR_SELECTION:'titan::entitySelector::clearSelection',
+    // GIZMO POSITION
+    GIZMO_SET_POSITION:'titan::gizmo::setPosition',
+    GIZMO_CLEAR_POSITION:'titan::gizmo::clearPosition',
 };
 export const TITAN_ACTION = {
     INIT_PLUGIN_CONFIG:'titan::initPluginConfig',
@@ -32,21 +33,82 @@ export const TITAN_UI_MODE = {
     Drawing: 'Drawing',
 };
 
-const ENTITY_DESCRIPTORS = ($isInsideTitan?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
+const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
     .map(e=>
     {
-        // the `Blueprint` field value is a comma delimited string, which is not particularly useful,
-        // so convert the string into an array, and additional `Set` to make life simpler
-        const blueprintArray = e.Blueprint.split(',').map(x=>x.trim());
-        e.Blueprint = blueprintArray.join(',');
-        e.BlueprintArr = blueprintArray;
-        e.BlueprintSet = new Set(blueprintArray.filter(x=> x.length > 0 && x !== 'null'));
+        // make the Name field all lower case and get rid of special characters to make filtering simpler
+        e.normalizedName = e.Name.toLowerCase(); // .replace(/[\s\-+()]/g, '');
+        // the `Blueprint` field value is a comma delimited string, which is not particularly
+        // useful, so convert the string into an array, and from there to a JavaScript object
+        // to make life simpler and code more readable
+        const blueprintArray = e.Blueprint.split(',').map(x=>x.trim().toLowerCase());
+        // NOTE: this next one is not 100% reliable, since people have kind of been doing
+        // whatever they feel like with the ordering of this information, but it mostly
+        // works and since we are standardising this going forward lets just run with it!
+        e.BlueprintMap = {
+            type: blueprintArray[0],
+            subtype: blueprintArray[1],
+            detail: blueprintArray[2],
+            country: blueprintArray[3],
+            force: blueprintArray[4],
+            alliance: blueprintArray[5]
+        };
+        // add in country property with reference to full country details so life is simpler
+        const country = COUNTRY.LCASENAME[e.BlueprintMap.country];
+        if(country)
+            e.country = country;
+        // add loadouts (and defaults? they always seem to be blank/empty)
+        const loadoutsAndDefaults = TitanUtils.getLoadoutsAndDefaultsFor(e);
+        e.loadouts = loadoutsAndDefaults.loadouts;
+        e.defaults = loadoutsAndDefaults.defaults;
 
-        // remove unnecessary fields form descriptor - not needed for the UI
-        ['ClassName', 'Tags', 'Filter', 'draggableLive', 'legacyInitialize', 'visible', 'colliding'].forEach(k => delete e[k]);
+        // remove unnecessary fields from descriptor - not needed for the UI
+        ['Blueprint', 'ClassName', 'Tags', 'Filter', 'draggableLive', 'legacyInitialize', 'visible', 'colliding'].forEach(k => delete e[k]);
 
         return e;
     });
+
+// create an array containing all (unique) countries referenced by Titan entities
+const ENTITY_COUNTRIES = (() =>
+{
+    const entitiesWithCountry = ENTITY_DESCRIPTORS.filter(x=>x.country);
+    const uniqueCountries = [];
+    const alpha2codes = new Set();
+    for(let idx=0; idx<entitiesWithCountry.length; idx++)
+    {
+        const entityCountry = entitiesWithCountry[idx].country;
+        if(!alpha2codes.has(entityCountry.alpha2))
+        {
+            alpha2codes.add(entityCountry.alpha2);
+            uniqueCountries.push(entityCountry);
+        }
+
+    }
+    uniqueCountries.sort((a,b)=> a.lcasename < b.lcasename ? -1 : 1);
+    return uniqueCountries;
+})();
+
+
+// for debugging purposes - find bad/invalid countries ---------------------------------------------------------------
+if(DEBUG)
+{
+    const entitiesWithNoCountry = ENTITY_DESCRIPTORS.filter(x=>!x.country);
+    if(entitiesWithNoCountry.length)
+    {
+        const badRecords = {};
+        entitiesWithNoCountry.forEach(x =>
+        {
+            const badCountry = x.BlueprintMap.country;
+            (badRecords[badCountry] = badRecords[badCountry] || []).push(x);
+        });
+        $tLogger.warning('titan-manager.js has found unknown/invalid countries in entity descriptors:');
+        for(const badCountry in badRecords)
+        {
+            $tLogger.warning('\t', `'${badCountry}'`, 'x'+badRecords[badCountry].length);
+        }
+    }
+}
+// end ----------------------------------------------------------------------------------------------------------------
 
 const TitanManager =
 {
@@ -61,11 +123,16 @@ const TitanManager =
             height: window.screen.availHeight,
         },
         // current titan simulation mode - starts in 'SimMode_Menu'
-        simMode: ($isInsideTitan ? $tWorldInterface.getSimulationMode() : SIM_MODE.MENU),
+        simMode: ($isInOuterra ? $tWorldInterface.getSimulationMode() : SIM_MODE.MENU),
         // a cached list of all entity descriptors - since this doesn't change
         // during the lifetime of a Titan execution cycle, we just ask for it
         // once here to avoid constantly querying the C++ back end
         entityDescriptors: ENTITY_DESCRIPTORS,
+        // a cached list of all countries references by the entity descriptors.
+        // Since this doesn't change during the lifetime of a Titan execution
+        // cycle, we just work it out here once here to avoid constantly
+        // computing the list
+        entityCountries: ENTITY_COUNTRIES,
         // current titan UI mode (used to help determine what mouse and
         // keyboard interactions currently "mean" and how to handle them). The
         // current mode is at the top of the 'stack' (i.e., the last item in the
@@ -78,6 +145,9 @@ const TitanManager =
         {
             selected: null,
         },
+        // The last location that the gizmo was placed - null means the location
+        // is not yet set or otherwise unknown
+        gizmo: null,
     }),
     getters: {
         // --------------------------------------------------------------------
@@ -91,6 +161,7 @@ const TitanManager =
         titanWindow: (state) => state.window,
         titanSimMode: (state) => state.simMode,
         titanEntityDescriptors: (state) => state.entityDescriptors,
+        titanEntityCountries: (state) => state.entityCountries,
         // --------------------------------------------------------------------
         // TITAN UI MODE
         // --------------------------------------------------------------------
@@ -101,6 +172,12 @@ const TitanManager =
         // ENTITY SELECTOR WINDOW
         // --------------------------------------------------------------------
         getEntitySelectorSelection: (state) => state.entitySelector.selected,
+        hasEntitySelectorSelection: (state, getters) => getters.getEntitySelectorSelection !== null,
+        // --------------------------------------------------------------------
+        // ENTITY SELECTOR WINDOW
+        // --------------------------------------------------------------------
+        gizmoPos: (state) => state.gizmo,
+        hasGizmoPos: (state, getters) => getters.gizmoPos !== null,
     },
     mutations: {
         // --------------------------------------------------------------------
@@ -115,7 +192,7 @@ const TitanManager =
             if(!SIM_MODES.has(mode))
                 return;
 
-            if(!$isInsideTitan)
+            if(!$isInOuterra)
             {
                 state.simMode = mode;
             }
@@ -222,6 +299,26 @@ const TitanManager =
             state.entitySelector.selected = null;
         },
         /**
+         * Store the current position of the Titan gizmo pointer.
+         *
+         * @param {object} state the store state object
+         * @param {object} ecef the gizmo position
+         */
+        [TITAN_MUTATION.GIZMO_SET_POSITION](state, ecef)
+        {
+            state.gizmo = ecef;
+        },
+        /**
+         * Store the current position of the Titan gizmo pointer.
+         *
+         * @param {object} state the store state object
+         * @param {object} ecef the gizmo position
+         */
+        [TITAN_MUTATION.GIZMO_CLEAR_POSITION](state)
+        {
+            state.gizmo = null;
+        },
+        /**
          * NOTE: INTERNAL USE ONLY - do not expose via TITAN_MUTATION
          * NOTE: See also actions: TITAN_ACTION.INIT_PLUGIN_CONFIG
          *
@@ -239,7 +336,7 @@ const TitanManager =
         [TITAN_ACTION.INIT_PLUGIN_CONFIG]: ({commit}) =>
         {
             const pluginsConfigFile = '/plugins/config.json';
-            if($isInsideTitan)
+            if($isInOuterra)
             {
                 const cachedPath = $tFileInterface.getCurrentDir();
                 $tFileInterface.switchProgramPath();

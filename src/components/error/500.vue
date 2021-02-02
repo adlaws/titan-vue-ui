@@ -10,19 +10,19 @@
             Internal server error!
         </template>
         <template #icon>
-            <titan-icon icon="alert-octagram" />
+            <cse-icon icon="alert-octagram" />
         </template>
     </error-base>
 </template>
 
 <script>
-import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+import CseIcon from '@/components/cse/core/CseIcon.vue';
 import ErrorBase from './ErrorBase.vue';
 
 export default {
     name: 'http500',
     components: {
-        ErrorBase, TitanIcon
+        ErrorBase, CseIcon
     },
     data()
     {

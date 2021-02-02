@@ -1,5 +1,5 @@
 <template>
-    <titan-window
+    <cse-desktop-window
         title="Virtual Cameras"
         icon="camera"
         :x="600"
@@ -8,24 +8,35 @@
         :height="160"
     >
         <template #default="context">
-            <titan-window-content :titan-window="context.titanWindow">
-                <titan-select
+            <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
+                <v-select
                     v-model="selectedCameraMode"
-                    :options="cameraOptions"
-                />
-                <button
+                    :items="cameraOptions"
+                    item-text="text"
+                    item-value="id"
+                >
+                    <template v-slot:selection="{ item }">
+                        <v-icon>{{ item.icon }}</v-icon>
+                        <span class="ml-2">{{ item.text }}</span>
+                    </template>
+                    <template v-slot:item="{ item }">
+                        <v-icon>{{ item.icon }}</v-icon>
+                        <span class="ml-2">{{ item.text }}</span>
+                    </template>
+                </v-select>
+                <v-btn
                     :disabled="!selectedCameraMode"
                     @click="switchCameraMode"
                 >
                     Create
-                </button>
-            </titan-window-content>
+                </v-btn>
+            </cse-desktop-window-content>
         </template>
-    </titan-window>
+    </cse-desktop-window>
 </template>
 
 <script>
-import { $isInsideTitan, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
+import { $isInOuterra, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
 import LatLongUtils from './latlong-utils.js';
 
 const REFRESH_RATE = 1000.0 * (1.0 / 30.0); // try to update at 30 frames per second
@@ -40,9 +51,9 @@ export default {
     {
         return {
             cameraOptions:[
-                { id: 'standard',     text: 'Standard Camera', disabled: false },
-                { id: 'orbit',        text: 'Orbit Camera',    disabled: false },
-                { id: 'randomFlight', text: 'Random Flight',   disabled: false },
+                { id: 'standard',     text: 'Standard Camera', icon: "mdi-camera",          disabled: false },
+                { id: 'orbit',        text: 'Orbit Camera',    icon: "mdi-orbit",           disabled: false },
+                { id: 'randomFlight', text: 'Random Flight',   icon: "mdi-vector-polyline", disabled: false },
             ],
             selectedCameraMode: 'standard',
             currentCameraMode: 'standard',
@@ -61,7 +72,7 @@ export default {
     {
         // cache the active scenario's camera on startup so we don't have to look
         // it up all the time
-        if($isInsideTitan)
+        if($isInOuterra)
             this.scenarioCamera = $tWorldInterface.getActiveScenario().getActiveCamera();
 
         // set up updater function factory methods

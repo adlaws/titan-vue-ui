@@ -1,5 +1,5 @@
 <template>
-    <titan-window
+    <cse-desktop-window
         title="Simple"
         icon="emoticon-happy"
         :x="0"
@@ -8,24 +8,27 @@
         :height="160"
     >
         <template #default="context">
-            <titan-window-content :titan-window="context.titanWindow">
-                <titan-select
+            <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
+                <v-select
                     v-model="selectedOption"
-                    :options="entityOptions"
+                    label="Entity Type:"
+                    :items="entityOptions"
+                    item-text="text"
+                    item-value="id"
                 />
-                <button
+                <v-btn
                     :disabled="!selectedOption"
                     @click="createEntity"
                 >
                     Create
-                </button>
-            </titan-window-content>
+                </v-btn>
+            </cse-desktop-window-content>
         </template>
-    </titan-window>
+    </cse-desktop-window>
 </template>
 
 <script>
-import { $isInsideTitan, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
+import { $isInOuterra, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
 
 export default {
     name: 'simple',
@@ -34,14 +37,8 @@ export default {
         return {
             entityOptions:[
                 { id: 'bus_blue',               text: 'Bus' },
-                { id: 'Toyota Corolla (grey)', text: 'Toyota Corolla (grey)' },
+                { id: 'Toyota Corolla (grey)',  text: 'Toyota Corolla (grey)' },
                 { id: 'hmmwv_m1025a2_desert',   text: 'HMMWV Humvee' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
-                { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
                 { id: 'mh60r_seahawk',          text: 'MH 60R Seahawk' },
             ],
             selectedOption: null,
@@ -51,9 +48,9 @@ export default {
     {
         createEntity()
         {
-            if(!$isInsideTitan)
+            if(!$isInOuterra)
             {
-                console.log('Not inside Titan - would have created a '+this.selectedOption);
+                console.log('Not inside Outerra - would have created a '+this.selectedOption);
                 return;
             }
 

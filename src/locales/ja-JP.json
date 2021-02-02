@@ -25,6 +25,35 @@
             "abbr": "西"
         }
     },
+    "worldSettings":
+    {
+        "atmosphere":
+        {
+            "Atmosphere": "大気",
+            "Clouds": "曇",
+            "Fog": "霧",
+            "Haze": "もや",
+            "Precipitation": "降水",
+            "Lower Altitude": "低高度",
+            "Upper Altitude": "高高度",
+            "Lightning": "雷",
+            "Density": "湿度",
+            "Height": "高さ",
+            "Scattering": "飛散",
+            "Type": "種類",
+            "Rate": "流量",
+            "None": "無",
+            "Rain": "雨",
+            "Snow": "雪"
+        },
+        "water":{
+            "Water": "海"
+        },
+        "wind":{
+            "Wind": "風"
+
+        }
+    },
     "":""
 
 }

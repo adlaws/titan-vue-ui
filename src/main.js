@@ -3,11 +3,12 @@ import App from './App.vue';
 
 Vue.config.productionTip = false;
 
-// application state store and routing
+// application state store and routing ----------------------------------------
 import store from '@/assets/js/store/store.js';
 import router from '@/assets/js/router/router.js';
+// ----------------------------------------------------------------------------
 
-// internationalisation
+// internationalisation -------------------------------------------------------
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
 import { LANGUAGE, DEFAULT_LOCALE } from '@/locales';
@@ -16,6 +17,11 @@ const i18n = new VueI18n({
     locale: DEFAULT_LOCALE,
     messages,
 });
+// ----------------------------------------------------------------------------
+
+// Vuetify UI framework -------------------------------------------------------
+import vuetify from '@/plugins/vuetify/vuetify';
+// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 // This is necessary so that TitanEventInterface works correctly
@@ -34,11 +40,11 @@ require('@/../public/js/titanEventListener.js');
 // ----------------------------------------------------------------------------
 const requireComponent = require.context(
     // The relative path of the components folder
-    './components/common/titan',
+    './components/common/cse',
     // Whether or not to look in subfolders
     true,
     // The regular expression used to match base component filenames
-    /Titan[A-Z]\w+\.(vue|js)$/
+    /Cse[A-Z]\w+\.(vue|js)$/
 );
 
 requireComponent.keys().forEach(fileName =>
@@ -66,6 +72,7 @@ new Vue({
     router,
     store,
     i18n,
+    vuetify,
     render: h => h(App),
 }).$mount('#app');
 

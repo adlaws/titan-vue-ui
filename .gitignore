@@ -27,3 +27,6 @@ yarn-error.log*
 
 # javascript map files
 *.js.map
+
+#development conveniences
+public/dev

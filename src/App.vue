@@ -1,15 +1,17 @@
 <template>
-    <router-view />
+    <v-app>
+        <router-view />
+    </v-app>
 </template>
 
 <script>
-import { $eview, $isInsideTitan } from '@/assets/js/titan/titan-utils.js';
+import { $eview, $isInOuterra } from '@/assets/js/titan/titan-utils.js';
 
 export default {
     name: 'app',
     mounted()
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         $eview.set_transparent(true);

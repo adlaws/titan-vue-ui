@@ -1,6 +1,28 @@
 export default class DataUtils
 {
     /**
+     * Generate a random integer in the given range
+     *
+     * @param {Number} min the minimum value
+     * @param {Number} min the maximum value (exclusive)
+     * @return {Number} a random integer in the given range
+     */
+    static randInt(min, max)
+    {
+        return Math.round(min + (Math.random() * (max-min)));
+    }
+
+    /**
+     * Choose a random item from an array
+     *
+     * @param {Array} arr
+     */
+    static randChoice(arr)
+    {
+        return arr[DataUtils.randInt(0,arr.length-1)];
+    }
+
+    /**
      * Remaps the values associated with keys in the source to new keys in the
      * output object.
      *
@@ -107,17 +129,17 @@ export default class DataUtils
      * NOTE: ordering of pairs is not guaranteed to be consistent
      *
      * @param {Object} obj the object to be converted
-     * @param {String} keyKey the key to use for keys (optional)
+     * @param {String} idKey the key to use for keys (optional)
      * @param {String} valueKey the key to use for values (optional)
      * @return {Array} the array of pairs
      */
-    static dictToList(obj, keyKey = 'id', valueKey = 'value')
+    static dictToList(obj, idKey = 'id', valueKey = 'value')
     {
-        return Object.getOwnPropertyNames(obj).map(key =>
+        return Object.getOwnPropertyNames(obj).map(id =>
         {
             const entry = {};
-            entry[keyKey] = key;
-            entry[valueKey] = obj[key];
+            entry[idKey] = id;
+            entry[valueKey] = obj[id];
             return entry;
         });
     }

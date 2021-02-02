@@ -15,7 +15,7 @@
             </p>
             <p>
                 <router-link
-                    :to="{ name: 'titan', params: {}}"
+                    :to="{ name: 'cse', params: {}}"
                     style="color:white;text-decoration:none;"
                 >
                     Back to Home
@@ -24,20 +24,20 @@
         </div>
         <div class="screen-centered-icon">
             <slot name="icon">
-                <titan-icon icon="alert" />
+                <cse-icon icon="alert" />
             </slot>
         </div>
     </div>
 </template>
 
 <script>
-import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+import CseIcon from '@/components/cse/core/CseIcon.vue';
 
 export default {
     name: 'error-base',
     components:
     {
-        TitanIcon,
+        CseIcon,
     },
     props: {
         error: {
@@ -89,12 +89,10 @@ export default {
     transform: translate(-50%, -50%);
     h1{
         font-size:800%;
-        line-height:50%;
         text-align: center;
     }
     h2{
         font-size:200%;
-        line-height:50%;
         text-align: center;
     }
     p{

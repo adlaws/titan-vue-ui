@@ -24,7 +24,7 @@ $gray-dark: #686868;
 
 $black: #101010;
 $black-light: #222222;
-$black-dark: #181818;
+$black-dark: #1E1E1E;
 
 $shade-variants:(
     dark:-87.5%,
@@ -50,7 +50,6 @@ $colors:(
     dark: $black,
 );
 
-
 $transparent-black: rgba(0,0,0,0);
 
 $drop-shadow-large: 16px;
@@ -61,15 +60,9 @@ $text-bg: $white;
 $text-fg: $black;
 $text-bg-active: $white-light;
 $text-fg-active: $black-dark;
-$text-bg-inactive: $white-dark;
-$text-fg-inactive: $black-light;
-$text-bg-disabled: $gray-light;
-$text-fg-disabled: $gray-dark;
 
 $window-fg-active: $text-fg-active;
 $window-bg-active: $text-bg-active;
-$window-fg-inactive: $text-fg-inactive;
-$window-bg-inactive: $text-bg-inactive;
 
 $menu-bg-active: $bg-medium;
 $menu-fg-active: findContrastColor($menu-bg-active, $white, $black);

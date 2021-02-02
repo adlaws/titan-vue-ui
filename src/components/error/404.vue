@@ -10,7 +10,7 @@
             The part of the application you were looking for cannot be found.
         </template>
         <template #icon>
-            <titan-icon icon="map-marker-question" />
+            <cse-icon icon="map-marker-question" />
         </template>
     </error-base>
 </template>
@@ -18,13 +18,13 @@
 <script>
 import { Color } from '@/assets/js/utils/color-utils.js';
 
-import TitanIcon from '@/components/titan/core/TitanIcon.vue';
+import CseIcon from '@/components/cse/core/CseIcon.vue';
 import ErrorBase from './ErrorBase.vue';
 
 export default {
     name: 'http404',
     components: {
-        ErrorBase, TitanIcon
+        ErrorBase, CseIcon
     },
     data()
     {

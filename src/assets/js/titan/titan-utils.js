@@ -28,10 +28,6 @@ import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 import UIUtils from '@/assets/js/utils/ui-utils.js';
 
-export const TITAN_ROOT_PATH = '../../../../';
-export const PACKAGES_PATH = `${TITAN_ROOT_PATH}packages/`;
-export const DATA_PATH = `${TITAN_ROOT_PATH}data/`;
-
 export const _GLOBAL = Function('return this')();
 export const window = _GLOBAL.window;
 export const $got = _GLOBAL.$got || {}; // NOTE: not currently used
@@ -39,9 +35,13 @@ export const $got = _GLOBAL.$got || {}; // NOTE: not currently used
 // Determine if we are running in a production environment (as opposed to development)
 export const $isProduction = process.env.NODE_ENV === 'production';
 // Determine if we are running in Titan
-export const $isInsideTitan = window.$eview !== undefined;
+export const $isInOuterra = window.$eview !== undefined;
 // Determine if we are running in Outerra
-export const $isInsideOuterra = /Outerra\/c4e/g.test(window.navigator.userAgent); // true if inside OUTERRA
+// export const $isInsideOuterra = /Outerra\/c4e/g.test(window.navigator.userAgent); // true if inside OUTERRA
+
+export const TITAN_ROOT_PATH = $isInOuterra?'../../../../':'/'; // relative to 'dist' folder (i.e., of packaged app)
+export const PACKAGES_PATH = `${TITAN_ROOT_PATH}${$isInOuterra?'':'dev/'}packages/`;
+export const DATA_PATH = `${TITAN_ROOT_PATH}data/`;
 
 // take $eview from the window, otherwise make up dummy implementation
 // for use when developing widgets in browsers
@@ -91,6 +91,10 @@ const DUMMY_FILE_SYSTEM = {
     getBasePath:       () => '',
 };
 export const $tFileInterface = $query_interface('ti::js::TitanFileSystem.create') || DUMMY_FILE_SYSTEM;
+const FILE_INTERFACE_CACHE = {
+    USER_PATH: null,
+    SYSTEM_PATH: null,
+};
 // TODO: investigate how "global storage" is actually needed in single page UI setup
 export const $tGlobalStorage = $tWorldInterface ? $tWorldInterface.getGlobalStorageObject() : null;
 
@@ -284,7 +288,7 @@ export default class TitanUtils
      */
     static isInsideTitan()
     {
-        return $isInsideTitan;
+        return $isInOuterra;
     }
 
     static getWindowSize()
@@ -297,7 +301,7 @@ export default class TitanUtils
 
     static quitApplication()
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         // shut down NodeJS before exit
@@ -375,6 +379,73 @@ export default class TitanUtils
     }
 
     /**
+     * Mimics the functionality found in the `ti.cc.Descriptor` of ti-service.js`
+     * (line #263 onward) of the original Titan source
+     *
+     * NOTE: It seems pretty silly that this is the way to do this - surely it
+     *       should be a single call to the C++ back end for it to manage, rather
+     *       than the JavaScript side of things needing to be aware of the
+     *       underlying folder structure to obtain the loadouts for an entity
+     *       type.
+     * NOTE: the original implemententation also included the full file name (with
+     *       file extension), the file extension and path of the file in the
+     *       results, which seems *completely* unnecessary given that the only
+     *       thing we really need to do is retrieve the file name to use as the
+     *       name of the loadout. This implementation strips the unecessary
+     *       parts out.
+     */
+    static getLoadoutsAndDefaultsFor(descriptor)
+    {
+        const defaultLoadout = {name:'Default',type:'default', /*filename:null,filepath:null,ext:null*/};
+
+        if(!$isInOuterra)
+        {
+            return {
+                loadouts:[defaultLoadout],
+                defaults:{},
+            };
+        }
+
+        const name = descriptor.entityName || descriptor.Name;
+        const url = descriptor.Path;
+        const dir = TitanUtils._getDirectory(url);
+        const entityDir = `/packages${dir}/.${name.toLowerCase()}`;
+
+        const profileDir = `${entityDir}/profile`;
+
+        $tFileInterface.switchProgramPath();
+        const systemLoadouts = TitanUtils._getDirListing(profileDir).filter(x=>x.ext==='loadout');
+        systemLoadouts.forEach(x=>x.type='system');
+        $tFileInterface.switchUserPath();
+        const userLoadouts = TitanUtils._getDirListing(profileDir).filter(x=>x.ext==='loadout');
+        userLoadouts.forEach(x=>x.type='user');
+        const loadouts = [defaultLoadout,...systemLoadouts, ...userLoadouts];
+
+        // remove unnecessary data (see notes above)
+        loadouts.forEach(x=>
+        {
+            ['filename', 'filepath', 'ext'].forEach(k => delete x[k]);
+        });
+
+        // NOTE: This doesn't ever seem to actually retrieve anything, might be zombie code,
+        //       consider deleting
+        const defaultsDir = `${entityDir}/defaults`;
+        let defaults = $tWorldInterface.readJsonData(TitanUtils.getUserPath() + defaultsDir);
+        if(!defaults)
+        {
+            defaults = ($tWorldInterface.readJsonData(TitanUtils.getSystemPath() + defaultsDir)) || {};
+            // if defaults file is in the bin dir, we will ignore isUserProfile flag and always load profile from bin dir
+            if(defaults.profile)
+                defaults.profile.isUserProfile = false;
+        }
+
+        return {
+            loadouts,
+            defaults,
+        };
+    }
+
+    /**
      * Converts screen coordinates from a mouse event to coordinates used by
      * Outerra, which inverts the Y-axis.
      *
@@ -402,7 +473,7 @@ export default class TitanUtils
     {
         // $tWorldInterface.injectMousePosition(winXY, range);
         // return $tWorldInterface.getWorldPositionUnderMouse();
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.getWorldPosFromScreenPix(winXY);
         return {x:0, y:0, z:0};
     }
@@ -415,7 +486,7 @@ export default class TitanUtils
      */
     static worldPosUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.getWorldPositionUnderMouse();
         return {x:0, y:0, z:0};
     }
@@ -427,7 +498,7 @@ export default class TitanUtils
      */
     static showGizmoAt(ecef)
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.showGizmoAt(ecef);
     }
 
@@ -438,7 +509,7 @@ export default class TitanUtils
      */
     static getObjectUUIDUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.getObjectUUIDUnderMouse();
         return -1;
     }
@@ -450,7 +521,7 @@ export default class TitanUtils
      */
     static isObjectUnderMouseSelected()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isObjectUnderMouseSelected();
         return false;
     }
@@ -462,7 +533,7 @@ export default class TitanUtils
      */
     static isSelectableObjectUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isSelectableObjectUnderMouse();
         return false;
     }
@@ -475,7 +546,7 @@ export default class TitanUtils
      */
     static isSelectableShapeObjectUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isSelectableShapeObjectUnderMouse();
         return false;
     }
@@ -488,7 +559,7 @@ export default class TitanUtils
      */
     static isSelectableTriggerUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isSelectableTriggerUnderMouse();
         return false;
     }
@@ -501,7 +572,7 @@ export default class TitanUtils
      */
     static isSelectableWaypointUnderMouse()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             return $tWorldInterface.isSelectableWaypointUnderMouse();
         return false;
     }
@@ -513,7 +584,7 @@ export default class TitanUtils
      */
     static select()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.select();
     }
 
@@ -522,7 +593,7 @@ export default class TitanUtils
      */
     static clearSelection()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.clearSelection();
     }
 
@@ -535,7 +606,7 @@ export default class TitanUtils
      */
     static injectMousePosition(winXY, limit=15000)
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.injectMousePosition(winXY, limit);
     }
 
@@ -562,7 +633,7 @@ export default class TitanUtils
      */
     static beginAreaDragSelect()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.beginAreaDragSelect();
     }
 
@@ -571,7 +642,7 @@ export default class TitanUtils
      */
     static endAreaDragSelect()
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.endAreaDragSelect();
     }
 
@@ -582,7 +653,7 @@ export default class TitanUtils
      */
     static set_undo_redo_keypress_monitoring_active(isActive)
     {
-        if($isInsideTitan)
+        if($isInOuterra)
             $tWorldInterface.set_undo_redo_keypress_monitoring_active(isActive===true);
     }
 
@@ -698,7 +769,7 @@ export default class TitanUtils
 
     static launchPluginExecutable(cmdLineStr)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tWorldInterface.launchPluginExecutable(cmdLineStr);
     }
@@ -743,7 +814,7 @@ export default class TitanUtils
     **/
     static bindEventHandlers()
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         let eventHandlers = $tGlobalStorage.eventHandlers;
         window.onblur                    = eventHandlers.handleMouseDownEvent.bind(window);
@@ -768,7 +839,7 @@ export default class TitanUtils
 
     static setUndoRedoKeyMonitoringState(isActive)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tWorldInterface.set_undo_redo_keypress_monitoring_active(isActive);
     }
@@ -789,21 +860,21 @@ export default class TitanUtils
 
     static addEventListener(name, handler)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tGlobalStorage.TitanEvent.addListener(name, handler);
     }
 
     static removeEventListener(name, handler)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tGlobalStorage.TitanEvent.removeListener(name, handler);
     }
 
     static addGlobalEventListener(handler)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         TitanUtils.GLOBAL_LISTENERS.push(handler);
         $tGlobalStorage.TitanEvent.addGlobalListener(handler);
@@ -811,7 +882,7 @@ export default class TitanUtils
 
     static removeGlobalEventListener(handler)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         // TODO: remove from TitanUtils.GLOBAL_LISTENERS
         $tGlobalStorage.TitanEvent.removeGlobalListener(handler);
@@ -819,7 +890,7 @@ export default class TitanUtils
 
     static removeAllGlobalEventListeners()
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         TitanUtils.GLOBAL_LISTENERS.forEach(handler =>
         {
@@ -829,7 +900,7 @@ export default class TitanUtils
 
     static closeWindow()
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
         $tGlobalStorage.closeWindow( window.name );
     }
@@ -844,8 +915,15 @@ export default class TitanUtils
      */
     static getUserPath()
     {
+        // used cached if possible to avoid messing about with the file system
+        if(FILE_INTERFACE_CACHE.USER_PATH)
+            return FILE_INTERFACE_CACHE.USER_PATH;
+
+        const cachedPath = $tFileInterface.getCurrentDir();
         $tFileInterface.switchUserPath();
-        return $tFileInterface.getBasePath();
+        FILE_INTERFACE_CACHE.USER_PATH = $tFileInterface.getBasePath();
+        $tFileInterface.changeDir(cachedPath);
+        return FILE_INTERFACE_CACHE.USER_PATH;
     }
 
     /**
@@ -853,48 +931,107 @@ export default class TitanUtils
      */
     static getSystemPath()
     {
+        // used cached if possible to avoid messing about with the file system
+        if(FILE_INTERFACE_CACHE.SYSTEM_PATH)
+            return FILE_INTERFACE_CACHE.SYSTEM_PATH;
+
+        const cachedPath = $tFileInterface.getCurrentDir();
         $tFileInterface.switchProgramPath();
-        return $tFileInterface.getBasePath();
+        FILE_INTERFACE_CACHE.SYSTEM_PATH = $tFileInterface.getBasePath();
+        $tFileInterface.changeDir(cachedPath);
+        return FILE_INTERFACE_CACHE.SYSTEM_PATH;
     }
 
     static loadUserData(path, defaultData={})
     {
-        let dataPath = TitanUtils.getUserPath() + TitanUtils._rationalizeDataPath(path);
+        let dataPath = TitanUtils.getUserPath() + TitanUtils._normalizePath(path);
         return TitanUtils._loadJsonData(dataPath, defaultData);
     }
 
     static saveUserData(path, data={})
     {
-        let dataPath = TitanUtils.getUserPath() + TitanUtils._rationalizeDataPath(path);
+        let dataPath = TitanUtils.getUserPath() + TitanUtils._normalizePath(path);
         return TitanUtils._saveJsonData(dataPath, data);
     }
 
     static loadSystemData(path, defaultData={})
     {
-        let dataPath = TitanUtils.getSystemPath() + TitanUtils._rationalizeDataPath(path);
+        let dataPath = TitanUtils.getSystemPath() + TitanUtils._normalizePath(path);
         return TitanUtils._loadJsonData(dataPath, defaultData);
     }
 
     static saveSystemData(path, data={})
     {
-        let dataPath = TitanUtils.getSystemPath() + TitanUtils._rationalizeDataPath(path);
+        let dataPath = TitanUtils.getSystemPath() + TitanUtils._normalizePath(path);
         return TitanUtils._saveJsonData(dataPath, data);
     }
 
-    static _rationalizeDataPath(path)
+    static _normalizePath(path)
     {
         // replace all backslashes (\) with forward slashes (/)
         path = path.trim().replace(/\\/g, '/');
-        // if the path doesn't start with a '/' add one
-        if(path.charAt(0)!=='/')
+        // if the path doesn't start with a '/' add one,
+        // provided it's not starting with a a Windows 'C:/'
+        // style drive specifier
+        if(path.charAt(0)!=='/' && path.charAt(1)!==':')
             path = '/'+path;
         // done
         return path;
     }
 
+    static _getDirectory(path)
+    {
+        const normalized = TitanUtils._normalizePath(path);
+        return normalized.substring(0, normalized.lastIndexOf('/'));
+    }
+
+    static _changeDir(dir)
+    {
+        const current = $tFileInterface.getCurrentDir();
+        const expected = this._normalizePath(current + dir);
+        $tFileInterface.changeDir(dir);
+        const actual = this._normalizePath($tFileInterface.getCurrentDir());
+        return expected === actual;
+    }
+
+    static _getDirListing(dir)
+    {
+        const files = [];
+        if(TitanUtils._changeDir(dir))
+        {
+            const listing = $tFileInterface.getFileList();
+            if(listing)
+            {
+                const nameExtRegex = /(?<name>.*)\.(?<ext>[^.]*)$/;
+                Object.getOwnPropertyNames(listing).forEach(key =>
+                {
+                    const info = listing[key];
+                    if (info.isDirectory)
+                        return;
+
+                    const filename = info.filename;
+                    const matches = filename.match(nameExtRegex);
+                    if(!matches)
+                        return;
+
+                    const details = {
+                        filename,
+                        filepath: `${dir}/${filename}`,
+                        name: matches.groups.name,
+                        ext: matches.groups.ext,
+                    };
+
+                    files.push(details);
+                });
+            }
+        }
+
+        return files;
+    }
+
     static _loadJsonData(path, defaultData={})
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return {...defaultData};
 
         let data = {...defaultData};
@@ -911,7 +1048,7 @@ export default class TitanUtils
 
     static _saveJsonData(path, data={})
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         $tWorldInterface.writeJsonData(path, data);
@@ -920,7 +1057,7 @@ export default class TitanUtils
     // persistent state storage, restoration, setters and getters ----------------------------------
     static loadState(stateID, defaultState={})
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return {...defaultState};
 
         // load in persisted state
@@ -936,7 +1073,7 @@ export default class TitanUtils
 
     static saveState(stateID, state={})
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         $tGlobalStorage.saveState(stateID, state);
@@ -961,7 +1098,7 @@ export default class TitanUtils
     static outerraTabHack(evt, opts)
     {
         // no need to do anything if we are just in a browser
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         const defaultOpts = {
@@ -1027,7 +1164,7 @@ export default class TitanUtils
      */
     static outerraDropdownHack(el, maxHeight)
     {
-        if(!$isInsideTitan)
+        if(!$isInOuterra)
             return;
 
         if (!el || el.__ddhack !== undefined || el.children.length < 2 )
