@@ -12,30 +12,26 @@
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-tabs
+                <b-tabs
                     v-model="tabs.current"
-                    align-with-title
-                    class="compact"
                 >
-                    <v-tabs-slider color="accent" />
-                    <v-tab key="Waypoints">
+                    <b-tabs-slider color="accent" />
+                    <b-tab-item key="Waypoints">
                         {{ $t('waypointSettings.waypoints.Waypoints', languageID) }}
-                    </v-tab>
-                    <v-tab key="Assignments">
+                    </b-tab-item>
+                    <b-tab-item key="Assignments">
                         {{ $t('waypointSettings.assignments.Assignments', languageID) }}
                         &times;{{ waypointPath.entities.length }}
-                    </v-tab>
-                </v-tabs>
+                    </b-tab-item>
+                </b-tabs>
 
-                <v-tabs-items
+                <b-tabs-items
                     v-model="tabs.current"
                 >
-                    <v-tab-item
+                    <b-tab-item
                         key="Waypoints"
                     >
-                        <v-container
-                            class="compact"
-                        >
+                        <div class="container">
                             <waypoints-table
                                 ref="waypointsTable"
                                 :waypoints="waypointPath.waypoints"
@@ -46,10 +42,10 @@
                                 :waypoint="currentWaypoint"
                                 @selected="handleWaypointSelection"
                             />
-                        </v-container>
-                    </v-tab-item>
+                        </div>
+                    </b-tab-item>
 
-                    <v-tab-item
+                    <b-tab-item
                         key="Assignments"
                     >
                         <ul>
@@ -60,8 +56,8 @@
                                 {{ entity }}
                             </li>
                         </ul>
-                    </v-tab-item>
-                </v-tabs-items>
+                    </b-tab-item>
+                </b-tabs-items>
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>

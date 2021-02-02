@@ -3,7 +3,11 @@
         class="vue-os--cse-location"
         :style="`font-size:${taskbarSize*0.25}px;`"
     >
-        <cse-icon icon="map-marker" class="mr-1" />
+        <b-icon
+            icon="map-marker"
+            size="is-small"
+            class="mr-1"
+        />
         <span
             @click="contextMenu.locationFormat.show = false"
             @contextmenu.prevent="showLocationFormatContextMenu"
@@ -15,7 +19,11 @@
             </span>
         </span>
         <br>
-        <cse-icon icon="compass" class="mr-1" />
+        <b-icon
+            icon="compass"
+            size="is-small"
+            class="mr-1"
+        />
         <heading class="monospace" :heading="tweenedMagneticHeading" />
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +69,6 @@ import Longitude from '@/components/cse/core/display/Longitude.vue';
 import Heading from '@/components/cse/core/display/Heading.vue';
 import MGRS from '@/components/cse/core/display/MGRS.vue';
 import CseContextMenu from '@/components/cse/core/CseContextMenu.vue';
-import CseIcon from '@/components/cse/core/CseIcon.vue';
 
 const DEFAULT_UPDATE_INTERVAL_MS = 125; // update every 125ms (8x per second)
 const MIN_UPDATE_INTERVAL = 100; // at most update 10x per second
@@ -72,7 +79,6 @@ export default {
     {
         Latitude, Longitude, Heading, 'mgrs':MGRS,
         CseContextMenu,
-        CseIcon,
     },
     props:
     {

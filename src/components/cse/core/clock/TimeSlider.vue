@@ -1,20 +1,21 @@
 <template>
     <div class="cse-desktop--time-slider cse-overlay-text">
-        <v-icon
+        <b-icon
             style="text-shadow: 0 0 4px black;"
-            @click="useLocalTz=!useLocalTz"
-        >
-            {{ useLocalTz?'mdi-web-clock':'mdi-clock-outline' }}
-        </v-icon>
-        {{ theTime }}
-        {{ tzOffsetText }}
-        <v-slider
+            class="clickable"
+            :icon="useLocalTz?'web-clock':'clock-outline'"
+            @click.native="useLocalTz=!useLocalTz"
+        />
+        <span style="font-size:16px;">
+            {{ theTime }}
+            {{ tzOffsetText }}
+        </span>
+        <b-slider
             v-model="dayOffset"
-            class="compact"
-            min="0"
-            max="1439"
-            step="1"
-            style="min-height:16px;"
+            :min="0"
+            :max="1439"
+            :step="1"
+            :tooltip="false"
             @input="dayOffsetChanged"
         />
         <div

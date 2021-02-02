@@ -20,24 +20,36 @@
             >
                 <ul>
                     <li @click="startScenarioConstructor">
-                        <cse-icon size="200%;" icon="map-marker-path" />
+                        <b-icon
+                            size="is-large"
+                            icon="map-marker-path"
+                        />
                         <span class="ml-1">{{ $t('Scenario Constructor', language.id) }}</span>
                     </li>
                     <li @click="startLobby">
-                        <cse-icon size="200%;" icon="account-group-outline" />
+                        <b-icon
+                            size="is-large"
+                            icon="account-group-outline"
+                        />
                         <span class="ml-1">{{ $t('Scenario Lobby', language.id) }}</span>
                     </li>
                     <li @click="$router.push({name:'fps'})">
-                        <cse-icon size="200%;" icon="clipboard-edit-outline" />
+                        <b-icon
+                            size="is-large"
+                            icon="clipboard-edit-outline"
+                        />
                         <span class="ml-1">{{ $t('After Action Review', language.id) }}</span>
                     </li>
                     <li>
-                        <cse-icon size="200%;" icon="cogs" />
+                        <b-icon
+                            size="is-large"
+                            icon="cogs"
+                        />
                         <span class="ml-1">{{ $t('Options', language.id) }}</span>
                     </li>
                     <li @click="quitApplication">
-                        <cse-icon
-                            size="200%;"
+                        <b-icon
+                            size="is-large"
                             icon="logout"
                         />
                         <span class="ml-1">{{ $t('Quit', language.id) }}</span>
@@ -76,13 +88,12 @@ import CseTaskbarWindowTile from '@/components/cse/core/CseTaskbarWindowTile.vue
 import CseClock from '@/components/cse/core/clock/CseClock.vue';
 import CseLocation from '@/components/cse/core/CseLocation.vue';
 import CseLocale from '@/components/cse/core/CseLocale.vue';
-import CseIcon from '@/components/cse/core/CseIcon.vue';
 import CseLogo from '@/components/cse/core/CseLogo.vue';
 
 export default {
     name: 'cse-task-bar',
     components: {
-        CseTaskbarWindowTile, CseIcon, CseLogo,
+        CseTaskbarWindowTile, CseLogo,
         CseClock, CseLocation, CseLocale,
     },
     props: {},

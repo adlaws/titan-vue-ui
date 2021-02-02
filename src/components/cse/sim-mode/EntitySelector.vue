@@ -10,23 +10,23 @@
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-container>
-                    <v-row>
-                        <v-col cols="4">
-                            <v-text-field
+                <div class="container">
+                    <div class="columns">
+                        <div class="column is-4">
+                            <b-input
                                 v-model="filters.name"
                                 label="Search:"
                                 dense
                                 clearable
-                                clear-icon="mdi-close"
+                                clear-icon="close"
                             >
                                 <template slot="append">
-                                    <cse-icon icon="magnify" />
+                                    <b-icon icon="magnify" />
                                 </template>
-                            </v-text-field>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-select
+                            </b-input>
+                        </div>
+                        <div class="column is-4">
+                            <b-dropdown
                                 v-model="filters.country"
                                 label="Country"
                                 placeholder="Any"
@@ -38,9 +38,9 @@
                                 :items="filters.countryOpts"
                             >
                                 <template v-slot:selection="{ item, index }">
-                                    <v-chip v-if="index === 0">
+                                    <b-chip v-if="index === 0">
                                         <span>{{ item }}</span>
-                                    </v-chip>
+                                    </b-chip>
                                     <span
                                         v-if="index === 1"
                                         class="grey--text caption"
@@ -48,10 +48,10 @@
                                         (and {{ filters.country.length - 1 }} others)
                                     </span>
                                 </template>
-                            </v-select>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-select
+                            </b-dropdown>
+                        </div>
+                        <div class="column is-4">
+                            <b-dropdown
                                 v-model="filters.domain"
                                 label="Domain"
                                 placeholder="Any"
@@ -63,9 +63,9 @@
                                 :items="filters.domainOpts"
                             >
                                 <template v-slot:selection="{ item, index }">
-                                    <v-chip v-if="index === 0">
+                                    <b-chip v-if="index === 0">
                                         <span>{{ item }}</span>
-                                    </v-chip>
+                                    </b-chip>
                                     <span
                                         v-if="index === 1"
                                         class="grey--text caption"
@@ -73,12 +73,12 @@
                                         (and {{ filters.domain.length - 1 }} others)
                                     </span>
                                 </template>
-                            </v-select>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                            </b-dropdown>
+                        </div>
+                    </div>
+                </div>
 
-                <v-data-table
+                <b-table
                     dense
                     item-key="Name"
                     show-select
@@ -113,7 +113,7 @@
                             height="32"
                         />
                     </template>
-                </v-data-table>
+                </b-table>
                 <hr>
                 <div style="user-select:text;">
                     {{ selected?selected:'' }}
@@ -133,7 +133,6 @@ import { COUNTRY } from '@/assets/js/utils/countries.js';
 
 import CseDesktopWindow from '@/components/common/cse/CseDesktopWindow.vue';
 import CseDesktopWindowContent from '@/components/common/cse/CseDesktopWindowContent.vue';
-import CseIcon from '@/components/cse/core/CseIcon.vue';
 import ImgFallback from '@/components/cse/core/ImgFallback.vue';
 import CountryFlag from '@/components/cse/core/CountryFlag.vue';
 
@@ -142,7 +141,7 @@ export default {
     components:
     {
         CseDesktopWindow, CseDesktopWindowContent,
-        CseIcon, CountryFlag,
+        CountryFlag,
         ImgFallback
     },
     data()

@@ -3,31 +3,29 @@
         class="vue-os--cse-clock"
         :style="`font-size:${taskbarSize*0.25}px;`"
     >
-        <cse-icon icon="clock" class="mr-1" /><span class="monospace">{{ time }}</span>
+        <b-icon
+            icon="clock"
+            size="is-small"
+            class="mr-1"
+        />
+        <span class="monospace">{{ time }}</span>
         <br>
-        <cse-icon icon="calendar-month" class="mr-1" /><span class="monospace">{{ date }}</span>
+        <b-icon
+            icon="calendar-month"
+            size="is-small"
+            class="mr-1"
+        />
+        <span class="monospace">{{ date }}</span>
 
         <!-- date-time-widget / -->
     </div>
 </template>
 
 <script>
-// import tzlookup from 'tz-lookup';
-
-// import { $tWorldInterface, $isInOuterra } from '@/assets/js/titan/titan-utils.js';
-// import DateTimeUtils from '@/assets/js/utils/datetime-utils.js';
-
-import CseIcon from '@/components/cse/core/CseIcon.vue';
-
-// import DateTimeWidget from '@/components/cse/core/clock/DateTimeWidget.vue';
-
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default {
     name: 'cse-clock',
-    components: {
-        CseIcon, // DateTimeWidget,
-    },
     data()
     {
         return {

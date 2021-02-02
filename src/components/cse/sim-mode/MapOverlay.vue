@@ -40,7 +40,7 @@
                                 style="width:32px;height:32px;padding:3px;background-color:white;"
                                 @click="toggleFullscreen(context.cseDesktopWindow)"
                             >
-                                <cse-icon size="24px" :icon="`fullscreen${isFullscreen?'-exit':''}`" />
+                                <b-icon size="24px" :icon="`fullscreen${isFullscreen?'-exit':''}`" />
                             </button>
                         </l-control>
 
@@ -82,8 +82,6 @@ Icon.Default.mergeOptions({
 // --------------------------------------------------------------------------------------------------------------------
 import { LMap, LTileLayer, LControl } from "vue2-leaflet";
 
-import CseIcon from '@/components/cse/core/CseIcon.vue';
-
 // Outerra Map Project Modes for Geographic Camera
 // ref: titan-git\api\ot\projection.h
 const OT_MAP_PROJECTION = {
@@ -96,7 +94,6 @@ export default {
     name: 'map-overlay',
     components:
     {
-        CseIcon,
         LMap, LTileLayer, LControl,
     },
     data()

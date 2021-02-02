@@ -1,24 +1,21 @@
 <template>
     <div>
         {{ crewDescriptor.role }}: {{ crewEntry.name }}
-        <v-icon
+        <b-icon
+            :icon="`lock${ crewEntry.locked === false ? '-open-outline' : '' }`"
             :color="crewEntry.locked?'warning':'secondary'"
             @click="$emit('toggle-lock', crewEntry)"
-        >
-            mdi-lock{{ crewEntry.locked === false ? '-open-outline' : '' }}
-        </v-icon>
-        <v-icon
+        />
+        <b-icon
+            :icon="crewEntry.cameraLocked ? 'camera' : 'camera-outline'"
             :color="crewEntry.cameraLocked?'primary':'secondary'"
             @click="$emit('toggle-camera', crewEntry)"
-        >
-            {{ crewEntry.cameraLocked ? 'mdi-camera' : 'mdi-camera-outline' }}
-        </v-icon>
-        <v-icon
+        />
+        <b-icon
+            :icon="crewEntry.controlledBy === 'player' ? 'google-controller' : 'robot-outline'"
             :color="crewEntry.controlledBy === 'player'?'error':'secondary'"
             @click="$emit('toggle-control', crewEntry)"
-        >
-            {{ crewEntry.controlledBy === 'player' ? 'mdi-google-controller' : 'mdi-robot-outline' }}
-        </v-icon>
+        />
     </div>
 </template>
 

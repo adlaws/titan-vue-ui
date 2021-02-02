@@ -12,7 +12,7 @@
                 name="window-icon"
                 :window-context="{size:iconSize, active:active}"
             >
-                <cse-icon
+                <b-icon
                     v-if="icon"
                     :icon="icon"
                     :size="`${iconSize.w}px`"
@@ -44,7 +44,7 @@
             v-if="minimizable"
             @click="$emit('window-minimise')"
         >
-            <cse-icon
+            <b-icon
                 icon="window-minimize"
                 :size="`${iconSize.w}px`"
                 class="icon control-btn"
@@ -54,7 +54,7 @@
             v-if="maximizable"
             @click="$emit('window-toggle-maximise')"
         >
-            <cse-icon
+            <b-icon
                 :icon="maximized===false?'window-maximize':'window-restore'"
                 :size="`${iconSize.w}px`"
                 class="icon control-btn"
@@ -64,7 +64,7 @@
             v-if="closable"
             @click="$emit('window-close')"
         >
-            <cse-icon
+            <b-icon
                 icon="window-close"
                 :size="`${iconSize.w}px`"
                 class="icon control-btn"
@@ -76,14 +76,8 @@
 <script>
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
-import CseIcon from '@/components/cse/core/CseIcon.vue';
-
 export default {
     name: 'titan-title-bar',
-    components:
-    {
-        CseIcon
-    },
     props:
     {
         title: {

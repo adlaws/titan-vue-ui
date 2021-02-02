@@ -9,27 +9,31 @@
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-select
+                <b-dropdown
                     v-model="selectedCameraMode"
                     :items="cameraOptions"
                     item-text="text"
                     item-value="id"
                 >
                     <template v-slot:selection="{ item }">
-                        <v-icon>{{ item.icon }}</v-icon>
+                        <b-icon
+                            :icon="item.icon"
+                        />
                         <span class="ml-2">{{ item.text }}</span>
                     </template>
                     <template v-slot:item="{ item }">
-                        <v-icon>{{ item.icon }}</v-icon>
+                        <b-icon
+                            :icon="item.icon"
+                        />
                         <span class="ml-2">{{ item.text }}</span>
                     </template>
-                </v-select>
-                <v-btn
+                </b-dropdown>
+                <b-button
                     :disabled="!selectedCameraMode"
                     @click="switchCameraMode"
                 >
                     Create
-                </v-btn>
+                </b-button>
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>
@@ -51,9 +55,9 @@ export default {
     {
         return {
             cameraOptions:[
-                { id: 'standard',     text: 'Standard Camera', icon: "mdi-camera",          disabled: false },
-                { id: 'orbit',        text: 'Orbit Camera',    icon: "mdi-orbit",           disabled: false },
-                { id: 'randomFlight', text: 'Random Flight',   icon: "mdi-vector-polyline", disabled: false },
+                { id: 'standard',     text: 'Standard Camera', icon: "camera",          disabled: false },
+                { id: 'orbit',        text: 'Orbit Camera',    icon: "orbit",           disabled: false },
+                { id: 'randomFlight', text: 'Random Flight',   icon: "vector-polyline", disabled: false },
             ],
             selectedCameraMode: 'standard',
             currentCameraMode: 'standard',

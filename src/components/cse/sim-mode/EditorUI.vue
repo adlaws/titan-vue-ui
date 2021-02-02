@@ -4,17 +4,17 @@
         style="width:100%;height:100%;overflow:hidden;"
     >
         <time-slider />
-
-        <!--
-        <cse-scenario-objects />
-        <entity-selector2 />
-        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
-        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
-        <waypoint-settings />
         <world-state />
 
+        <!--
+        <entity-selector2 />
+        <cse-scenario-objects />
+        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+        <waypoint-settings />
         <aar-statistics />
         <map-overlay />
+
+        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
         <drawing-tools />
 
         <cse-dockable
@@ -24,7 +24,7 @@
             dock="w"
             draggable
             title="OBJECTS"
-            icon="mdi-cube"
+            icon="cube"
         >
             Entity list
         </cse-dockable>
@@ -97,7 +97,6 @@ import LinearCompass2 from '@/components/cse/core/display/compass/LinearCompass2
 import DropdownToolbar from '@/components/cse/sim-mode/DropdownToolbar.vue';
 import TimeSlider from '@/components/cse/core/clock/TimeSlider.vue';
 
-import CseIcon from '@/components/cse/core/CseIcon.vue';
 import CseContextMenu from '@/components/cse/core/CseContextMenu.vue';
 import CseRadialMenu from '@/components/cse/core/CseRadialMenu.vue';
 import CseDockable from '@/components/cse/core/CseDockable.vue';
@@ -131,7 +130,6 @@ export default {
         TimeSlider, EntitySpotlight,
         EntitySelector2, MapOverlay, DrawingTools, WorldState, AarStatistics,
         CseScenarioObjects, WaypointSettings,
-        CseIcon,
         CseContextMenu, CseRadialMenu, CseDockable, CseNotificationsArea,
     },
     data()

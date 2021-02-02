@@ -92,11 +92,14 @@ Example use:
                     :class="{disabled:item.disabled===true}"
                     @click="_revealSubmenu(idx)"
                 >
-                    <cse-icon v-if="item[iconKey]" :icon="item[iconKey]" />
+                    <b-icon
+                        v-if="item[iconKey]"
+                        :icon="item[iconKey]"
+                    />
                     <span v-else style="width:1em;display:inline-block;" />
                     <span class="ml-1 mr-2">{{ item[textKey] }}</span>
                     <span class="spacer" />
-                    <cse-icon icon="chevron-right" />
+                    <b-icon icon="chevron-right" />
                     <transition name="fade" mode="out-in">
                         <cse-context-menu
                             v-if="submenu.idx === idx"
@@ -113,7 +116,10 @@ Example use:
                     :class="{disabled:item.disabled===true}"
                     @click.stop="_handleItemClicked(item)"
                 >
-                    <cse-icon v-if="item[iconKey]" :icon="item[iconKey]||'blank'" />
+                    <b-icon
+                        v-if="item[iconKey]"
+                        :icon="item[iconKey]||'blank'"
+                    />
                     <span v-else style="width:1em;display:inline-block;" />
                     <span class="ml-1 mr-2">{{ item[textKey] }}</span>
                 </li>
@@ -126,8 +132,6 @@ Example use:
 import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
-import CseIcon from '@/components/cse/core/CseIcon.vue';
-
 // the context menu can be dismissed without making a selection by clicking
 // anywhere outside the bounds of the context menu, by pressing the ESCAPE
 // key, or moving the mouse pointer outside the window
@@ -135,10 +139,6 @@ const CANCELLATION_EVENTS = ['keydown', 'mousedown', 'mouseout'];
 
 export default {
     name:'cse-context-menu',
-    components:
-    {
-        CseIcon,
-    },
     props:
     {
         // the preferred x position on the screen - may be adjusted due to proximity to edges of screen

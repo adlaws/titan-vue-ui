@@ -1,9 +1,8 @@
 <template>
     <div>
-        <v-data-table
+        <b-table
             v-model="table.selected"
             dense
-            class="compact"
             height="10rem"
             item-key="uid"
             single-select
@@ -26,10 +25,10 @@
                 <span v-else class="secondary--text">&mdash;</span>
             </template>
             <template v-slot:[`item.type`]="{ item }">
-                <v-icon>{{ WAYPOINT.TYPE[item.type].icon }}</v-icon>
+                <b-icon :icon="WAYPOINT.TYPE[item.type].icon" />
             </template>
             <template v-slot:[`item.roe`]="{ item }">
-                <v-icon>{{ WAYPOINT.ROE[item.roe].icon }}</v-icon>
+                <b-icon :icon="WAYPOINT.TYPE[item.roe].icon" />
             </template>
             <template v-slot:[`item.speed`]="{ item }">
                 {{ item.speed }}m/s
@@ -50,7 +49,7 @@
             <template v-slot:[`footer.page-text`]="{ pageStart, pageStop, itemsLength }">
                 {{ pageStart }} - {{ pageStop }} of {{ itemsLength }} Waypoints
             </template>
-        </v-data-table>
+        </b-table>
 
         <cse-context-menu
             v-if="contextMenu.show"

@@ -24,21 +24,16 @@
         </div>
         <div class="screen-centered-icon">
             <slot name="icon">
-                <cse-icon icon="alert" />
+                <b-icon icon="alert" />
             </slot>
         </div>
     </div>
 </template>
 
 <script>
-import CseIcon from '@/components/cse/core/CseIcon.vue';
 
 export default {
     name: 'error-base',
-    components:
-    {
-        CseIcon,
-    },
     props: {
         error: {
             type: Object,

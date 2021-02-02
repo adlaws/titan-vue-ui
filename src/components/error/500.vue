@@ -10,19 +10,18 @@
             Internal server error!
         </template>
         <template #icon>
-            <cse-icon icon="alert-octagram" />
+            <b-icon icon="alert-octagram" />
         </template>
     </error-base>
 </template>
 
 <script>
-import CseIcon from '@/components/cse/core/CseIcon.vue';
 import ErrorBase from './ErrorBase.vue';
 
 export default {
     name: 'http500',
     components: {
-        ErrorBase, CseIcon
+        ErrorBase,
     },
     data()
     {

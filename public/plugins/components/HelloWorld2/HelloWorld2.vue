@@ -12,16 +12,15 @@
                 <h1>
                     {{ greetings[greetingIdx] }}
                 </h1>
-                <v-btn
+                <b-button
                     @click="changeGreeting"
                 >
                     Change Language
-                    <v-icon
+                    <b-icon
+                        icon="earth"
                         right
-                    >
-                        mdi-earth
-                    </v-icon>
-                </v-btn>
+                    />
+                </b-button>
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>

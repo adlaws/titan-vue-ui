@@ -14,152 +14,135 @@
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-container>
-                    <v-row>
-                        <v-col cols="12">
-                            <v-btn-toggle
-                                v-model="currentTool"
-                            >
-                                <v-btn
+                <div class="container">
+                    <div class="columns">
+                        <div class="column is-12">
+                            <b-field>
+                                <b-radio-button
                                     v-for="(tool, idx) in tools"
                                     :key="`tool-${idx}`"
-                                    :value="tool.type"
+                                    v-model="currentTool"
+                                    :native-value="tool.type"
                                     small
                                 >
-                                    <v-icon
+                                    <b-icon
                                         small
-                                    >
-                                        {{ tool.icon }}
-                                    </v-icon>
-                                </v-btn>
-                            </v-btn-toggle>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="12">
-                            <v-menu
+                                        :icon="tool.icon"
+                                    />
+                                </b-radio-button>
+                            </b-field>
+                            {{ currentTool }}
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-12">
+                            <b-menu
                                 v-model="colorPicker.visible"
                                 :close-on-content-click="false"
                                 :nudge-width="200"
                                 offset-x
                             >
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-btn
+                                    <b-button
                                         :color="fill.active?fill.color.hexa:'#AAA'"
                                         dark
                                         small
                                         v-bind="attrs"
                                         v-on="on"
                                     >
-                                        <v-icon
+                                        <b-icon
                                             :color="fill.active?fillContrast:'#888'"
-                                        >
-                                            mdi-shape
-                                        </v-icon>
-                                    </v-btn>
+                                            icon="shape"
+                                        />
+                                    </b-button>
                                 </template>
-                                <v-card>
-                                    <v-list-item class="pb-0">
-                                        <v-list-item-content>
-                                            <v-list-item-title>
-                                                <v-checkbox
-                                                    v-model="fill.active"
-                                                    label="Fill Shapes"
-                                                    class="pa-0 ma-0"
-                                                    hide-details="true"
-                                                    dense
-                                                />
-                                            </v-list-item-title>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                    <v-expand-transition>
-                                        <div v-show="fill.active">
-                                            <v-color-picker
-                                                v-model="fill.color"
-                                                canvas-height="100"
-                                                show-swatches
-                                                swatches-max-height="300"
-                                                :swatches="colorPicker.palette"
-                                            />
-                                        </div>
-                                    </v-expand-transition>
-                                </v-card>
-                            </v-menu>
-                            <v-menu
+                                <div class="card">
+                                    <b-checkbox
+                                        v-model="fill.active"
+                                        label="Fill Shapes"
+                                        class="pa-0 ma-0"
+                                        hide-details="true"
+                                        dense
+                                    />
+                                    <div v-show="fill.active">
+                                        COLOR PICKER
+                                        <!-- b-color-picker
+                                            v-model="fill.color"
+                                            canvas-height="100"
+                                            show-swatches
+                                            swatches-max-height="300"
+                                            :swatches="colorPicker.palette"
+                                        / -->
+                                    </div>
+                                </div>
+                            </b-menu>
+                            <b-menu
                                 v-model="colorPicker.stroke"
                                 :close-on-content-click="false"
                                 :nudge-width="200"
                                 offset-x
                             >
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-btn
+                                    <b-button
                                         :color="stroke.active?stroke.color.hexa:'#AAA'"
                                         dark
                                         small
                                         v-bind="attrs"
                                         v-on="on"
                                     >
-                                        <v-icon
+                                        <b-icon
+                                            icon="shape-outline"
                                             :color="stroke.active?strokeContrast:'#888'"
-                                        >
-                                            mdi-shape-outline
-                                        </v-icon>
-                                    </v-btn>
+                                        />
+                                    </b-button>
                                 </template>
-                                <v-card>
-                                    <v-list-item class="pb-0">
-                                        <v-list-item-content>
-                                            <v-list-item-title>
-                                                <v-checkbox
-                                                    v-model="stroke.active"
-                                                    label="Stroke Shapes"
-                                                    class="pa-0 ma-0"
-                                                    hide-details="true"
+                                <div class="card">
+                                    <b-checkbox
+                                        v-model="stroke.active"
+                                        label="Stroke Shapes"
+                                        class="pa-0 ma-0"
+                                        hide-details="true"
+                                        dense
+                                    />
+                                    <div v-show="stroke.active">
+                                        <b-slider
+                                            v-model="stroke.width"
+                                            label="Width:"
+                                            class="pr-4 pl-4"
+                                            :min="0"
+                                            :max="10"
+                                            :step="0.1"
+                                            thumb-label
+                                        >
+                                            <template v-slot:append>
+                                                <b-input
+                                                    v-model="stroke.width"
+                                                    class="mt-0 pt-0"
                                                     dense
+                                                    hide-details
+                                                    single-line
+                                                    type="number"
+                                                    min="0"
+                                                    max="10"
+                                                    style="width: 70px"
+                                                    suffix="px"
                                                 />
-                                            </v-list-item-title>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                    <v-expand-transition>
-                                        <div v-show="stroke.active">
-                                            <v-slider
-                                                v-model="stroke.width"
-                                                label="Width:"
-                                                class="pr-4 pl-4"
-                                                min="0"
-                                                max="10"
-                                                step="0.1"
-                                                thumb-label
-                                            >
-                                                <template v-slot:append>
-                                                    <v-text-field
-                                                        v-model="stroke.width"
-                                                        class="mt-0 pt-0"
-                                                        dense
-                                                        hide-details
-                                                        single-line
-                                                        type="number"
-                                                        min="0"
-                                                        max="10"
-                                                        style="width: 70px"
-                                                        suffix="px"
-                                                    />
-                                                </template>
-                                            </v-slider>
-                                            <v-color-picker
-                                                v-model="stroke.color"
-                                                canvas-height="100"
-                                                show-swatches
-                                                swatches-max-height="300"
-                                                :swatches="colorPicker.palette"
-                                            />
-                                        </div>
-                                    </v-expand-transition>
-                                </v-card>
-                            </v-menu>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                                            </template>
+                                        </b-slider>
+                                        COLOR PICKER
+                                        <!-- b-color-picker
+                                            v-model="fill.color"
+                                            canvas-height="100"
+                                            show-swatches
+                                            swatches-max-height="300"
+                                            :swatches="colorPicker.palette"
+                                        / -->
+                                    </div>
+                                </div>
+                            </b-menu>
+                        </div>
+                    </div>
+                </div>
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>
@@ -206,8 +189,8 @@ export default {
                 ],
             },
             tools:[
-                {type: 'rectangle', icon: 'mdi-shape-square-plus', tooltip: 'Square'},
-                {type: 'ellipse', icon: 'mdi-shape-circle-plus', tooltip: 'Circle'},
+                {type: 'rectangle', icon: 'shape-square-plus', tooltip: 'Square'},
+                {type: 'ellipse', icon: 'shape-circle-plus', tooltip: 'Circle'},
             ],
             drag:{
                 mightDrag: false,

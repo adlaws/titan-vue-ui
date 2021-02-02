@@ -3,7 +3,9 @@
         class="vue-os--cse-place-and-time-setter"
     >
         <h1>Spatiotemporal Navigation</h1>
-        <cse-icon icon="clock" />
+        <b-icon
+            icon="clock"
+        />
         Current timezone is {{ timezone }}
         {{ latitude }} {{ longitude }} {{ altitude }}
         <location-field />
@@ -15,14 +17,13 @@ import tzlookup from 'tz-lookup';
 
 import { $tWorldInterface, $isInOuterra } from '@/assets/js/titan/titan-utils.js';
 
-import CseIcon from '@/components/cse/core/CseIcon.vue';
 import LocationField from '@/components/cse/core/field/LocationField.vue';
 
 
 export default {
     name: 'cse-place-and-time',
     components: {
-        CseIcon, LocationField,
+        LocationField,
     },
     data()
     {

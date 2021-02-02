@@ -12,44 +12,42 @@
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-tabs
+                <b-tabs
                     v-model="tabs.current"
-                    align-with-title
-                    class="compact"
                 >
-                    <v-tabs-slider color="accent" />
-                    <v-tab key="Units">
+                    <b-tabs-slider color="accent" />
+                    <b-tab-item key="Units">
                         {{ $t('aarStatistics.units.Units', languageID) }}
-                    </v-tab>
-                    <v-tab key="Groups">
+                    </b-tab-item>
+                    <b-tab-item key="Groups">
                         {{ $t('aarStatistics.groups.Groups', languageID) }}
-                    </v-tab>
-                    <v-tab key="Battle Seeds">
+                    </b-tab-item>
+                    <b-tab-item key="Battle Seeds">
                         {{ $t('aarStatistics.battleSeeds.Battle Seeds', languageID) }}
-                    </v-tab>
-                    <v-tab key="Win/Lose Conditions">
+                    </b-tab-item>
+                    <b-tab-item key="Win/Lose Conditions">
                         {{ $t('aarStatistics.winLoseConditions.Win/Lose Conditions', languageID) }}
-                    </v-tab>
-                </v-tabs>
+                    </b-tab-item>
+                </b-tabs>
 
-                <v-tabs-items
+                <b-tabs-items
                     v-model="tabs.current"
                 >
-                    <v-tab-item
+                    <b-tab-item
                         key="Units"
                     >
-                        <v-spacer />
-                        <v-text-field
+                        <b-spacer />
+                        <b-input
                             v-model="tables.units.search"
-                            append-icon="mdi-magnify"
+                            append-icon="magnify"
                             label="Search"
                             single-line
                             hide-details
                             clearable
                         />
-                        <v-data-table
+                        <b-table
                             dense
-                            class="compact mb-5"
+                            class="mb-5"
                             :items="tables.units.items"
                             :headers="tables.units.headers"
                             :footer-props="tables.units.footerprops"
@@ -57,9 +55,10 @@
                             :search="tables.units.search"
                         >
                             <template v-slot:[`item.alliance`]="{ item }">
-                                <v-icon :color="item.alliance==='blufor'?'#08f':'red'">
-                                    mdi-triangle
-                                </v-icon>
+                                <b-icon
+                                    icon="triangle"
+                                    :color="item.alliance==='blufor'?'#08f':'red'"
+                                />
                             </template>
                             <template v-slot:[`item.pctHit`]="{ item }">
                                 {{ parseFloat((item.hits/item.fired*100.0).toFixed(2)) }}%
@@ -76,53 +75,53 @@
                             <template v-slot:[`item.pctHealth`]="{ item }">
                                 {{ parseFloat((item.pctHealth*100).toFixed(2)) }}%
                             </template>
-                        </v-data-table>
-                        <v-form
-                            class="compact mt-2"
+                        </b-table>
+                        <b-form
+                            class="mt-2"
                         >
-                            <v-row>
-                                <v-col cols="8" />
-                                <v-col cols="3">
-                                    <v-text-field
+                            <div class="columns">
+                                <div class="column is-8" />
+                                <div class="column is-3">
+                                    <b-input
                                         v-model="exportFile.filename"
                                         class="input-align-right"
                                         label="File"
                                     >
                                         <template v-slot:append-outer>
-                                            <v-select
+                                            <b-dropdown
                                                 v-model="exportFile.format"
                                                 label="Format"
                                                 :items="[{text:'.json',value:'json'}, {text:'.csv',value:'csv'}]"
                                             />
                                         </template>
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="1">
-                                    <v-btn
+                                    </b-input>
+                                </div>
+                                <div class="column is-1">
+                                    <b-button
                                         small
                                     >
                                         Export
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-form>
-                    </v-tab-item>
-                    <v-tab-item
+                                    </b-button>
+                                </div>
+                            </div>
+                        </b-form>
+                    </b-tab-item>
+                    <b-tab-item
                         key="Groups"
                     >
                         Groups
-                    </v-tab-item>
-                    <v-tab-item
+                    </b-tab-item>
+                    <b-tab-item
                         key="Battle Seeds"
                     >
                         Battle Seeds
-                    </v-tab-item>
-                    <v-tab-item
+                    </b-tab-item>
+                    <b-tab-item
                         key="Win/Lose Conditions"
                     >
                         Win/Lose Conditions
-                    </v-tab-item>
-                </v-tabs-items>
+                    </b-tab-item>
+                </b-tabs-items>
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>

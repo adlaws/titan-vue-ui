@@ -1,7 +1,7 @@
 <template>
     <cse-dockable
         title="ACTIVE OBJECTS"
-        icon="mdi-lightning-bolt"
+        icon="lightning-bolt"
         :width="width"
         :height="height"
         :offset="offset"
@@ -10,80 +10,76 @@
         :collapsed="false"
     >
         <div style="margin:4px;margin-top:16px;">
-            <v-row>
-                <v-col cols="12">
-                    <v-text-field
+            <div class="columns">
+                <div class="column is-12">
+                    <b-input
                         v-model.trim="textFilter"
                         trim
                         label="Search"
                         dense
-                        append-icon="mdi-magnify"
+                        append-icon="magnify"
                         clearable
                     />
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="1">
-                    <v-btn
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column is-1">
+                    <b-button
                         small
                         :disabled="!hasFilters()"
                         @click="clearFilters"
                     >
-                        <v-icon>
-                            mdi-filter-remove
-                        </v-icon>
-                    </v-btn>
-                </v-col>
-                <v-col cols="1">
-                    <v-btn
+                        <b-icon
+                            icon="filter-remove"
+                        />
+                    </b-button>
+                </div>
+                <div class="column is-1">
+                    <b-button
                         small
                         @click="updateAllianceFilter"
                     >
-                        <v-icon
+                        <b-icon
+                            icon="`flag${ allianceFilter === null ? '-outline' : '' }`"
                             :color="allianceColor(allianceFilter)"
-                        >
-                            mdi-flag{{ allianceFilter === null ? '-outline' : '' }}
-                        </v-icon>
-                    </v-btn>
-                </v-col>
-                <v-col cols="1">
-                    <v-btn
+                        />
+                    </b-button>
+                </div>
+                <div class="column is-1">
+                    <b-button
                         small
                         @click="updateLockFilter"
                     >
-                        <v-icon
+                        <b-icon
+                            :icon="`lock${ lockFilter === null ? '-off-outline' : (lockFilter === true ? '' : '-open-variant') }`"
                             :color="lockFilter === null ? '' : 'warning'"
-                        >
-                            mdi-lock{{ lockFilter === null ? '-off-outline' : (lockFilter === true ? '' : '-open-variant') }}
-                        </v-icon>
-                    </v-btn>
-                </v-col>
-                <v-col cols="1">
-                    <v-btn
+                        />
+                    </b-button>
+                </div>
+                <div class="column is-1">
+                    <b-button
                         small
                         @click="updateControlFilter"
                     >
-                        <v-icon
+                        <b-icon
+                            :icon="controlFilter === null ? 'google-controller-off' : (controlFilter === 'ai' ? 'robot' : 'google-controller')"
                             :color="controlFilter === null ? '' : 'warning'"
-                        >
-                            {{ controlFilter === null ? 'mdi-google-controller-off' : (controlFilter === 'ai' ? 'mdi-robot' : 'mdi-google-controller') }}
-                        </v-icon>
-                    </v-btn>
-                </v-col>
-                <v-col cols="1">
-                    <v-btn
+                        />
+                    </b-button>
+                </div>
+                <div class="column is-1">
+                    <b-button
                         small
                         @click="updateDomainFilter"
                     >
-                        <v-icon
+                        <b-icon
+                            :icon="`${ domainIcon(domainFilter) }`"
                             :color="domainFilter === null ? '' : 'warning'"
-                        >
-                            mdi-{{ domainIcon(domainFilter) }}
-                        </v-icon>
-                    </v-btn>
-                </v-col>
-                <v-col cols="3">
-                    <v-select
+                        />
+                    </b-button>
+                </div>
+                <div class="column is-3">
+                    <b-dropdown
                         v-model="countryFilter"
                         dense
                         clearable
@@ -93,7 +89,7 @@
                         multiple
                     >
                         <template v-slot:selection="{ item, index }">
-                            <v-chip
+                            <b-chip
                                 small
                                 close
                                 @click:close="countryFilter.splice(index,1)"
@@ -101,64 +97,67 @@
                                 <country-flag
                                     :alpha2="item.alpha2"
                                 />
-                            </v-chip>
+                            </b-chip>
                         </template>
                         <template v-slot:item="{ item, attrs }">
-                            <v-checkbox :value="attrs.inputValue" />
+                            <b-checkbox :value="attrs.inputValue" />
                             <country-flag class="mr-2" :alpha2="item.alpha2" />
                             {{ item.name }}
                         </template>
-                    </v-select>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12">
-                    <v-tabs
+                    </b-dropdown>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column is-12">
+                    <b-tabs
                         v-model="tab"
                         vertical
                     >
-                        <v-tab>
-                            <v-icon left>
-                                mdi-tank
-                            </v-icon>
+                        <b-tab-item>
+                            <b-icon
+                                icon="tank"
+                                left
+                            />
                             &times;{{ vehicles.length }}
-                        </v-tab>
-                        <v-tab>
-                            <v-icon left>
-                                mdi-human
-                            </v-icon>
+                        </b-tab-item>
+                        <b-tab-item>
+                            <b-icon
+                                icon="human"
+                                left
+                            />
                             &times;{{ lifeforms.length }}
-                        </v-tab>
-                        <v-tab>
-                            <v-icon left>
-                                mdi-cube
-                            </v-icon>
+                        </b-tab-item>
+                        <b-tab-item>
+                            <b-icon
+                                icon="cube"
+                                left
+                            />
                             &times;{{ others.length }}
-                        </v-tab>
-                        <v-tabs-items v-model="tab">
-                            <v-tab-item>
+                        </b-tab-item>
+                        <b-tabs v-model="tab">
+                            <b-tab-item>
                                 <vehicle-table
                                     :vehicles="vehicles"
                                     :scenario-objects="scenarioObjects"
                                     :scenario-objects-by-uid="scenarioObjectsByUid"
                                 />
-                            </v-tab-item>
-                            <v-tab-item>
+                            </b-tab-item>
+                            <b-tab-item>
                                 <lifeform-table
                                     :lifeforms="lifeforms"
                                     :scenario-objects="scenarioObjects"
                                 />
-                            </v-tab-item>
-                            <v-tab-item>
+                            </b-tab-item>
+                            <b-tab-item>
                                 <objects-table
                                     :objects="others"
                                     :scenario-objects="scenarioObjects"
                                 />
-                            </v-tab-item>
-                        </v-tabs-items>
-                    </v-tabs>
-                </v-col>
-            </v-row>
+                            </b-tab-item>
+                        </b-tabs>
+                    </b-tabs>
+                </div>
+            </div>
         </div>
     </cse-dockable>
 </template>

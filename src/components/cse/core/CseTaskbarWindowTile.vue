@@ -5,9 +5,10 @@
         :class="{active:window.managed.active}"
         :title="window.title"
     >
-        <cse-icon
+        <b-icon
             v-if="window.icon"
             :icon="window.icon"
+            size="is-medium"
         />
         <div v-else>
             {{ window.title.charAt(0).toUpperCase() }}
@@ -16,13 +17,8 @@
 </template>
 
 <script>
-import CseIcon from '@/components/cse/core/CseIcon.vue';
-
 export default {
     name:'cse-taskbar-window-tile',
-    components:{
-        CseIcon
-    },
     props:{
         window: {
             type: Object,

@@ -28,7 +28,7 @@ export default {
     {
         mdiClasses()
         {
-            return 'mdi '+ this.icon.split(' ').map(x => 'mdi-'+x).join(' ');
+            return 'mdi '+ this.icon.split(' ').map(x => ''+x).join(' ');
         }
     }
 };

@@ -84,7 +84,10 @@ Example use:
                         :key="`item-${idx}`"
                         @click="_selected(item)"
                     >
-                        <cse-icon :icon="item.icon" />
+                        <b-icon
+                            :icon="item.icon"
+                            size="is-medium"
+                        />
                         <span class="label">{{ item.text }}</span>
                     </li>
                 </ul>
@@ -97,8 +100,6 @@ Example use:
 import EventUtils, { KEY } from '@/assets/js/utils/event-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
-import CseIcon from '@/components/cse/core/CseIcon.vue';
-
 const APPEARANCE = {
     ACTIVE: {opacity: 1.0, color: '#888'},
     INACTIVE: {opacity: 0.5, color: '#888'},
@@ -110,10 +111,6 @@ const CANCELLATION_EVENTS = ['keydown', 'mousedown'];
 
 export default {
     name: 'dropdown-toolbar',
-    components:
-    {
-        CseIcon
-    },
     props:
     {
         size:
@@ -199,6 +196,9 @@ export default {
         _updatePosition()
         {
             const container = this.$refs.container;
+            if(!container)
+                return;
+
             const containerBounds = container.getBoundingClientRect();
 
             container.style.left = (this.desktopBounds.left + ((this.desktopBounds.w - containerBounds.width)/2)) + 'px';

@@ -9,19 +9,19 @@
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-select
+                <b-dropdown
                     v-model="selectedOption"
                     label="Entity Type:"
                     :items="entityOptions"
                     item-text="text"
                     item-value="id"
                 />
-                <v-btn
+                <b-button
                     :disabled="!selectedOption"
                     @click="createEntity"
                 >
                     Create
-                </v-btn>
+                </b-button>
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>

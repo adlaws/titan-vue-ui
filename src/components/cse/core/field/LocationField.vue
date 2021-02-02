@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-text-field
+        <b-input
             v-model="currentLocation"
             :messages="messages"
             :error="!isValid"
@@ -25,7 +25,7 @@ export default {
             type: [Object, String],
             default: null,
         },
-        // these are Vuetify <v-text-field> properties which we allow and pass through
+        // these are Vuetify <b-input> properties which we allow and pass through
         //   Ref: https://vuetifyjs.com/en/api/v-text-field/#props
         disabled: Boolean,
         readonly: Boolean,

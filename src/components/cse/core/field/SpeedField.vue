@@ -1,5 +1,5 @@
 <template>
-    <v-text-field
+    <b-input
         v-model="currentValue"
         class="input-align-right"
         hide-details="auto"
@@ -16,7 +16,7 @@
             v-if="showUnitOptions"
             slot="append-outer"
         >
-            <v-select
+            <b-dropdown
                 v-model="currentUnits"
                 :items="UNIT_OPTIONS"
                 item-text="unit.abbr"
@@ -26,7 +26,7 @@
                 :readonly="readonly"
             />
         </template>
-    </v-text-field>
+    </b-input>
 </template>
 
 <script>
@@ -70,7 +70,7 @@ export default {
             type: [Boolean, String],
             default: false
         },
-        // these are Vuetify <v-text-field> properties which we allow and pass through
+        // these are Vuetify <b-input> properties which we allow and pass through
         //   Ref: https://vuetifyjs.com/en/api/v-text-field/#props
         disabled: Boolean,
         readonly: Boolean,

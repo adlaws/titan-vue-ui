@@ -10,7 +10,7 @@
             You don't have permission to view this.
         </template>
         <template #icon>
-            <cse-icon icon="lock" />
+            <b-icon icon="lock" />
         </template>
     </error-base>
 </template>
@@ -18,13 +18,12 @@
 <script>
 import { Color } from '@/assets/js/utils/color-utils.js';
 
-import CseIcon from '@/components/cse/core/CseIcon.vue';
 import ErrorBase from './ErrorBase.vue';
 
 export default {
     name: 'http403',
     components: {
-        ErrorBase, CseIcon
+        ErrorBase,
     },
     data()
     {

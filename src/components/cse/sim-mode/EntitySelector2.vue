@@ -13,238 +13,231 @@
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
                 <div class="filter-buttons-container">
                     <div class="header">
-                        <v-btn-toggle
-                            v-model="entitiesObjects"
-                            mandatory
-                        >
-                            <v-btn
-                                x-small
-                                class="ellipsis-overflow no-text-transform"
-                                :color="(entitiesObjects==='entities')?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                value="entities"
-                            >
-                                Entities
-                            </v-btn>
-                            <v-btn
-                                x-small
-                                class="ellipsis-overflow no-text-transform"
-                                :color="(entitiesObjects==='objects')?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                value="objects"
-                            >
-                                Objects
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn
-                            x-small
-                            class="float-right"
-                            :color="verifiedOnly?ACTIVE_VERIFIED_BUTTON_COLOR:''"
-                            :class="{'v-btn--active': verifiedOnly}"
+                        <b-button
+                            size="is-small"
+                            style="float:right;"
+                            :class="{'is-success': verifiedOnly}"
                             @click="verifiedOnly=!verifiedOnly"
                         >
                             Verified
-                        </v-btn>
+                        </b-button>
+                        <b-field
+                            class="mb-0"
+                        >
+                            <b-radio-button
+                                v-model="entitiesObjects"
+                                native-value="entities"
+                                size="is-small"
+                                class="ellipsis-overflow no-text-transform"
+                            >
+                                Entities
+                            </b-radio-button>
+                            <b-radio-button
+                                v-model="entitiesObjects"
+                                native-value="objects"
+                                size="is-small"
+                                class="ellipsis-overflow no-text-transform"
+                            >
+                                Objects
+                            </b-radio-button>
+                        </b-field>
                     </div>
                     <div class="left-filters-container">
-                        <v-btn
-                            x-small
+                        <b-button
+                            size="is-small"
                             class="ellipsis-overflow no-text-transform"
-                            :color="(allowEntities?isTypeCharacter:isTypeScenery)?ACTIVE_FILTER_BUTTON_COLOR:''"
-                            :class="{'v-btn--active': (allowEntities?isTypeCharacter:isTypeScenery)}"
+                            :class="{'is-primary': (allowEntities?isTypeCharacter:isTypeScenery)}"
                             @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.CHARACTER:BLUEPRINT_VALUE.TYPE.SCENERY)"
                         >
                             {{ allowEntities?'Characters':'Scenery' }}
-                        </v-btn>
-                        <v-btn-toggle
+                        </b-button>
+                        <b-field
                             v-if="allowEntities"
-                            v-model="characterSubtype"
-                            style="display:flex;"
+                            class="mb-0"
                         >
-                            <v-btn
+                            <b-radio-button
                                 v-for="(option, idx) in characterSubtypeOptions"
                                 :key="`character-subtype-${idx}`"
-                                x-small
-                                :color="(characterSubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
+                                v-model="characterSubtype"
+                                size="is-small"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
+                                :class="{'is-primary':(characterSubtype===option.value)}"
                                 :style="`max-width:${(100/characterSubtypeOptions.length)}%;`"
-                                :value="option.value"
+                                :native-value="option.value"
                                 :disabled="!allowCharacterTypes"
                             >
                                 {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn-toggle
+                            </b-radio-button>
+                        </b-field>
+                        <b-field
                             v-if="allowObjects"
-                            v-model="scenerySubtype"
-                            style="display:flex;"
+                            class="mb-0"
                         >
-                            <v-btn
+                            <b-radio-button
                                 v-for="(option, idx) in scenerySubtypeOptions"
                                 :key="`scenery-subtype-${idx}`"
-                                x-small
-                                :color="(scenerySubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
+                                v-model="scenerySubtype"
+                                :native-value="option.value"
+                                size="is-small"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
+                                :class="{'is-primary':(scenerySubtype===option.value)}"
                                 :style="`max-width:${(100/scenerySubtypeOptions.length)}%;`"
-                                :value="option.value"
                                 :disabled="!allowSceneryTypes"
                             >
                                 {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn-toggle
+                            </b-radio-button>
+                        </b-field>
+                        <b-field
                             v-if="allowEntities"
-                            v-model="characterDetailFilter"
-                            style="display:flex;"
+                            class="mb-0"
                         >
-                            <v-btn
+                            <b-radio-button
                                 v-for="(option, idx) in characterDetailOptions"
                                 :key="`character-detail-${idx}`"
-                                x-small
-                                :color="(characterDetailFilter===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
+                                v-model="characterDetailFilter"
+                                :native-value="option.value"
+                                size="is-small"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
+                                :class="{'is-primary':(characterDetailFilter===option.value)}"
                                 :style="`max-width:${(100/characterDetailOptions.length)}%;`"
-                                :value="option.value"
                                 :disabled="!allowCharacterTypes"
                             >
                                 {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
+                            </b-radio-button>
+                        </b-field>
                     </div>
                     <div class="right-filters-container">
-                        <v-btn
-                            x-small
+                        <b-button
+                            size="is-small"
                             class="ellipsis-overflow no-text-transform"
-                            :class="{'v-btn--active': (allowEntities?isTypeVehicle:isTypeItem)}"
+                            :class="{'is-primary': (allowEntities?isTypeVehicle:isTypeItem)}"
                             :color="(allowEntities?isTypeVehicle:isTypeItem)?ACTIVE_FILTER_BUTTON_COLOR:''"
                             @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.VEHICLE:BLUEPRINT_VALUE.TYPE.ITEMS)"
                         >
                             {{ allowEntities?'Vehicles':'Items' }}
-                        </v-btn>
-                        <v-btn-toggle
+                        </b-button>
+                        <b-field
                             v-if="allowEntities"
-                            v-model="vehicleSubtype"
-                            style="display:flex;"
+                            class="mb-0"
                         >
-                            <v-btn
+                            <b-radio-button
                                 v-for="(option, idx) in vehicleSubtypeOptions"
                                 :key="`vehicle-subtype-${idx}`"
-                                x-small
-                                :color="(vehicleSubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
+                                v-model="vehicleSubtype"
+                                :native-value="option.value"
+                                size="is-small"
+                                :class="{'is-primary':(vehicleSubtype===option.value)}"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
                                 :style="`max-width:${(100/vehicleSubtypeOptions.length)}%;`"
-                                :value="option.value"
                                 :disabled="!allowVehicleTypes"
                             >
                                 {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn-toggle
+                            </b-radio-button>
+                        </b-field>
+                        <b-field
                             v-else-if="allowObjects"
-                            v-model="itemsSubtype"
-                            style="display:flex;"
+                            class="mb-0"
                         >
-                            <v-btn
+                            <b-button
                                 v-for="(option, idx) in itemsSubtypeOptions"
                                 :key="`vehicle-subtype-${idx}`"
-                                x-small
-                                :color="(itemsSubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
+                                v-model="itemsSubtype"
+                                :native-value="option.value"
+                                size="is-small"
+                                :class="{'is-primary':(itemsSubtype===option.value)}"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
                                 :style="`max-width:${(100/itemsSubtypeOptions.length)}%;`"
-                                :value="option.value"
                                 :disabled="!allowItemsTypes"
                             >
                                 {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn-toggle
+                            </b-button>
+                        </b-field>
+                        <b-field
                             v-if="allowEntities"
-                            v-model="vehicleDetailFilter"
-                            style="display:flex;"
+                            class="mb-0"
                         >
-                            <v-btn
+                            <b-radio-button
                                 v-for="(option, idx) in vehicleDetailOptions"
                                 :key="`vehicle-detail-${idx}`"
-                                x-small
-                                :color="(vehicleDetailFilter===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
+                                v-model="vehicleDetailFilter"
+                                :native-value="option.value"
+                                size="is-small"
+                                :class="{'is-primary':(vehicleDetailFilter===option.value)}"
                                 class="ellipsis-overflow no-text-transform"
                                 style="flex-grow:1;"
                                 :style="`max-width:${(100/vehicleDetailOptions.length)}%;`"
-                                :value="option.value"
                                 :disabled="!allowVehicleTypes || !vehicleSubtype"
                             >
                                 {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
+                            </b-radio-button>
+                        </b-field>
                     </div>
                 </div>
 
                 <!-- NOTE: a lot of inline styles here to make the layout work -->
                 <!--       it's definitely not ideal, -->
-                <v-form
-                    dense
-                    class="compact mt-4"
+                <div
+                    class="columns"
+                    style="height:32px;"
                 >
-                    <v-row
-                        style="height:32px;"
-                    >
-                        <v-col cols="6">
-                            <v-text-field
-                                v-model="searchText"
-                                label="Search"
-                                clearable
-                                append-icon="mdi-magnify"
-                            />
-                        </v-col>
-                        <v-col cols="6">
-                            <v-select
-                                v-model="countryFilter"
-                                label="Countries"
-                                item-value="numeric"
-                                dense
-                                attach
-                                chips
-                                multiple
-                                clearable
-                                :items="entityCountries"
-                                style="top:-20px;"
-                            >
-                                <template v-slot:selection="{ item, index }">
-                                    <v-chip
-                                        v-if="index < 2"
-                                        small
-                                        close
-                                        @click:close="countryFilter.splice(index,1)"
-                                    >
-                                        <country-flag :alpha2="item.alpha2" />
-                                    </v-chip>
-                                    <span
-                                        v-if="index === 2"
-                                        class="grey--text caption"
-                                        style="margin-top:16px;font-size:0.65rem !important;"
-                                    >
-                                        +{{ countryFilter.length - 2 }} more
-                                    </span>
-                                </template>
-                                <template v-slot:item="{ item, attrs }">
-                                    <v-checkbox
-                                        :value="attrs.inputValue"
-                                    />
-                                    <country-flag class="mr-2" :alpha2="item.alpha2" />
-                                    {{ item.name }}
-                                </template>
-                            </v-select>
-                        </v-col>
-                    </v-row>
-                </v-form>
+                    <div class="column is-6">
+                        <b-input
+                            v-model="searchText"
+                            label="Search"
+                            clearable
+                            append-icon="magnify"
+                        />
+                    </div>
+                    <div class="column is-6">
+                        <b-dropdown
+                            v-model="countryFilter"
+                            label="Countries"
+                            item-value="numeric"
+                            dense
+                            attach
+                            chips
+                            multiple
+                            clearable
+                            :items="entityCountries"
+                            style="top:-20px;"
+                        >
+                            <template v-slot:selection="{ item, index }">
+                                <b-chip
+                                    v-if="index < 2"
+                                    small
+                                    close
+                                    @click:close="countryFilter.splice(index,1)"
+                                >
+                                    <country-flag :alpha2="item.alpha2" />
+                                </b-chip>
+                                <span
+                                    v-if="index === 2"
+                                    class="grey--text caption"
+                                    style="margin-top:16px;font-size:0.65rem !important;"
+                                >
+                                    +{{ countryFilter.length - 2 }} more
+                                </span>
+                            </template>
+                            <template v-slot:item="{ item, attrs }">
+                                <b-checkbox
+                                    :value="attrs.inputValue"
+                                />
+                                <country-flag class="mr-2" :alpha2="item.alpha2" />
+                                {{ item.name }}
+                            </template>
+                        </b-dropdown>
+                    </div>
+                </div>
 
                 <div
                     style="display:flex;"
                 >
-                    <v-virtual-scroll
+                    <b-virtual-scroll
                         class="no-divider ml-0 mr-1"
                         style="flex-grow:0.975;"
                         :bench="15"
@@ -253,15 +246,15 @@
                         item-height="32px"
                     >
                         <template v-slot:default="{ item }">
-                            <v-list-item
+                            <b-list-item
                                 :key="item.entityName"
                                 dense
                                 class="entityListItem px-1"
                                 :class="{selected: item.entityName===(selectedEntity&&selectedEntity.entityName)}"
                                 @click="selectEntity(item)"
                             >
-                                <v-list-item-content>
-                                    <v-list-item-title>
+                                <b-list-item-content>
+                                    <b-list-item-title>
                                         <div style="display:flex;align-items: center;">
                                             <img-fallback
                                                 :src="`${PACKAGES_PATH}${item.Path}.gif`"
@@ -273,7 +266,7 @@
                                             <span style="flex-grow:1;max-width:205px;overflow:hidden;white-space:nowrap;font-size:85%;text-overflow:ellipsis;">
                                                 {{ item.Name }}
                                             </span>
-                                            <v-spacer />
+                                            <b-spacer />
                                             <country-flag
                                                 v-if="item.country"
                                                 :alpha2="item.country.alpha2"
@@ -281,19 +274,19 @@
                                                 size="24px"
                                             />
                                         </div>
-                                    </v-list-item-title>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-divider />
+                                    </b-list-item-title>
+                                </b-list-item-content>
+                            </b-list-item>
+                            <b-divider />
                         </template>
-                    </v-virtual-scroll>
+                    </b-virtual-scroll>
                     <div
                         style="flex-grow:0;width:150px;font-size:85%;display:flex;flex-direction:column;"
                         class="pl-2"
                     >
                         <div v-if="!selectedEntity">
                             <img-fallback
-                                key="sakjhdkjahskjdhksagdiueqgdi"
+                                key="something-unique-001"
                                 src="images/thumbnail-missing.png"
                                 width="130"
                                 height="65"
@@ -301,14 +294,14 @@
                         </div>
                         <div v-else>
                             <img-fallback
-                                key="sakjhdkjahskjdhksagdiueqgdsadusaodho8qowq"
+                                key="something-unique-002"
                                 :src="`${PACKAGES_PATH}${selectedEntity.Path}_rot.gif`"
                                 :fallback="[`${PACKAGES_PATH}${selectedEntity.Path}.gif`,'images/thumbnail-missing.png']"
                                 width="130"
                                 height="65"
                             />
                             {{ selectedEntity.Name }}
-                            <v-select
+                            <b-dropdown
                                 v-if="selectedEntity.loadouts.length"
                                 class="mt-4"
                                 dense
@@ -325,23 +318,23 @@
                     class="mt-2"
                     style="width:100%;display:flex;justify-content: flex-end;"
                 >
-                    <v-btn
+                    <b-button
                         color="secondary"
-                        x-small
+                        size="is-small"
                         :disabled="!canCreateEntity"
                         @click="placeEntity({empty:true})"
                     >
                         Place Empty
-                    </v-btn>
-                    <v-btn
+                    </b-button>
+                    <b-button
                         color="primary"
-                        x-small
+                        size="is-small"
                         class="ml-2"
                         :disabled="!canCreateEntity"
                         @click="placeEntity"
                     >
                         Place
-                    </v-btn>
+                    </b-button>
                 </div>
             </cse-desktop-window-content>
         </template>

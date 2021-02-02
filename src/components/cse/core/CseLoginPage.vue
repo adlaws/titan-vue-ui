@@ -4,46 +4,47 @@
             ref="particles"
             style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:201;"
         />
-        <v-dialog
+        <b-dialog
             v-model="isVisible"
             max-width="50%"
             eager
             persistent
         >
-            <v-card>
-                <v-card-title class="white--text accent">
-                    <v-icon class="mr-2 white--text">
-                        mdi-key-variant
-                    </v-icon>
+            <div class="card">
+                <div class="card-title white--text accent">
+                    <b-icon
+                        class="mr-2 white--text"
+                        :icon="key-variant"
+                    />
                     CSE Sign In
-                </v-card-title>
-                <v-card-text>
+                </div>
+                <div class="card-text">
                     <div style="min-height:25px;" />
-                    <v-form
+                    <b-form
                         ref="loginForm"
                         v-model="form.isValid"
                         style="position:relative;"
                     >
-                        <v-text-field
+                        <b-input
                             v-model="form.username"
                             label="Username"
-                            prepend-inner-icon="mdi-account"
+                            prepend-inner-icon="account"
                             autocomplete="current-username"
                             clearable
-                            clear-icon="mdi-close"
+                            clear-icon="close"
                             :rules="[form.rules.usernameRequired,]"
                             @click:clear="resetLoginFail();"
                             @input="resetLoginFail"
                             @keydown.enter="_doLogin()"
                         />
-                        <v-text-field
+                        <b-input
                             v-model="form.password"
                             label="Password"
                             :type="revealPassword ? 'text' : 'password'"
-                            prepend-inner-icon="mdi-key"
-                            :append-icon="revealPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                            prepend-inner-icon="key"
+                            :append-icon="revealPassword ? 'eye-off' : 'eye'"
                             autocomplete="current-password"
-                            clear-icon="mdi-close"
+                            clear-icon="close"
                             clearable
                             :rules="[form.rules.passwordRequired,]"
                             @click:clear="resetLoginFail();"
@@ -51,42 +52,44 @@
                             @input="resetLoginFail"
                             @keydown.enter="_doLogin()"
                         />
-                    </v-form>
+                    </b-form>
                     <div style="min-height:45px;">
-                        <v-alert
+                        <b-alert
                             v-if="loginFailed"
                             dense
                             border="left"
                             type="warning"
                         >
                             Please check your details and try again.
-                        </v-alert>
+                        </b-alert>
                     </div>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn
+                </div>
+                <div class="card-actions">
+                    <b-button
                         secondary
                         @click="_doCancel()"
                     >
                         Work Offline
-                        <v-icon right>
-                            mdi-network-off
-                        </v-icon>
-                    </v-btn>
-                    <v-spacer />
-                    <v-btn
+                        <b-icon
+                            right
+                            :icon="network-off"
+                        />
+                    </b-button>
+                    <b-spacer />
+                    <b-button
                         color="accent"
                         :disabled="!form.isValid"
                         @click="_doLogin"
                     >
                         Sign In
-                        <v-icon right>
-                            mdi-login
-                        </v-icon>
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+                        <b-icon
+                            right
+                            :icon="login"
+                        />
+                    </b-button>
+                </div>
+            </div>
+        </b-dialog>
     </div>
 </template>
 
@@ -175,10 +178,6 @@ const PARTICLES = {
 
 export default {
     name: 'cse-login-page',
-    components:
-    {
-        // ModalContainer, // CseIcon,
-    },
     data()
     {
         return {

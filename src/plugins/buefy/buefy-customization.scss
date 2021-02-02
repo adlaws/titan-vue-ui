@@ -1,0 +1,159 @@
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
+
+// Set your colors
+$primary: #08f;
+$primary-light: findLightColor($primary);
+$primary-dark: findDarkColor($primary);
+$primary-invert: findColorInvert($primary);
+
+// Lists and maps
+$custom-colors: null !default;
+$custom-shades: null !default;
+
+// Setup $colors to use as bulma classes (e.g. 'is-twitter')
+$colors: mergeColorMaps(
+    (
+        "white": (
+            $white,
+            $black,
+        ),
+        "black": (
+            $black,
+            $white,
+        ),
+        "light": (
+            $light,
+            $light-invert,
+        ),
+        "dark": (
+            $dark,
+            $dark-invert,
+        ),
+        "primary": (
+            $primary,
+            $primary-invert,
+            $primary-light,
+            $primary-dark,
+        ),
+        "link": (
+            $link,
+            $link-invert,
+            $link-light,
+            $link-dark,
+        ),
+        "info": (
+            $info,
+            $info-invert,
+            $info-light,
+            $info-dark,
+        ),
+        "success": (
+            $success,
+            $success-invert,
+            $success-light,
+            $success-dark,
+        ),
+        "warning": (
+            $warning,
+            $warning-invert,
+            $warning-light,
+            $warning-dark,
+        ),
+        "danger": (
+            $danger,
+            $danger-invert,
+            $danger-light,
+            $danger-dark,
+        ),
+    ),
+    $custom-colors
+);
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+
+// export some key SCSS varibles as CSS variables we can use elsewhere
+:root {
+    @each $name, $components in $colors {
+        --theme-#{unquote($name)}: #{nth($components, 1)};
+        $contrast: nth($components, 2);
+        @if length($components) > 3 {
+            $contrast: #{nth($components, 3)};
+        }
+        --theme-#{unquote($name)}-contrast: #{$contrast};
+    }
+}
+
+// Buefy/Bulma Style Overrides --------------------------------------------------------------------
+
+.b-tabs {
+    .tabs {
+        ul {
+            li{
+                &.is-active {
+                    background-color: rgba($primary, 0.25);
+                }
+                &:hover:not(.is-active) {
+                    background-color: rgba($primary, 0.125);
+                    a {
+                        color: rgba($primary, 0.5);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.compact {
+    $scale: 0.75;
+
+    .columns {
+        margin-left: -0.75rem * $scale;
+        margin-right: -0.75rem * $scale;
+        margin-top: -0.75rem * $scale;
+        &:not(:last-child) {
+            margin-bottom: 1.5rem / 4.0 * $scale;
+        }
+        .column {
+            padding: 0 0.5rem !important;
+        }
+    }
+
+    .control
+    {
+        padding-top: 0.25rem;
+    }
+
+    $ns: 0.5em * $scale;
+    $ew: 0.75em * $scale;
+    .pagination-previous, .pagination-next, .pagination-link, .pagination-ellipsis,
+    .file-cta, .file-name,
+    .select select,
+    .taginput .taginput-container.is-focusable,
+    .textarea, .input, .button {
+        padding: $ns $ew;
+        height: 2.5em * $scale;
+        line-height: 1.5 * $scale;
+    }
+
+    .select
+    {
+        height: auto;
+        select {
+            padding-right: 2rem;
+            padding-top: 0.25rem;
+        }
+
+        &:not(.is-loading)::after
+        {
+            right: 0.8em;
+        }
+    }
+}

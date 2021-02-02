@@ -46,7 +46,8 @@
             @click="status.health.head=Math.random()*100.0"
         >
             AK-74M Tracer + 1P78<br>
-            <v-icon>mdi-ammunition</v-icon>&times;16
+            <b-icon icon="ammunition" />
+            &times;16
         </div>
         <div
             style="position:absolute;display:block;width:auto;height:auto;right:16px;bottom:0px;"

@@ -5,9 +5,10 @@
         @click="expire"
     >
         <div class="notification-content">
-            <v-icon v-if="_icon">
-                {{ _icon }}
-            </v-icon>
+            <b-icon
+                v-if="_icon"
+                :icon="_icon"
+            />
             <div
                 v-else
                 class="icon-spacer"
@@ -27,10 +28,10 @@
 
 <script>
 const TYPE_ICON = {
-    info: 'mdi-information',
-    warning: 'mdi-alert',
-    error: 'mdi-alert-octagon',
-    success: 'mdi-check-circle',
+    info: 'information',
+    warning: 'alert',
+    error: 'alert-octagon',
+    success: 'check-circle',
 };
 
 export default {

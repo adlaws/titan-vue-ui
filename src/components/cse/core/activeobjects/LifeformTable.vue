@@ -1,8 +1,7 @@
 <template>
-    <v-card>
-        <v-data-table
+    <div>
+        <b-table
             dense
-            class="compact"
             item-key="uid"
             no-data-text="There are no lifeforms"
             no-results-text="No lifeforms match the filter criteria"
@@ -14,32 +13,30 @@
                     :alpha2="item.country.alpha2"
                 />
                 {{ item.country.alpha2.toUpperCase() }}
-                <v-icon :color="item.alliance==='blufor'?'#08f':'red'">
-                    mdi-triangle
-                </v-icon>
+                <b-icon
+                    icon="triangle"
+                    :color="item.alliance==='blufor'?'#08f':'red'"
+                />
             </template>
             <template v-slot:[`item.actions`]="{ item }">
-                <v-icon
+                <b-icon
+                    :icon="`lock${ item.locked === false ? '-open-variant-outline' : '' }`"
                     :color="item.locked?'warning':'secondary'"
                     @click="toggleLock(item)"
-                >
-                    mdi-lock{{ item.locked === false ? '-open-variant-outline' : '' }}
-                </v-icon>
-                <v-icon
+                />
+                <b-icon
+                    :icon="item.cameraLocked ? 'camera' : 'camera-outline'"
                     :color="item.cameraLocked?'primary':'secondary'"
                     @click="toggleCamera(item)"
-                >
-                    {{ item.cameraLocked ? 'mdi-camera' : 'mdi-camera-outline' }}
-                </v-icon>
-                <v-icon
+                />
+                <b-icon
+                    :icon="item.controlledBy === 'player' ? 'google-controller' : 'robot-outline'"
                     :color="item.controlledBy === 'player'?'error':'secondary'"
                     @click="toggleControl(item)"
-                >
-                    {{ item.controlledBy === 'player' ? 'mdi-google-controller' : 'mdi-robot-outline' }}
-                </v-icon>
+                />
             </template>
-        </v-data-table>
-    </v-card>
+        </b-table>
+    </div>
 </template>
 
 <script>

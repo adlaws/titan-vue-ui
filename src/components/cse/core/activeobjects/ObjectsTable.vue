@@ -1,7 +1,6 @@
 <template>
-    <v-data-table
+    <b-table
         dense
-        class="compact"
         item-key="uid"
         no-data-text="There are no objects"
         no-results-text="No objects match the filter criteria"
@@ -15,20 +14,18 @@
             {{ item.country.alpha2.toUpperCase() }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-            <v-icon
+            <b-icon
+                :icon="`lock${ item.locked === false ? '-open-variant-outline' : '' }`"
                 :color="item.locked?'warning':'secondary'"
                 @click="toggleLock(item)"
-            >
-                mdi-lock{{ item.locked === false ? '-open-variant-outline' : '' }}
-            </v-icon>
-            <v-icon
+            />
+            <b-icon
+                :icon="`camera${item.cameraLocked ? '' : '-outline'}`"
                 :color="item.cameraLocked?'primary':'secondary'"
                 @click="toggleCamera(item)"
-            >
-                {{ item.cameraLocked ? 'mdi-camera' : 'mdi-camera-outline' }}
-            </v-icon>
+            />
         </template>
-    </v-data-table>
+    </b-table>
 </template>
 
 <script>

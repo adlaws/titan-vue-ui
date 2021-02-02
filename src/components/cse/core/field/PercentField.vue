@@ -3,7 +3,7 @@
     Optionally specify min and max allowed values
 -->
 <template>
-    <v-text-field
+    <b-input
         v-model.trim.number="currentValue"
         class="input-align-right"
         hide-details="auto"
@@ -51,7 +51,7 @@ export default {
             default: 100.0,
             validator: (value) => !isNaN(parseFloat(value))
         },
-        // these are Vuetify <v-text-field> properties which we allow and pass through
+        // these are Vuetify <b-input> properties which we allow and pass through
         //   Ref: https://vuetifyjs.com/en/api/v-text-field/#props
         disabled: Boolean,
         readonly: Boolean,

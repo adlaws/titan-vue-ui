@@ -1,7 +1,6 @@
 <template>
-    <v-data-table
+    <b-table
         dense
-        class="compact"
         item-key="uid"
         no-data-text="There are no vehicles"
         no-results-text="No vehicles match the filter criteria"
@@ -16,42 +15,38 @@
                 :alpha2="item.country.alpha2"
             />
             {{ item.country.alpha2.toUpperCase() }}
-            <v-icon :color="item.alliance==='blufor'?'#08f':'red'">
-                mdi-triangle
-            </v-icon>
+            <b-icon :color="item.alliance==='blufor'?'#08f':'red'">
+                triangle
+            </b-icon>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-            <v-icon
+            <b-icon
+                :icon="`lock${ item.locked === false ? '-open-variant-outline' : '' }`"
                 :color="item.locked?'warning':'secondary'"
                 @click="toggleLock(item)"
-            >
-                mdi-lock{{ item.locked === false ? '-open-variant-outline' : '' }}
-            </v-icon>
-            <v-icon
+            />
+            <b-icon
+                :icon="`camera${item.cameraLocked ? '' : '-outline'}`"
                 :color="item.cameraLocked?'primary':'secondary'"
                 @click="toggleCamera(item)"
-            >
-                {{ item.cameraLocked ? 'mdi-camera' : 'mdi-camera-outline' }}
-            </v-icon>
-            <v-icon
+            />
+            <b-icon
+                :icon="item.controlledBy === 'player' ? 'google-controller' : 'robot-outline'"
                 :color="item.controlledBy === 'player'?'error':'secondary'"
                 @click="toggleControl(item)"
-            >
-                {{ item.controlledBy === 'player' ? 'mdi-google-controller' : 'mdi-robot-outline' }}
-            </v-icon>
+            />
         </template>
         <template v-slot:[`item.data-table-expand`]="{ item, isExpanded, expand }">
-            <v-btn
+            <b-button
                 v-if="item.crew && item.crew.length>0"
                 icon
                 @click="expand(!isExpanded)"
             >
-                <v-icon
-                    :class="{'mdi-rotate-180': isExpanded}"
-                >
-                    mdi-chevron-down
-                </v-icon>
-            </v-btn>
+                <b-icon
+                    :icon="chevron-down"
+                    :class="{'rotate-180': isExpanded}"
+                />
+            </b-button>
         </template>
         <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
@@ -70,7 +65,7 @@
                 </ul>
             </td>
         </template>
-    </v-data-table>
+    </b-table>
 </template>
 
 <script>

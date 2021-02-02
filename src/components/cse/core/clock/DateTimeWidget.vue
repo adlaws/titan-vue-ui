@@ -1,55 +1,53 @@
 <template>
     <div class="cse-desktop--date-time-widget">
-        <v-form class="compact">
-            <v-row>
-                <v-col cols="4">
-                    <v-text-field
-                        v-model="theTime"
-                        prepend-icon="mdi-clock-outline"
-                        label="Time"
-                    />
-                    <v-slider
-                        v-model="dayOffset"
-                        min="0"
-                        max="1439"
-                        step="1"
-                    />
-                </v-col>
-                <v-col cols="4">
-                    <v-menu
-                        ref="menu"
-                        v-model="menu"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                                v-model="theDate"
-                                label="Date"
-                                prepend-icon="mdi-calendar"
-                                v-bind="attrs"
-                                v-on="on"
-                            />
-                        </template>
-                        <v-date-picker
-                            ref="picker"
+        <div class="columns">
+            <div class="column is-4">
+                <b-input
+                    v-model="theTime"
+                    prepend-icon="clock-outline"
+                    label="Time"
+                />
+                <b-slider
+                    v-model="dayOffset"
+                    :min="0"
+                    :max="1439"
+                    :step="1"
+                />
+            </div>
+            <div class="column is-4">
+                <b-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                >
+                    <template v-slot:activator="{ on, attrs }">
+                        <b-input
                             v-model="theDate"
-                            :max="new Date().toISOString().substr(0, 10)"
-                            min="1950-01-01"
+                            label="Date"
+                            prepend-icon="calendar"
+                            v-bind="attrs"
+                            v-on="on"
                         />
-                    </v-menu>
-                </v-col>
-                <v-col cols="4">
-                    <v-select
-                        v-model="theTimezone"
-                        label="Timezone"
-                        :items="timezones"
+                    </template>
+                    <b-date-picker
+                        ref="picker"
+                        v-model="theDate"
+                        :max="new Date().toISOString().substr(0, 10)"
+                        min="1950-01-01"
                     />
-                </v-col>
-            </v-row>
-        </v-form>
+                </b-menu>
+            </div>
+            <div class="column is-4">
+                <b-dropdown
+                    v-model="theTimezone"
+                    label="Timezone"
+                    :items="timezones"
+                />
+            </div>
+        </div>
         {{ theTime }}
         <br>
         {{ dayOffset }}

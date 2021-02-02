@@ -32,7 +32,7 @@ Example usage:
         :offset="100"
         dock="e"
         title="EAST DOCK"
-        icon="mdi-ferry"
+        icon="ferry"
     >
         Welcome to the East Dock.
     </cse-dockable>
@@ -78,31 +78,29 @@ Events:
         </div>
         <div
             ref="handle"
-            v-ripple
             class="dockable-handle clickable"
             :class="{draggable: draggable}"
             @click="isCollapsed=!isCollapsed"
         >
-            <v-icon
+            <b-icon
                 class="dockable-trigger"
-            >
-                mdi-chevron-double-{{ chevronDirection }}
-            </v-icon>
+                :icon="`chevron-double-${chevronDirection}`"
+            />
             <div v-if="title" class="title-text">
                 {{ title }}
             </div>
-            <v-icon v-if="icon">
-                {{ icon }}
-            </v-icon>
-            <v-spacer v-if="draggable" />
-            <v-icon
+            <b-icon
+                v-if="icon"
+                :icon="icon"
+            />
+            <b-spacer v-if="draggable" />
+            <b-icon
                 v-if="draggable"
                 class="drag-handle"
+                :icon="`dots-${isDockEW?'vertical':'horizontal'}`"
                 @mousedown="handleDragStart"
                 @click.stop
-            >
-                mdi-dots-{{ isDockEW?'vertical':'horizontal' }}
-            </v-icon>
+            />
         </div>
     </div>
 </template>

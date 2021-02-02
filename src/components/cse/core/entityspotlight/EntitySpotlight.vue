@@ -41,7 +41,7 @@
                     />
                     <!-- eslint-disable-next-line vue/no-v-html -->
                     <span v-html="_highlight(item.Name)" />
-                    <v-icon>mdi-camera</v-icon>
+                    <b-icon icon="camera" />
                 </li>
             </ul>
         </div>
