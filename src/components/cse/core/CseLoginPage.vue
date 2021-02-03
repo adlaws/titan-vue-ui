@@ -2,7 +2,7 @@
     <div>
         <div
             ref="particles"
-            style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:201;"
+            style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:40;"
         />
         <b-dialog
             v-model="isVisible"
@@ -14,45 +14,39 @@
                 <div class="card-title white--text accent">
                     <b-icon
                         class="mr-2 white--text"
-                        :icon="key-variant"
+                        icon="key-variant"
                     />
                     CSE Sign In
                 </div>
                 <div class="card-text">
                     <div style="min-height:25px;" />
-                    <b-form
-                        ref="loginForm"
-                        v-model="form.isValid"
-                        style="position:relative;"
-                    >
-                        <b-input
-                            v-model="form.username"
-                            label="Username"
-                            prepend-inner-icon="account"
-                            autocomplete="current-username"
-                            clearable
-                            clear-icon="close"
-                            :rules="[form.rules.usernameRequired,]"
-                            @click:clear="resetLoginFail();"
-                            @input="resetLoginFail"
-                            @keydown.enter="_doLogin()"
-                        />
-                        <b-input
-                            v-model="form.password"
-                            label="Password"
-                            :type="revealPassword ? 'text' : 'password'"
-                            prepend-inner-icon="key"
-                            :append-icon="revealPassword ? 'eye-off' : 'eye'"
-                            autocomplete="current-password"
-                            clear-icon="close"
-                            clearable
-                            :rules="[form.rules.passwordRequired,]"
-                            @click:clear="resetLoginFail();"
-                            @click:append="resetLoginFail();revealPassword = !revealPassword;"
-                            @input="resetLoginFail"
-                            @keydown.enter="_doLogin()"
-                        />
-                    </b-form>
+                    <b-input
+                        v-model="form.username"
+                        label="Username"
+                        prepend-inner-icon="account"
+                        autocomplete="current-username"
+                        clearable
+                        clear-icon="close"
+                        :rules="[form.rules.usernameRequired,]"
+                        @click:clear="resetLoginFail();"
+                        @input="resetLoginFail"
+                        @keydown.enter="_doLogin()"
+                    />
+                    <b-input
+                        v-model="form.password"
+                        label="Password"
+                        :type="revealPassword ? 'text' : 'password'"
+                        prepend-inner-icon="key"
+                        :append-icon="revealPassword ? 'eye-off' : 'eye'"
+                        autocomplete="current-password"
+                        clear-icon="close"
+                        clearable
+                        :rules="[form.rules.passwordRequired,]"
+                        @click:clear="resetLoginFail();"
+                        @click:append="resetLoginFail();revealPassword = !revealPassword;"
+                        @input="resetLoginFail"
+                        @keydown.enter="_doLogin"
+                    />
                     <div style="min-height:45px;">
                         <b-alert
                             v-if="loginFailed"
@@ -67,24 +61,23 @@
                 <div class="card-actions">
                     <b-button
                         secondary
-                        @click="_doCancel()"
+                        @click.native="_doCancel"
                     >
                         Work Offline
                         <b-icon
                             right
-                            :icon="network-off"
+                            icon="network-off"
                         />
                     </b-button>
-                    <b-spacer />
                     <b-button
                         color="accent"
                         :disabled="!form.isValid"
-                        @click="_doLogin"
+                        @click.native="_doLogin"
                     >
                         Sign In
                         <b-icon
                             right
-                            :icon="login"
+                            icon="login"
                         />
                     </b-button>
                 </div>
@@ -198,7 +191,7 @@ export default {
     },
     mounted()
     {
-        this.inputElms = [... this.$refs.loginForm.$el.querySelectorAll('input')];
+        this.inputElms = []; // [... this.$refs.loginForm.$el.querySelectorAll('input')];
         window.particlesJS(this.$refs.particles, PARTICLES);
         // this._bindEvents(true);
     },
@@ -228,6 +221,7 @@ export default {
         },
         _doCancel()
         {
+            console.log('CANCEL');
             this.$router.push({name:'cse'});
         },
         /**
