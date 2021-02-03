@@ -1,36 +1,45 @@
 <template>
-    <v-text-field
-        v-model="currentValue"
-        class="input-align-right"
-        hide-details="auto"
-        :suffix="showUnitOptions?'':currentUnits.abbr"
-        :messages="messages"
-        :error="!isValid"
-        :disabled="disabled"
-        :hint="hint"
-        :label="label"
-        :placeholder="placeholder"
-        :readonly="readonly"
-    >
-        <template
-            v-if="showUnitOptions"
-            slot="append-outer"
+    <div class="p-field">
+        <label
+            v-if="label"
         >
-            <v-select
-                v-model="currentUnits"
-                :items="UNIT_OPTIONS"
-                item-text="unit.abbr"
-                item-value="unit"
-                style="max-width:4.5em;min-width:4.5em;"
+            {{ label }}
+        </label>
+        <div :class="{'p-inputgroup':showUnitOptions}">
+            <InputNumber
+                v-model="currentValue"
+                class="input-align-right"
+                hide-details="auto"
+                :suffix="showUnitOptions?'':currentUnits.abbr"
+                :messages="messages"
+                :class="{'p-invalid':!isValid}"
                 :disabled="disabled"
-                :readonly="readonly"
+                :placeholder="placeholder"
             />
-        </template>
-    </v-text-field>
+            <Dropdown
+                v-if="showUnitOptions"
+                v-model="currentUnits"
+                :options="UNIT_OPTIONS"
+                option-label="unit.abbr"
+                option-value="unit"
+                style="max-width:6rem;min-width:6rem;"
+                :disabled="disabled"
+            />
+        </div>
+        <small
+            v-if="messages||hint"
+            :class="{'p-invalid':!isValid}"
+        >
+            {{ messages||hint }}
+        </small>
+    </div>
 </template>
 
 <script>
 import Convert, { SPEED_UNITS, SPEED_UNIT_OPTIONS } from '@/assets/js/utils/convert-utils.js';
+
+import InputNumber from 'primevue/inputnumber';
+import Dropdown from 'primevue/dropdown';
 
 const CONVERTER = Convert.speed;
 const UNIT_OPTIONS = SPEED_UNIT_OPTIONS;
@@ -41,6 +50,10 @@ const FLOAT_REGEX = /^[+-]?\d+(\.\d+)?$/;
 
 export default {
     name: 'speed-field',
+    components:
+    {
+        InputNumber, Dropdown
+    },
     props:
     {
         value:

@@ -32,13 +32,29 @@ body {
 }
 
 // PrimeVue overrides -----------------------------------------------------------------------------
-.p-grid
-{
+.p-grid {
     margin-left: 0 !important;
     margin-right: 0 !important;
     margin-top: 0 !important;
 }
+
+.p-tabview {
+    .p-highlight {
+        a {
+            background-color: rgba(0,128,255,0.65) !important;
+        }
+    }
+}
+
 // ------------------------------------------------------------------------------------------------
+.input-align-right
+{
+    input
+    {
+        text-align: right;
+    }
+}
+
 .ellipsis-overflow
 {
     overflow: hidden;

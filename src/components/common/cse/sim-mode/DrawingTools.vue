@@ -99,9 +99,9 @@
 import {TITAN_MUTATION, TITAN_UI_MODE} from '@/assets/js/store/titan-manager.js';
 
 import Slider from 'primevue/slider';
-import Checkbox  from 'primevue/checkbox';
-import Button  from 'primevue/button';
-import SelectButton  from 'primevue/selectbutton';
+import Checkbox from 'primevue/checkbox';
+import Button from 'primevue/button';
+import SelectButton from 'primevue/selectbutton';
 
 import TitanUtils, { $isInOuterra, $tRenderToolbox } from '@/assets/js/titan/titan-utils.js';
 import { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';

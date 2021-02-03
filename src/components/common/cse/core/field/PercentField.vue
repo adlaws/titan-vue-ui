@@ -3,22 +3,43 @@
     Optionally specify min and max allowed values
 -->
 <template>
-    <v-text-field
-        v-model.trim.number="currentValue"
-        class="input-align-right"
-        hide-details="auto"
-        suffix="%"
-        :messages="messages"
-        :error="!isValid"
-        :disabled="disabled"
-        :hint="hint"
-        :label="label"
-        :placeholder="placeholder"
-        :readonly="readonly"
-    />
+    <div class="p-field">
+        <label
+            v-if="label"
+        >
+            {{ label }}
+        </label>
+        <InputNumber
+            v-model.trim.number="currentValue"
+            class="input-align-right"
+            hide-details="auto"
+            suffix="%"
+            style="width:99%;"
+            :class="{'p-invalid':!isValid}"
+            :disabled="disabled"
+            :hint="hint"
+            :placeholder="placeholder"
+            :readonly="readonly"
+        />
+        <Slider
+            v-model="currentValue"
+            :min="min"
+            :max="max"
+            style="width:99%;"
+        />
+        <small
+            v-if="messages||hint"
+            :class="{'p-invalid':!isValid}"
+        >
+            {{ messages||hint }}
+        </small>
+    </div>
 </template>
 
 <script>
+import InputNumber from 'primevue/inputnumber';
+import Slider from 'primevue/slider';
+
 const POSITIVE_FLOAT_REGEX = /^\d+(\.\d+)?$/;
 const FLOAT_REGEX = /^[+-]?\d+(\.\d+)?$/;
 
@@ -31,6 +52,10 @@ export default {
     //     // we don't actually need to bother specifying it here (see the `validate()` method)
     // event: 'input'
     // },
+    components:
+    {
+        InputNumber, Slider
+    },
     props:
     {
         value:
@@ -50,6 +75,10 @@ export default {
             type: [Number, String,],
             default: 100.0,
             validator: (value) => !isNaN(parseFloat(value))
+        },
+        slider: {
+            type: Boolean,
+            default: true,
         },
         // these are Vuetify <v-text-field> properties which we allow and pass through
         //   Ref: https://vuetifyjs.com/en/api/v-text-field/#props

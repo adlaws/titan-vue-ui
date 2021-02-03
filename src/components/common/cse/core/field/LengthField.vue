@@ -1,36 +1,53 @@
 <template>
-    <v-text-field
-        v-model="currentValue"
-        class="input-align-right"
-        hide-details="auto"
-        :suffix="showUnitOptions?'':currentUnits.abbr"
-        :messages="messages"
-        :error="!isValid"
-        :disabled="disabled"
-        :hint="hint"
-        :label="label"
-        :placeholder="placeholder"
-        :readonly="readonly"
-    >
-        <template
-            v-if="showUnitOptions"
-            slot="append-outer"
+    <div class="p-field">
+        <label
+            v-if="label"
         >
-            <v-select
-                v-model="currentUnits"
-                :items="UNIT_OPTIONS"
-                item-text="unit.abbr"
-                item-value="unit"
-                style="max-width:2.75em;min-width:2.75em;"
+            {{ label }}
+        </label>
+        <div :class="{'p-inputgroup':showUnitOptions}">
+            <InputNumber
+                v-model="currentValue"
+                class="input-align-right"
+                hide-details="auto"
+                :suffix="showUnitOptions?'':currentUnits.abbr"
+                :messages="messages"
+                :class="{'p-invalid':!isValid}"
                 :disabled="disabled"
-                :readonly="readonly"
+                :placeholder="placeholder"
             />
-        </template>
-    </v-text-field>
+            <Dropdown
+                v-if="showUnitOptions"
+                v-model="currentUnits"
+                :options="UNIT_OPTIONS"
+                option-label="unit.abbr"
+                option-value="unit"
+                style="max-width:5rem;min-width:5rem;"
+                :disabled="disabled"
+            />
+        </div>
+        <Slider
+            v-if="useSlider"
+            v-model="currentValue"
+            :min="min"
+            :max="max"
+            style="width:100%;"
+        />
+        <small
+            v-if="messages||hint"
+            :class="{'p-invalid':!isValid}"
+        >
+            {{ messages||hint }}
+        </small>
+    </div>
 </template>
 
 <script>
 import Convert, { LENGTH_UNITS, LENGTH_UNIT_OPTIONS } from '@/assets/js/utils/convert-utils.js';
+
+import InputNumber from 'primevue/inputnumber';
+import Dropdown from 'primevue/dropdown';
+import Slider from 'primevue/slider';
 
 const CONVERTER = Convert.length;
 const UNIT_OPTIONS = LENGTH_UNIT_OPTIONS;
@@ -41,6 +58,10 @@ const FLOAT_REGEX = /^[+-]?\d+(\.\d+)?$/;
 
 export default {
     name: 'length-field',
+    components:
+    {
+        InputNumber, Dropdown, Slider
+    },
     props:
     {
         value:
@@ -60,6 +81,10 @@ export default {
             default: null,
             validator: (value) => value === null || !isNaN(parseFloat(value))
         },
+        slider: {
+            type: Boolean,
+            default: true,
+        },
         displayUnits:
         {
             type: Object,
@@ -73,7 +98,6 @@ export default {
         // these are Vuetify <v-text-field> properties which we allow and pass through
         //   Ref: https://vuetifyjs.com/en/api/v-text-field/#props
         disabled: Boolean,
-        readonly: Boolean,
         hint: { type: String, default: undefined },
         label: { type: String, default: undefined },
         placeholder: { type: String, default: undefined },
@@ -88,6 +112,10 @@ export default {
     },
     computed:
     {
+        useSlider()
+        {
+            return true; // this.slider && this.min !== null && this.max !== null;
+        },
         isValid()
         {
             if(!this.validationRegex.test(this.currentValue))
