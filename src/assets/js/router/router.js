@@ -7,9 +7,9 @@ import Http404 from '@/components/error/404';
 import Http500 from '@/components/error/500';
 
 import Root from '@/components/common/Root.vue';
-import CseLoginPage from '@/components/cse/core/CseLoginPage.vue';
-import CseDesktop from '@/components/cse/core/CseDesktop.vue';
-import CseFpsOverlay from '@/components/cse/core/CseFpsOverlay.vue';
+import CseLoginPage from '@/components/cse/CseLoginPage.vue';
+import CseDesktop from '@/components/cse/CseDesktop.vue';
+import CseFpsOverlay from '@/components/common/cse/CseFpsOverlay.vue';
 
 Vue.use(VueRouter);
 

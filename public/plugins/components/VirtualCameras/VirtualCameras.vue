@@ -16,11 +16,11 @@
                     item-value="id"
                 >
                     <template v-slot:selection="{ item }">
-                        <v-icon>{{ item.icon }}</v-icon>
+                        <cse-icon :icon="item.icon" />
                         <span class="ml-2">{{ item.text }}</span>
                     </template>
                     <template v-slot:item="{ item }">
-                        <v-icon>{{ item.icon }}</v-icon>
+                        <cse-icon :icon="item.icon" />
                         <span class="ml-2">{{ item.text }}</span>
                     </template>
                 </v-select>
