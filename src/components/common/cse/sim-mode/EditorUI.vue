@@ -3,11 +3,10 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <world-state />
+        <entity-selector2 />
 
         <!--
         <cse-scenario-objects />
-        <entity-selector2 />
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
         <waypoint-settings />
 
@@ -35,6 +34,7 @@
         PrimeVue - DONE:
         <time-slider />
         <drawing-tools />
+        <world-state />
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
 
         -->

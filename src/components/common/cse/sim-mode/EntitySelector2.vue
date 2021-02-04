@@ -4,8 +4,8 @@
         icon="car"
         :x="50"
         :y="50"
-        :width="485"
-        :height="465"
+        :width="470"
+        :height="500"
         :closable="false"
         :resizable="true"
     >
@@ -13,280 +13,194 @@
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
                 <div class="filter-buttons-container">
                     <div class="header">
-                        <v-btn-toggle
+                        <ToggleButton
+                            v-model="verifiedOnly"
+                            on-label="Verified"
+                            off-label="Verified"
+                            class="p-button-xsm"
+                            :class="{'p-button-success':verifiedOnly}"
+                            style="float:right;"
+                        />
+                        <SelectButton
                             v-model="entitiesObjects"
-                            mandatory
-                        >
-                            <v-btn
-                                x-small
-                                class="ellipsis-overflow no-text-transform"
-                                :color="(entitiesObjects==='entities')?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                value="entities"
-                            >
-                                Entities
-                            </v-btn>
-                            <v-btn
-                                x-small
-                                class="ellipsis-overflow no-text-transform"
-                                :color="(entitiesObjects==='objects')?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                value="objects"
-                            >
-                                Objects
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn
-                            x-small
-                            class="float-right"
-                            :color="verifiedOnly?ACTIVE_VERIFIED_BUTTON_COLOR:''"
-                            :class="{'v-btn--active': verifiedOnly}"
-                            @click="verifiedOnly=!verifiedOnly"
-                        >
-                            Verified
-                        </v-btn>
+                            :options="[{label:'Entities',value:'entities'},{label:'Objects',value:'objects'}]"
+                            class="p-button-xsm"
+                            data-key="value"
+                            option-label="label"
+                            option-value="value"
+                        />
                     </div>
                     <div class="left-filters-container">
-                        <v-btn
-                            x-small
-                            class="ellipsis-overflow no-text-transform"
-                            :color="(allowEntities?isTypeCharacter:isTypeScenery)?ACTIVE_FILTER_BUTTON_COLOR:''"
-                            :class="{'v-btn--active': (allowEntities?isTypeCharacter:isTypeScenery)}"
+                        <Button
+                            class="p-button-xsm"
+                            :label="allowEntities?'Characters':'Scenery'"
                             @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.CHARACTER:BLUEPRINT_VALUE.TYPE.SCENERY)"
-                        >
-                            {{ allowEntities?'Characters':'Scenery' }}
-                        </v-btn>
-                        <v-btn-toggle
+                        />
+                        <SelectButton
                             v-if="allowEntities"
                             v-model="characterSubtype"
-                            style="display:flex;"
-                        >
-                            <v-btn
-                                v-for="(option, idx) in characterSubtypeOptions"
-                                :key="`character-subtype-${idx}`"
-                                x-small
-                                :color="(characterSubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                class="ellipsis-overflow no-text-transform"
-                                style="flex-grow:1;"
-                                :style="`max-width:${(100/characterSubtypeOptions.length)}%;`"
-                                :value="option.value"
-                                :disabled="!allowCharacterTypes"
-                            >
-                                {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn-toggle
+                            class="p-button-xsm flex-grow"
+                            :options="characterSubtypeOptions"
+                            :disabled="!allowCharacterTypes"
+                            data-key="value"
+                            option-label="label"
+                            option-value="value"
+                            option-disabled="isDisabled"
+                        />
+                        <SelectButton
                             v-if="allowObjects"
                             v-model="scenerySubtype"
-                            style="display:flex;"
-                        >
-                            <v-btn
-                                v-for="(option, idx) in scenerySubtypeOptions"
-                                :key="`scenery-subtype-${idx}`"
-                                x-small
-                                :color="(scenerySubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                class="ellipsis-overflow no-text-transform"
-                                style="flex-grow:1;"
-                                :style="`max-width:${(100/scenerySubtypeOptions.length)}%;`"
-                                :value="option.value"
-                                :disabled="!allowSceneryTypes"
-                            >
-                                {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn-toggle
+                            class="p-button-xsm flex-grow"
+                            :options="scenerySubtypeOptions"
+                            data-key="value"
+                            option-label="label"
+                            option-value="value"
+                        />
+                        <SelectButton
                             v-if="allowEntities"
                             v-model="characterDetailFilter"
-                            style="display:flex;"
-                        >
-                            <v-btn
-                                v-for="(option, idx) in characterDetailOptions"
-                                :key="`character-detail-${idx}`"
-                                x-small
-                                :color="(characterDetailFilter===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                class="ellipsis-overflow no-text-transform"
-                                style="flex-grow:1;"
-                                :style="`max-width:${(100/characterDetailOptions.length)}%;`"
-                                :value="option.value"
-                                :disabled="!allowCharacterTypes"
-                            >
-                                {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
+                            class="p-button-xsm flex-grow"
+                            :options="characterDetailOptions"
+                            :disabled="!allowCharacterTypes"
+                            data-key="value"
+                            option-label="label"
+                            option-value="value"
+                        />
                     </div>
-                    <div class="right-filters-container">
-                        <v-btn
-                            x-small
-                            class="ellipsis-overflow no-text-transform"
-                            :class="{'v-btn--active': (allowEntities?isTypeVehicle:isTypeItem)}"
-                            :color="(allowEntities?isTypeVehicle:isTypeItem)?ACTIVE_FILTER_BUTTON_COLOR:''"
+                    <div
+                        class="right-filters-container"
+                    >
+                        <Button
+                            class="p-button-xsm"
+                            :label="allowEntities?'Vehicles':'Items'"
                             @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.VEHICLE:BLUEPRINT_VALUE.TYPE.ITEMS)"
-                        >
-                            {{ allowEntities?'Vehicles':'Items' }}
-                        </v-btn>
-                        <v-btn-toggle
+                        />
+                        <SelectButton
                             v-if="allowEntities"
                             v-model="vehicleSubtype"
-                            style="display:flex;"
-                        >
-                            <v-btn
-                                v-for="(option, idx) in vehicleSubtypeOptions"
-                                :key="`vehicle-subtype-${idx}`"
-                                x-small
-                                :color="(vehicleSubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                class="ellipsis-overflow no-text-transform"
-                                style="flex-grow:1;"
-                                :style="`max-width:${(100/vehicleSubtypeOptions.length)}%;`"
-                                :value="option.value"
-                                :disabled="!allowVehicleTypes"
-                            >
-                                {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn-toggle
+                            :options="vehicleSubtypeOptions"
+                            class="p-button-xsm flex-grow"
+                            data-key="value"
+                            option-label="label"
+                            option-value="value"
+                        />
+                        <SelectButton
                             v-else-if="allowObjects"
                             v-model="itemsSubtype"
-                            style="display:flex;"
-                        >
-                            <v-btn
-                                v-for="(option, idx) in itemsSubtypeOptions"
-                                :key="`vehicle-subtype-${idx}`"
-                                x-small
-                                :color="(itemsSubtype===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                class="ellipsis-overflow no-text-transform"
-                                style="flex-grow:1;"
-                                :style="`max-width:${(100/itemsSubtypeOptions.length)}%;`"
-                                :value="option.value"
-                                :disabled="!allowItemsTypes"
-                            >
-                                {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
-                        <v-btn-toggle
+                            :options="itemsSubtypeOptions"
+                            class="p-button-xsm flex-grow"
+                            data-key="value"
+                            option-label="label"
+                            option-value="value"
+                            style="flex-grow:1;"
+                        />
+                        <SelectButton
                             v-if="allowEntities"
                             v-model="vehicleDetailFilter"
-                            style="display:flex;"
-                        >
-                            <v-btn
-                                v-for="(option, idx) in vehicleDetailOptions"
-                                :key="`vehicle-detail-${idx}`"
-                                x-small
-                                :color="(vehicleDetailFilter===option.value)?ACTIVE_FILTER_BUTTON_COLOR:''"
-                                class="ellipsis-overflow no-text-transform"
-                                style="flex-grow:1;"
-                                :style="`max-width:${(100/vehicleDetailOptions.length)}%;`"
-                                :value="option.value"
-                                :disabled="!allowVehicleTypes || !vehicleSubtype"
-                            >
-                                {{ option.label }}
-                            </v-btn>
-                        </v-btn-toggle>
+                            :options="vehicleDetailOptions"
+                            :disabled="!vehicleSubtype"
+                            class="p-button-xsm flex-grow"
+                            data-key="value"
+                            option-label="label"
+                            option-value="value"
+                        />
                     </div>
                 </div>
 
                 <!-- NOTE: a lot of inline styles here to make the layout work -->
                 <!--       it's definitely not ideal, -->
-                <v-form
-                    dense
-                    class="compact mt-4"
+                <div
+                    class="p-grid"
                 >
-                    <v-row
-                        style="height:32px;"
-                    >
-                        <v-col cols="6">
-                            <v-text-field
-                                v-model="searchText"
-                                label="Search"
-                                clearable
-                                append-icon="mdi-magnify"
-                            />
-                        </v-col>
-                        <v-col cols="6">
-                            <v-select
-                                v-model="countryFilter"
-                                label="Countries"
-                                item-value="numeric"
-                                dense
-                                attach
-                                chips
-                                multiple
-                                clearable
-                                :items="entityCountries"
-                                style="top:-20px;"
-                            >
-                                <template v-slot:selection="{ item, index }">
-                                    <v-chip
-                                        v-if="index < 2"
-                                        small
-                                        close
-                                        @click:close="countryFilter.splice(index,1)"
-                                    >
-                                        <country-flag :alpha2="item.alpha2" />
-                                    </v-chip>
-                                    <span
-                                        v-if="index === 2"
-                                        class="grey--text caption"
-                                        style="margin-top:16px;font-size:0.65rem !important;"
-                                    >
-                                        +{{ countryFilter.length - 2 }} more
-                                    </span>
-                                </template>
-                                <template v-slot:item="{ item, attrs }">
-                                    <v-checkbox
-                                        :value="attrs.inputValue"
+                    <div class="p-col-6">
+                        <InputText
+                            v-model="searchText"
+                            label="Search"
+                            append-icon="mdi-magnify"
+                            class="p-inputtext-sm"
+                        />
+                    </div>
+                    <div class="p-col-6">
+                        <MultiSelect
+                            v-model="countryFilter"
+                            :options="entityCountries"
+                            style="width:210px;"
+                            data-key="alpha2"
+                            option-label="name"
+                            placeholder="Select Countries"
+                            class="multiselect-custom p-multiselect-sm"
+                            :filter="true"
+                        >
+                            <template #value="slotProps">
+                                <span
+                                    v-for="(option, idx) of slotProps.value"
+                                    :key="option.alpha2"
+                                    class="country-item country-item-value"
+                                >
+                                    <country-flag
+                                        v-if="idx<5"
+                                        :alpha2="option.alpha2"
+                                        :class="{'p-ml-1':idx>0}"
                                     />
-                                    <country-flag class="mr-2" :alpha2="item.alpha2" />
-                                    {{ item.name }}
+                                    <span v-if="idx===5">
+                                        + {{ slotProps.value.length - 5 }}
+                                    </span>
+                                </span>
+                                <template v-if="!slotProps.value || slotProps.value.length === 0">
+                                    Select Countries
                                 </template>
-                            </v-select>
-                        </v-col>
-                    </v-row>
-                </v-form>
+                            </template>
+                            <template #option="slotProps">
+                                <country-flag class="mr-2" :alpha2="slotProps.option.alpha2" />
+                                {{ slotProps.option.name }}
+                            </template>
+                        </MultiSelect>
+                    </div>
+                </div>
 
                 <div
                     style="display:flex;"
                 >
-                    <v-virtual-scroll
-                        class="no-divider ml-0 mr-1"
-                        style="flex-grow:0.975;"
-                        :bench="15"
-                        :items="filteredEntities"
-                        height="256"
-                        item-height="32px"
+                    <DataTable
+                        :value="filteredEntities"
+                        class="p-datatable-sm no-headers"
+                        style="width:300px;min-height:230px;"
+                        selection-mode="single"
+                        data-key="Name"
+                        :scrollable="true"
+                        :rows="filteredEntities.length"
+                        :total-records="filteredEntities.length"
+                        scroll-height="230px"
+                        @row-select="selectEntity"
                     >
-                        <template v-slot:default="{ item }">
-                            <v-list-item
-                                :key="item.entityName"
-                                dense
-                                class="entityListItem px-1"
-                                :class="{selected: item.entityName===(selectedEntity&&selectedEntity.entityName)}"
-                                @click="selectEntity(item)"
-                            >
-                                <v-list-item-content>
-                                    <v-list-item-title>
-                                        <div style="display:flex;align-items: center;">
-                                            <img-fallback
-                                                :src="`${PACKAGES_PATH}${item.Path}.gif`"
-                                                fallback="images/thumbnail-missing.png"
-                                                width="48"
-                                                height="24"
-                                                class="mr-1"
-                                            />
-                                            <span style="flex-grow:1;max-width:205px;overflow:hidden;white-space:nowrap;font-size:85%;text-overflow:ellipsis;">
-                                                {{ item.Name }}
-                                            </span>
-                                            <v-spacer />
-                                            <country-flag
-                                                v-if="item.country"
-                                                :alpha2="item.country.alpha2"
-                                                :title="item.country.name"
-                                                size="24px"
-                                            />
-                                        </div>
-                                    </v-list-item-title>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-divider />
-                        </template>
-                    </v-virtual-scroll>
+                        <Column
+                            header="Items"
+                        >
+                            <template #body="slotProps">
+                                <div style="display:flex;">
+                                    <img-fallback
+                                        :src="`${PACKAGES_PATH}${slotProps.data.Path}.gif`"
+                                        fallback="images/thumbnail-missing.png"
+                                        width="48"
+                                        height="24"
+                                        class="mr-1"
+                                    />
+                                    <span
+                                        style="flex-grow:1;max-width:205px;overflow:hidden;white-space:nowrap;font-size:85%;text-overflow:ellipsis;"
+                                    >
+                                        {{ slotProps.data.Name }}
+                                    </span>
+                                    <country-flag
+                                        v-if="slotProps.data.country"
+                                        :alpha2="slotProps.data.country.alpha2"
+                                        :title="slotProps.data.country.name"
+                                        size="24px"
+                                    />
+                                </div>
+                            </template>
+                        </Column>
+                    </DataTable>
+
                     <div
                         style="flex-grow:0;width:150px;font-size:85%;display:flex;flex-direction:column;"
                         class="pl-2"
@@ -308,13 +222,12 @@
                                 height="65"
                             />
                             {{ selectedEntity.Name }}
-                            <v-select
+                            <Dropdown
                                 v-if="selectedEntity.loadouts.length"
-                                class="mt-4"
-                                dense
+                                class="p-mt-4"
                                 label="Loadout"
-                                :items="selectedEntity.loadouts"
-                                item-text="name"
+                                :options="selectedEntity.loadouts"
+                                option-label="name"
                                 return-object
                             />
                         </div>
@@ -325,23 +238,20 @@
                     class="mt-2"
                     style="width:100%;display:flex;justify-content: flex-end;"
                 >
-                    <v-btn
-                        color="secondary"
-                        x-small
+                    <Button
+                        class="p-button-xsm"
                         :disabled="!canCreateEntity"
                         @click="placeEntity({empty:true})"
                     >
                         Place Empty
-                    </v-btn>
-                    <v-btn
-                        color="primary"
-                        x-small
-                        class="ml-2"
+                    </Button>
+                    <Button
+                        class="p-ml-2 p-button-xsm"
                         :disabled="!canCreateEntity"
                         @click="placeEntity"
                     >
                         Place
-                    </v-btn>
+                    </Button>
                 </div>
             </cse-desktop-window-content>
         </template>
@@ -353,6 +263,16 @@ import 'flag-icon-css/sass/flag-icon.scss';
 
 import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
 import TitanUtils, { $tCrewInterface, PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
+import UIUtils from '@/assets/js/utils/ui-utils.js';
+
+import Button from 'primevue/button';
+import ToggleButton from 'primevue/togglebutton';
+import SelectButton from 'primevue/selectbutton';
+import InputText from 'primevue/inputtext';
+import Dropdown from 'primevue/dropdown';
+import MultiSelect from 'primevue/multiselect';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 
 import ImgFallback from '@/components/common/cse/core/ImgFallback.vue';
 import CountryFlag from '@/components/common/cse/core/CountryFlag.vue';
@@ -409,7 +329,7 @@ const BLUEPRINT_VALUE = {
 // eslint-disable-next-line no-unused-vars
 const SUBTYPE_FILTER_OPTIONS = {
     [BLUEPRINT_VALUE.TYPE.CHARACTER]:[
-        {label:'Military', value:BLUEPRINT_VALUE.SUBTYPE.MILITARY},
+        {label:'Military', value:BLUEPRINT_VALUE.SUBTYPE.MILITARY, isDisabled: true},
         {label:'Civilian', value:BLUEPRINT_VALUE.SUBTYPE.CIVILIAN},
         {label:'Animal', value:BLUEPRINT_VALUE.SUBTYPE.ANIMAL},
     ],
@@ -432,7 +352,7 @@ const SUBTYPE_FILTER_OPTIONS = {
 
 const DETAIL_FILTER_OPTIONS = {
     [BLUEPRINT_VALUE.SUBTYPE.CHARACTER]:[
-        {label:'Male', value:BLUEPRINT_VALUE.DETAIL.MALE},
+        {label:'Male', value:BLUEPRINT_VALUE.DETAIL.MALE, isDisabled: true},
         {label:'Female', value:BLUEPRINT_VALUE.DETAIL.FEMALE},
     ],
     [BLUEPRINT_VALUE.SUBTYPE.AIR]:[
@@ -459,6 +379,7 @@ export default {
     name: 'entity-selector2',
     components:
     {
+        Button, ToggleButton, SelectButton, Dropdown, InputText, MultiSelect, DataTable, Column,
         ImgFallback, CountryFlag,
     },
     data()
@@ -481,6 +402,8 @@ export default {
             vehicleDetailFilter: null,
             // vehicleDetailOptions is a computed value, depends on vehicle subtype
             countryFilter: [],
+            tableSelection: null,
+            virtualFilteredEntities:[],
             PACKAGES_PATH,
             BLUEPRINT_VALUE,
             ACTIVE_FILTER_BUTTON_COLOR,
@@ -518,7 +441,7 @@ export default {
                 // show all 9 possible options, but there's screen real estate prevents us
                 // from doing so, at least without switching to a drop-down list or
                 // something like that, and it would probably be ugly if we did.
-                return [{label:'-', value:false},{label:'-', value:false}, {label:'-', value:false}];
+                return [{label:'-', value:1},{label:'-', value:2}, {label:'-', value:3}];
             }
             return DETAIL_FILTER_OPTIONS[this.vehicleSubtype];
         },
@@ -642,7 +565,7 @@ export default {
                     if(x.country && x.country.numeric)
                     {
                         // do any of the countries in the filter match the entities country?
-                        return this.countryFilter.some(country => country === x.country.numeric);
+                        return this.countryFilter.some(country => country.numeric === x.country.numeric);
                     }
                     return false;
                 });
@@ -655,7 +578,8 @@ export default {
         textFilteredEntities()
         {
             let filtered = this.countryFilteredEntities;
-            if(this.searchText && this.searchText.length > 0)
+            const searchText = this.searchText || '';
+            if(searchText.length > 0)
             {
                 const lCaseFilter = this.searchText.toLowerCase();
                 filtered = filtered.filter(x=>x.normalizedName.indexOf(lCaseFilter)!==-1);
@@ -733,6 +657,14 @@ export default {
                 this.itemsSubtype = null;
             }
         },
+        filteredEntities()
+        {
+            this.virtualFilteredEntities = this.loadChunk(0, 20);
+        }
+    },
+    mounted()
+    {
+        this.virtualFilteredEntities = this.loadChunk(0, 20);
     },
     beforeDestroy()
     {
@@ -744,8 +676,9 @@ export default {
         {
             this.typeFilter = (this.typeFilter !== typeFilterValue) ? typeFilterValue : BLUEPRINT_VALUE.TYPE.ANY;
         },
-        selectEntity(entity)
+        selectEntity(evt)
         {
+            const entity = evt.data;
             this.$store.commit(TITAN_MUTATION.ENTITY_SELECTOR_SET_SELECTION, entity);
         },
         placeEntity(opts={empty:false})
@@ -765,6 +698,25 @@ export default {
                 }
             }
         },
+        loadChunk(startIdx, count)
+        {
+            let chunk = [];
+            if(this.filteredEntities.length>0)
+            {
+                const rowsLeft = this.filteredEntities.length - startIdx;
+                const rows = Math.min(rowsLeft, count);
+                for (let i = 0; i < rows; i++)
+                {
+                    chunk[i] = {...this.filteredEntities[startIdx + i]};
+                }
+            }
+            return chunk;
+        },
+        onVirtualScroll: UIUtils.throttle(function(evt)
+        {
+            console.log('on virtual scroll', evt);
+            this.virtualFilteredEntities = this.loadChunk(evt.first, evt.rows);
+        }, 50),
     }
 };
 </script>

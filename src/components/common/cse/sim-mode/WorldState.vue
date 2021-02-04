@@ -244,20 +244,22 @@
                     <TabPanel
                         :header="$t('worldSettings.water.Water', languageID)"
                     >
-                        <v-card flat>
-                            <speed-field
-                                v-model="theSpeed"
-                                show-unit-options
-                                :display-units="SPEED_UNITS.KILOMETERS_PER_HOUR"
-                            />
-                            {{ theSpeed }}{{ SPEED_UNITS.METERS_PER_SECOND.abbr }}
-                            <temperature-field
-                                v-model="theTemp"
-                                show-unit-options
-                                :display-units="TEMPERATURE_UNITS.FAHRENHEIT"
-                            />
-                            {{ theTemp }}{{ TEMPERATURE_UNITS.CELSIUS.abbr }}
-                        </v-card>
+                        <Card>
+                            <template #content>
+                                <speed-field
+                                    v-model="theSpeed"
+                                    show-unit-options
+                                    :display-units="SPEED_UNITS.KILOMETERS_PER_HOUR"
+                                />
+                                {{ theSpeed }}{{ SPEED_UNITS.METERS_PER_SECOND.abbr }}
+                                <temperature-field
+                                    v-model="theTemp"
+                                    show-unit-options
+                                    :display-units="TEMPERATURE_UNITS.FAHRENHEIT"
+                                />
+                                {{ theTemp }}{{ TEMPERATURE_UNITS.CELSIUS.abbr }}
+                            </template>
+                        </Card>
                     </TabPanel>
                 </TabView>
             </cse-desktop-window-content>
@@ -271,6 +273,7 @@ import TabPanel from 'primevue/tabpanel';
 import InputNumber from 'primevue/inputnumber';
 import Slider from 'primevue/slider';
 import Dropdown from 'primevue/dropdown';
+import Card from 'primevue/card';
 
 import SpeedField from '@/components/common/cse/core/field/SpeedField.vue';
 import TemperatureField from '@/components/common/cse/core/field/TemperatureField.vue';
@@ -289,7 +292,7 @@ export default {
     name: 'world-state',
     components:
     {
-        TabView, TabPanel, InputNumber, Slider, Dropdown,
+        TabView, TabPanel, Card, InputNumber, Slider, Dropdown,
         SpeedField, TemperatureField, LengthField, PercentField,
     },
     data()

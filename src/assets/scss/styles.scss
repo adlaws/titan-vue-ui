@@ -46,6 +46,39 @@ body {
     }
 }
 
+.p-button.p-button-xsm {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+}
+
+.p-selectbutton {
+    &.p-button-sm {
+        .p-button {
+            font-size: 0.875rem;
+            padding: 0.4375rem 0.875rem;
+        }
+    }
+    &.p-button-xsm {
+        .p-button {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.75rem;
+        }
+    }
+    &.flex-grow {
+        display:flex;
+        .p-button {
+            flex-grow: 1;
+        }
+    }
+}
+
+.p-datatable {
+    &.no-headers {
+        thead {
+            display: none;
+        }
+    }
+}
 // ------------------------------------------------------------------------------------------------
 .input-align-right
 {
