@@ -3,6 +3,28 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
+        <cse-notifications-area
+            dock="w"
+            offset="-32"
+            :width="300"
+        />
+
+        <!--
+        <waypoint-settings />
+        <cse-scenario-objects />
+
+        <aar-statistics />
+        <map-overlay />
+
+
+        PrimeVue - DONE:
+        <drawing-tools />
+        <entity-selector2 />
+        <time-slider />
+        <world-state />
+        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
+
         <cse-dockable
             :width="300"
             :height="300"
@@ -14,28 +36,6 @@
         >
             Entity list
         </cse-dockable>
-        <!--
-        <waypoint-settings />
-        <cse-scenario-objects />
-
-        <aar-statistics />
-        <map-overlay />
-
-
-        <cse-notifications-area
-            dock="w"
-            offset="-32"
-            :width="300"
-        />
-
-        PrimeVue - DONE:
-        <drawing-tools />
-        <entity-selector2 />
-        <time-slider />
-        <world-state />
-        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
-        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
-
 
         -->
 

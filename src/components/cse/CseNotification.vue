@@ -1,17 +1,19 @@
 <template>
     <div
         class="cse-desktop--notification"
-        :class="type"
+        :style="{color:_color}"
         @click="expire"
     >
         <div class="notification-content">
             <cse-icon
                 v-if="_icon"
                 :icon="_icon"
+                size="2em"
             />
             <div
                 v-else
                 class="icon-spacer"
+                :style="`border-left: 1em solid ${_color};`"
             />
             <div class="notification-text">
                 {{ content }} {{ lifetime }}
@@ -21,7 +23,7 @@
             v-if="!noProgress"
             ref="lifetimeBar"
             class="lifetime-bar"
-            :style="`transition-duration:${lifetime/1000}s;`"
+            :style="{'background-color':_color, 'transition-duration':_transitionDuration}"
         />
     </div>
 </template>
@@ -32,6 +34,13 @@ const TYPE_ICON = {
     warning: 'alert',
     error: 'alert-octagon',
     success: 'check-circle',
+};
+
+const TYPE_COLORS = {
+    info: '#0288D1',
+    warning: '#FBC02D',
+    error: '#D32F2F',
+    success: '#689F38',
 };
 
 export default {
@@ -67,6 +76,7 @@ export default {
     {
         return {
             lifetimeBarElm: null,
+            TYPE_COLORS
         };
     },
     computed:
@@ -83,6 +93,14 @@ export default {
             }
             return TYPE_ICON[this.type.toLowerCase()] || false;
         },
+        _color()
+        {
+            return TYPE_COLORS[this.type]||'#08f';
+        },
+        _transitionDuration()
+        {
+            return this.lifetime/1000 +'s';
+        }
     },
     watch:
     {

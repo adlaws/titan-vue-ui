@@ -867,25 +867,6 @@ pre, code, .monospace
             background-color: $menu-bg-inactive;
             color: $menu-fg-inactive;
 
-            // use CSS variables provided by Vuetify framework to get colors
-            // Ref: https://vuetifyjs.com/en/features/theme/#custom-properties
-            @each $name in (primary, secondary, accent, info, error, success, warning) {
-                $varNameBase: --v-#{unquote($name)}-base;
-                &.#{$name}, &.#{$name} .v-icon {
-                    background-color: $menu-bg-inactive !important;
-                    border-color: var($varNameBase);
-                    color: var($varNameBase);
-                }
-                &.#{$name} .lifetime-bar
-                {
-                    background-color: var($varNameBase);
-                }
-                &.#{$name} .icon-spacer
-                {
-                    border-left: 1em solid var($varNameBase);
-                }
-            }
-
             font-size: 80%;
             height:3.2em; // 2 lines tall - see -webkit-line-clamp below
 
