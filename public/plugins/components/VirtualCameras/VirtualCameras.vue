@@ -51,9 +51,9 @@ export default {
     {
         return {
             cameraOptions:[
-                { id: 'standard',     text: 'Standard Camera', icon: "mdi-camera",          disabled: false },
-                { id: 'orbit',        text: 'Orbit Camera',    icon: "mdi-orbit",           disabled: false },
-                { id: 'randomFlight', text: 'Random Flight',   icon: "mdi-vector-polyline", disabled: false },
+                { id: 'standard',     text: 'Standard Camera', icon: "camera",          disabled: false },
+                { id: 'orbit',        text: 'Orbit Camera',    icon: "orbit",           disabled: false },
+                { id: 'randomFlight', text: 'Random Flight',   icon: "vector-polyline", disabled: false },
             ],
             selectedCameraMode: 'standard',
             currentCameraMode: 'standard',

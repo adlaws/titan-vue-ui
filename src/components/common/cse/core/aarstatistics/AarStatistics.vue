@@ -41,7 +41,7 @@
                         <v-spacer />
                         <v-text-field
                             v-model="tables.units.search"
-                            append-icon="mdi-magnify"
+                            append-icon="magnify"
                             label="Search"
                             single-line
                             hide-details

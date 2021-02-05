@@ -1,7 +1,7 @@
 <template>
     <cse-dockable
         title="ACTIVE OBJECTS"
-        icon="mdi-lightning-bolt"
+        icon="lightning-bolt"
         :width="width"
         :height="height"
         :offset="offset"
@@ -17,7 +17,7 @@
                         trim
                         label="Search"
                         dense
-                        append-icon="mdi-magnify"
+                        append-icon="magnify"
                         clearable
                     />
                 </v-col>
@@ -51,7 +51,7 @@
                         @click="updateLockFilter"
                     >
                         <cse-icon
-                            :icon="`mdi-lock${ lockFilter === null ? '-off-outline' : (lockFilter === true ? '' : '-open-variant') }`"
+                            :icon="`lock${ lockFilter === null ? '-off-outline' : (lockFilter === true ? '' : '-open-variant') }`"
                             :color="lockFilter === null ? '' : 'warning'"
                         />
                     </v-btn>
@@ -62,7 +62,7 @@
                         @click="updateControlFilter"
                     >
                         <cse-icon
-                            :icon="controlFilter === null ? 'mdi-google-controller-off' : (controlFilter === 'ai' ? 'mdi-robot' : 'mdi-google-controller')"
+                            :icon="controlFilter === null ? 'google-controller-off' : (controlFilter === 'ai' ? 'robot' : 'google-controller')"
                             :color="controlFilter === null ? '' : 'warning'"
                         />
                     </v-btn>
@@ -73,7 +73,7 @@
                         @click="updateDomainFilter"
                     >
                         <cse-icon
-                            :icon="`mdi-${ domainIcon(domainFilter) }`"
+                            :icon="`${ domainIcon(domainFilter) }`"
                             :color="domainFilter === null ? '' : 'warning'"
                         />
                     </v-btn>

@@ -28,10 +28,10 @@
 
 <script>
 const TYPE_ICON = {
-    info: 'mdi-information',
-    warning: 'mdi-alert',
-    error: 'mdi-alert-octagon',
-    success: 'mdi-check-circle',
+    info: 'information',
+    warning: 'alert',
+    error: 'alert-octagon',
+    success: 'check-circle',
 };
 
 export default {

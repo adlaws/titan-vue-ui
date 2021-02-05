@@ -18,7 +18,7 @@
                                 label="Search:"
                                 dense
                                 clearable
-                                clear-icon="mdi-close"
+                                clear-icon="close"
                             >
                                 <template slot="append">
                                     <cse-icon icon="magnify" />

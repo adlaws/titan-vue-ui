@@ -3,6 +3,16 @@
         class="m-0 p-0"
         :class="mdiClasses"
         :style="{fontSize:size, color:color}"
+        @click="$emit('click', $event)"
+        @dblclick="$emit('dblclick', $event)"
+        @contextmenu="$emit('contextmenu', $event)"
+        @mousedown="$emit('mousedown', $event)"
+        @mouseup="$emit('mouseup', $event)"
+        @mousemove="$emit('mousemove', $event)"
+        @mouseenter="$emit('mouseenter', $event)"
+        @mouseleave="$emit('mouseleave', $event)"
+        @mouseover="$emit('mouseover', $event)"
+        @mouseout="$emit('mouseout', $event)"
     />
 </template>
 

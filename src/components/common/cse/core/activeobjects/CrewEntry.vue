@@ -7,12 +7,12 @@
             @click="$emit('toggle-lock', crewEntry)"
         />
         <cse-icon
-            :icon="crewEntry.cameraLocked ? 'mdi-camera' : 'mdi-camera-outline'"
+            :icon="crewEntry.cameraLocked ? 'camera' : 'camera-outline'"
             :color="crewEntry.cameraLocked?'primary':'secondary'"
             @click="$emit('toggle-camera', crewEntry)"
         />
         <cse-icon
-            :icon="crewEntry.controlledBy === 'player' ? 'mdi-google-controller' : 'mdi-robot-outline'"
+            :icon="crewEntry.controlledBy === 'player' ? 'google-controller' : 'robot-outline'"
             :color="crewEntry.controlledBy === 'player'?'error':'secondary'"
             @click="$emit('toggle-control', crewEntry)"
         />

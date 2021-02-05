@@ -28,10 +28,10 @@
                         <v-text-field
                             v-model="form.username"
                             label="Username"
-                            prepend-inner-icon="mdi-account"
+                            prepend-inner-icon="account"
                             autocomplete="current-username"
                             clearable
-                            clear-icon="mdi-close"
+                            clear-icon="close"
                             :rules="[form.rules.usernameRequired,]"
                             @click:clear="resetLoginFail();"
                             @input="resetLoginFail"
@@ -41,10 +41,10 @@
                             v-model="form.password"
                             label="Password"
                             :type="revealPassword ? 'text' : 'password'"
-                            prepend-inner-icon="mdi-key"
-                            :append-icon="revealPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                            prepend-inner-icon="key"
+                            :append-icon="revealPassword ? 'eye-off' : 'eye'"
                             autocomplete="current-password"
-                            clear-icon="mdi-close"
+                            clear-icon="close"
                             clearable
                             :rules="[form.rules.passwordRequired,]"
                             @click:clear="resetLoginFail();"

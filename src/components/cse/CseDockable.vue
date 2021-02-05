@@ -32,7 +32,7 @@ Example usage:
         :offset="100"
         dock="e"
         title="EAST DOCK"
-        icon="mdi-ferry"
+        icon="ferry"
     >
         Welcome to the East Dock.
     </cse-dockable>
@@ -79,16 +79,14 @@ Events:
         <div
             ref="handle"
             v-ripple
-            class="dockable-handle clickable"
+            class="dockable-handle clickable p-ripple"
             :class="{draggable: draggable}"
-            @click="isCollapsed=!isCollapsed"
+            @mouseup="isCollapsed=isDragging?isCollapsed:!isCollapsed"
         >
             <cse-icon
                 :icon="`chevron-double-${ chevronDirection }`"
                 class="dockable-trigger"
-            >
-                mdi-
-            </cse-icon>
+            />
             <div v-if="title" class="title-text">
                 {{ title }}
             </div>
@@ -96,13 +94,13 @@ Events:
                 v-if="icon"
                 :icon="icon"
             />
-            <v-spacer v-if="draggable" />
+            <div v-if="draggable" style="flex-grow:1;" />
             <cse-icon
                 v-if="draggable"
-                :icon="`mdi-dots-${ isDockEW?'vertical':'horizontal' }`"
+                :icon="`dots-${ isDockEW?'vertical':'horizontal' }`"
                 class="drag-handle"
-                @mousedown="handleDragStart"
-                @click.stop
+                @mousedown.prevent.stop="handleDragStart"
+                @click.prevent.stop
             />
         </div>
     </div>
@@ -111,6 +109,8 @@ Events:
 <script>
 import MathUtils from '@/assets/js/utils/math-utils.js';
 
+import Ripple from 'primevue/ripple';
+
 const EVENT = {
     EXPANDED: 'expanded',
     isCollapsed: 'isCollapsed',
@@ -118,6 +118,10 @@ const EVENT = {
 
 export default {
     name:'',
+    directives:
+    {
+        'ripple': Ripple,
+    },
     props:{
         title:
         {
@@ -170,6 +174,7 @@ export default {
         return {
             isCollapsed: true,
             currentOffset: 0,
+            isDragging: false,
             dragStart: { x: 0, y: 0 },
         };
     },
@@ -354,6 +359,8 @@ export default {
 
             evt.preventDefault();
 
+            this.isDragging = true;
+
             this.dragStart.x = evt.clientX;
             this.dragStart.y = evt.clientY;
             document.onmousemove = this.handleDrag;
@@ -381,9 +388,12 @@ export default {
         /**
          * If dragging is enabled, this method handles the end of a drag operation.
          */
-        handleDragEnd(/*evt*/)
+        handleDragEnd(evt)
         {
+            evt.preventDefault();
+
             this.isDragging = false;
+
             document.onmouseup = null;
             document.onmousemove = null;
         },

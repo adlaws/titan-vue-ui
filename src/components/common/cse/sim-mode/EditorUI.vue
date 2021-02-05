@@ -3,15 +3,6 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <world-state />
-
-        <!--
-        <waypoint-settings />
-        <cse-scenario-objects />
-
-        <aar-statistics />
-        <map-overlay />
-
         <cse-dockable
             :width="300"
             :height="300"
@@ -19,10 +10,17 @@
             dock="w"
             draggable
             title="OBJECTS"
-            icon="mdi-cube"
+            icon="cube"
         >
             Entity list
         </cse-dockable>
+        <!--
+        <waypoint-settings />
+        <cse-scenario-objects />
+
+        <aar-statistics />
+        <map-overlay />
+
 
         <cse-notifications-area
             dock="w"
@@ -34,6 +32,7 @@
         <drawing-tools />
         <entity-selector2 />
         <time-slider />
+        <world-state />
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
