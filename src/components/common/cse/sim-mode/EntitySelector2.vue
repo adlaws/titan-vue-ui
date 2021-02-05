@@ -33,38 +33,42 @@
                     <div class="left-filters-container">
                         <Button
                             class="p-button-xsm"
+                            :class="{'p-button-outlined p-button-secondary':allowVehicleTypes||allowItemsTypes}"
                             :label="allowEntities?'Characters':'Scenery'"
                             @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.CHARACTER:BLUEPRINT_VALUE.TYPE.SCENERY)"
                         />
                         <SelectButton
                             v-if="allowEntities"
-                            v-model="characterSubtype"
+                            v-model="characterSubtype2"
                             class="p-button-xsm flex-grow"
                             :options="characterSubtypeOptions"
                             :disabled="!allowCharacterTypes"
                             data-key="value"
                             option-label="label"
                             option-value="value"
-                            option-disabled="isDisabled"
+                            option-disabled="disabled"
+                            @input="updateCharacterSubtypeFilter"
                         />
                         <SelectButton
                             v-if="allowObjects"
-                            v-model="scenerySubtype"
+                            v-model="scenerySubtype2"
                             class="p-button-xsm flex-grow"
                             :options="scenerySubtypeOptions"
                             data-key="value"
                             option-label="label"
                             option-value="value"
+                            @input="updateScenerySubtypeFilter"
                         />
                         <SelectButton
                             v-if="allowEntities"
-                            v-model="characterDetailFilter"
+                            v-model="characterDetailFilter2"
                             class="p-button-xsm flex-grow"
                             :options="characterDetailOptions"
                             :disabled="!allowCharacterTypes"
                             data-key="value"
                             option-label="label"
                             option-value="value"
+                            @input="updateCharacterDetailFilter"
                         />
                     </div>
                     <div
@@ -72,37 +76,41 @@
                     >
                         <Button
                             class="p-button-xsm"
+                            :class="{'p-button-outlined p-button-secondary':allowCharacterTypes||allowSceneryTypes}"
                             :label="allowEntities?'Vehicles':'Items'"
                             @click="updateTypeFilter(allowEntities?BLUEPRINT_VALUE.TYPE.VEHICLE:BLUEPRINT_VALUE.TYPE.ITEMS)"
                         />
                         <SelectButton
                             v-if="allowEntities"
-                            v-model="vehicleSubtype"
+                            v-model="vehicleSubtype2"
                             :options="vehicleSubtypeOptions"
                             class="p-button-xsm flex-grow"
                             data-key="value"
                             option-label="label"
                             option-value="value"
+                            @input="updateVehicleSubtypeFilter"
                         />
                         <SelectButton
                             v-else-if="allowObjects"
-                            v-model="itemsSubtype"
+                            v-model="itemsSubtype2"
                             :options="itemsSubtypeOptions"
                             class="p-button-xsm flex-grow"
                             data-key="value"
                             option-label="label"
                             option-value="value"
                             style="flex-grow:1;"
+                            @input="updateItemsSubtypeFilter"
                         />
                         <SelectButton
                             v-if="allowEntities"
-                            v-model="vehicleDetailFilter"
+                            v-model="vehicleDetailFilter2"
                             :options="vehicleDetailOptions"
                             :disabled="!vehicleSubtype"
                             class="p-button-xsm flex-grow"
                             data-key="value"
                             option-label="label"
                             option-value="value"
+                            @input="updateVehicleDetailFilter"
                         />
                     </div>
                 </div>
@@ -113,12 +121,14 @@
                     class="p-grid"
                 >
                     <div class="p-col-6">
-                        <InputText
-                            v-model="searchText"
-                            label="Search"
-                            append-icon="mdi-magnify"
-                            class="p-inputtext-sm"
-                        />
+                        <span class="p-input-icon-left">
+                            <cse-icon icon="magnify" />
+                            <InputText
+                                v-model="searchText"
+                                class="p-inputtext-sm"
+                                placeholder="Search"
+                            />
+                        </span>
                     </div>
                     <div class="p-col-6">
                         <MultiSelect
@@ -142,7 +152,7 @@
                                         :alpha2="option.alpha2"
                                         :class="{'p-ml-1':idx>0}"
                                     />
-                                    <span v-if="idx===5">
+                                    <span v-if="idx===6">
                                         + {{ slotProps.value.length - 5 }}
                                     </span>
                                 </span>
@@ -224,10 +234,13 @@
                             {{ selectedEntity.Name }}
                             <Dropdown
                                 v-if="selectedEntity.loadouts.length"
-                                class="p-mt-4"
+                                v-model="selectedEntityLoadout"
+                                class="p-mt-4 p-dropdown-sm"
+                                style="width:100%;"
                                 label="Loadout"
                                 :options="selectedEntity.loadouts"
                                 option-label="name"
+                                option-value="name"
                                 return-object
                             />
                         </div>
@@ -263,7 +276,6 @@ import 'flag-icon-css/sass/flag-icon.scss';
 
 import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
 import TitanUtils, { $tCrewInterface, PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
-import UIUtils from '@/assets/js/utils/ui-utils.js';
 
 import Button from 'primevue/button';
 import ToggleButton from 'primevue/togglebutton';
@@ -329,7 +341,7 @@ const BLUEPRINT_VALUE = {
 // eslint-disable-next-line no-unused-vars
 const SUBTYPE_FILTER_OPTIONS = {
     [BLUEPRINT_VALUE.TYPE.CHARACTER]:[
-        {label:'Military', value:BLUEPRINT_VALUE.SUBTYPE.MILITARY, isDisabled: true},
+        {label:'Military', value:BLUEPRINT_VALUE.SUBTYPE.MILITARY},
         {label:'Civilian', value:BLUEPRINT_VALUE.SUBTYPE.CIVILIAN},
         {label:'Animal', value:BLUEPRINT_VALUE.SUBTYPE.ANIMAL},
     ],
@@ -352,7 +364,7 @@ const SUBTYPE_FILTER_OPTIONS = {
 
 const DETAIL_FILTER_OPTIONS = {
     [BLUEPRINT_VALUE.SUBTYPE.CHARACTER]:[
-        {label:'Male', value:BLUEPRINT_VALUE.DETAIL.MALE, isDisabled: true},
+        {label:'Male', value:BLUEPRINT_VALUE.DETAIL.MALE},
         {label:'Female', value:BLUEPRINT_VALUE.DETAIL.FEMALE},
     ],
     [BLUEPRINT_VALUE.SUBTYPE.AIR]:[
@@ -403,7 +415,13 @@ export default {
             // vehicleDetailOptions is a computed value, depends on vehicle subtype
             countryFilter: [],
             tableSelection: null,
-            virtualFilteredEntities:[],
+            selectedEntityLoadout: null,
+            vehicleSubtype2: null, // required for toggling of vehicleSubtype filter button appearance
+            vehicleDetailFilter2: null, // required for toggling of vehicleSubtype filter button appearance
+            characterSubtype2: null, // required for toggling of characterSubtype filter button appearance
+            scenerySubtype2: null, // required for toggling of scenerySubtype filter button appearance
+            itemsSubtype2: null, // required for toggling of itemsSubtype filter button appearance
+            characterDetailFilter2: null, // required for toggling of vehicleSubtype filter button appearance
             PACKAGES_PATH,
             BLUEPRINT_VALUE,
             ACTIVE_FILTER_BUTTON_COLOR,
@@ -622,6 +640,7 @@ export default {
             {
                 this.characterSubtype = null;
                 this.characterDetailFilter = null;
+                this.characterDetailFilter2 = null;
             }
         },
         allowCharacterTypes(newValue)
@@ -630,6 +649,7 @@ export default {
             {
                 this.characterSubtype = null;
                 this.characterDetailFilter = null;
+                this.characterDetailFilter2 = null;
             }
         },
         allowVehicleTypes(newValue)
@@ -637,17 +657,20 @@ export default {
             if(!newValue)
             {
                 this.vehicleSubtype = null;
+                this.vehicleSubtype2 = null;
             }
         },
         vehicleSubtype()
         {
             this.vehicleDetailFilter = null;
+            this.vehicleDetailFilter2 = null;
         },
         allowSceneryTypes(newValue)
         {
             if(!newValue)
             {
                 this.scenerySubtype = null;
+                this.scenerySubtype2 = null;
             }
         },
         allowItemsTypes(newValue)
@@ -655,16 +678,14 @@ export default {
             if(!newValue)
             {
                 this.itemsSubtype = null;
+                this.itemsSubtype2 = null;
             }
         },
-        filteredEntities()
+        selectedEntity(newValue)
         {
-            this.virtualFilteredEntities = this.loadChunk(0, 20);
-        }
-    },
-    mounted()
-    {
-        this.virtualFilteredEntities = this.loadChunk(0, 20);
+            const loadouts = (newValue && newValue.loadouts.length) ? newValue.loadouts : [];
+            this.selectedEntityLoadout = loadouts.length ? loadouts[0].name : null;
+        },
     },
     beforeDestroy()
     {
@@ -698,25 +719,36 @@ export default {
                 }
             }
         },
-        loadChunk(startIdx, count)
+        updateVehicleSubtypeFilter(evt)
         {
-            let chunk = [];
-            if(this.filteredEntities.length>0)
-            {
-                const rowsLeft = this.filteredEntities.length - startIdx;
-                const rows = Math.min(rowsLeft, count);
-                for (let i = 0; i < rows; i++)
-                {
-                    chunk[i] = {...this.filteredEntities[startIdx + i]};
-                }
-            }
-            return chunk;
+            this.vehicleSubtype = (evt === this.vehicleSubtype) ? null : evt;
+            this.vehicleSubtype2 = this.vehicleSubtype;
         },
-        onVirtualScroll: UIUtils.throttle(function(evt)
+        updateItemsSubtypeFilter(evt)
         {
-            console.log('on virtual scroll', evt);
-            this.virtualFilteredEntities = this.loadChunk(evt.first, evt.rows);
-        }, 50),
+            this.itemsSubtype = (evt === this.itemsSubtype) ? null : evt;
+            this.itemsSubtype2 = this.itemsSubtype;
+        },
+        updateVehicleDetailFilter(evt)
+        {
+            this.vehicleDetailFilter = (evt === this.vehicleDetailFilter) ? null : evt;
+            this.vehicleDetailFilter2 = this.vehicleDetailFilter;
+        },
+        updateCharacterSubtypeFilter(evt)
+        {
+            this.characterSubtype = (evt === this.characterSubtype) ? null : evt;
+            this.characterSubtype2 = this.characterSubtype;
+        },
+        updateScenerySubtypeFilter(evt)
+        {
+            this.scenerySubtype = (evt === this.scenerySubtype) ? null : evt;
+            this.scenerySubtype2 = this.scenerySubtype;
+        },
+        updateCharacterDetailFilter(evt)
+        {
+            this.characterDetailFilter = (evt === this.characterDetailFilter) ? null : evt;
+            this.characterDetailFilter2 = this.characterDetailFilter;
+        },
     }
 };
 </script>

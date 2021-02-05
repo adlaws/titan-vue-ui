@@ -46,6 +46,24 @@ body {
     }
 }
 
+.p-dropdown.p-dropdown-sm {
+    .p-dropdown-label {
+        font-size: 0.875rem;
+        padding: 0.4375rem 0.4375rem;
+    }
+    .p-dropdown-items {
+        font-size: 0.875rem;
+        padding: 0;
+    }
+}
+
+.p-multiselect.p-multiselect-sm {
+    .p-multiselect-label, .p-inputtext {
+        font-size: 0.875rem;
+        padding: 0.4375rem 0.4375rem;
+    }
+}
+
 .p-button.p-button-xsm {
     font-size: 0.75rem;
     padding: 0.4rem 0.75rem;
