@@ -4,9 +4,9 @@
         icon="passport"
         :x="150"
         :y="150"
-        :width="450"
-        :min-width="403"
-        :height="545"
+        :width="420"
+        :min-width="420"
+        :height="605"
         :resizable="true"
         :closable="false"
     >
@@ -16,88 +16,68 @@
                     <TabPanel
                         :header="$t('worldSettings.atmosphere.Atmosphere', languageID)"
                     >
-                        <div class="p-grid">
-                            <div class="font-weight-bold">
+                        <div class="p-grid p-formgrid">
+                            <div class="p-text-bold">
                                 <cse-icon icon="weather-cloudy" />
                                 {{ $t('worldSettings.atmosphere.Clouds', languageID) }}
                             </div>
                         </div>
 
-                        <div class="p-grid">
-                            <div class="p-col-3">
-                                {{ $t('worldSettings.atmosphere.Density', languageID) }}
+                        <div class="p-grid p-formgrid">
+                            <div
+                                class="p-col-6"
+                                style="padding-bottom:0;"
+                            >
+                                <length-field
+                                    v-model="tabs.atmosphere.cloud.altitude[0]"
+                                    class="p-inputtext-sm"
+                                    :label="$t('worldSettings.atmosphere.Lower Altitude', languageID)"
+                                    :slider="false"
+                                    :min="0"
+                                    :max="tabs.atmosphere.cloud.altitude[1]"
+                                />
                             </div>
-                            <div class="p-col-6">
+                            <div
+                                class="p-col-6"
+                                style="padding-bottom:0;"
+                            >
+                                <length-field
+                                    v-model="tabs.atmosphere.cloud.altitude[1]"
+                                    class="p-inputtext-sm"
+                                    :label="$t('worldSettings.atmosphere.Upper Altitude', languageID)"
+                                    :slider="false"
+                                    :min="tabs.atmosphere.cloud.altitude[0]"
+                                    :max="50000"
+                                />
+                            </div>
+                        </div>
+                        <div class="p-grid p-formgrid">
+                            <div
+                                class="p-col-12"
+                                style="padding-top:0;"
+                            >
                                 <Slider
+                                    v-model="tabs.atmosphere.cloud.altitude"
+                                    :range="true"
+                                    :min="0"
+                                    :max="50000"
+                                    :step="1"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="p-grid p-formgrid">
+                            <div class="p-col-6">
+                                <percent-field
                                     v-model="tabs.atmosphere.cloud.density"
-                                    :min="0"
-                                    :max="100"
-                                    :step="1"
+                                    :label="$t('worldSettings.atmosphere.Density', languageID)"
+                                    class="p-inputtext-sm"
                                 />
-                            </div>
-                            <div class="p-col-3">
-                                <percent-field v-model="tabs.atmosphere.cloud.density" />
-                            </div>
-                        </div>
-
-                        <div class="p-grid">
-                            <div class="p-col-3">
-                                {{ $t('worldSettings.atmosphere.Lower Altitude', languageID) }}
                             </div>
                             <div class="p-col-6">
-                                <Slider
-                                    v-model="tabs.atmosphere.cloud.altitude"
-                                    :min="0"
-                                    :max="20000"
-                                    :step="1"
-                                />
-                            </div>
-                            <div class="p-col-3">
-                                <length-field
-                                    v-model="tabs.atmosphere.cloud.altitude"
-                                    :show-unit-options="false"
-                                    :display-units="LENGTH_UNITS.METERS"
-                                    :min="0"
-                                    :max="20000"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="p-grid">
-                            <div class="p-col-3">
-                                {{ $t('worldSettings.atmosphere.Upper Altitude', languageID) }}
-                            </div>
-                            <div class="p-col-6">
-                                <Slider
-                                    v-model="tabs.atmosphere.cloud.height"
-                                    :min="0"
-                                    :max="20000"
-                                />
-                            </div>
-                            <div class="p-col-3">
-                                <length-field
-                                    v-model="tabs.atmosphere.cloud.height"
-                                    :show-unit-options="false"
-                                    :display-units="LENGTH_UNITS.METERS"
-                                    :min="0"
-                                    :max="20000"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="p-grid">
-                            <div class="p-col-3">
-                                {{ $t('worldSettings.atmosphere.Lightning', languageID) }}
-                            </div>
-                            <div class="p-col-6">
-                                <Slider
-                                    v-model="tabs.atmosphere.cloud.lightning"
-                                    :min="0"
-                                    :max="10"
-                                    :step="0.1"
-                                />
-                            </div>
-                            <div class="p-col-3 p-field">
+                                <label>
+                                    {{ $t('worldSettings.atmosphere.Lightning', languageID) }}
+                                </label>
                                 <InputNumber
                                     v-model="tabs.atmosphere.cloud.lightning"
                                     mode="decimal"
@@ -105,6 +85,8 @@
                                     :max="10"
                                     :min-fraction-digits="0"
                                     :max-fraction-digits="1"
+                                    suffix=" strikes/minute"
+                                    class="p-inputtext-sm"
                                 />
                                 <Slider
                                     v-model="tabs.atmosphere.cloud.lightning"
@@ -112,131 +94,90 @@
                                     :max="10"
                                     :step="0.1"
                                 />
-                                <small>strikes per min per 100km2</small>
+                                <small>per 100km2</small>
                             </div>
                         </div>
 
                         <div class="p-grid">
-                            <div class="font-weight-bold">
-                                <cse-icon icon="weather-fog" />
-                                {{ $t('worldSettings.atmosphere.Fog', languageID) }}
-                            </div>
-                        </div>
-
-                        <div class="p-grid">
-                            <div class="p-col-9">
-                                <Slider
-                                    v-model="tabs.atmosphere.fog.density"
-                                    :label="$t('worldSettings.atmosphere.Density', languageID)"
-                                    :min="0"
-                                    :max="100"
-                                    :step="1"
-                                />
-                            </div>
-                            <div class="p-col-3">
-                                <percent-field v-model="tabs.atmosphere.fog.density" />
-                            </div>
-                        </div>
-
-                        <div class="p-grid">
-                            <div class="p-col-3">
-                                {{ $t('worldSettings.atmosphere.Height', languageID) }}
-                            </div>
-                            <div class="p-col-6">
-                                <Slider
-                                    v-model="tabs.atmosphere.fog.height"
-                                    :min="0"
-                                    :max="20000"
-                                />
-                            </div>
-                            <div class="p-col-3">
-                                <length-field
-                                    v-model="tabs.atmosphere.fog.height"
-                                    show-unit-options
-                                    :display-units="LENGTH_UNITS.METERS"
-                                    :min="0"
-                                    :max="20000"
-                                />
-                            </div>
-                        </div>
-
-                        <div class="p-grid">
-                            <div class="p-col-3">
-                                {{ $t('worldSettings.atmosphere.Scattering', languageID) }}
-                            </div>
-                            <div class="p-col-6">
-                                <Slider
-                                    v-model="tabs.atmosphere.fog.scattering"
-                                    :min="0"
-                                    :max="100"
-                                    :step="1"
-                                />
-                            </div>
-                            <div class="p-col-3">
-                                <percent-field v-model="tabs.atmosphere.fog.scattering" />
-                            </div>
-                        </div>
-
-                        <div class="p-grid">
-                            <div class="font-weight-bold">
-                                <cse-icon icon="weather-hazy" />
-                                {{ $t('worldSettings.atmosphere.Haze', languageID) }}
-                            </div>
-                        </div>
-
-                        <div class="p-grid">
-                            <div class="p-col-3">
-                                {{ $t('worldSettings.atmosphere.Density', languageID) }}
-                            </div>
-                            <div class="p-col-6">
-                                <Slider
-                                    v-model="tabs.atmosphere.haze.density"
-                                    :min="0"
-                                    :max="100"
-                                    :step="1"
-                                />
-                            </div>
-                            <div class="p-col-3">
-                                <percent-field v-model="tabs.atmosphere.haze.density" />
-                            </div>
-                        </div>
-
-                        <div class="p-grid">
-                            <div class="font-weight-bold">
+                            <div class="p-text-bold">
                                 <cse-icon icon="weather-pouring" />
                                 {{ $t('worldSettings.atmosphere.Precipitation', languageID) }}
                             </div>
                         </div>
 
-                        <div class="p-grid">
-                            <div class="p-col-3">
-                                {{ $t('worldSettings.atmosphere.Type', languageID) }}
-                            </div>
-                            <div class="p-col-9">
+                        <div class="p-grid p-formgrid">
+                            <div class="p-col-6">
+                                <label>Type</label>
+                                <br>
                                 <Dropdown
                                     v-model="tabs.atmosphere.precipitation.type"
                                     :options="precipitationTypes"
                                     option-label="text"
                                     option-value="value"
+                                    class="p-dropdown-sm"
                                 />
-                            </div>
-
-                            <div class="p-col-3">
-                                {{ $t('worldSettings.atmosphere.Rate', languageID) }}
                             </div>
                             <div class="p-col-6">
-                                <Slider
-                                    v-model="tabs.atmosphere.precipitation.rate"
-                                    :disabled="tabs.atmosphere.precipitation.type==='none'"
-                                    :min="0"
-                                    :max="100"
-                                    :step="1"
-                                />
-                            </div>
-                            <div class="p-col-3">
                                 <percent-field
                                     v-model="tabs.atmosphere.precipitation.rate"
                                     :disabled="tabs.atmosphere.precipitation.type==='none'"
+                                    :label="$t('worldSettings.atmosphere.Rate', languageID)"
+                                    class="p-inputtext-sm"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="p-grid">
+                            <div class="p-text-bold">
+                                <cse-icon icon="weather-fog" />
+                                {{ $t('worldSettings.atmosphere.Fog', languageID) }}
+                            </div>
+                        </div>
+
+                        <div class="p-grid p-formgrid">
+                            <div class="p-col-6">
+                                <percent-field
+                                    v-model="tabs.atmosphere.fog.density"
+                                    :label="$t('worldSettings.atmosphere.Density', languageID)"
+                                    class="p-inputtext-sm"
+                                />
+                            </div>
+                            <div class="p-col-6">
+                                <length-field
+                                    v-model="tabs.atmosphere.fog.height"
+                                    :label="$t('worldSettings.atmosphere.Height', languageID)"
+                                    show-unit-options
+                                    :display-units="LENGTH_UNITS.METERS"
+                                    :min="0"
+                                    :max="20000"
+                                    class="p-inputtext-sm"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="p-grid p-formgrid">
+                            <div class="p-col-6">
+                                <percent-field
+                                    v-model="tabs.atmosphere.fog.scattering"
+                                    :label="$t('worldSettings.atmosphere.Scattering', languageID)"
+                                    class="p-inputtext-sm"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="p-grid">
+                            <div class="p-text-bold">
+                                <cse-icon icon="weather-hazy" />
+                                {{ $t('worldSettings.atmosphere.Haze', languageID) }}
+                            </div>
+                        </div>
+
+                        <div class="p-grid p-formgrid">
+                            <div class="p-col-6">
+                                <percent-field
+                                    v-model="tabs.atmosphere.haze.density"
+                                    :label="$t('worldSettings.atmosphere.Density', languageID)"
+                                    class="p-inputtext-sm"
                                 />
                             </div>
                         </div>
@@ -250,12 +191,14 @@
                                     v-model="theSpeed"
                                     show-unit-options
                                     :display-units="SPEED_UNITS.KILOMETERS_PER_HOUR"
+                                    class="p-inputtext-sm"
                                 />
                                 {{ theSpeed }}{{ SPEED_UNITS.METERS_PER_SECOND.abbr }}
                                 <temperature-field
                                     v-model="theTemp"
                                     show-unit-options
                                     :display-units="TEMPERATURE_UNITS.FAHRENHEIT"
+                                    class="p-inputtext-sm"
                                 />
                                 {{ theTemp }}{{ TEMPERATURE_UNITS.CELSIUS.abbr }}
                             </template>
@@ -298,6 +241,7 @@ export default {
     data()
     {
         return {
+            value4:[20, 40],
             theSpeed: 0,
             theTemp: 0,
             tabs:
@@ -306,8 +250,7 @@ export default {
                 atmosphere: {
                     cloud: {
                         density: 0.0,
-                        altitude: 20000.0,
-                        height: 2277.0,
+                        altitude: [20000.0, 27000.0],
                         lightning: 0.0,
                     },
                     fog: {

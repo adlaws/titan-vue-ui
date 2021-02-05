@@ -3,29 +3,26 @@
     Optionally specify min and max allowed values
 -->
 <template>
-    <div class="p-field">
+    <div>
         <label
             v-if="label"
         >
             {{ label }}
         </label>
         <InputNumber
-            v-model.trim.number="currentValue"
+            v-model="currentValue"
             class="input-align-right"
-            hide-details="auto"
             suffix="%"
-            style="width:99%;"
             :class="{'p-invalid':!isValid}"
             :disabled="disabled"
             :hint="hint"
             :placeholder="placeholder"
-            :readonly="readonly"
         />
         <Slider
             v-model="currentValue"
             :min="min"
             :max="max"
-            style="width:99%;"
+            :disabled="disabled"
         />
         <small
             v-if="messages||hint"
@@ -83,7 +80,6 @@ export default {
         // these are Vuetify <v-text-field> properties which we allow and pass through
         //   Ref: https://vuetifyjs.com/en/api/v-text-field/#props
         disabled: Boolean,
-        readonly: Boolean,
         hint: { type: String, default: undefined },
         label: { type: String, default: undefined },
         placeholder: { type: String, default: undefined },

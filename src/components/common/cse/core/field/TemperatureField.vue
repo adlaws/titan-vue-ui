@@ -1,5 +1,5 @@
 <template>
-    <div class="p-field">
+    <div>
         <label
             v-if="label"
         >
@@ -45,16 +45,14 @@ const CONVERTER = Convert.temperature;
 const UNIT_OPTIONS = TEMPERATURE_UNIT_OPTIONS;
 const SI_UNITS = TEMPERATURE_UNITS.CELSIUS;
 
-const POSITIVE_FLOAT_REGEX = /^\d+(\.\d+)?$/;
 const FLOAT_REGEX = /^[+-]?\d+(\.\d+)?$/;
 
 export default {
-    name: 'speed-field',
+    name: 'temperature-field',
     components:
     {
         InputNumber, Dropdown
     },
-
     props:
     {
         value:
@@ -104,7 +102,7 @@ export default {
     {
         isValid()
         {
-            if(!this.validationRegex.test(this.currentValue))
+            if(!FLOAT_REGEX.test(this.currentValue))
                 return false;
 
             const floatVal = parseFloat(this.currentValue);
@@ -122,11 +120,6 @@ export default {
             if(!this.isValid)
                 return 0;
             return CONVERTER(this.currentValue, this.currentUnits.id, SI_UNITS.id);
-        },
-        validationRegex()
-        {
-            // choose validation regex based on allowed range of values
-            return (this.min !== null && this.min < 0) ? FLOAT_REGEX : POSITIVE_FLOAT_REGEX;
         },
         errorMessage()
         {

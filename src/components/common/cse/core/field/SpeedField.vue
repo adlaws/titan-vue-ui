@@ -1,5 +1,5 @@
 <template>
-    <div class="p-field">
+    <div>
         <label
             v-if="label"
         >

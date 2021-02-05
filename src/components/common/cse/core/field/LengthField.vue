@@ -1,5 +1,5 @@
 <template>
-    <div class="p-field">
+    <div>
         <label
             v-if="label"
         >
@@ -15,6 +15,7 @@
                 :class="{'p-invalid':!isValid}"
                 :disabled="disabled"
                 :placeholder="placeholder"
+                :use-grouping="false"
             />
             <Dropdown
                 v-if="showUnitOptions"
@@ -31,7 +32,7 @@
             v-model="currentValue"
             :min="min"
             :max="max"
-            style="width:100%;"
+            :disabled="disabled"
         />
         <small
             v-if="messages||hint"
@@ -114,7 +115,7 @@ export default {
     {
         useSlider()
         {
-            return true; // this.slider && this.min !== null && this.max !== null;
+            return this.slider && this.min !== null && this.max !== null;
         },
         isValid()
         {
