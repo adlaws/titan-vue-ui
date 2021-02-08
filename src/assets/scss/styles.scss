@@ -85,7 +85,14 @@ body {
     &.flex-grow {
         display:flex;
         .p-button {
-            flex-grow: 1;
+            // makes all buttons take up all horizontal space, and be distributed
+            // evenly regardless of content of individual buttons
+            flex: 1 1 0px;
+            .p-button-label {
+                overflow: hidden;
+                white-space:nowrap;
+                text-overflow: ellipsis;
+            }
         }
     }
 }
@@ -134,6 +141,10 @@ button.ellipsis-overflow
 .no-text-transform
 {
     text-transform: none !important;
+}
+
+.spacer {
+    flex-grow: 1;
 }
 
 .inherit-color

@@ -3,23 +3,15 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
-        <cse-notifications-area
-            dock="w"
-            offset="-32"
-            :width="300"
-        />
-
+        <entity-selector2 />
         <!--
-        <waypoint-settings />
         <cse-scenario-objects />
-
+        <waypoint-settings />
         <aar-statistics />
         <map-overlay />
 
-
         PrimeVue - DONE:
         <drawing-tools />
-        <entity-selector2 />
         <time-slider />
         <world-state />
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
@@ -36,6 +28,12 @@
         >
             Entity list
         </cse-dockable>
+
+        <cse-notifications-area
+            dock="w"
+            offset="-32"
+            :width="300"
+        />
 
         -->
 
