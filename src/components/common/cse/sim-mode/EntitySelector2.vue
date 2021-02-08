@@ -121,12 +121,18 @@
                     class="p-grid"
                 >
                     <div class="p-col-6">
-                        <span class="p-input-icon-left">
+                        <span class="p-input-icon-left p-input-icon-right">
                             <cse-icon icon="magnify" />
                             <InputText
                                 v-model="searchText"
                                 class="p-inputtext-sm"
                                 placeholder="Search"
+                            />
+                            <cse-icon
+                                v-show="searchText.length!==0"
+                                class="clickable"
+                                icon="close"
+                                @click="searchText=''"
                             />
                         </span>
                     </div>
@@ -176,7 +182,8 @@
                         class="p-datatable-sm no-headers"
                         style="width:300px;min-height:230px;"
                         selection-mode="single"
-                        data-key="Name"
+                        data-key="id"
+                        :loading="entityFilterUpdating"
                         :scrollable="true"
                         :rows="filteredEntities.length"
                         :total-records="filteredEntities.length"
@@ -275,7 +282,7 @@
 import 'flag-icon-css/sass/flag-icon.scss';
 
 import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
-import TitanUtils, { $tCrewInterface, PACKAGES_PATH } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $tCrewInterface, PACKAGES_PATH, } from '@/assets/js/titan/titan-utils.js';
 
 import Button from 'primevue/button';
 import ToggleButton from 'primevue/togglebutton';
@@ -414,6 +421,7 @@ export default {
             vehicleDetailFilter: null,
             // vehicleDetailOptions is a computed value, depends on vehicle subtype
             countryFilter: [],
+            entityFilterUpdating: false,
             tableSelection: null,
             selectedEntityLoadout: null,
             vehicleSubtype2: null, // required for toggling of vehicleSubtype filter button appearance
@@ -506,7 +514,7 @@ export default {
          */
         subtypeFilteredEntities()
         {
-            let filtered = this.typeFilteredEntities;
+            let filtered =this.typeFilteredEntities;
 
             let filter = [];
             if(this.allowCharacterTypes && this.characterSubtype)
@@ -559,7 +567,7 @@ export default {
                 filter.push('' + this.itemsDetailFilter);
             }
 
-            let filtered = this.subtypeFilteredEntities;
+            let filtered =this.subtypeFilteredEntities;
             if(filter.length)
             {
                 filtered = filtered.filter(x =>
@@ -575,7 +583,7 @@ export default {
          */
         countryFilteredEntities()
         {
-            let filtered = this.detailFilteredEntities;
+            let filtered =this.detailFilteredEntities;
             if(this.countryFilter.length)
             {
                 filtered = filtered.filter(x =>
@@ -595,14 +603,16 @@ export default {
          */
         textFilteredEntities()
         {
-            let filtered = this.countryFilteredEntities;
+            let filtered =this.countryFilteredEntities;
             const searchText = this.searchText || '';
             if(searchText.length > 0)
             {
                 const lCaseFilter = this.searchText.toLowerCase();
                 filtered = filtered.filter(x=>x.normalizedName.indexOf(lCaseFilter)!==-1);
             }
-            return filtered.sort((a,b)=>a.normalizedName > b.normalizedName ? 1 : -1);
+            filtered = filtered.sort((a,b)=>a.normalizedName > b.normalizedName ? 1 : -1);
+
+            return filtered;
         },
         /**
          * NOTE: chains onward from textFilteredEntities
@@ -722,32 +732,32 @@ export default {
         updateVehicleSubtypeFilter(evt)
         {
             this.vehicleSubtype = (evt === this.vehicleSubtype) ? null : evt;
-            this.vehicleSubtype2 = this.vehicleSubtype;
+            setTimeout(()=>{this.vehicleSubtype2 = this.vehicleSubtype;}, 100);
         },
         updateItemsSubtypeFilter(evt)
         {
             this.itemsSubtype = (evt === this.itemsSubtype) ? null : evt;
-            this.itemsSubtype2 = this.itemsSubtype;
+            setTimeout(()=>{this.itemsSubtype2 = this.itemsSubtype;}, 100);
         },
         updateVehicleDetailFilter(evt)
         {
             this.vehicleDetailFilter = (evt === this.vehicleDetailFilter) ? null : evt;
-            this.vehicleDetailFilter2 = this.vehicleDetailFilter;
+            setTimeout(()=>{this.vehicleDetailFilter2 = this.vehicleDetailFilter;}, 100);
         },
         updateCharacterSubtypeFilter(evt)
         {
             this.characterSubtype = (evt === this.characterSubtype) ? null : evt;
-            this.characterSubtype2 = this.characterSubtype;
+            setTimeout(()=>{this.characterSubtype2 = this.characterSubtype;}, 100);
         },
         updateScenerySubtypeFilter(evt)
         {
             this.scenerySubtype = (evt === this.scenerySubtype) ? null : evt;
-            this.scenerySubtype2 = this.scenerySubtype;
+            setTimeout(()=>{this.scenerySubtype2 = this.scenerySubtype;}, 100);
         },
         updateCharacterDetailFilter(evt)
         {
             this.characterDetailFilter = (evt === this.characterDetailFilter) ? null : evt;
-            this.characterDetailFilter2 = this.characterDetailFilter;
+            setTimeout(()=>{this.characterDetailFilter2 = this.characterDetailFilter;}, 100);
         },
     }
 };

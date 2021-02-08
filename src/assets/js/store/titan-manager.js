@@ -1,13 +1,13 @@
 import TitanUtils, { SIM_MODE, SIM_MODES, FREE_CAMERA_MODE, $isInOuterra, $tLogger, $tWorldInterface, $tFileInterface } from '@/assets/js/titan/titan-utils.js';
 import FetchUtils from '@/assets/js/utils/fetch-utils.js';
-import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-dev.js';
+import { DUMMY_ENTITIES } from '@/assets/js/titan/titan-ALL_ENTITIES.js';
 import { COUNTRY } from '@/assets/js/utils/countries.js';
 
 export const DEBUG = false;
 
 export const TITAN_MUTATION = {
     // TITAN STATE MANAGEMENT
-    SET_SPLASH_SCREEN_SHOWN:'titan::setSplachScreenShown',
+    SET_SPLASH_SCREEN_SHOWN:'titan::setSplashScreenShown',
     CHANGE_SIM_MODE:'titan::changeSimMode',
     // TITAN UI MODE
     ENTER_UI_MODE:'titan::uimode::enter',
@@ -34,8 +34,12 @@ export const TITAN_UI_MODE = {
 };
 
 const ENTITY_DESCRIPTORS = ($isInOuterra?$tWorldInterface.getEntityDescriptionList():DUMMY_ENTITIES)
-    .map(e=>
+    .map((e, idx)=>
     {
+        // make a guaranteed unique ID from the index of the entry - it turns out
+        // that not all `Name` fields are unique(!) so we can't use that as one
+        // might expect [adlaws]
+        e.id = idx;
         // make the Name field all lower case and get rid of special characters to make filtering simpler
         e.normalizedName = e.Name.toLowerCase(); // .replace(/[\s\-+()]/g, '');
         // the `Blueprint` field value is a comma delimited string, which is not particularly

@@ -4,6 +4,11 @@
         style="width:100%;height:100%;overflow:hidden;"
     >
         <entity-selector2 />
+        <world-state />
+        <time-slider />
+        <drawing-tools />
+        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
         <!--
         <cse-scenario-objects />
         <waypoint-settings />
@@ -11,11 +16,6 @@
         <map-overlay />
 
         PrimeVue - DONE:
-        <drawing-tools />
-        <time-slider />
-        <world-state />
-        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
-        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
 
         <cse-dockable
             :width="300"
