@@ -13,8 +13,8 @@
             ref="titlebar"
             :title="title"
             :icon="icon"
-            :x="status.x"
-            :y="status.y"
+            :x.sync="status.x"
+            :y.sync="status.y"
             :closable="closable"
             :minimizable="minimizable"
             :maximizable="maximizable && resizable"
@@ -24,7 +24,6 @@
             :maximized="status.maximized"
             :minimized="status.minimized"
             @window-dragstart="$emit('window-dragstart', $event)"
-            @window-updateXY="updateXY"
             @window-dragend="$emit('window-dragend', $event)"
             @window-minimise="minimize"
             @window-toggle-maximise="toggleMaximize"
@@ -280,11 +279,6 @@ export default {
     },
     methods:
     {
-        updateXY(xy)
-        {
-            this.status.x = xy.x;
-            this.status.y = xy.y;
-        },
         isMinimized()
         {
             return this.status.minimized !== false;

@@ -425,15 +425,19 @@ pre, code, .monospace
     @include transition($transition-duration-medium, (box-shadow, color, background-color));
 
     background-color: $transparent-black;
-    border-radius: 0px;
-    box-shadow: 0 0 $drop-shadow-medium/4 rgba(255,255,255, 0.5), 0 0 $drop-shadow-medium black;
-    // @include box-shadow($drop-shadow-medium);
+    // have a subtle white glow as well as the boc shadow to
+    // help separate windows edges from those underneath
+    box-shadow: 0 0 $drop-shadow-medium/4 rgba(255,255,255, 0.5),
+            0 0 $drop-shadow-medium black,
+            0 0 $drop-shadow-medium*2 rgba(0,0,0,0.125);
 
     &.active
     {
-        // have a subtle white glow as well as the boc shadow to help separate
-        // active windows from those underneath
-        box-shadow: 0 0 $drop-shadow-large/4 rgba(255,255,255, 0.5), 0 0 $drop-shadow-large black;
+        // have a subtle white glow as well as the boc shadow to
+        // help separate windows edges from those underneath
+        box-shadow: 0 0 $drop-shadow-large/4 rgba(255,255,255, 0.5),
+                    0 0 $drop-shadow-large black,
+                    0 0 $drop-shadow-large*2 rgba(0,0,0,0.125);
     }
 
     &.fullscreen

@@ -174,7 +174,8 @@ export default {
             this.dragStart.y = dragY;
             const newX = this.x + dragDeltaX;
             const newY = this.y + dragDeltaY;
-            this.$emit('window-updateXY', { x: newX, y: newY });
+            this.$emit('update:x', newX);
+            this.$emit('update:y', newY);
         },
         handleDragEnd(/*evt*/)
         {
