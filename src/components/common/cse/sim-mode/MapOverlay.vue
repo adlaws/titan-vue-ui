@@ -156,7 +156,7 @@ export default {
                     const tileLayer = this.$refs.tileLayer;
                     tileLayer.setName(tileLayer.name);
                 }
-            }, 100)
+            }, false)
     },
     mounted()
     {

@@ -24,12 +24,12 @@ export const POSITION_FORMAT = {
     MGRS: 'mgrs',
 };
 export const POSITION_FORMAT_OPTIONS = [
+    {label: 'MGRS', id: POSITION_FORMAT.MGRS},
     {label: 'Decimal', id: POSITION_FORMAT.DECIMAL},
     {label: 'Degrees/Minutes/Seconds', id: POSITION_FORMAT.DMS},
-    {label: 'MGRS', id: POSITION_FORMAT.MGRS},
 ];
 const POSITION_FORMAT_OPTIONS_BY_CODE = DataUtils.objArrayToLookup(POSITION_FORMAT_OPTIONS, 'id');
-const POSITION_FORMAT_DEFAULT = POSITION_FORMAT_OPTIONS[1];
+const POSITION_FORMAT_DEFAULT = POSITION_FORMAT_OPTIONS[0];
 // Ref: https://en.wikipedia.org/wiki/Decimal_degrees,
 //      https://en.wikipedia.org/wiki/Military_Grid_Reference_System
 const POSITION_PRECISION = {

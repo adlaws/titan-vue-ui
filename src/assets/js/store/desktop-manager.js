@@ -74,7 +74,7 @@ const DesktopManager =
         // the size, visiblity and position of the taskbar, can be 'docked' to north, south,
         // east or west edges
         taskbar: {
-            size: 64, // in pixels
+            size: 32, // in pixels
             show: true,
             dock: 's', // n,s,e,w
         },

@@ -20,8 +20,9 @@ export const DURATION_UNITS = {
 export const DURATION_UNIT_OPTIONS = DataUtils.dictToList(DURATION_UNITS, 'id', 'unit');
 
 export const LENGTH_UNITS = {
-    METERS:         {id: 'meters',        full: 'meters',         abbr: 'm', isSIUnit: true },
     CENTIMETERS:    {id: 'centimeters',   full: 'centimeters',    abbr: 'cm'},
+    METERS:         {id: 'meters',        full: 'meters',         abbr: 'm', isSIUnit: true },
+    KILOMETERS:     {id: 'kilometers',    full: 'kilometers',     abbr: 'km'},
     INCHES:         {id: 'inches',        full: 'inches',         abbr: 'in'},
     FEET:           {id: 'feet',          full: 'feet',           abbr: 'ft'},
     YARDS:          {id: 'yards',         full: 'yards',          abbr: 'yd'},
@@ -96,8 +97,9 @@ export const Conversions =
         toStandard:
         {
             // convert length in some unit into standard units (meters)
-            [LENGTH_UNITS.METERS.id]:         (x) => x,
             [LENGTH_UNITS.CENTIMETERS.id]:    (x) => x / 100.0,
+            [LENGTH_UNITS.METERS.id]:         (x) => x,
+            [LENGTH_UNITS.KILOMETERS.id]:     (x) => x * 1000.0,
             [LENGTH_UNITS.INCHES.id]:         (x) => x / 39.3701,
             [LENGTH_UNITS.FEET.id]:           (x) => x / 3.28084,
             [LENGTH_UNITS.YARDS.id]:          (x) => x / 1.09361,
@@ -107,8 +109,9 @@ export const Conversions =
         fromStandard:
         {
             // convert length from standard units (meters) into some other unit
-            [LENGTH_UNITS.METERS.id]:         (x) => x,
             [LENGTH_UNITS.CENTIMETERS.id]:    (x) => x * 100,
+            [LENGTH_UNITS.METERS.id]:         (x) => x,
+            [LENGTH_UNITS.KILOMETERS.id]:     (x) => x / 1000.0,
             [LENGTH_UNITS.INCHES.id]:         (x) => x * 39.3701,
             [LENGTH_UNITS.FEET.id]:           (x) => x * 3.28084,
             [LENGTH_UNITS.YARDS.id]:          (x) => x * 1.09361,

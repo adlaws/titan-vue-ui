@@ -4,6 +4,7 @@
         class="cse-desktop--task-bar"
         :class="{vertical}"
     >
+        <cse-location class="ml-1" />
         <div
             class="start"
             @click="showStartMenu=!showStartMenu"
@@ -72,9 +73,16 @@
         <div
             class="spacer"
         />
-        <cse-location class="mr-2" />
-        <cse-clock class="mr-2" />
-        <cse-locale class="mr-2" />
+        Calytrix CSE <sup>&copy;2021</sup>
+        <div
+            class="spacer"
+        />
+        <div>
+            <cse-icon
+                :icon="false?'map':'earth'"
+                class="clickable mr-1"
+            />
+        </div>
     </div>
 </template>
 

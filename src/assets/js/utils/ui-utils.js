@@ -29,7 +29,7 @@ export default class UiUtils
      *
      * @param func the function to be 'debounced'
      * @param wait the time to wait for "non-execution" before actually calling the function.
-     *             If omitted, `requestAnimationFrame` is used (if available).
+     *             If omitted or `false`, `requestAnimationFrame` is used (if available).
      * @param options a JavaScript object which specifies when the debounced function should be
      *        called in the context of the start or end of the rapid succession of events. It
      *        is of the form...

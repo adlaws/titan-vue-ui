@@ -1,9 +1,11 @@
 <template>
     <div
         class="vue-os--cse-location"
-        :style="`font-size:${taskbarSize*0.25}px;`"
+        :style="`font-size:${taskbarSize*0.5}px;`"
     >
-        <cse-icon icon="map-marker" class="mr-1" />
+        <cse-icon
+            icon="map-marker"
+        />
         <span
             @click="contextMenu.locationFormat.show = false"
             @contextmenu.prevent="showLocationFormatContextMenu"
@@ -14,14 +16,23 @@
                 <longitude class="monospace ml-2" :longitude="tweenedLongitude" />
             </span>
         </span>
-        <br>
-        <cse-icon icon="compass" class="mr-1" />
+
+        <cse-icon
+            :icon="`arrow-expand-${tweenedElevation>=0?'up':'down'}`"
+            class="ml-2"
+        />
+        <elevation
+            class="monospace"
+            :elevation="Math.abs(tweenedElevation)"
+        />
+
+        <cse-icon icon="compass" class="ml-2" />
         <heading class="monospace" :heading="tweenedMagneticHeading" />
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="-8 -8 16 16"
-            :width="taskbarSize*0.25"
-            :height="taskbarSize*0.25"
+            :width="taskbarSize*0.5"
+            :height="taskbarSize*0.5"
             :style="`position:relative;top:${taskbarSize/18}px;`"
         >
             <g
@@ -59,6 +70,7 @@ import MathUtils from '@/assets/js/utils/math-utils.js';
 import Latitude from '@/components/common/cse/core/display/Latitude.vue';
 import Longitude from '@/components/common/cse/core/display/Longitude.vue';
 import Heading from '@/components/common/cse/core/display/Heading.vue';
+import Elevation from '@/components/common/cse/core/display/Elevation.vue';
 import MGRS from '@/components/common/cse/core/display/MGRS.vue';
 
 const DEFAULT_UPDATE_INTERVAL_MS = 125; // update every 125ms (8x per second)
@@ -68,7 +80,7 @@ export default {
     name: 'cse-location',
     components:
     {
-        Latitude, Longitude, Heading, 'mgrs':MGRS,
+        'mgrs':MGRS, Latitude, Longitude, Heading, Elevation,
     },
     props:
     {
@@ -83,6 +95,8 @@ export default {
             lla: {latitude:0.0, longitude: 0.0, altitude:0.0},
             tweenedLatitude: 0.0,
             tweenedLongitude: 0.0,
+            elevation: 0.0,
+            tweenedElevation: 0.0,
             magneticHeading: 0, // between -180.0 and 180.0
             tweenedMagneticHeading: 0,
             compassRotation: 0.0,
@@ -141,6 +155,7 @@ export default {
                 // ease the lat/long values to provide the illusion of continuous updates
                 this.easeValue({tweenedLatitude: newVal.latitude});
                 this.easeValue({tweenedLongitude: newVal.longitude});
+                this.easeValue({tweenedElevation: newVal.altitude});
             }
         },
     },
