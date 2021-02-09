@@ -31,14 +31,8 @@
 </template>
 
 <script>
-import CseIcon from '@/components/cse/core/CseIcon.vue';
-
 export default {
     name: 'error-base',
-    components:
-    {
-        CseIcon,
-    },
     props: {
         error: {
             type: Object,

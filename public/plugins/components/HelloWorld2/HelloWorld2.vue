@@ -16,11 +16,10 @@
                     @click="changeGreeting"
                 >
                     Change Language
-                    <v-icon
+                    <cse-icon
+                        icon="earth"
                         right
-                    >
-                        mdi-earth
-                    </v-icon>
+                    />
                 </v-btn>
             </cse-desktop-window-content>
         </template>
@@ -28,6 +27,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'hello-world-2',
     data()

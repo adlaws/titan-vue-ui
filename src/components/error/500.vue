@@ -16,13 +16,12 @@
 </template>
 
 <script>
-import CseIcon from '@/components/cse/core/CseIcon.vue';
 import ErrorBase from './ErrorBase.vue';
 
 export default {
     name: 'http500',
     components: {
-        ErrorBase, CseIcon
+        ErrorBase,
     },
     data()
     {

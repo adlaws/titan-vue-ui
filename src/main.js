@@ -20,7 +20,7 @@ const i18n = new VueI18n({
 // ----------------------------------------------------------------------------
 
 // Vuetify UI framework -------------------------------------------------------
-import vuetify from '@/plugins/vuetify/vuetify';
+import '@/plugins/primevue/primevue.js';
 // ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
@@ -40,7 +40,7 @@ require('@/../public/js/titanEventListener.js');
 // ----------------------------------------------------------------------------
 const requireComponent = require.context(
     // The relative path of the components folder
-    './components/common/cse',
+    './components/cse',
     // Whether or not to look in subfolders
     true,
     // The regular expression used to match base component filenames
@@ -72,7 +72,6 @@ new Vue({
     router,
     store,
     i18n,
-    vuetify,
     render: h => h(App),
 }).$mount('#app');
 
