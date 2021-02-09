@@ -178,21 +178,45 @@
                     style="display:flex;"
                 >
                     <DataTable
-                        :value="filteredEntities"
+                        :value="virtualFilteredEntities"
                         class="p-datatable-sm no-headers"
-                        style="width:300px;min-height:230px;"
+                        style="width:300px;"
                         selection-mode="single"
                         data-key="id"
-                        :loading="entityFilterUpdating"
-                        :scrollable="true"
-                        :rows="filteredEntities.length"
-                        :total-records="filteredEntities.length"
+                        :lazy="true"
+                        :rows="6"
+                        :scrollable="virtualFilteredEntities.length>5"
+                        :virtual-scroll="true"
+                        :virtual-row-height="40"
                         scroll-height="230px"
+                        :total-records="filteredEntities.length"
+                        @virtual-scroll="onVirtualScroll"
+
                         @row-select="selectEntity"
                     >
-                        <Column
-                            header="Items"
+                        <template
+                            #empty
                         >
+                            No Matches
+                        </template>
+                        <Column>
+                            <template #loading>
+                                <span class="loading-text">
+                                    <div style="display:flex;">
+                                        <img
+                                            src="images/thumbnail-missing.png"
+                                            width="48"
+                                            height="24"
+                                            class="mr-1"
+                                        >
+                                        <span
+                                            style="flex-grow:1;max-width:205px;overflow:hidden;white-space:nowrap;font-size:85%;text-overflow:ellipsis;"
+                                        >
+                                            <cse-icon icon="loading spin" />
+                                        </span>
+                                    </div>
+                                </span>
+                            </template>
                             <template #body="slotProps">
                                 <div style="display:flex;">
                                     <img-fallback
@@ -363,7 +387,7 @@ const SUBTYPE_FILTER_OPTIONS = {
         {label:'Nature', value:BLUEPRINT_VALUE.SUBTYPE.NATURE},
     ],
     [BLUEPRINT_VALUE.TYPE.ITEMS]:[
-        {label:'Equipment', value:BLUEPRINT_VALUE.SUBTYPE.EQUIPMENT},
+        {label:'Gear', value:BLUEPRINT_VALUE.SUBTYPE.EQUIPMENT},
         {label:'Housing', value:BLUEPRINT_VALUE.SUBTYPE.HOUSING},
         {label:'Clutter', value:BLUEPRINT_VALUE.SUBTYPE.CLUTTER},
     ],
@@ -424,6 +448,7 @@ export default {
             entityFilterUpdating: false,
             tableSelection: null,
             selectedEntityLoadout: null,
+            virtualFilteredEntities: [],
             vehicleSubtype2: null, // required for toggling of vehicleSubtype filter button appearance
             vehicleDetailFilter2: null, // required for toggling of vehicleSubtype filter button appearance
             characterSubtype2: null, // required for toggling of characterSubtype filter button appearance
@@ -696,6 +721,14 @@ export default {
             const loadouts = (newValue && newValue.loadouts.length) ? newValue.loadouts : [];
             this.selectedEntityLoadout = loadouts.length ? loadouts[0].name : null;
         },
+        filteredEntities()
+        {
+            this.virtualFilteredEntities = this.loadChunk(0,20);
+        }
+    },
+    mounted()
+    {
+        this.virtualFilteredEntities = this.loadChunk(0,20);
     },
     beforeDestroy()
     {
@@ -758,6 +791,15 @@ export default {
         {
             this.characterDetailFilter = (evt === this.characterDetailFilter) ? null : evt;
             setTimeout(()=>{this.characterDetailFilter2 = this.characterDetailFilter;}, 100);
+        },
+        onVirtualScroll(event)
+        {
+            this.virtualFilteredEntities = this.loadChunk(event.first, 20);
+        },
+        loadChunk(start, count)
+        {
+            const end = Math.min(this.filteredEntities.length, start + count);
+            return this.filteredEntities.slice(start, end);
         },
     }
 };

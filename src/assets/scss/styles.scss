@@ -97,6 +97,8 @@ body {
     }
 }
 
+// get rid of headers in DataTables by adding a `no-headers` class
+// to the DataTable - <DataTable class="no-headers">
 .p-datatable {
     &.no-headers {
         thead {
@@ -413,7 +415,6 @@ pre, code, .monospace
 
     padding: 0;
     margin: 0;
-    border: none;
 
     display: flex;
     flex-direction: column;
@@ -425,12 +426,14 @@ pre, code, .monospace
 
     background-color: $transparent-black;
     border-radius: 0px;
-    @include box-shadow($drop-shadow-medium);
+    box-shadow: 0 0 $drop-shadow-medium/4 rgba(255,255,255, 0.5), 0 0 $drop-shadow-medium black;
+    // @include box-shadow($drop-shadow-medium);
 
     &.active
     {
-        @include box-shadow($drop-shadow-large);
-        // box-shadow: 0 0 4px #FFFFFF, 0 0 10px black;
+        // have a subtle white glow as well as the boc shadow to help separate
+        // active windows from those underneath
+        box-shadow: 0 0 $drop-shadow-large/4 rgba(255,255,255, 0.5), 0 0 $drop-shadow-large black;
     }
 
     &.fullscreen

@@ -7,6 +7,7 @@
         <Dialog
             :visible="isVisible"
             :modal="true"
+            :closable="false"
             :style="{width: '50vw'}"
         >
             <template #header style="background-color:red;">
@@ -341,6 +342,10 @@ export default {
             {
                 this._doLogin();
             }
+        },
+        foo(bar)
+        {
+            console.log(bar);
         },
     }
 };
