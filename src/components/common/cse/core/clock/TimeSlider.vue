@@ -1,5 +1,8 @@
 <template>
-    <div class="cse-desktop--time-slider cse-overlay-text">
+    <div
+        ref="container"
+        class="cse-desktop--time-slider cse-overlay-text"
+    >
         <cse-icon
             :icon="useLocalTz?'web-clock':'clock-outline'"
             style="text-shadow: 0 0 4px black;"
@@ -9,7 +12,7 @@
         {{ tzOffsetText }}
         <slider
             v-model="dayOffset"
-            class="mt-1"
+            class="mt-1 no-range-color"
             :min="0"
             :max="1439"
             :step="1"
@@ -27,11 +30,13 @@
 import tz from 'tz-lookup';
 import { DateTime } from 'luxon';
 
-import Slider from 'primevue/slider';
+import { $isInOuterra, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
 
 import SunCalc from '@/assets/js/utils/suncalc.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
-import { $isInOuterra, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
+import UiUtils from '@/assets/js/utils/ui-utils.js';
+
+import Slider from 'primevue/slider';
 
 // frequency to update timezone for current location
 // when local time offset is in use
@@ -53,10 +58,12 @@ export default {
             localTzName: 'UTC',
             isUpdating: false,
             daylightGradient: null,
+            container: null,
         };
     },
     computed:
     {
+        desktopBounds() { return this.$store.getters.desktopBounds; },
         tzOffsetText()
         {
             if(!this.useLocalTz)
@@ -72,6 +79,10 @@ export default {
     },
     watch:
     {
+        desktopBounds()
+        {
+            this.updatePosition();
+        },
         dayOffset(newValue)
         {
             const hours = (newValue / 60) | 0;
@@ -100,6 +111,8 @@ export default {
             this.dayOffset = (activeScenario.getTimeOfDay() / 60000) | 0;
             // start the update cycle
         }
+        this.container = this.$refs.container;
+        this.updatePosition();
         this.startUpdates();
     },
     beforeDestroy()
@@ -108,6 +121,14 @@ export default {
     },
     methods:
     {
+        updatePosition: UiUtils.throttle(function()
+        {
+            if(!this.container)
+                return;
+            const style = this.container.style;
+            style.top = this.desktopBounds.top + 8 + 'px';
+            style.right = this.desktopBounds.left + 8 + 'px';
+        }, false),
         dayOffsetChanged()
         {
             const offsetMins = MathUtils.wrapClamp(this.dayOffset - this.localTzOffset, 0, 1440);

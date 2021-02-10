@@ -5,31 +5,40 @@
         :x="600"
         :y="100"
         :width="275"
-        :height="160"
+        :height="200"
     >
         <template #default="context">
-            <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-select
+            <cse-desktop-window-content
+                :cse-desktop-window="context.cseDesktopWindow"
+            >
+                <Dropdown
                     v-model="selectedCameraMode"
-                    :items="cameraOptions"
-                    item-text="text"
-                    item-value="id"
+                    placeholder="Select..."
+                    class="p-dropdown-sm"
+                    :options="cameraOptions"
+                    data-key="id"
                 >
-                    <template v-slot:selection="{ item }">
-                        <cse-icon :icon="item.icon" />
-                        <span class="ml-2">{{ item.text }}</span>
+                    <template #value="slotProps">
+                        <div v-if="slotProps.value">
+                            <cse-icon :icon="slotProps.value.icon" class="mr-2" />
+                            {{ slotProps.value.text }}
+                        </div>
+                        <span v-else>
+                            {{ slotProps.placeholder }}
+                        </span>
                     </template>
-                    <template v-slot:item="{ item }">
-                        <cse-icon :icon="item.icon" />
-                        <span class="ml-2">{{ item.text }}</span>
+                    <template #option="slotProps">
+                        <cse-icon :icon="slotProps.option.icon" class="mr-2" />
+                        {{ slotProps.option.text }}
                     </template>
-                </v-select>
-                <v-btn
+                </Dropdown>
+                <br>
+                <Button
+                    label="Create"
+                    class="p-button-sm"
                     :disabled="!selectedCameraMode"
                     @click="switchCameraMode"
-                >
-                    Create
-                </v-btn>
+                />
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>
@@ -39,6 +48,9 @@
 import { $isInOuterra, $tWorldInterface, $tLogger } from '@/assets/js/titan/titan-utils.js';
 import LatLongUtils from './latlong-utils.js';
 
+import Dropdown from 'primevue/dropdown';
+import Button from 'primevue/button';
+
 const REFRESH_RATE = 1000.0 * (1.0 / 30.0); // try to update at 30 frames per second
 
 // dummy values when working in a browser for testing, normally obtained from scneario camera
@@ -47,6 +59,10 @@ const DUMMY_ORIENTATION = {w:4, x: 5, y: 6, z: 7};
 
 export default {
     name: 'virtual-cameras',
+    components:
+    {
+        Dropdown, Button,
+    },
     data()
     {
         return {
@@ -86,13 +102,13 @@ export default {
          */
         switchCameraMode()
         {
-            if( this.selectedCameraMode === this.currentCameraMode )
+            if( this.selectedCameraMode.id === this.currentCameraMode.id )
                 return; // didn't change the camera, no action required
 
             this.stopCameraUpdateLoop();
             this.cameraUpdateLast = null;
             this.cameraUpdater = null;
-            if( this.currentCameraMode === 'standard' )
+            if( this.currentCameraMode.id === 'standard' )
             {
                 // cache the current position and orientation of the camera so that we can
                 // restore it later on
@@ -114,7 +130,7 @@ export default {
             }
 
             this.currentCameraMode = this.selectedCameraMode;
-            if( this.currentCameraMode === 'standard')
+            if( this.currentCameraMode.id === 'standard')
             {
                 // restore the cached position of the standard camera
                 if(this.scenarioCamera !== null)
@@ -130,7 +146,7 @@ export default {
             }
             else
             {
-                const cameraUpdaterFactory = this.cameraUpdaters[this.currentCameraMode];
+                const cameraUpdaterFactory = this.cameraUpdaters[this.currentCameraMode.id];
                 if(cameraUpdaterFactory)
                 {
                     this.cameraUpdater = cameraUpdaterFactory();
@@ -142,7 +158,7 @@ export default {
                 }
             }
 
-            $tLogger.debug(`Switched to ${this.currentCameraMode} camera.`);
+            $tLogger.debug(`Switched to ${this.currentCameraMode.id} camera.`);
         },
         /**
          * Start camera updates

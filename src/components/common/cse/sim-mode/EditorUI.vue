@@ -6,6 +6,7 @@
         <entity-selector2 />
         <world-state />
         <time-slider />
+        <controlled-entity-indicator />
         <drawing-tools />
         <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
@@ -96,6 +97,7 @@ import MathUtils, { Vec3, Vec2 } from '@/assets/js/utils/math-utils.js';
 
 import LinearCompass2 from '@/components/common/cse/core/display/compass/LinearCompass2.vue';
 import DropdownToolbar from '@/components/common/cse/sim-mode/DropdownToolbar.vue';
+import ControlledEntityIndicator from '@/components/common/cse/core/clock/ControlledEntityIndicator.vue';
 import TimeSlider from '@/components/common/cse/core/clock/TimeSlider.vue';
 
 import EntitySelector2 from '@/components/common/cse/sim-mode/EntitySelector2.vue';
@@ -123,7 +125,8 @@ export default {
     components:
     {
         LinearCompass2, DropdownToolbar,
-        TimeSlider, EntitySpotlight,
+        TimeSlider, ControlledEntityIndicator,
+        EntitySpotlight,
         EntitySelector2, MapOverlay, DrawingTools, WorldState, AarStatistics,
         CseScenarioObjects, WaypointSettings,
     },

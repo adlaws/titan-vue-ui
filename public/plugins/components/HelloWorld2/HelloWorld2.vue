@@ -9,27 +9,32 @@
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <h1>
+                <h2>
                     {{ greetings[greetingIdx] }}
-                </h1>
-                <v-btn
+                </h2>
+                <Button
+                    class="p-button-sm"
                     @click="changeGreeting"
                 >
                     Change Language
                     <cse-icon
                         icon="earth"
-                        right
+                        class="ml-1"
                     />
-                </v-btn>
+                </Button>
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>
 </template>
 
 <script>
+import Button from 'primevue/button';
 
 export default {
     name: 'hello-world-2',
+    components: {
+        Button
+    },
     data()
     {
         return {

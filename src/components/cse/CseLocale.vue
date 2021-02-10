@@ -1,7 +1,7 @@
 <template>
     <div
-        class="vue-os--cse-locale"
-        :style="`font-size:${taskbarSize*0.25}px;`"
+        class="vue-os--cse-locale clickable"
+        :style="`font-size:${taskbarSize*0.5}px;`"
         @click="changeLanguage"
     >
         <span
@@ -18,9 +18,6 @@ import { LANGUAGE, PREFERENCE_MUTATION } from '@/assets/js/store/preference-mana
 
 export default {
     name: 'cse-locale',
-    components: {
-
-    },
     data()
     {
         return {};
@@ -47,6 +44,7 @@ export default {
 <style lang="scss" scoped>
 .vue-os--cse-locale
 {
-    max-width: 1em;
+    width: 1.5em;
+    text-align: center;
 }
 </style>

@@ -13,6 +13,7 @@ export const DESKTOP_MUTATION = {
     UPDATE_SCREEN_SIZE:'desktop::updateScreenSize',
     // WINDOW MANAGEMENT
     SET_TASKBAR_VISIBLE:'desktop::setTaskbarVisible',
+    SET_MENUBAR_VISIBLE:'desktop::setMenubarVisible',
     REGISTER_WINDOW:'desktop::registerWindow',
     UPDATE_WINDOW:'desktop::updateWindow',
     DEREGISTER_WINDOW:'desktop::deregisterWindow',
@@ -71,6 +72,13 @@ const DesktopManager =
                 key: null,
             }
         },
+        // the size, visiblity and position of the menubar, can be 'docked' to north, south,
+        // east or west edges
+        menubar: {
+            size: 32, // in pixels
+            show: true,
+            dock: 'n', // n,s,e,w
+        },
         // the size, visiblity and position of the taskbar, can be 'docked' to north, south,
         // east or west edges
         taskbar: {
@@ -122,6 +130,35 @@ const DesktopManager =
                 width:'100vw', height:`${size}px`,
             };
         },
+        isMenubarVisible: (state) => state.menubar.show,
+        menubarSize: (state) => state.menubar.size,
+        menubarDock: (state) => state.menubar.dock,
+        menubarBounds: (state, getters) =>
+        {
+            const size = getters.menubarSize;
+            const dock = getters.menubarDock;
+
+            const east = dock === 'e';
+            const west = dock === 'w';
+            const north = dock === 'n';
+            const south = !(east || west || north);
+
+            if(east || west)
+            {
+                return {
+                    vertical: true,
+                    left:west?0:'auto', right:east?0:'auto',
+                    top:0, bottom:0,
+                    width:`${size}px`, height:'100vh',
+                };
+            }
+
+            return {
+                top:north?0:'auto', bottom:south?0:'auto',
+                left:0, right:0,
+                width:'100vw', height:`${size}px`,
+            };
+        },
         screenBounds: (state, getters) =>
         {
             const screenSize = getters.screenSize;
@@ -134,33 +171,79 @@ const DesktopManager =
         },
         desktopBounds: (state, getters) =>
         {
-            const bounds = { ...getters.screenBounds};
-            if(getters.isTaskbarVisible)
+            const screenBounds = { ...getters.screenBounds};
+            const menubarVisible = getters.isMenubarVisible;
+            const taskbarVisible = getters.isTaskbarVisible;
+            if(menubarVisible || taskbarVisible)
             {
-                const size = getters.taskbarSize;
-                const dock = getters.taskbarDock;
+                let left = screenBounds.left;
+                let right = screenBounds.right;
+                let top = screenBounds.top;
+                let bottom = screenBounds.bottom;
 
-                const east = dock === 'e';
-                const west = dock === 'w';
-                const north = dock === 'n';
+                if(menubarVisible)
+                {
+                    const size = getters.menubarSize;
+                    const dock = getters.menubarDock;
 
-                if(east || west)
-                {
-                    bounds.w -= size;
-                    bounds.x += west?size:0;
-                    bounds.left = bounds.x;
-                    bounds.right = bounds.y + bounds.w;
+                    const east = dock === 'e';
+                    const west = dock === 'w';
+                    const north = dock === 'n';
+
+                    if(east || west)
+                    {
+                        // left/right edge
+                        if(west)
+                            left = size;
+                        else
+                            right = right - size;
+                    }
+                    else
+                    {
+                        // top/bottom edge
+                        if(north)
+                            top = size;
+                        else
+                            bottom = bottom - size;
+                    }
                 }
-                else
+
+                if(taskbarVisible)
                 {
-                    bounds.h -= size;
-                    bounds.y += north?size:0;
-                    bounds.top = bounds.y;
-                    bounds.bottom = bounds.x + bounds.h;
+                    const size = getters.taskbarSize;
+                    const dock = getters.taskbarDock;
+
+                    const east = dock === 'e';
+                    const west = dock === 'w';
+                    const north = dock === 'n';
+
+                    if(east || west)
+                    {
+                        // left/right edge
+                        if(west)
+                            left = Math.max(left, size);
+                        else
+                            right = Math.min(right, right - size);
+                    }
+                    else
+                    {
+                        // top/bottom edge
+                        if(north)
+                            top = Math.max(top, size);
+                        else
+                            bottom = Math.min(bottom, bottom - size);
+                    }
                 }
+
+                screenBounds.x = screenBounds.left = left;
+                screenBounds.right = right;
+                screenBounds.w = screenBounds.right - screenBounds.left;
+                screenBounds.y = screenBounds.top = top;
+                screenBounds.bottom = bottom;
+                screenBounds.h = screenBounds.bottom - screenBounds.top;
             }
 
-            return bounds;
+            return screenBounds;
         },
         windows: (state) => state.windows || {},
         getWindow: (state, getters) => (id) => getters.windows[id] || {},
@@ -314,6 +397,10 @@ const DesktopManager =
         // --------------------------------------------------------------------
         // WINDOW MANAGEMENT
         // --------------------------------------------------------------------
+        [DESKTOP_MUTATION.SET_MENUBAR_VISIBLE](state, isVisible=true)
+        {
+            state.menubar.show = isVisible;
+        },
         [DESKTOP_MUTATION.SET_TASKBAR_VISIBLE](state, isVisible=true)
         {
             state.taskbar.show = isVisible;
@@ -525,7 +612,9 @@ const DesktopManager =
                 }
             }
 
-            // hide taskbar
+            // hide menu bar and taskbar
+            const menubar = state.menubar;
+            menubar.show = false;
             const taskbar = state.taskbar;
             taskbar.show = false;
 
@@ -535,7 +624,9 @@ const DesktopManager =
         },
         [DESKTOP_MUTATION.FULLSCREEN_EXIT](state)
         {
-            // show taskbar
+            // show menubar and taskbar
+            const menubar = state.menubar;
+            menubar.show = true;
             const taskbar = state.taskbar;
             taskbar.show = true;
 

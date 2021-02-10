@@ -5,63 +5,12 @@
         :class="{vertical}"
     >
         <cse-location class="ml-1" />
-        <div
-            class="start"
-            @click="showStartMenu=!showStartMenu"
-        >
-            <div class="start-cse-button">
-                <cse-logo
-                    :size="taskbarSize*0.666"
-                />
-            </div>
-            <div
-                v-show="showStartMenu"
-                :style="`bottom:${taskbarSize}px;`"
-                class="menu"
-            >
-                <ul>
-                    <li @click="startScenarioConstructor">
-                        <cse-icon
-                            icon="map-marker-path"
-                            size="200%"
-                        />
-                        <span class="ml-1">{{ $t('Scenario Constructor', language.id) }}</span>
-                    </li>
-                    <li @click="startLobby">
-                        <cse-icon
-                            icon="account-group-outline"
-                            size="200%"
-                        />
-                        <span class="ml-1">{{ $t('Scenario Lobby', language.id) }}</span>
-                    </li>
-                    <li @click="$router.push({name:'fps'})">
-                        <cse-icon
-                            icon="clipboard-edit-outline"
-                            size="200%"
-                        />
-                        <span class="ml-1">{{ $t('After Action Review', language.id) }}</span>
-                    </li>
-                    <li>
-                        <cse-icon
-                            icon="cogs"
-                            size="200%"
-                        />
-                        <span class="ml-1">{{ $t('Options', language.id) }}</span>
-                    </li>
-                    <li @click="quitApplication">
-                        <cse-icon
-                            icon="logout"
-                            size="200%"
-                        />
-                        <span class="ml-1">{{ $t('Quit', language.id) }}</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
+
         <div
             class="spacer"
             :style="`max-${vertical?'height':'width'}:${taskbarSize*0.25}px;`"
         />
+
         <cse-taskbar-window-tile
             v-for="(window, idx) in windows"
             :key="`win-${idx}`"
@@ -69,37 +18,40 @@
             @click.native="focusWindow(window)"
             @dblclick.native="toggleWindow(window)"
         />
-        <!-- {{ uiModeState }} -->
+
+        <div class="spacer" />
+
         <div
-            class="spacer"
-        />
-        Calytrix CSE <sup>&copy;2021</sup>
-        <div
-            class="spacer"
-        />
-        <div>
+            v-ripple
+            class="clickable p-ripple"
+        >
             <cse-icon
-                :icon="false?'map':'earth'"
-                class="clickable mr-1"
+                :icon="is3D?'axis-arrow':'map'"
             />
+            <span class="mr-1">
+                {{ is3D?'3':'2' }}D
+            </span>
         </div>
     </div>
 </template>
 
 <script>
 import { DESKTOP_MUTATION } from '@/assets/js/store/desktop-manager.js';
-import { TITAN_MUTATION } from '@/assets/js/store/titan-manager.js';
 
-import TitanUtils, { SIM_MODE } from '@/assets/js/titan/titan-utils.js';
+import Ripple from 'primevue/ripple';
 
 export default {
     name: 'cse-task-bar',
+    directives: {
+        'ripple': Ripple
+    },
     props: {},
     data()
     {
         return {
             showStartMenu: false,
             vertical: false,
+            is3D:true,
         };
     },
     computed:
@@ -107,9 +59,6 @@ export default {
         windows() { return this.$store.getters.windows; },
         taskbarSize() { return this.$store.getters.taskbarSize; },
         taskbarBounds() { return this.$store.getters.taskbarBounds; },
-        desktopBounds() { return this.$store.getters.desktopBounds; },
-        screenSize() { return this.$store.getters.screenSize; },
-        uiModeState() { return this.$store.getters.uiModeState; },
         language() {return this.$store.getters.language; },
     },
     mounted()
@@ -130,18 +79,6 @@ export default {
             container.style.height = this.taskbarBounds.height;
 
             this.vertical = this.taskbarBounds.vertical || false;
-        },
-        startScenarioConstructor()
-        {
-            this.$store.commit(TITAN_MUTATION.CHANGE_SIM_MODE, SIM_MODE.EDITOR);
-        },
-        startLobby()
-        {
-            this.$store.commit(TITAN_MUTATION.CHANGE_SIM_MODE, SIM_MODE.ADMIN);
-        },
-        quitApplication()
-        {
-            TitanUtils.quitApplication();
         },
         focusWindow(window)
         {

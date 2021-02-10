@@ -272,7 +272,6 @@
                                 :options="selectedEntity.loadouts"
                                 option-label="name"
                                 option-value="name"
-                                return-object
                             />
                         </div>
                     </div>

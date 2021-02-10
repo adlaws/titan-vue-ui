@@ -5,23 +5,26 @@
         :x="0"
         :y="100"
         :width="275"
-        :height="160"
+        :height="250"
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-select
+                <Dropdown
                     v-model="selectedOption"
                     label="Entity Type:"
-                    :items="entityOptions"
-                    item-text="text"
-                    item-value="id"
+                    class="p-dropdown-sm"
+                    :options="entityOptions"
+                    option-label="text"
+                    option-value="id"
+                    placeholder="Select..."
                 />
-                <v-btn
+                <br>
+                <Button
+                    label="Create"
+                    class="p-button-sm"
                     :disabled="!selectedOption"
                     @click="createEntity"
-                >
-                    Create
-                </v-btn>
+                />
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>
@@ -30,8 +33,15 @@
 <script>
 import { $isInOuterra, $tWorldInterface } from '@/assets/js/titan/titan-utils.js';
 
+import Dropdown from 'primevue/dropdown';
+import Button from 'primevue/button';
+
 export default {
     name: 'simple',
+    components:
+    {
+        Dropdown, Button,
+    },
     data()
     {
         return {

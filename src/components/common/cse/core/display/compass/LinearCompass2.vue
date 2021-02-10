@@ -90,8 +90,10 @@ Example use:
 <script>
 import gsap from 'gsap'; // provides tweening functions
 
-import MathUtils from '@/assets/js/utils/math-utils.js';
 import { $tWorldInterface, $isInOuterra } from '@/assets/js/titan/titan-utils.js';
+
+import MathUtils from '@/assets/js/utils/math-utils.js';
+import UiUtils from '@/assets/js/utils/ui-utils.js';
 
 import LinearCompass2Objective from '@/components/common/cse/core/display/compass/LinearCompass2Objective.vue';
 
@@ -204,7 +206,7 @@ export default {
     },
     methods:
     {
-        updatePosition()
+        updatePosition: UiUtils.throttle(function()
         {
             const container = this.$refs.container;
             const containerBounds = container.getBoundingClientRect();
@@ -244,7 +246,7 @@ export default {
                 else // center
                     container.style.top = (this.desktopBounds.top + ((this.desktopBounds.h - containerBounds.height)/2)) + 'px';
             }
-        },
+        }, false),
         updateHeading()
         {
             if(!this.running)

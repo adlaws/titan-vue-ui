@@ -5,6 +5,8 @@
         class="cse-desktop pass-through"
         :class="{'faux-outerra-background': !isInOuterra}"
     >
+        <cse-menu-bar v-if="menubarVisible" />
+
         <transition
             name="fade-slow"
             mode="out-in"
@@ -53,6 +55,7 @@ export default {
         isSimModeEditor() { return this.currentSimMode === SIM_MODE.EDITOR; },
         isSimModeAdmin() { return this.currentSimMode === SIM_MODE.ADMIN; },
         taskbarVisible() { return this.$store.getters.isTaskbarVisible; },
+        menubarVisible() { return this.$store.getters.isMenubarVisible; },
     },
     watch:
     {
@@ -255,7 +258,7 @@ export default {
         {
             const screenSize = {w: document.body.clientWidth, h:document.body.clientHeight};
             this.$store.commit(DESKTOP_MUTATION.UPDATE_SCREEN_SIZE, screenSize);
-        }, false, {onLeadIn: true, onTrailOut: true}),
+        }, false),
         ////////////////////////////////////////////////////////////////////////////////////////////
         // OTHER HANDLERS
         ////////////////////////////////////////////////////////////////////////////////////////////
