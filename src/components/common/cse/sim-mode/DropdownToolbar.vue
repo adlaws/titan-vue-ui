@@ -2,9 +2,9 @@
 A drop down toolbar, which displays a row of items under it ready for action:
 
                  ----------------------V----------------------
-                               +---+ +---+ +---+
-                               | A | | B | | C |
-                               +---+ +---+ +---+
+                           +---+ +---+   +---+ +---+
+                           | A | | B |   | C | | D |
+                           +---+ +---+   +---+ +---+
 
 @param {Number} size the width of the dropdown trigger in pixels
 @param {Number} y the preferred y position on the screen (offset from top of screen)
@@ -32,7 +32,9 @@ Example use:
                         items: [
                             {id:'a', icon:'car', text:'Car'},
                             {id:'b', icon:'ferry', text:'Ferry'},
+                            {separator:true},
                             {id:'c', icon:'airplane', text:'Aeroplane'},
+                            {id:'d', icon:'submarine', text:'Submarine'},
                         ]
                     },
                 };
@@ -78,16 +80,67 @@ Example use:
             <div
                 v-if="showItems"
             >
-                <ul>
-                    <li
-                        v-for="(item, idx) in items"
-                        :key="`item-${idx}`"
-                        @click="_selected(item)"
+                <transition
+                    :name="`slide-${navDirection}`"
+                    mode="out-in"
+                >
+                    <ul
+                        :key="`group-${groupIdx}`"
                     >
-                        <cse-icon :icon="item.icon" />
-                        <span class="label">{{ item.text }}</span>
-                    </li>
-                </ul>
+                        <template
+                            v-for="(item, idx) in currentGroup.items"
+                        >
+                            <li
+                                v-if="item.separator"
+                                :key="`item-${groupIdx}-${idx}`"
+                                class="separator"
+                            />
+                            <li
+                                v-else
+                                :key="`item-${idx}`"
+                                class="item"
+                                @click="_selected(item)"
+                            >
+                                <cse-icon :icon="item.icon" />
+                                <span class="label">{{ item.text }}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </transition>
+                <div
+                    v-if="hasPreviousGroup || hasNextGroup"
+                    class="pagination"
+                    style="display:flex;justify-content:space-between;"
+                >
+                    <div
+                        class="previous"
+                        :class="{empty:!hasPreviousGroup}"
+                        @click="navDirection='right';groupIdx--"
+                    >
+                        <span v-if="hasPreviousGroup">
+                            <cse-icon icon="chevron-left" />
+                            {{ previousGroup.name }}
+                            <cse-icon
+                                v-if="previousGroup.icon"
+                                :icon="previousGroup.icon"
+                            />
+                        </span>
+                    </div>
+                    <div
+                        class="next"
+                        :class="{empty:!hasNextGroup}"
+                        @click="navDirection='left';groupIdx++"
+                    >
+                        <span v-if="hasNextGroup">
+                            <cse-icon
+                                v-if="nextGroup.icon"
+                                :icon="nextGroup.icon"
+                            />
+                            {{ nextGroup.name }}
+                            <cse-icon icon="chevron-right" />
+                        </span>
+                    </div>
+                </div>
             </div>
         </transition>
     </div>
@@ -127,13 +180,60 @@ export default {
             showItems: false,
             opacity: APPEARANCE.INACTIVE.opacity,
             color: APPEARANCE.INACTIVE.color,
-            items:[
-                {id:'a',icon:'map', text:'Map'},
-                {id:'b',icon:'draw', text:'Drawing'},
-                {id:'c',icon:'car', text:'Entities'},
-                {id:'d',icon:'radio-handheld', text:'CNR'},
-                {id:'e',icon:'vector-polyline', text:'Waypoints'},
-                {id:'f',icon:'rabbit', text:'Rabbits'},
+            navDirection: 'right',
+            groupIdx: 0,
+            groups:[
+                {
+                    name:'Terrain',
+                    icon:'terrain',
+                    items:[
+                        {id:'a',icon:'map', text:'Scenario'},
+                        {id:'b',icon:'draw', text:'Briefing'},
+                        {id:'c',icon:'car', text:'World'},
+                        {separator: true},
+                        {id:'a',icon:'map', text:'ORBAT'},
+                        {id:'b',icon:'draw', text:'Overlays'},
+                        {id:'c',icon:'car', text:'Comms'},
+                        {separator: true},
+                        {id:'d',icon:'radio-handheld', text:'Units'},
+                        {id:'e',icon:'vector-polyline', text:'Waypoints'},
+                        {id:'f',icon:'rabbit', text:'Triggers'},
+                    ],
+                },
+                {
+                    name:'World',
+                    icon:'earth',
+                    items:[
+                        {id:'g',icon:'map', text:'ORBAT'},
+                        {id:'h',icon:'draw', text:'Overlays'},
+                        {id:'i',icon:'car', text:'Comms'},
+                        {separator: true},
+                        {id:'j',icon:'radio-handheld', text:'Units'},
+                        {id:'k',icon:'vector-polyline', text:'Waypoints'},
+                        {id:'l',icon:'rabbit', text:'Triggers'},
+                        {separator: true},
+                        {id:'m',icon:'map', text:'Scenario'},
+                        {id:'n',icon:'draw', text:'Briefing'},
+                        {id:'o',icon:'car', text:'World'},
+                    ],
+                },
+                {
+                    name:'Tools',
+                    icon:'hammer-wrench',
+                    items:[
+                        {id:'p',icon:'map', text:'ORBAT'},
+                        {id:'q',icon:'draw', text:'Overlays'},
+                        {id:'r',icon:'car', text:'Comms'},
+                        {separator: true},
+                        {id:'s',icon:'radio-handheld', text:'Units'},
+                        {id:'k',icon:'vector-polyline', text:'Waypoints'},
+                        {id:'t',icon:'rabbit', text:'Triggers'},
+                        {separator: true},
+                        {id:'u',icon:'map', text:'Scenario'},
+                        {id:'v',icon:'draw', text:'Briefing'},
+                        {id:'w',icon:'car', text:'World'},
+                    ],
+                },
             ],
             autoCloseTimeout: null,
             showTime: null,
@@ -142,6 +242,27 @@ export default {
     computed:
     {
         desktopBounds() { return this.$store.getters.desktopBounds; },
+        currentGroup()
+        {
+            if(this.groups.length === 0)
+                return [];
+
+            return this.groups[this.groupIdx] || [];
+        },
+        previousGroup()
+        {
+            if(this.groupIdx<1)
+                return null;
+            return this.groups[this.groupIdx-1];
+        },
+        nextGroup()
+        {
+            if(this.groupIdx>=this.groups.length-1)
+                return null;
+            return this.groups[this.groupIdx+1];
+        },
+        hasPreviousGroup() { return this.previousGroup !== null; },
+        hasNextGroup() { return this.nextGroup !== null; },
     },
     watch:
     {

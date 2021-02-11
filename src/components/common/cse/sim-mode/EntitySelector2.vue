@@ -305,7 +305,7 @@
 import 'flag-icon-css/sass/flag-icon.scss';
 
 import {TITAN_MUTATION} from '@/assets/js/store/titan-manager.js';
-import TitanUtils, { $tCrewInterface, PACKAGES_PATH, } from '@/assets/js/titan/titan-utils.js';
+import TitanUtils, { $tCrewInterface, PACKAGES_PATH, $isInOuterra } from '@/assets/js/titan/titan-utils.js';
 
 import Button from 'primevue/button';
 import ToggleButton from 'primevue/togglebutton';
@@ -746,6 +746,9 @@ export default {
         },
         placeEntity(opts={empty:false})
         {
+            if(!$isInOuterra)
+
+                return;
             const gizmoPos = this.$store.getters.gizmoPos;
             if(gizmoPos && this.selectedEntity)
             {

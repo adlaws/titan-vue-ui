@@ -220,6 +220,21 @@ pre, code, .monospace
 .fade-slow-enter-active, .fade-slow-leave-active{ @include transition($transition-duration-slow, [opacity]); }
 .fade-slow-enter, .fade-slow-leave-to{opacity: 0;}
 
+// Slide left/right with fade - navigating between pages etc
+// <transition :name="`slide-${isLeft?'left':'right'}`" mode="out-in"> ... </transition>
+.slide-left-leave-active, .slide-left-enter-active,
+.slide-right-leave-active, .slide-right-enter-active {
+    @include transition(0.2s, [opacity transform]);
+}
+.slide-left-enter, .slide-right-leave-to {
+    transform: translate(1rem, 0);
+    opacity: 0;
+}
+.slide-left-leave-to, .slide-right-enter {
+    transform: translate(-1rem, 0);
+    opacity: 0;
+}
+
 // animations -------------------------------------------------------------------------------------
 @keyframes shake-error {
     0%, 100% {transform: translateX(0);}
@@ -696,6 +711,35 @@ pre, code, .monospace
         cursor: pointer;
     }
 
+    .pagination
+    {
+        .previous {
+            padding: 4px 8px 4px 4px;
+        }
+        .next {
+            padding: 4px 4px 4px 8px;
+        }
+        .previous, .next
+        {
+            margin-top: 8px;
+
+            &:not(.empty)
+            {
+                cursor: pointer;
+                &:hover
+                {
+                    color: $menu-bg-hover;
+                    background-color: $menu-fg-hover;
+                    @include box-shadow($drop-shadow-medium, $menu-bg-inactive, 0.4);
+                }
+
+                color: $menu-fg-inactive;
+                background-color: $menu-bg-inactive;
+                border-radius:4px;
+            }
+        }
+    }
+
     ul
     {
         display: flex;
@@ -707,55 +751,64 @@ pre, code, .monospace
         padding:0;
 
         list-style: none;
+
         li
         {
-            backdrop-filter: $glass-blur;
-
-            width: 52px;
-            height: 52px;
-            font-size:40px;
-            line-height:40px;
-
-            margin: 0 4px;
-            padding: 0;
-
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-            align-items: center;
-
-            color: $menu-fg-inactive;
-            background-color: $menu-bg-inactive;
-            border-radius:4px;
-
-            @include transition($transition-duration-medium, (box-shadow));
-
-            cursor: pointer;
-            &:hover
+            &.separator
             {
-                color: $menu-bg-hover;
-                background-color: $menu-fg-hover;
-                @include box-shadow($drop-shadow-medium, $menu-bg-inactive, 0.4);
+                width: 26px;
+                height: 26px;
             }
-            &.active
+            &.item
             {
-                color: $menu-bg-active;
-                background-color: $menu-fg-active;
-                box-shadow: none;
+                backdrop-filter: $glass-blur;
+
+                width: 52px;
+                height: 52px;
+                font-size:40px;
+                line-height:40px;
+
+                margin: 0 4px;
+                padding: 0;
+
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                align-items: center;
+
+                color: $menu-fg-inactive;
+                background-color: $menu-bg-inactive;
+                border-radius:4px;
+
+                @include transition($transition-duration-medium, (box-shadow));
+
+                cursor: pointer;
                 &:hover
                 {
-                    color: $menu-bg-active-hover;
-                    background-color: $menu-fg-active-hover;
+                    color: $menu-bg-hover;
+                    background-color: $menu-fg-hover;
                     @include box-shadow($drop-shadow-medium, $menu-bg-inactive, 0.4);
                 }
-            }
+                &.active
+                {
+                    color: $menu-bg-active;
+                    background-color: $menu-fg-active;
+                    box-shadow: none;
+                    &:hover
+                    {
+                        color: $menu-bg-active-hover;
+                        background-color: $menu-fg-active-hover;
+                        @include box-shadow($drop-shadow-medium, $menu-bg-inactive, 0.4);
+                    }
+                }
 
-            .label
-            {
-                font-size:25%;
-                line-height:25%;
-                margin-top:2px;
+                .label
+                {
+                    font-size:25%;
+                    line-height:25%;
+                    margin-top:2px;
+                }
             }
         }
     }

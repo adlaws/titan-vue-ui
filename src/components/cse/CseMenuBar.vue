@@ -12,6 +12,7 @@
 
         <label
             class="ml-1 mr-1"
+            :style="running?'color:#0F0;text-shadow: 0 0 4px #0F0;':'color:#DFD'"
         >
             Running
         </label>
@@ -24,6 +25,7 @@
 
         <label
             class="mr-1"
+            :style="isAAR?'color:#F00;text-shadow: 0 0 4px #F00;':'color:#FDD'"
         >
             AAR
         </label>
