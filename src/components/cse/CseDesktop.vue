@@ -17,6 +17,7 @@
             />
         </transition>
 
+
         <editor-ui v-if="isSimModeEditor" />
         <lobby-ui v-if="isSimModeAdmin" />
 

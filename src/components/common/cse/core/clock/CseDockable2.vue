@@ -1,38 +1,5 @@
-<template>
-    <div
-        ref="container"
-        class="cse-desktop--controlled-entity-indicator"
-        :style="{width:controlledEntity?'15rem':'auto'}"
-    >
-        <cse-icon
-            :icon="`google-controller${controlledEntity?'':'-off'}`"
-            size="1.5rem"
-            class="clickable"
-            @click="controlledEntity='V-Dagger (JTAC)'"
-        />
-        <span
-            v-if="controlledEntity"
-            class="p-ml-1 p-mr-1"
-        >
-            {{ controlledEntity }}
-        </span>
-        <cse-icon
-            v-if="controlledEntity"
-            icon="close"
-            size="1.5rem"
-            class="clickable"
-            @click="controlledEntity=null"
-        />
-    </div>
-</template>
-
 <script>
-import { $isInOuterra, /* $tWorldInterface */} from '@/assets/js/titan/titan-utils.js';
-
-// import UiUtils from '@/assets/js/utils/ui-utils.js';
-
 export default {
-    name:'controlled-entity-indicator',
     props:
     {
         dock: {
@@ -47,7 +14,6 @@ export default {
     data()
     {
         return {
-            controlledEntity: 'V-Dagger (JTAC)',
             container: null,
             resizeObserver: null,
         };
@@ -69,10 +35,6 @@ export default {
     },
     mounted()
     {
-        if($isInOuterra)
-        {
-            // const activeScenario = $tWorldInterface.getActiveScenario();
-        }
         this.container = this.$refs.container;
         this.resizeObserver = new ResizeObserver(this.updatePosition).observe(this.container);
         this.updatePosition();
@@ -107,24 +69,10 @@ export default {
 </script>
 
 <style lang="scss">
-.cse-desktop--controlled-entity-indicator
+.cse-dockable
 {
-    display:flex;
-    align-items: center;
-    justify-content: space-between;
-
     position:fixed;
     top: 0px;
     left:0px;
-
-    font-size:0.9rem;
-
-    padding: 4px;
-
-    height: 1.8rem;
-    background: rgba(0,64,128,1);
-    color: white;
-
-    box-shadow: 0 0 8px rgba(0,0,0,0.5);
 }
 </style>

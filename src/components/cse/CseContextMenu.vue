@@ -90,7 +90,7 @@ Example use:
                     :ref="`submenu-${idx}`"
                     :key="`item-${idx}`"
                     :class="{disabled:item.disabled===true}"
-                    @click="_revealSubmenu(idx)"
+                    @click.stop="_revealSubmenu(idx)"
                 >
                     <cse-icon v-if="item[iconKey]" :icon="item[iconKey]" />
                     <span v-else style="width:1em;display:inline-block;" />
@@ -103,6 +103,7 @@ Example use:
                             :x="submenu.x"
                             :y="submenu.y"
                             :items="item.items"
+                            :level="level+1"
                             @selected="_handleItemClicked(item)"
                         />
                     </transition>
@@ -129,7 +130,7 @@ import MathUtils from '@/assets/js/utils/math-utils.js';
 // the context menu can be dismissed without making a selection by clicking
 // anywhere outside the bounds of the context menu, by pressing the ESCAPE
 // key, or moving the mouse pointer outside the window
-const CANCELLATION_EVENTS = ['keydown', 'mousedown', 'mouseout'];
+const CANCELLATION_EVENTS = ['keydown', 'mousedown', 'mouseout',];
 
 export default {
     name:'cse-context-menu',
@@ -167,15 +168,17 @@ export default {
             type: Boolean,
             default: false,
         },
-        useParentForPosition:
+        level:
         {
-            type:Boolean,
-            default: false,
-        },
+            type: Number,
+            default: 0,
+        }
     },
     data()
     {
         return {
+            // the DIV containing the context menu
+            container: null,
             // the final position of the context menu on the screen after adjustments
             // due to available screen space
             pos:{
@@ -190,28 +193,25 @@ export default {
             selected: null,
         };
     },
+    computed:{
+        isTopMenu() { return this.level === 0; }
+    },
     mounted()
     {
+        let x = this.x;
+        let y = this.y;
+
         // need to make sure we keep the context menu inside the available screen space - we can
         // also opt to ignore the taskbar and appear over the top of it if desired, but generally
         // we don't want to do that
         const desktopBounds = this.ignoreTaskbar ? this.$store.getters.screenBounds : this.$store.getters.desktopBounds;
+
         // work out bounds for context menu
-        const container = this.$refs.container;
-        const bounds = container.getBoundingClientRect();
+        this.container = this.$refs.container;
+        // const bounds = this.container.getBoundingClientRect();
 
-        let x = this.x;
-        let y = this.y;
-
-        if(this.useParentForPosition && this.$parent)
-        {
-            let bcRect = this.$parent.$el.getBoundingClientRect();
-            x -= bcRect.x;
-            y -= bcRect.y;
-        }
-
-        this.pos.x = MathUtils.clamp(x, desktopBounds.left, desktopBounds.right - bounds.width);
-        this.pos.y = MathUtils.clamp(y, desktopBounds.top, desktopBounds.bottom - bounds.height);
+        this.pos.x = MathUtils.clamp(x, desktopBounds.left, desktopBounds.right);
+        this.pos.y = MathUtils.clamp(y, desktopBounds.top, desktopBounds.bottom);
 
         this.$nextTick(() =>
         {
@@ -220,23 +220,25 @@ export default {
             // if this happens until after the location/size of the container has been
             // updated and the component has been rendered, hence the need to wait for
             // the tick.
-            const parentMenu = container.parentElement;
+            const parentMenu = this.container.parentElement;
             if(!parentMenu)
                 return; // we are not a sub-menu, so everything is cool
 
             // get our *absolute* position on the screen and our *current* bounds
             // now that we are rendered
-            const absolutePosition = this._getAbsolutePosition(container);
-            const bounds2 = container.getBoundingClientRect();
+            // const absolutePosition = this._getAbsolutePosition(this.container);
+            const bounds2 = this.container.getBoundingClientRect();
+
             // check the right edge and bottom to see if we go off the screen
-            const rightEdge = absolutePosition.x + bounds2.width;
-            const bottomEdge = absolutePosition.y + bounds2.height;
+            const rightEdge = bounds2.x + bounds2.width;
+            const bottomEdge = bounds2.y + bounds2.height;
             if( rightEdge > desktopBounds.right)
             {
                 // we're off the right edge of the screen - reposition so we are aligned
                 // with the left side of the parent menu
                 const parentBounds = parentMenu.getBoundingClientRect();
-                this.pos.x -= (parentBounds.width + bounds2.width);
+                this.pos.x -= parentBounds.width;
+                this.pos.x -= bounds2.width;
             }
             if(bottomEdge > desktopBounds.bottom)
             {
@@ -262,13 +264,13 @@ export default {
     {
         _revealSubmenu(idx)
         {
-            const container = this.$refs[`submenu-${idx}`][0];
-            const bounds = container.getBoundingClientRect();
-
-            this.submenu.x = bounds.width;
-            this.submenu.y = container.offsetTop;
+            const subMenuListItem = this.$refs[`submenu-${idx}`][0];
+            const bounds = subMenuListItem.getBoundingClientRect();
 
             this.submenu.idx = idx;
+
+            this.submenu.x = bounds.x + bounds.width;
+            this.submenu.y = bounds.top;
         },
         _handleItemClicked(item)
         {
@@ -285,7 +287,7 @@ export default {
          */
         _watchForClickOutsideOrEscape(evt)
         {
-            if(this.$refs.container.contains(evt.target))
+            if(this.container.contains(evt.target))
                 return; // it's on the context menu, don't do anything
 
             if(EventUtils.isMouseOut(evt))

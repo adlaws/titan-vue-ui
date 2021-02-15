@@ -3,20 +3,29 @@
         class="pass-through"
         style="width:100%;height:100%;overflow:hidden;"
     >
+        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
+        <controlled-entity-indicator />
+        <time-slider />
+        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+
+        <!--
         <entity-selector2 />
         <world-state />
-        <time-slider />
-        <controlled-entity-indicator />
-        <drawing-tools />
-        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
-        <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
-        <!--
-        <cse-scenario-objects />
         <waypoint-settings />
+
+        <drawing-tools />
+
+        <cse-scenario-objects />
         <aar-statistics />
         <map-overlay />
 
         PrimeVue - DONE:
+
+        <cse-notifications-area
+            dock="w"
+            offset="-32"
+            :width="300"
+        />
 
         <cse-dockable
             :width="300"
@@ -29,12 +38,6 @@
         >
             Entity list
         </cse-dockable>
-
-        <cse-notifications-area
-            dock="w"
-            offset="-32"
-            :width="300"
-        />
 
         -->
 
@@ -536,7 +539,13 @@ export default {
                         id:9, text:'Option D', tooltip:'D is for Dog', disabled:false,
                         items:[
                             {id:'a', text:'Sub menu 1'},
-                            {id:'b', text:'Sub menu 2'},
+                            {id:'b', text:'Sub menu 2',
+                                items: [
+                                    {id:'Y-b-a', text:'Sub Y-B-A'},
+                                    {id:'Y-b-b', text:'Sub Y-B-B'},
+                                ]
+                            },
+
                         ]
                     },
                     {
@@ -546,7 +555,12 @@ export default {
                             {id:'Y', text:'Sub menu Y',
                                 items:[
                                     {id:'Y-a', text:'Sub Y-A'},
-                                    {id:'Y-b', text:'Sub Y-B'},
+                                    {id:'Y-b', text:'Sub Y-B',
+                                        items:[
+                                            {id:'Y-b-a', text:'Sub Y-B-A'},
+                                            {id:'Y-b-b', text:'Sub Y-B-B'},
+                                        ]
+                                    },
                                 ]}
                         ],
                     },

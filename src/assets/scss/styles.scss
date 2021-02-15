@@ -551,7 +551,7 @@ pre, code, .monospace
 
 .cse-desktop--window
 {
-    position: absolute;
+    position: fixed;
 
     padding: 0;
     margin: 0;
@@ -700,7 +700,7 @@ pre, code, .monospace
 
 .cse-desktop--dropdown-toolbar
 {
-    position:absolute;
+    position:fixed;
 
     display: flex;
     flex-direction: column;
@@ -820,10 +820,10 @@ pre, code, .monospace
 
     border-radius: 2px;
 
-    position: absolute;
+    position: fixed; // remove from document layout, position always relative to the document, unaffected by scrolling.
     top:0;
     left:0;
-    min-width: 10em;
+    min-width: 11rem;
 
     padding: 0;
     margin: 0;
@@ -884,7 +884,7 @@ pre, code, .monospace
 {
     z-index: 1024;
 
-    position: absolute;
+    position: fixed;
     top:0;
     left:0;
 
@@ -911,6 +911,8 @@ pre, code, .monospace
 
 .cse-desktop--dockable
 {
+    position: fixed;
+
     $handle-size: 32px;
 
     z-index: 1024;
@@ -922,7 +924,6 @@ pre, code, .monospace
 
     @include box-shadow($drop-shadow-medium);
 
-    position: absolute;
 
     display: flex;
     &.dock-w {
@@ -1039,7 +1040,7 @@ pre, code, .monospace
     margin: 0;
     padding: 0;
 
-    position: absolute;
+    position: fixed;
 
     .notification-items
     {
@@ -1125,7 +1126,7 @@ pre, code, .monospace
 {
     z-index: 1024;
 
-    position: absolute;
+    position: fixed;
 
     top:25vh;
     left:20vw;

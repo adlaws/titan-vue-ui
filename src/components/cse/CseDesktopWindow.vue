@@ -166,11 +166,19 @@ export default {
             type: Boolean,
             default: false,
         },
+        // ensure that at least this number of pixels of a window are visible
+        // on the desktop when it first appears to avoid windows initialising
+        // off screen or with title bars inaccessible
+        safetyMargin: {
+            type: Number,
+            default: 24,
+        }
     },
     data()
     {
         return {
             id: null,
+            container: null,
             status:
             {
                 x: 0,
@@ -191,7 +199,7 @@ export default {
                 type: null,
                 drag: { x: 0, y: 0 },
                 edge: { x: 0, y: 0 },
-            }
+            },
         };
     },
     computed:
@@ -204,11 +212,11 @@ export default {
     },
     watch:
     {
-        'status.x': function(newX, /*oldX*/) { this.$refs.container.style.left = newX + 'px'; },
-        'status.y': function(newY, /*oldY*/) { this.$refs.container.style.top = newY + 'px'; },
-        'status.w': function(newW, /*oldW*/) { this.$refs.container.style.width = newW + 'px'; },
-        'status.h': function(newH, /*oldH*/) { this.$refs.container.style.height = newH + 'px'; },
-        zIndex(newZ, /*oldZ*/) { this.$refs.container.style.zIndex = newZ; },
+        'status.x': function(newX, /*oldX*/) { if(this.container) {this.container.style.left = newX + 'px';} },
+        'status.y': function(newY, /*oldY*/) { if(this.container) {this.container.style.top = newY + 'px';} },
+        'status.w': function(newW, /*oldW*/) { if(this.container) {this.container.style.width = newW + 'px';} },
+        'status.h': function(newH, /*oldH*/) { if(this.container) {this.container.style.height = newH + 'px';} },
+        zIndex(newZ, /*oldZ*/) { if(this.container) { this.container.style.zIndex = newZ; } },
         icon(newIcon, /*oldIcon*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, icon:newIcon}); },
         title(newTitle, /*oldTitle*/) { this.$store.commit(DESKTOP_MUTATION.UPDATE_WINDOW, {id:this.id, title:newTitle}); },
         isActive(isActive, /*wasActive*/) { this.$emit(EVENT.WINDOW_ACTIVE, isActive); },
@@ -246,30 +254,38 @@ export default {
         }
 
         const xywh = this._processPositionAndSize(this.x, this.y, this.width, this.height);
-        this.status.x = xywh.x;
-        this.status.y = xywh.y;
-        this.status.w = xywh.width;
-        this.status.h = xywh.height;
 
-        const style = this.$refs.container.style;
-        style.left = status.x + 'px';
-        style.top = status.y + 'px';
-        style.width = status.width + 'px';
-        style.height = status.height + 'px';
-
-        if(this.undecorated)
+        this.$nextTick(()=>
         {
-            style.borderRadius = '0px';
-            style.border = '0px solid black';
-            style.boxShadow = 'none';
-        }
+            this.container = this.$refs.container;
+            this.status.x = xywh.x;
+            this.status.y = xywh.y;
+            this.status.w = xywh.width;
+            this.status.h = xywh.height;
 
-        if(this.startMinimized && this.minimizable)
-            this.minimize();
-        else if(this.startMaximized && this.resizable && this.maximizable)
-            this.maximize();
-        else if(this.startFullscreen)
-            this.$store.commit(DESKTOP_MUTATION.FULLSCREEN_ENTER, {id: window.id});
+            const style = this.container.style;
+
+            style.zIndex = this.zIndex;
+
+            style.left = status.x + 'px';
+            style.top = status.y + 'px';
+            style.width = status.width + 'px';
+            style.height = status.height + 'px';
+
+            if(this.undecorated)
+            {
+                style.borderRadius = '0px';
+                style.border = '0px solid black';
+                style.boxShadow = 'none';
+            }
+
+            if(this.startMinimized && this.minimizable)
+                this.minimize();
+            else if(this.startMaximized && this.resizable && this.maximizable)
+                this.maximize();
+            else if(this.startFullscreen)
+                this.$store.commit(DESKTOP_MUTATION.FULLSCREEN_ENTER, {id: window.id});
+        });
     },
     beforeDestroy()
     {
@@ -616,7 +632,11 @@ export default {
                     windowX = this._parseFloatSafe(windowX, 0);
             }
 
-            return MathUtils.clamp(windowX, this.desktopBounds.left, this.desktopBounds.right - windowWidth);
+            // make sure that the window is at least partially within the desktop left-right bounds
+            const safetyMargin = Math.max(this.safetyMargin, 8);
+            const minX = (this.desktopBounds.left - windowWidth) + safetyMargin;
+            const maxX = (this.desktopBounds.right + windowWidth) - safetyMargin;
+            return MathUtils.clamp(windowX, minX, maxX);
         },
         _processY(windowY, windowHeight)
         {
@@ -634,7 +654,12 @@ export default {
                     windowY = this._parseFloatSafe(windowY, 0);
             }
 
-            return MathUtils.clamp(windowY, this.desktopBounds.top, this.desktopBounds.bottom - windowHeight);
+            // make sure that the window is at least partially within the desktop top-bottom bounds,
+            // but make sure that the title bar hasn't gone off the top!
+            const safetyMargin = Math.max(this.safetyMargin, 8);
+            const minY = this.desktopBounds.top;
+            const maxY = this.desktopBounds.bottom - safetyMargin;
+            return MathUtils.clamp(windowY, minY, maxY);
         },
         _parseFloatSafe(str, defaultValue=0)
         {

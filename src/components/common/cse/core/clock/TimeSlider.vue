@@ -223,8 +223,8 @@ export default {
 <style lang="scss">
 .cse-desktop--time-slider
 {
+    position:fixed;
     display:block;
-    position:absolute;
     top: 0px;
     right:0px;
 

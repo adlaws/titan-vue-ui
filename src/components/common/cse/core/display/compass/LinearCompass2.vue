@@ -195,6 +195,7 @@ export default {
     },
     mounted()
     {
+        this.container = this.$refs.container;
         this.updatePosition();
         // start the update cycle
         this.running = true;
@@ -208,26 +209,27 @@ export default {
     {
         updatePosition: UiUtils.throttle(function()
         {
-            const container = this.$refs.container;
-            const containerBounds = container.getBoundingClientRect();
+            const containerBounds = this.container.getBoundingClientRect();
+            const style = this.container.style;
 
-            container.style.position = 'absolute';
+            style.position = 'fixed';
+            style.zIndex = 0;
 
             if(typeof this.x === 'number')
             {
                 let x = this.x;
                 if( x < 0)
                     x += this.desktopBounds.right - containerBounds.width;
-                container.style.left = MathUtils.clamp(x, this.desktopBounds.left, this.desktopBounds.right-containerBounds.width) + 'px';
+                style.left = MathUtils.clamp(x, this.desktopBounds.left, this.desktopBounds.right-containerBounds.width) + 'px';
             }
             else
             {
                 if(this.x === 'left')
-                    container.style.left = this.desktopBounds.left + 'px';
+                    style.left = this.desktopBounds.left + 'px';
                 else if(this.x === 'right')
-                    container.style.left = (this.desktopBounds.right - containerBounds.width) + 'px';
+                    style.left = (this.desktopBounds.right - containerBounds.width) + 'px';
                 else // center
-                    container.style.left = (this.desktopBounds.left + ((this.desktopBounds.w - containerBounds.width)/2)) + 'px';
+                    style.left = (this.desktopBounds.left + ((this.desktopBounds.w - containerBounds.width)/2)) + 'px';
             }
 
             if(typeof this.y === 'number')
@@ -235,16 +237,16 @@ export default {
                 let y = this.y;
                 if( y < 0)
                     y += this.desktopBounds.bottom - containerBounds.height;
-                container.style.top = MathUtils.clamp(y, this.desktopBounds.top, this.desktopBounds.bottom-containerBounds.height) + 'px';
+                style.top = MathUtils.clamp(y, this.desktopBounds.top, this.desktopBounds.bottom-containerBounds.height) + 'px';
             }
             else
             {
                 if(this.y === 'top')
-                    container.style.top = this.desktopBounds.top + 'px';
+                    style.top = this.desktopBounds.top + 'px';
                 else if(this.y === 'bottom')
-                    container.style.top = (this.desktopBounds.bottom - containerBounds.height) + 'px';
+                    style.top = (this.desktopBounds.bottom - containerBounds.height) + 'px';
                 else // center
-                    container.style.top = (this.desktopBounds.top + ((this.desktopBounds.h - containerBounds.height)/2)) + 'px';
+                    style.top = (this.desktopBounds.top + ((this.desktopBounds.h - containerBounds.height)/2)) + 'px';
             }
         }, false),
         updateHeading()

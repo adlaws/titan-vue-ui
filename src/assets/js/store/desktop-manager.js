@@ -88,6 +88,9 @@ const DesktopManager =
         },
         // window registry and management
         windows: {},
+        // windows Z index begins here, allowing items to appear behind/in front of
+        // windows
+        windowZstart: 128,
         maxZ: 0,
     }),
     getters: {
@@ -248,7 +251,8 @@ const DesktopManager =
         windows: (state) => state.windows || {},
         getWindow: (state, getters) => (id) => getters.windows[id] || {},
         getWindowManagedProps: (state, getters) => (id) => getters.getWindow(id).managed || {},
-        getWindowZindex: (state, getters) => (id) => getters.getWindowManagedProps(id).zIndex || 0,
+        getWindowZindex: (state, getters) => (id) => state.windowZstart + getters.getWindowManagedProps(id).zOffset || state.windowZstart,
+        getMaxWindowZindex: (state) => state.windowZstart + state.maxZ,
         isWindowActive: (state, getters) => (id) => getters.getWindowManagedProps(id).active || false,
         isWindowShown: (state, getters) => (id) => getters.getWindowManagedProps(id).show || false,
         isWindowFullscreen: (state, getters) => (id) => getters.getWindowManagedProps(id).fullscreen || false,
@@ -439,7 +443,7 @@ const DesktopManager =
                         active: true,
                         show: true,
                         fullscreen: false,
-                        zIndex: state.maxZ,
+                        zOffset: state.maxZ,
                         instance: payload.instance, // window instance
                     }
                 }
@@ -500,7 +504,7 @@ const DesktopManager =
             // de-registered window was active) activate the top level
             // window now
             const managed = window.managed;
-            const currentZindex = managed.zIndex;
+            const currentZoffset = managed.zOffset;
             const wasActive = managed.active;
             let maxZ = 0;
             let topWindow = null;
@@ -508,11 +512,11 @@ const DesktopManager =
             {
                 const w = windows[id];
                 const wManaged = w.managed;
-                if(wManaged.zIndex >= currentZindex)
-                    wManaged.zIndex--;
-                if(wManaged.zIndex >= maxZ)
+                if(wManaged.zOffset >= currentZoffset)
+                    wManaged.zOffset--;
+                if(wManaged.zOffset >= maxZ)
                 {
-                    maxZ = w.zIndex;
+                    maxZ = w.zOffset;
                     topWindow = w;
                 }
             }
@@ -538,17 +542,17 @@ const DesktopManager =
             // adjust the Z-indices of all windows currently
             // in front of the window 'down' by one
             const managed = window.managed;
-            const currentZindex = managed.zIndex;
+            const currentZoffset = managed.zOffset;
             for(const id in state.windows)
             {
                 const w = state.windows[id];
                 const wManaged = w.managed;
                 wManaged.active = (id === payload.id);
-                if(wManaged.zIndex >= currentZindex)
-                    wManaged.zIndex--;
+                if(wManaged.zOffset >= currentZoffset)
+                    wManaged.zOffset--;
             }
             // make the Z-index of the target window the maximum
-            managed.zIndex = state.maxZ;
+            managed.zOffset = state.maxZ;
         },
         /**
          * Bring a window to the "back"
@@ -566,10 +570,10 @@ const DesktopManager =
 
             const managed = window.managed;
             // cache Z-index of the target window
-            const currentZindex = managed.zIndex;
+            const currentZoffset = managed.zOffset;
             // deactivate and make the Z-index 1 (send to back)
             managed.active = false;
-            managed.zIndex = 0;
+            managed.zOffset = 0;
             // adjust the Z-indices of all windows currently
             // in below the window 'up' by one, activate the
             // 'top' one
@@ -577,9 +581,9 @@ const DesktopManager =
             {
                 const w = state.windows[id];
                 const wManaged = w.managed;
-                if(wManaged.zIndex < currentZindex)
-                    wManaged.zIndex++;
-                wManaged.active = wManaged.zIndex === state.maxZ;
+                if(wManaged.zOffset < currentZoffset)
+                    wManaged.zOffset++;
+                wManaged.active = wManaged.zOffset === state.maxZ;
             }
             // now that we have gone through all the windows, make the "top"
             // window the active one
@@ -590,7 +594,7 @@ const DesktopManager =
             {
                 const w = state.windows[id];
                 const wManaged = w.managed;
-                wManaged.active = wManaged.zIndex === state.maxZ;
+                wManaged.active = wManaged.zOffset === state.maxZ;
             }
         },
         [DESKTOP_MUTATION.FULLSCREEN_ENTER](state, payload)

@@ -8,6 +8,13 @@ import store from '@/assets/js/store/store.js';
 import router from '@/assets/js/router/router.js';
 // ----------------------------------------------------------------------------
 
+// Vue2 Portal ----------------------------------------------------------------
+// NOTE: This functionality is built into Vue3 as Teleport, and is not needed
+//       if we upgrade to Vue3
+import PortalVue from 'portal-vue';
+Vue.use(PortalVue);
+// ----------------------------------------------------------------------------
+
 // internationalisation -------------------------------------------------------
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);

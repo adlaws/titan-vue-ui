@@ -146,7 +146,6 @@
                                 <length-field
                                     v-model="tabs.atmosphere.fog.height"
                                     :label="$t('worldSettings.atmosphere.Height', languageID)"
-                                    show-unit-options
                                     :display-units="LENGTH_UNITS.METERS"
                                     :min="0"
                                     :max="20000"
