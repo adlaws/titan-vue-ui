@@ -117,7 +117,7 @@ const EVENT = {
 };
 
 export default {
-    name:'',
+    name:'cse-expanding-dockable',
     directives:
     {
         'ripple': Ripple,
@@ -198,10 +198,10 @@ export default {
         minYoffset() { return this.desktopBounds.top; },
         maxXoffset() { return this.desktopBounds.right - (this.isCollapsed ? this.bounds.width : this.width); },
         _dock() { return '' + this.dock.toLowerCase().charAt(0); },
-        isDockEast() { return this._dock === 'e'; },
         isDockWest() { return this._dock === 'w'; },
+        isDockEast() { return !this.isDockWest && this._dock === 'e'; },
         isDockNorth() { return this._dock === 'n'; },
-        isDockSouth() { return this._dock === 's'; },
+        isDockSouth() { return !this.isDockNorth && this._dock === 's'; },
         isDockEW() { return this.isDockEast || this.isDockWest; },
         isDockNS() { return !this.isDockEW; },
         chevronDirection()
@@ -299,11 +299,11 @@ export default {
             {
                 // position at 'center' of edge
                 if(this.isDockEW)
-                    return this.desktopBounds.top + (this.desktopBounds.h / 2) - (this.bounds.height / 2.0);
+                    return this.desktopBounds.top + (this.desktopBounds.height / 2) - (this.bounds.height / 2.0);
                 else
                 {
                     console.log(offsetStr, this.desktopBounds);
-                    return this.desktopBounds.left + (this.desktopBounds.w / 2) - (this.bounds.width / 2.0);
+                    return this.desktopBounds.left + (this.desktopBounds.width / 2) - (this.bounds.width / 2.0);
                 }
             }
             // for anything else just position it at the start of the edge

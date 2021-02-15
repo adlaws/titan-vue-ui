@@ -11,15 +11,16 @@
         </router-link>
 
         <linear-compass2
-            ignore-taskbar
-            :y="-10"
+            dock="s"
+            :padding-y="8"
+            use-screen-bounds
         />
 
         <cse-notifications-area
-            ignore-taskbar
-            dock="w"
-            offset="-16"
+            dock="sw"
+            :padding-y="8"
             :width="300"
+            use-screen-bounds
         />
 
         <character-damage

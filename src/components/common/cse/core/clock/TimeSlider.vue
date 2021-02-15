@@ -34,7 +34,8 @@ import { $isInOuterra, $tWorldInterface } from '@/assets/js/titan/titan-utils.js
 
 import SunCalc from '@/assets/js/utils/suncalc.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
-import UiUtils from '@/assets/js/utils/ui-utils.js';
+
+import CseDockableMixin from '@/components/cse/CseDockableMixin.vue';
 
 import Slider from 'primevue/slider';
 
@@ -43,11 +44,12 @@ import Slider from 'primevue/slider';
 const UPDATE_INTERVAL = 1000;
 
 export default {
-    name:'date-time-widget',
+    name:'time-slider',
     components:
     {
         Slider,
     },
+    mixins: [CseDockableMixin],
     data()
     {
         return {
@@ -79,10 +81,6 @@ export default {
     },
     watch:
     {
-        desktopBounds()
-        {
-            this.updatePosition();
-        },
         dayOffset(newValue)
         {
             const hours = (newValue / 60) | 0;
@@ -111,8 +109,6 @@ export default {
             this.dayOffset = (activeScenario.getTimeOfDay() / 60000) | 0;
             // start the update cycle
         }
-        this.container = this.$refs.container;
-        this.updatePosition();
         this.startUpdates();
     },
     beforeDestroy()
@@ -121,14 +117,6 @@ export default {
     },
     methods:
     {
-        updatePosition: UiUtils.throttle(function()
-        {
-            if(!this.container)
-                return;
-            const style = this.container.style;
-            style.top = this.desktopBounds.top + 8 + 'px';
-            style.right = this.desktopBounds.left + 8 + 'px';
-        }, false),
         dayOffsetChanged()
         {
             const offsetMins = MathUtils.wrapClamp(this.dayOffset - this.localTzOffset, 0, 1440);
@@ -223,10 +211,7 @@ export default {
 <style lang="scss">
 .cse-desktop--time-slider
 {
-    position:fixed;
     display:block;
-    top: 0px;
-    right:0px;
 
     font-size:90%;
 

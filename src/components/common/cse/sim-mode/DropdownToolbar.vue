@@ -1,10 +1,10 @@
 <!-- ------------------------------------------------------------------------------------------
 A drop down toolbar, which displays a row of items under it ready for action:
 
-                 ----------------------V----------------------
-                           +---+ +---+   +---+ +---+
-                           | A | | B |   | C | | D |
-                           +---+ +---+   +---+ +---+
+                ----------------------V----------------------
+                          +---+ +---+   +---+ +---+
+                          | A | | B |   | C | | D |
+                          +---+ +---+   +---+ +---+
 
 @param {Number} size the width of the dropdown trigger in pixels
 @param {Number} y the preferred y position on the screen (offset from top of screen)
@@ -316,7 +316,7 @@ export default {
             const container = this.$refs.container;
             const containerBounds = container.getBoundingClientRect();
 
-            container.style.left = (this.desktopBounds.left + ((this.desktopBounds.w - containerBounds.width)/2)) + 'px';
+            container.style.left = (this.desktopBounds.left + ((this.desktopBounds.width - containerBounds.width)/2)) + 'px';
 
             if(typeof this.y === 'number')
                 container.style.top = MathUtils.clamp(this.y, this.desktopBounds.top, this.desktopBounds.bottom-containerBounds.height) + 'px';

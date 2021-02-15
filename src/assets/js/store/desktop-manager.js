@@ -167,22 +167,22 @@ const DesktopManager =
             const screenSize = getters.screenSize;
             return {
                 x: 0, y: 0,
-                w: screenSize.w, h: screenSize.h,
+                width: screenSize.w, height: screenSize.h,
                 left: 0, right: screenSize.w,
                 top: 0, bottom: screenSize.h
             };
         },
         desktopBounds: (state, getters) =>
         {
-            const screenBounds = { ...getters.screenBounds};
+            const bounds = { ...getters.screenBounds };
             const menubarVisible = getters.isMenubarVisible;
             const taskbarVisible = getters.isTaskbarVisible;
             if(menubarVisible || taskbarVisible)
             {
-                let left = screenBounds.left;
-                let right = screenBounds.right;
-                let top = screenBounds.top;
-                let bottom = screenBounds.bottom;
+                let left = bounds.left;
+                let right = bounds.right;
+                let top = bounds.top;
+                let bottom = bounds.bottom;
 
                 if(menubarVisible)
                 {
@@ -238,15 +238,15 @@ const DesktopManager =
                     }
                 }
 
-                screenBounds.x = screenBounds.left = left;
-                screenBounds.right = right;
-                screenBounds.w = screenBounds.right - screenBounds.left;
-                screenBounds.y = screenBounds.top = top;
-                screenBounds.bottom = bottom;
-                screenBounds.h = screenBounds.bottom - screenBounds.top;
+                bounds.x = bounds.left = left;
+                bounds.right = right;
+                bounds.width = bounds.right - bounds.left;
+                bounds.y = bounds.top = top;
+                bounds.bottom = bottom;
+                bounds.height = bounds.bottom - bounds.top;
             }
 
-            return screenBounds;
+            return bounds;
         },
         windows: (state) => state.windows || {},
         getWindow: (state, getters) => (id) => getters.windows[id] || {},

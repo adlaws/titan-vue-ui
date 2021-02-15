@@ -4,13 +4,14 @@
         style="width:100%;height:100%;overflow:hidden;"
     >
         <dropdown-toolbar v-if="!isAnyWindowFullscreen" :y="22" />
-        <controlled-entity-indicator />
-        <time-slider />
-        <linear-compass2 v-if="!isAnyWindowFullscreen" :y="-10" />
+        <controlled-entity-indicator dock="nw" :padding-x="16" :padding-y="16" />
+        <time-slider dock="ne" :padding-x="8" :padding-y="8" />
+        <linear-compass2 v-if="!isAnyWindowFullscreen" dock="s" :padding-y="16" />
 
         <!--
         <entity-selector2 />
         <world-state />
+
         <waypoint-settings />
 
         <drawing-tools />
@@ -20,14 +21,13 @@
         <map-overlay />
 
         PrimeVue - DONE:
-
         <cse-notifications-area
-            dock="w"
-            offset="-32"
+            dock="sw"
+            :padding-y="16"
             :width="300"
         />
 
-        <cse-dockable
+        <cse-expanding-dockable
             :width="300"
             :height="300"
             offset="end"
@@ -37,8 +37,7 @@
             icon="cube"
         >
             Entity list
-        </cse-dockable>
-
+        </cse-expanding-dockable>
         -->
 
         <div

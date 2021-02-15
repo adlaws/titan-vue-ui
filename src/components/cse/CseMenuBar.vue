@@ -160,7 +160,7 @@ export default {
             const actions = {
                 'scenario-constructor': this.startScenarioConstructor,
                 'scenario-lobby': this.startLobby,
-                'scenario-aar': () => {},
+                'scenario-aar': () => {this.$router.push({name:'fps'});},
             };
             const action = actions[selection.id];
             if(action)

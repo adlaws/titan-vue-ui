@@ -26,7 +26,6 @@ Example use:
         - visible compass width is 90° (i.e., viewbox is 90px wide)
     -->
     <svg
-        ref="container"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 90 8"
         :width="size"
@@ -93,7 +92,8 @@ import gsap from 'gsap'; // provides tweening functions
 import { $tWorldInterface, $isInOuterra } from '@/assets/js/titan/titan-utils.js';
 
 import MathUtils from '@/assets/js/utils/math-utils.js';
-import UiUtils from '@/assets/js/utils/ui-utils.js';
+
+import CseDockableMixin from '@/components/cse/CseDockableMixin.vue';
 
 import LinearCompass2Objective from '@/components/common/cse/core/display/compass/LinearCompass2Objective.vue';
 
@@ -106,6 +106,7 @@ export default {
     {
         LinearCompass2Objective,
     },
+    mixins:[CseDockableMixin],
     props:
     {
         color:
@@ -122,16 +123,6 @@ export default {
         {
             type: Number,
             default: 600,
-        },
-        x:
-        {
-            type: [Number, String],
-            default: 'center',
-        },
-        y:
-        {
-            type: [Number, String],
-            default: 'top',
         },
         ignoreTaskbar:
         {
@@ -173,14 +164,9 @@ export default {
     computed:
     {
         clampedTweenedCompassRotation() { return MathUtils.wrapClamp(this.tweenedCompassRotation, 0.0, 360.0); },
-        desktopBounds() { return this.ignoreTaskbar ? this.$store.getters.screenBounds : this.$store.getters.desktopBounds; },
     },
     watch:
     {
-        desktopBounds: function() { this.$nextTick(this.updatePosition); },
-        size: function() { this.$nextTick(this.updatePosition); },
-        x: function() { this.$nextTick(this.updatePosition); },
-        y: function() { this.$nextTick(this.updatePosition); },
         updateInterval() { this.updateAllRates(); },
         magneticHeading(newHeading, oldHeading)
         {
@@ -195,9 +181,6 @@ export default {
     },
     mounted()
     {
-        this.container = this.$refs.container;
-        this.updatePosition();
-        // start the update cycle
         this.running = true;
         this.updateHeading();
     },
@@ -207,48 +190,6 @@ export default {
     },
     methods:
     {
-        updatePosition: UiUtils.throttle(function()
-        {
-            const containerBounds = this.container.getBoundingClientRect();
-            const style = this.container.style;
-
-            style.position = 'fixed';
-            style.zIndex = 0;
-
-            if(typeof this.x === 'number')
-            {
-                let x = this.x;
-                if( x < 0)
-                    x += this.desktopBounds.right - containerBounds.width;
-                style.left = MathUtils.clamp(x, this.desktopBounds.left, this.desktopBounds.right-containerBounds.width) + 'px';
-            }
-            else
-            {
-                if(this.x === 'left')
-                    style.left = this.desktopBounds.left + 'px';
-                else if(this.x === 'right')
-                    style.left = (this.desktopBounds.right - containerBounds.width) + 'px';
-                else // center
-                    style.left = (this.desktopBounds.left + ((this.desktopBounds.w - containerBounds.width)/2)) + 'px';
-            }
-
-            if(typeof this.y === 'number')
-            {
-                let y = this.y;
-                if( y < 0)
-                    y += this.desktopBounds.bottom - containerBounds.height;
-                style.top = MathUtils.clamp(y, this.desktopBounds.top, this.desktopBounds.bottom-containerBounds.height) + 'px';
-            }
-            else
-            {
-                if(this.y === 'top')
-                    style.top = this.desktopBounds.top + 'px';
-                else if(this.y === 'bottom')
-                    style.top = (this.desktopBounds.bottom - containerBounds.height) + 'px';
-                else // center
-                    style.top = (this.desktopBounds.top + ((this.desktopBounds.h - containerBounds.height)/2)) + 'px';
-            }
-        }, false),
         updateHeading()
         {
             if(!this.running)
