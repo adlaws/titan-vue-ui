@@ -1,56 +1,65 @@
 <template>
     <div>
-        <v-data-table
-            v-model="table.selected"
-            dense
-            class="compact"
-            height="10rem"
-            item-key="uid"
-            single-select
-            no-data-text="There are no waypoints"
-            no-results-text="No waypoints match the filter criteria"
-            :items-per-page="5"
-            :headers="table.headers"
-            :footer-props="table.footerprops"
-            :options.sync="table.options"
-            :items="waypoints"
-            @click:row="_handleWaypointRowClicked"
+        <DataTable
+            ref="theTable"
+            :value="waypoints"
+            class="p-datatable-sm"
+            :paginator="true"
+            :rows="table.itemsPerPage"
+            paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+            current-page-report-template="Showing {first} to {last} of {totalRecords}"
+            data-key="uid"
+            selection-mode="single"
+            :selection.sync="table.selected"
             @contextmenu:row="_handleWaypointRowContextMenu"
         >
             <!-- eslint-disable-next-line vue/no-unused-vars -->
-            <template v-slot:[`item.idx`]="{ item }">
-                {{ waypointIdxLookup[item.uid]+1 }}
-            </template>
-            <template v-slot:[`item.name`]="{ item }">
-                <span v-if="item.name.length>0">{{ item.name }}</span>
-                <span v-else class="secondary--text">&mdash;</span>
-            </template>
-            <template v-slot:[`item.type`]="{ item }">
-                <cse-icon :icon="WAYPOINT.TYPE[item.type].icon" />
-            </template>
-            <template v-slot:[`item.roe`]="{ item }">
-                <cse-icon :icon="WAYPOINT.TYPE[item.roe].icon" />
-            </template>
-            <template v-slot:[`item.speed`]="{ item }">
-                {{ item.speed }}m/s
-            </template>
-            <template v-slot:[`item.wait`]="{ item }">
-                {{ item.wait }}s
-            </template>
-            <template v-slot:[`item.lla`]="{ item }">
-                <mgrs v-if="isMGRS" :latitude="item.lla.latitude" :longitude="item.lla.longitude" />
-                <span v-else>
-                    <latitude :latitude="item.lla.latitude" />
-                    <longitude class="ml-1" :longitude="item.lla.longitude" />
-                </span>
-            </template>
-            <template v-slot:[`item.altitude`]="{ item }">
-                {{ item.lla.altitude }}m
-            </template>
-            <template v-slot:[`footer.page-text`]="{ pageStart, pageStop, itemsLength }">
-                {{ pageStart }} - {{ pageStop }} of {{ itemsLength }} Waypoints
-            </template>
-        </v-data-table>
+            <Column field="index" header="" header-style="width:2rem;">
+                <template #body="slotProps">
+                    {{ waypointIdxLookup[slotProps.data.uid] + 1 }}
+                </template>
+            </Column>
+            <Column field="name" header="Name">
+                <template #body="slotProps">
+                    <span v-if="slotProps.data.name.length>0">{{ slotProps.data.name }}</span>
+                    <span v-else class="secondary--text">&mdash;</span>
+                </template>
+            </Column>
+            <Column field="type" header="Type" header-style="width:3rem;">
+                <template #body="slotProps">
+                    <cse-icon :icon="WAYPOINT.TYPE[slotProps.data.type].icon" />
+                </template>
+            </Column>
+            <Column field="roe" header="ROE" header-style="width:3rem;">
+                <template #body="slotProps">
+                    <cse-icon :icon="WAYPOINT.ROE[slotProps.data.roe].icon" />
+                </template>
+            </Column>
+            <Column field="speed" header="Speed">
+                <template #body="slotProps">
+                    {{ slotProps.data.speed }}m/s
+                </template>
+            </Column>
+            <Column field="wait" header="Wait" header-style="width:3rem;">
+                <template #body="slotProps">
+                    {{ slotProps.data.wait }}s
+                </template>
+            </Column>
+            <Column field="lla" header="Position" header-style="width:9rem;">
+                <template #body="slotProps">
+                    <mgrs v-if="isMGRS" :latitude="slotProps.data.lla.latitude" :longitude="slotProps.data.lla.longitude" />
+                    <span v-else>
+                        <latitude :latitude="slotProps.data.lla.latitude" />
+                        <longitude class="ml-1" :longitude="slotProps.data.lla.longitude" />
+                    </span>
+                </template>
+            </Column>
+            <Column field="altitude" header="Altitude">
+                <template #body="slotProps">
+                    {{ slotProps.data.lla.altitude }}m
+                </template>
+            </Column>
+        </DataTable>
 
         <cse-context-menu
             v-if="contextMenu.show"
@@ -71,6 +80,9 @@ import MathUtils from '@/assets/js/utils/math-utils.js';
 import { POSITION_FORMAT } from '@/assets/js/store/preference-manager.js';
 import { SPEED_UNITS } from '@/assets/js/utils/convert-utils.js';
 
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+
 import Latitude from '@/components/common/cse/core/display/Latitude.vue';
 import Longitude from '@/components/common/cse/core/display/Longitude.vue';
 import MGRS from '@/components/common/cse/core/display/MGRS.vue';
@@ -79,6 +91,7 @@ export default {
     name: 'waypoints-table',
     components:
     {
+        DataTable, Column,
         Latitude, Longitude, 'mgrs':MGRS,
     },
     props:
@@ -95,26 +108,9 @@ export default {
             SPEED_UNITS,
             table:
             {
-                page: 1,
-                options: {
-                    page: 0,
-                    itemsPerPage: 5,
-                },
-                headers:[
-                    { value: 'idx', text: '#', sortable: false, align: 'start', width: "1%", },
-                    { value: 'name', text: 'Name', sortable: false, align: 'start', width: "1%", cellClass:'ellipsis-overflow' },
-                    { value: 'type', text: 'Type', sortable: false, align: 'start', width: "1%", },
-                    { value: 'roe', text: 'ROE', sortable: false, align: 'start', width: "1%", },
-                    { value: 'speed', text: 'Speed', sortable: false, align: 'start', width: "1%", },
-                    { value: 'wait', text: 'Wait', sortable: false, align: 'start', width: "1%", },
-                    { value: 'lla', text: 'Location', sortable: false, align: 'start', width: "99%", },
-                    { value: 'altitude', text: 'Altitude', sortable: false, align: 'right', width: "1%", },
-                ],
-                footerprops:
-                {
-                    'items-per-page-options':[5],
-                },
-                selected: [],
+                itemsPerPage: 5,
+                selected: null,
+                paginator: null,
             },
             contextMenu:
             {
@@ -135,6 +131,31 @@ export default {
                 .reduce((obj,[key,val]) => (obj[key] = val,obj), {});
         },
     },
+    watch:
+    {
+        'table.selected': function(waypoint) { this.$emit('selected', waypoint); },
+    },
+    mounted()
+    {
+        // WARNING: Nasty Stuff
+        // here we want to get hold of the paginator component so that we can
+        // manually change the paging of the table to track with the currently
+        // active/selected waypoint. There's no "official" way to do this, so
+        // we run through `DataTable` Vue component's children, and get the first
+        // one with the component tag 'DTPaginator` - it's evil but it works,
+        // and until there's an official way to do this, this is probably the
+        // neatest solution to this problem.
+        const theTable = this.$refs.theTable;
+        const candidates = theTable.$children.filter((c) => c.$options._componentTag === 'DTPaginator');
+        this.table.paginator = candidates.length === 0 ? null : candidates[0];
+        // WARNING: Nasty Stuff
+        // here we get the table body wrapper and "lock" the height based on the
+        // number of rows so that if we display a page which has less than this
+        // number of items on it the table won't change size. For the a DataTable
+        // with the `p-datatable-sm` class applied, each row is 45px high per
+        // item plus 1px for the row 'line' = 46px per row
+        theTable.$el.querySelector('.p-datatable-wrapper').style.minHeight = (this.table.itemsPerPage * 46) + 'px';
+    },
     methods:
     {
         selectWaypoint(waypoint)
@@ -145,7 +166,7 @@ export default {
         },
         clearWaypointSelection()
         {
-            this.table.selected.splice(0,this.table.selected.length);
+            this.table.selected = null;
         },
         removeWaypoint()
         {
@@ -158,25 +179,16 @@ export default {
                 return;
 
             let actualIdx = MathUtils.wrapClamp(idx,0,this.waypoints.length);
-            const tablePage = ((actualIdx / this.table.options.itemsPerPage) | 0)+1;
+            const tablePage = ((actualIdx / this.table.itemsPerPage) | 0);
 
-            if(this.table.selected.length>0)
-                this.clearWaypointSelection();
-            this.table.selected.push(this.waypoints[actualIdx]);
-            this.table.options.page = tablePage;
+            this.table.selected = this.waypoints[actualIdx];
+            this._changePage(tablePage);
         },
-        _handleWaypointRowClicked(evt, row)
+        _changePage(pg)
         {
-            if(!row.isSelected)
-            {
-                row.select(true);
-                this.$emit('selected', row.item);
-            }
-            else
-            {
-                this.clearWaypointSelection();
-                this.$emit('selected', null);
-            }
+            // only change the page if we are not already on the requested page
+            if(this.table.paginator && this.table.paginator.page !== pg)
+                this.table.paginator.changePage(pg);
         },
         _handleWaypointRowContextMenu(evt, row)
         {

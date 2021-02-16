@@ -12,46 +12,21 @@
     >
         <template #default="context">
             <cse-desktop-window-content :cse-desktop-window="context.cseDesktopWindow">
-                <v-tabs
-                    v-model="tabs.current"
-                    align-with-title
-                    class="compact"
-                >
-                    <v-tabs-slider color="accent" />
-                    <v-tab key="Waypoints">
-                        {{ $t('waypointSettings.waypoints.Waypoints', languageID) }}
-                    </v-tab>
-                    <v-tab key="Assignments">
-                        {{ $t('waypointSettings.assignments.Assignments', languageID) }}
+                <TabView>
+                    <TabPanel :header="$t('waypointSettings.waypoints.Waypoints', languageID)">
+                        <waypoints-table
+                            ref="waypointsTable"
+                            :waypoints="waypointPath.waypoints"
+                            @selected="handleWaypointSelection"
+                        />
+                        <waypoint-card
+                            :waypoints="waypointPath.waypoints"
+                            :waypoint="currentWaypoint"
+                            @selected="handleWaypointSelection"
+                        />
+                    </TabPanel>
+                    <TabPanel :header="$t('waypointSettings.assignments.Assignments', languageID)">
                         &times;{{ waypointPath.entities.length }}
-                    </v-tab>
-                </v-tabs>
-
-                <v-tabs-items
-                    v-model="tabs.current"
-                >
-                    <v-tab-item
-                        key="Waypoints"
-                    >
-                        <v-container
-                            class="compact"
-                        >
-                            <waypoints-table
-                                ref="waypointsTable"
-                                :waypoints="waypointPath.waypoints"
-                                @selected="handleWaypointSelection"
-                            />
-                            <waypoint-card
-                                :waypoints="waypointPath.waypoints"
-                                :waypoint="currentWaypoint"
-                                @selected="handleWaypointSelection"
-                            />
-                        </v-container>
-                    </v-tab-item>
-
-                    <v-tab-item
-                        key="Assignments"
-                    >
                         <ul>
                             <li
                                 v-for="(entity, idx) in waypointPath.entities"
@@ -60,8 +35,8 @@
                                 {{ entity }}
                             </li>
                         </ul>
-                    </v-tab-item>
-                </v-tabs-items>
+                    </TabPanel>
+                </TabView>
             </cse-desktop-window-content>
         </template>
     </cse-desktop-window>
@@ -73,6 +48,9 @@ import { WAYPOINT, DUMMY_WAYPOINT } from './waypointsettings.js';
 import { POSITION_FORMAT } from '@/assets/js/store/preference-manager.js';
 import { SPEED_UNITS } from '@/assets/js/utils/convert-utils.js';
 
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
+
 import WaypointsTable from './WaypointsTable.vue';
 import WaypointCard from './WaypointCard.vue';
 
@@ -80,8 +58,8 @@ export default {
     name: 'waypoint-settings',
     components:
     {
-        WaypointsTable,
-        WaypointCard,
+        TabView, TabPanel,
+        WaypointsTable, WaypointCard,
     },
     data()
     {

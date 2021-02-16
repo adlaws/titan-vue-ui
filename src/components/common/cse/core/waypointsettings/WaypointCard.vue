@@ -1,156 +1,148 @@
 <template>
-    <v-card
+    <Card
         :class="{secondary: !isDummyWaypoint}"
     >
-        <v-card-title>
-            <v-btn
-                icon
-                :disabled="isDummyWaypoint"
-                @click="_selectWaypointByIdx(0)"
-            >
-                <cse-icon icon="chevron-double-left" />
-            </v-btn>
-            <v-btn
-                icon
-                :disabled="isDummyWaypoint"
-                @click="_selectWaypointByIdx(waypointIdxLookup[waypoint.uid]-1)"
-            >
-                <cse-icon icon="chevron-left" />
-            </v-btn>
-            <span v-if="isDummyWaypoint" class="secondary--text">
-                <cse-icon class="inherit-color" icon="map-marker-radius" />
-            </span>
-            <span v-else>
-                <cse-icon icon="map-marker-radius" />
-                {{ waypoint.name }}
-            </span>
-            <v-spacer />
-            <div
-                v-if="!isDummyWaypoint"
-                class="subtitle-2"
-            >
-                Waypoint #{{ waypointIdxLookup[waypoint.uid]+1 }}
+        <template #title>
+            <div class="p-grid">
+                <div class="p-col-3">
+                    <Button
+                        icon="mdi mdi-chevron-double-left"
+                        class="p-button-sm p-mr-1"
+                        :disabled="isDummyWaypoint"
+                        @click="_selectWaypointByIdx(0)"
+                    />
+                    <Button
+                        icon="mdi mdi-chevron-left"
+                        class="p-button-sm"
+                        :disabled="isDummyWaypoint"
+                        @click="_selectWaypointByIdx(waypointIdxLookup[waypoint.uid]-1)"
+                    />
+                </div>
+                <div class="p-col-6 p-flex">
+                    <span v-if="isDummyWaypoint" class="secondary--text">
+                        <cse-icon class="inherit-color" icon="map-marker-radius" />
+                    </span>
+                    <span v-else>
+                        <cse-icon icon="map-marker-radius" />
+                        {{ waypoint.name }}
+                    </span>
+                    <div class="spacer" />
+                    <div
+                        v-if="!isDummyWaypoint"
+                        style="font-size:50%;"
+                    >
+                        Waypoint #{{ waypointIdxLookup[waypoint.uid]+1 }}
+                    </div>
+                </div>
+                <div class="p-col-3">
+                    <Button
+                        icon="mdi mdi-chevron-right"
+                        class="p-button-sm"
+                        :disabled="isDummyWaypoint"
+                        @click="_selectWaypointByIdx(waypointIdxLookup[waypoint.uid]+1)"
+                    />
+                    <Button
+                        icon="mdi mdi-chevron-double-right"
+                        class="p-button-sm p-ml-1"
+                        :disabled="isDummyWaypoint"
+                        @click="_selectWaypointByIdx(-1)"
+                    />
+                </div>
             </div>
-            <v-btn
-                icon
-                :disabled="isDummyWaypoint"
-                @click="_selectWaypointByIdx(waypointIdxLookup[waypoint.uid]+1)"
-            >
-                <cse-icon icon="chevron-right" />
-            </v-btn>
-            <v-btn
-                icon
-                :disabled="isDummyWaypoint"
-                @click="_selectWaypointByIdx(-1)"
-            >
-                <cse-icon icon="chevron-double-right" />
-            </v-btn>
-        </v-card-title>
-        <v-card-text>
-            <v-form
-                class="compact"
-            >
-                <v-row>
-                    <v-col cols="3">
-                        <v-text-field
-                            v-model="waypoint.name"
-                            :disabled="isDummyWaypoint"
-                            placeholder="Unnamed"
-                            label="Waypoint Name"
-                        />
-                    </v-col>
-                    <v-col cols="6">
-                        <location-field
-                            v-model="waypoint.lla"
-                            :disabled="isDummyWaypoint"
-                            label="Location"
-                        />
-                    </v-col>
-                    <v-col cols="3">
-                        <length-field
-                            v-model="waypoint.lla.altitude"
-                            :disabled="isDummyWaypoint"
-                            label="Altitude"
-                        />
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="4">
-                        <v-select
-                            v-model="waypoint.type"
-                            :disabled="isDummyWaypoint"
-                            label="Type"
-                            item-value="id"
-                            :items="WAYPOINT.TYPE_OPTIONS"
-                        >
-                            <template v-slot:selection="data">
-                                <div class="ellipsis-overflow maxw-99">
-                                    <cse-icon
-                                        :icon="data.item.icon"
-                                        style="color:inherit;"
-                                        class="mr-1"
-                                    />
-                                    {{ data.item.label }}
-                                </div>
-                            </template>
-                            <template v-slot:item="data">
-                                <cse-icon class="mr-1">
-                                    {{ data.item.icon }}
-                                </cse-icon>
-                                {{ data.item.label }}
-                            </template>
-                        </v-select>
-                    </v-col>
-                    <v-col cols="4">
-                        <v-select
-                            v-model="waypoint.roe"
-                            :disabled="isDummyWaypoint"
-                            label="ROE"
-                            item-value="id"
-                            :items="WAYPOINT.ROE_OPTIONS"
-                        >
-                            <template v-slot:selection="data">
-                                <div class="ellipsis-overflow maxw-99">
-                                    <cse-icon
-                                        :icon="data.item.icon"
-                                        style="color:inherit;"
-                                        class="mr-1"
-                                    />
-                                    {{ data.item.label }}
-                                </div>
-                            </template>
-                            <template v-slot:item="data">
-                                <cse-icon
-                                    :icon="data.item.icon"
-                                    style="color:inherit;"
-                                    class="mr-1"
-                                />
-                                {{ data.item.label }}
-                            </template>
-                        </v-select>
-                    </v-col>
-                    <v-col cols="4">
-                        <speed-field
-                            v-model="waypoint.speed"
-                            :disabled="isDummyWaypoint"
-                            label="Speed"
-                            :display-units="SPEED_UNITS.METERS_PER_SECOND"
-                        />
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12">
-                        <span
-                            class="subtitle-2"
-                            :class="{'secondary--text': isDummyWaypoint}"
-                        >
-                            Secondary Actions: None
-                        </span>
-                    </v-col>
-                </v-row>
-            </v-form>
-        </v-card-text>
-    </v-card>
+        </template>
+        <template #content>
+            <div class="p-grid">
+                <div class="p-col-3">
+                    <label>Waypoint Name</label>
+                    <InputText
+                        v-model="waypoint.name"
+                        :disabled="isDummyWaypoint"
+                        class="p-inputtext-sm"
+                        placeholder="Unnamed"
+                    />
+                </div>
+                <div class="p-col-6">
+                    <label>Location</label>
+                    <location-field
+                        v-model="waypoint.lla"
+                        :disabled="isDummyWaypoint"
+                        class="p-inputtext-sm"
+                    />
+                </div>
+                <div class="p-col-3">
+                    <label>Altitude</label>
+                    <length-field
+                        v-model="waypoint.lla.altitude"
+                        :disabled="isDummyWaypoint"
+                        class="p-inputtext-sm"
+                    />
+                </div>
+            </div>
+            <div class="p-formgrid p-grid">
+                <div class="p-field p-col-4">
+                    <label>Type</label>
+                    <Dropdown
+                        v-model="waypoint.type"
+                        :disabled="isDummyWaypoint"
+                        class="p-dropdown-sm"
+                        data-key="id"
+                        :options="WAYPOINT.TYPE_OPTIONS"
+                    >
+                        <template #value="slotProps">
+                            <div class="ellipsis-overflow maxw-99">
+                                <cse-icon :icon="WAYPOINT.TYPE[slotProps.value].icon" class="mr-1" />
+                                {{ WAYPOINT.TYPE[slotProps.value].label }}
+                            </div>
+                        </template>
+                        <template #option="slotProps">
+                            <cse-icon :icon="WAYPOINT.TYPE[slotProps.option].icon" class="mr-1" />
+                            {{ WAYPOINT.TYPE[slotProps.option].label }}
+                        </template>
+                    </Dropdown>
+                </div>
+                <div class="p-field p-col-4">
+                    <label>ROE</label>
+                    <Dropdown
+                        v-model="waypoint.roe"
+                        :disabled="isDummyWaypoint"
+                        class="p-dropdown-sm"
+                        data-key="id"
+                        :options="WAYPOINT.ROE_OPTIONS"
+                    >
+                        <template #value="slotProps">
+                            <div class="ellipsis-overflow maxw-99">
+                                <cse-icon :icon="WAYPOINT.ROE[slotProps.value].icon" class="mr-1" />
+                                {{ WAYPOINT.ROE[slotProps.value].label }}
+                            </div>
+                        </template>
+                        <template #option="slotProps">
+                            <cse-icon :icon="WAYPOINT.ROE[slotProps.option].icon" class="mr-1" />
+                            {{ WAYPOINT.ROE[slotProps.option].label }}
+                        </template>
+                    </Dropdown>
+                </div>
+                <div class="p-col-4">
+                    <speed-field
+                        v-model="waypoint.speed"
+                        :disabled="isDummyWaypoint"
+                        label="Speed"
+                        :display-units="SPEED_UNITS.METERS_PER_SECOND"
+                        class="p-inputtext-sm"
+                    />
+                </div>
+            </div>
+            <div class="p-grid">
+                <div class="p-col-12">
+                    <span
+                        class="subtitle-2"
+                        :class="{'secondary--text': isDummyWaypoint}"
+                    >
+                        Secondary Actions: None
+                    </span>
+                </div>
+            </div>
+        </template>
+    </Card>
 </template>
 
 <script>
@@ -158,6 +150,12 @@ import { WAYPOINT, DUMMY_WAYPOINT } from './waypointsettings.js';
 
 import MathUtils from '@/assets/js/utils/math-utils.js';
 import { SPEED_UNITS } from '@/assets/js/utils/convert-utils.js';
+
+import Card from 'primevue/card';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Dropdown from 'primevue/dropdown';
+
 
 import SpeedField from '@/components/common/cse/core/field/SpeedField.vue';
 import LengthField from '@/components/common/cse/core/field/LengthField.vue';
@@ -167,6 +165,7 @@ export default {
     name: 'waypoint-card',
     components:
     {
+        Card, Button, InputText, Dropdown,
         SpeedField, LocationField, LengthField,
     },
     props:

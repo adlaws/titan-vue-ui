@@ -1,12 +1,16 @@
 <template>
     <div>
-        <v-text-field
+        <label
+            v-if="label"
+        >
+            {{ label }}
+        </label>
+        <InputText
             v-model="currentLocation"
             :messages="messages"
             :error="!isValid"
             :disabled="disabled"
             :hint="hint"
-            :label="label"
             :placeholder="placeholder"
             :readonly="readonly"
             @input="parseLocation"
@@ -17,8 +21,13 @@
 <script>
 import LatLongParser, { LATLNG_FORMAT } from '@/assets/js/utils/latlng-parsing.js';
 
+import InputText from 'primevue/inputtext';
+
 export default {
     name: 'location-field',
+    components:{
+        InputText,
+    },
     props:
     {
         value: {

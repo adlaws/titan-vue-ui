@@ -8,19 +8,17 @@
         <time-slider dock="ne" :padding-x="8" :padding-y="8" />
         <linear-compass2 v-if="!isAnyWindowFullscreen" dock="s" :padding-y="16" />
 
-        <!--
-        <entity-selector2 />
-        <world-state />
-
         <waypoint-settings />
-
-        <drawing-tools />
-
+        <!--
         <cse-scenario-objects />
         <aar-statistics />
         <map-overlay />
 
         PrimeVue - DONE:
+        <entity-selector2 />
+        <world-state />
+        <drawing-tools />
+
         <cse-notifications-area
             dock="sw"
             :padding-y="16"
