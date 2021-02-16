@@ -88,10 +88,10 @@ Example use:
                 :cy="centerXY.y"
                 :r="radius"
                 fill="#fff"
-                opacity="0.666"
+                opacity="0.25"
                 stroke="#000"
                 stroke-width="8"
-                stroke-opacity="0.333"
+                stroke-opacity="0.125"
                 paint-order="stroke"
             />
             <path
@@ -437,27 +437,6 @@ export default {
             }
             else if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY.KEY_CODE.ESCAPE))
                 this.$emit('cancelled'); // ESC key or click outside - cancelled
-        },
-        /**
-         * Utility method to obtain the absolute position of the element
-         *
-         * We need this because elm.getBoundingClientRect() returns results
-         * relative to the container of the element
-         *
-         * @param {DOMElement} the DOM element to check
-         * @return {object} the absolute {x,y} coordinates of the element
-         */
-        _getAbsolutePosition( el )
-        {
-            let x = 0;
-            let y = 0;
-            while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) )
-            {
-                x += el.offsetLeft - el.scrollLeft;
-                y += el.offsetTop - el.scrollTop;
-                el = el.offsetParent;
-            }
-            return { x, y };
         },
     }
 };

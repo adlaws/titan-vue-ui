@@ -417,4 +417,26 @@ export default class UiUtils
         const type = typeof x;
         return (x !== null && (type === 'object' || type === 'function'));
     }
+
+    /**
+    * Utility method to obtain the absolute position of the element
+    *
+    * We need this because elm.getBoundingClientRect() returns results
+    * relative to the container of the element
+    *
+    * @param el {DOMElement} the DOM element to check
+    * @return {object} the absolute {x,y} coordinates of the element
+    */
+    static getAbsolutePosition( el )
+    {
+        let x = 0;
+        let y = 0;
+        while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) )
+        {
+            x += el.offsetLeft - el.scrollLeft;
+            y += el.offsetTop - el.scrollTop;
+            el = el.offsetParent;
+        }
+        return { x, y };
+    }
 }

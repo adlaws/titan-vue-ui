@@ -70,7 +70,6 @@ Example use:
 
 <template>
     <div
-        ref="container"
         class="cse--context-menu"
         :style="`left:${pos.x}px;top:${pos.y}px;`"
     >
@@ -207,8 +206,7 @@ export default {
         const desktopBounds = this.ignoreTaskbar ? this.$store.getters.screenBounds : this.$store.getters.desktopBounds;
 
         // work out bounds for context menu
-        this.container = this.$refs.container;
-        // const bounds = this.container.getBoundingClientRect();
+        this.container = this.$el;
 
         this.pos.x = MathUtils.clamp(x, desktopBounds.left, desktopBounds.right);
         this.pos.y = MathUtils.clamp(y, desktopBounds.top, desktopBounds.bottom);
@@ -226,19 +224,18 @@ export default {
 
             // get our *absolute* position on the screen and our *current* bounds
             // now that we are rendered
-            // const absolutePosition = this._getAbsolutePosition(this.container);
-            const bounds2 = this.container.getBoundingClientRect();
+            const bounds = this.container.getBoundingClientRect();
 
             // check the right edge and bottom to see if we go off the screen
-            const rightEdge = bounds2.x + bounds2.width;
-            const bottomEdge = bounds2.y + bounds2.height;
+            const rightEdge = bounds.x + bounds.width;
+            const bottomEdge = bounds.y + bounds.height;
             if( rightEdge > desktopBounds.right)
             {
                 // we're off the right edge of the screen - reposition so we are aligned
                 // with the left side of the parent menu
                 const parentBounds = parentMenu.getBoundingClientRect();
                 this.pos.x -= parentBounds.width;
-                this.pos.x -= bounds2.width;
+                this.pos.x -= bounds.width;
             }
             if(bottomEdge > desktopBounds.bottom)
             {
@@ -267,10 +264,13 @@ export default {
             const subMenuListItem = this.$refs[`submenu-${idx}`][0];
             const bounds = subMenuListItem.getBoundingClientRect();
 
-            this.submenu.idx = idx;
-
             this.submenu.x = bounds.x + bounds.width;
             this.submenu.y = bounds.top;
+
+            // this next will reveal the sub-menu as the indices will match; see...
+            //    v-if="submenu.idx === idx"
+            // ...in the template
+            this.submenu.idx = idx;
         },
         _handleItemClicked(item)
         {
@@ -300,27 +300,6 @@ export default {
             }
             else if(EventUtils.isMouseDown(evt) || EventUtils.isKey(evt, KEY.KEY_CODE.ESCAPE))
                 this.$emit('cancelled'); // ESC key or click outside - cancelled
-        },
-        /**
-         * Utility method to obtain the absolute position of the element
-         *
-         * We need this because elm.getBoundingClientRect() returns results
-         * relative to the container of the element
-         *
-         * @param {DOMElement} the DOM element to check
-         * @return {object} the absolute {x,y} coordinates of the element
-         */
-        _getAbsolutePosition( el )
-        {
-            let x = 0;
-            let y = 0;
-            while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) )
-            {
-                x += el.offsetLeft - el.scrollLeft;
-                y += el.offsetTop - el.scrollTop;
-                el = el.offsetParent;
-            }
-            return { x, y };
         },
     }
 };
