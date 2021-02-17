@@ -3,11 +3,11 @@
         :class="{secondary: !isDummyWaypoint}"
     >
         <template #title>
-            <div class="p-grid">
-                <div class="p-col-3">
+            <div class="p-d-flex">
+                <div>
                     <Button
                         icon="mdi mdi-chevron-double-left"
-                        class="p-button-sm p-mr-1"
+                        class="p-mr-1 p-button-sm"
                         :disabled="isDummyWaypoint"
                         @click="_selectWaypointByIdx(0)"
                     />
@@ -18,23 +18,25 @@
                         @click="_selectWaypointByIdx(waypointIdxLookup[waypoint.uid]-1)"
                     />
                 </div>
-                <div class="p-col-6 p-flex">
-                    <span v-if="isDummyWaypoint" class="secondary--text">
-                        <cse-icon class="inherit-color" icon="map-marker-radius" />
-                    </span>
-                    <span v-else>
-                        <cse-icon icon="map-marker-radius" />
-                        {{ waypoint.name }}
-                    </span>
-                    <div class="spacer" />
+                <div class="p-ml-2 p-d-flex p-jc-between">
+                    <div>
+                        <span v-if="isDummyWaypoint" class="secondary--text">
+                            <cse-icon class="inherit-color" icon="map-marker-radius" />
+                        </span>
+                        <span v-else>
+                            <cse-icon icon="map-marker-radius" />
+                            {{ waypoint.name }}
+                        </span>
+                    </div>
                     <div
                         v-if="!isDummyWaypoint"
+                        class="p-as-center p-ml-auto"
                         style="font-size:50%;"
                     >
                         Waypoint #{{ waypointIdxLookup[waypoint.uid]+1 }}
                     </div>
                 </div>
-                <div class="p-col-3">
+                <div class="p-ml-auto">
                     <Button
                         icon="mdi mdi-chevron-right"
                         class="p-button-sm"
@@ -43,7 +45,7 @@
                     />
                     <Button
                         icon="mdi mdi-chevron-double-right"
-                        class="p-button-sm p-ml-1"
+                        class="p-ml-1 p-button-sm"
                         :disabled="isDummyWaypoint"
                         @click="_selectWaypointByIdx(-1)"
                     />
@@ -51,41 +53,38 @@
             </div>
         </template>
         <template #content>
-            <div class="p-grid">
-                <div class="p-col-3">
-                    <label>Waypoint Name</label>
+            <div class="p-grid p-fluid p-inputtext-sm">
+                <div class="p-col-4 p-pb-0">
+                    <label>Name</label>
                     <InputText
                         v-model="waypoint.name"
                         :disabled="isDummyWaypoint"
-                        class="p-inputtext-sm"
                         placeholder="Unnamed"
                     />
                 </div>
-                <div class="p-col-6">
+                <div class="p-col-4 p-pb-0">
                     <label>Location</label>
                     <location-field
                         v-model="waypoint.lla"
                         :disabled="isDummyWaypoint"
-                        class="p-inputtext-sm"
                     />
                 </div>
-                <div class="p-col-3">
+                <div class="p-col-4 p-pb-0">
                     <label>Altitude</label>
                     <length-field
                         v-model="waypoint.lla.altitude"
                         :disabled="isDummyWaypoint"
-                        class="p-inputtext-sm"
                     />
                 </div>
             </div>
-            <div class="p-formgrid p-grid">
-                <div class="p-field p-col-4">
+            <div class="p-fluid p-grid p-inputtext-sm p-dropdown-sm">
+                <div class="p-col-4 p-pb-0">
                     <label>Type</label>
                     <Dropdown
                         v-model="waypoint.type"
-                        :disabled="isDummyWaypoint"
-                        class="p-dropdown-sm"
                         data-key="id"
+                        append-to="body"
+                        :disabled="isDummyWaypoint"
                         :options="WAYPOINT.TYPE_OPTIONS"
                     >
                         <template #value="slotProps">
@@ -100,13 +99,13 @@
                         </template>
                     </Dropdown>
                 </div>
-                <div class="p-field p-col-4">
+                <div class="p-col-4 p-pb-0">
                     <label>ROE</label>
                     <Dropdown
                         v-model="waypoint.roe"
-                        :disabled="isDummyWaypoint"
-                        class="p-dropdown-sm"
                         data-key="id"
+                        append-to="body"
+                        :disabled="isDummyWaypoint"
                         :options="WAYPOINT.ROE_OPTIONS"
                     >
                         <template #value="slotProps">
@@ -121,11 +120,11 @@
                         </template>
                     </Dropdown>
                 </div>
-                <div class="p-col-4">
+                <div class="p-col-4 p-pb-0">
+                    <label>Speed</label>
                     <speed-field
                         v-model="waypoint.speed"
                         :disabled="isDummyWaypoint"
-                        label="Speed"
                         :display-units="SPEED_UNITS.METERS_PER_SECOND"
                         class="p-inputtext-sm"
                     />

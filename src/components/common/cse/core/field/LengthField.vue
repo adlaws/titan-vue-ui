@@ -10,7 +10,7 @@
                 v-model="currentValue"
                 class="input-align-right"
                 hide-details="auto"
-                :suffix="showUnitOptions?'':currentUnits.abbr"
+                :suffix="showUnitOptions?'':' '+currentUnits.abbr"
                 :messages="messages"
                 :class="{'p-invalid':!isValid}"
                 :disabled="disabled"
@@ -25,6 +25,7 @@
                 option-value="unit"
                 style="max-width:5rem;min-width:5rem;"
                 :disabled="disabled"
+                append-to="body"
             />
         </div>
         <Slider

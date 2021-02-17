@@ -23,6 +23,7 @@
                 option-label="unit.abbr"
                 option-value="unit"
                 style="max-width:5rem;min-width:5rem;"
+                append-to="body"
                 :disabled="disabled"
             />
         </div>

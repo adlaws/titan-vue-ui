@@ -22,8 +22,8 @@ export const WAYPOINT =
         SELECT_POSITION_FROM_WAYPOINTS:{id: 'SELECT_POSITION_FROM_WAYPOINTS', label:'Select Position From Waypoints', icon: 'vector-point'},
     },
 };
-WAYPOINT.TYPE_OPTIONS = Object.getOwnPropertyNames(WAYPOINT.TYPE).map(x => WAYPOINT.TYPE[x]);
-WAYPOINT.ROE_OPTIONS = Object.getOwnPropertyNames(WAYPOINT.ROE).map(x => WAYPOINT.ROE[x]);
+WAYPOINT.TYPE_OPTIONS = Object.getOwnPropertyNames(WAYPOINT.TYPE).map(x => WAYPOINT.TYPE[x].id);
+WAYPOINT.ROE_OPTIONS = Object.getOwnPropertyNames(WAYPOINT.ROE).map(x => WAYPOINT.ROE[x].id);
 
 export const DUMMY_WAYPOINT = {
     uid: 'dummy',

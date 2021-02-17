@@ -10,7 +10,7 @@
                 v-model="currentValue"
                 class="input-align-right"
                 hide-details="auto"
-                :suffix="showUnitOptions?'':currentUnits.abbr"
+                :suffix="showUnitOptions?'':' '+currentUnits.abbr"
                 :messages="messages"
                 :class="{'p-invalid':!isValid}"
                 :disabled="disabled"
@@ -23,6 +23,7 @@
                 option-label="unit.abbr"
                 option-value="unit"
                 style="max-width:6rem;min-width:6rem;"
+                append-to="body"
                 :disabled="disabled"
             />
         </div>

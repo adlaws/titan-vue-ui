@@ -9,14 +9,8 @@
         <linear-compass2 v-if="!isAnyWindowFullscreen" dock="s" :padding-y="16" />
 
         <waypoint-settings />
-        <!--
-        <cse-scenario-objects />
-        <aar-statistics />
-        <map-overlay />
-
-        PrimeVue - DONE:
-        <entity-selector2 />
         <world-state />
+        <entity-selector2 />
         <drawing-tools />
 
         <cse-notifications-area
@@ -36,6 +30,12 @@
         >
             Entity list
         </cse-expanding-dockable>
+        <!--
+        <cse-scenario-objects />
+        <aar-statistics />
+        <map-overlay />
+
+        PrimeVue - DONE:
         -->
 
         <div

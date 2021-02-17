@@ -149,6 +149,7 @@
                                     :display-units="LENGTH_UNITS.METERS"
                                     :min="0"
                                     :max="20000"
+                                    show-unit-options
                                     class="p-inputtext-sm"
                                 />
                             </div>
