@@ -863,10 +863,8 @@ export class MGRSUtils
         if (accuracy < 0)
             accuracy = 5;
 
-        return MGRSUtils.encode(MGRSUtils.latLongToUTM({
-            lat: latitude,
-            lon: longitude
-        }), Math.max(1, Math.min(5, accuracy)));
+        const utm = MGRSUtils.latLongToUTM({lat: latitude,lon: longitude});
+        return MGRSUtils.encode(utm, Math.max(1, Math.min(5, accuracy)));
     }
 
     /**

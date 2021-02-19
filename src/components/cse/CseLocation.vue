@@ -1,50 +1,74 @@
 <template>
     <div
-        class="vue-os--cse-location"
+        class="vue-os--cse-location monospace"
         :style="`font-size:${taskbarSize*0.5}px;`"
     >
-        <cse-icon
-            icon="map-marker"
-        />
-        <span
+        <div
+            ref="position"
+            v-ripple
+            class="p-ripple"
+            style="display:inline-block;"
             @click="contextMenu.locationFormat.show = false"
             @contextmenu.prevent="showLocationFormatContextMenu"
         >
-            <mgrs v-if="isMGRS" :latitude="tweenedLatitude" :longitude="tweenedLongitude" />
+            <cse-icon icon="map-marker" />
+            <mgrs
+                v-if="isMGRS"
+                ref="mgrs"
+                :latitude="tweenedLatitude"
+                :longitude="tweenedLongitude"
+            />
             <span v-else>
-                <latitude class="monospace" :latitude="tweenedLatitude" />
-                <longitude class="monospace ml-2" :longitude="tweenedLongitude" />
+                <latitude
+                    ref="latitude"
+                    class="mr-2"
+                    :latitude="tweenedLatitude"
+                />
+                <longitude
+                    ref="longitude"
+                    :longitude="tweenedLongitude"
+                />
             </span>
-        </span>
+            <cse-icon icon="content-copy" class="clickable" />
+        </div>
 
-        <cse-icon
-            :icon="`arrow-expand-${tweenedElevation>=0?'up':'down'}`"
-            class="ml-2"
-        />
-        <elevation
-            class="monospace"
-            :elevation="Math.abs(tweenedElevation)"
-        />
-
-        <cse-icon icon="compass" class="ml-2" />
-        <heading class="monospace" :heading="tweenedMagneticHeading" />
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="-8 -8 16 16"
-            :width="taskbarSize*0.5"
-            :height="taskbarSize*0.5"
-            :style="`position:relative;top:${taskbarSize/18}px;`"
+        <div
+            style="display:inline-block;"
+            class="p-ripple"
         >
-            <g
-                ref="compassNeedle"
-                fill="white"
-                stroke="white"
-                stroke-linejoin="round"
-                :transform="`rotate(${compassRotation})`"
+            <cse-icon
+                :icon="`arrow-expand-${tweenedElevation>=0?'up':'down'}`"
+                class="ml-2"
+            />
+            <elevation
+                :elevation="Math.abs(tweenedElevation)"
+            />
+        </div>
+
+        <div
+            style="display:inline-block;"
+            class="p-ripple"
+        >
+            <cse-icon icon="compass" class="ml-2" />
+            <heading :heading="tweenedMagneticHeading" />
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="-8 -8 16 16"
+                :width="taskbarSize*0.5"
+                :height="taskbarSize*0.5"
+                :style="`position:relative;top:${taskbarSize/18}px;`"
             >
-                <path d="M-5 6l5-3 5 3L0-6z" />
-            </g>
-        </svg>
+                <g
+                    ref="compassNeedle"
+                    fill="white"
+                    stroke="white"
+                    stroke-linejoin="round"
+                    :transform="`rotate(${compassRotation})`"
+                >
+                    <path d="M-5 6l5-3 5 3L0-6z" />
+                </g>
+            </svg>
+        </div>
 
         <transition name="fade" mode="out-in">
             <cse-context-menu
@@ -62,10 +86,13 @@
 
 <script>
 import gsap from 'gsap'; // provides tweening functions
+import ClipboardJS from 'clipboard';
 
 import { POSITION_FORMAT, POSITION_FORMAT_OPTIONS, PREFERENCE_MUTATION } from '@/assets/js/store/preference-manager.js';
 import { $tWorldInterface, $isInOuterra } from '@/assets/js/titan/titan-utils.js';
 import MathUtils from '@/assets/js/utils/math-utils.js';
+
+import Ripple from 'primevue/ripple';
 
 import Latitude from '@/components/common/cse/core/display/Latitude.vue';
 import Longitude from '@/components/common/cse/core/display/Longitude.vue';
@@ -81,6 +108,9 @@ export default {
     components:
     {
         'mgrs':MGRS, Latitude, Longitude, Heading, Elevation,
+    },
+    directives:{
+        'ripple': Ripple
     },
     props:
     {
@@ -105,6 +135,7 @@ export default {
             updateIntervalSeconds: (DEFAULT_UPDATE_INTERVAL_MS/1000.0),
             updateTimer: null,
             running: false,
+            clipboard: null,
             contextMenu:{
                 locationFormat:
                 {
@@ -161,6 +192,12 @@ export default {
     },
     mounted()
     {
+        this.clipboard = new ClipboardJS(this.$refs.position,
+            {
+                // dynamic text depending on the current format
+                text: function() { return this.clipboardText(); }.bind(this)
+            }
+        );
         this.updateAllRates();
         // start the update cycle
         this.running = true;
@@ -169,6 +206,7 @@ export default {
     beforeDestroy()
     {
         this.stopUpdates();
+        this.clipboard.destroy();
     },
     methods:
     {
@@ -238,7 +276,19 @@ export default {
             else if(currentFormat === POSITION_FORMAT.DECIMAL)
                 nextFormat = POSITION_FORMAT.MGRS;
             this.$store.commit(PREFERENCE_MUTATION.SET_POSITION_FORMAT, nextFormat);
-        }
+        },
+        clipboardText()
+        {
+            if(this.isMGRS)
+                return this.$refs.mgrs ? this.$refs.mgrs.clipboardText : '';
+            else
+            {
+                const latText = this.$refs.latitude ? this.$refs.latitude.clipboardText : '';
+                const lngText = this.$refs.longitude ? this.$refs.longitude.clipboardText : '';
+                return latText + ' ' + lngText;
+            }
+        },
+
     },
 };
 </script>

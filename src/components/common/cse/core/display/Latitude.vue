@@ -47,6 +47,10 @@ export default {
             }
             return '!!Unknown format' + this.format.id + '!!';
         },
+        clipboardText()
+        {
+            return this.latitudeText;
+        },
     },
 };
 </script>

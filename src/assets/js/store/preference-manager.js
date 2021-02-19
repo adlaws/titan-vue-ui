@@ -53,9 +53,9 @@ const POSITION_PRECISION_OPTIONS =
         {id: POSITION_PRECISION._100M,  dp: 3, precision:100},
         {id: POSITION_PRECISION._10M,   dp: 4, precision:10},
         {id: POSITION_PRECISION._1M,    dp: 5, precision:1},
-        {id: POSITION_PRECISION._10CM,  dp: 6, precision:0.1},
-        {id: POSITION_PRECISION._1CM,   dp: 7, precision:0.01},
-        {id: POSITION_PRECISION._1MM,   dp: 8, precision:0.001},
+        // {id: POSITION_PRECISION._10CM,  dp: 6, precision:0.1},
+        // {id: POSITION_PRECISION._1CM,   dp: 7, precision:0.01},
+        // {id: POSITION_PRECISION._1MM,   dp: 8, precision:0.001},
     ],
     [POSITION_FORMAT.DMS]: [
         // decimal places, precision in meters
@@ -65,9 +65,9 @@ const POSITION_PRECISION_OPTIONS =
         {id: POSITION_PRECISION._100M,  dp: 1, precision:100},
         {id: POSITION_PRECISION._10M,   dp: 2, precision:10},
         {id: POSITION_PRECISION._1M,    dp: 3, precision:1},
-        {id: POSITION_PRECISION._10CM,  dp: 4, precision:0.1},
-        {id: POSITION_PRECISION._1CM,   dp: 5, precision:0.01},
-        {id: POSITION_PRECISION._1MM,   dp: 6, precision:0.001},
+        // {id: POSITION_PRECISION._10CM,  dp: 4, precision:0.1},
+        // {id: POSITION_PRECISION._1CM,   dp: 5, precision:0.01},
+        // {id: POSITION_PRECISION._1MM,   dp: 6, precision:0.001},
     ],
     [POSITION_FORMAT.MGRS]: [
         // MGRS places, precision in meters
@@ -77,12 +77,12 @@ const POSITION_PRECISION_OPTIONS =
         {id: POSITION_PRECISION._100M,  dp: 3, precision:100},
         {id: POSITION_PRECISION._10M,   dp: 4, precision:10},
         {id: POSITION_PRECISION._1M,    dp: 5, precision:1},
-        {id: POSITION_PRECISION._10CM,  dp: 6, precision:0.1},
-        {id: POSITION_PRECISION._1CM,   dp: 7, precision:0.01},
-        {id: POSITION_PRECISION._1MM,   dp: 8, precision:0.001},
+        // {id: POSITION_PRECISION._10CM,  dp: 6, precision:0.1},
+        // {id: POSITION_PRECISION._1CM,   dp: 7, precision:0.01},
+        // {id: POSITION_PRECISION._1MM,   dp: 8, precision:0.001},
     ],
 };
-const POSITION_PRECISION_DEFAULT = POSITION_PRECISION_OPTIONS[POSITION_FORMAT_DEFAULT.id][4]; // 10m precision by default
+const POSITION_PRECISION_DEFAULT = POSITION_PRECISION_OPTIONS[POSITION_FORMAT_DEFAULT.id][5]; // 1m precision by default
 
 export const PREFERENCE_MUTATION = {
     // INPUT STATE TRACKING
