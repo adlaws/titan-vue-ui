@@ -6,7 +6,6 @@
         :class="{'faux-outerra-background': !isInOuterra}"
     >
         <cse-menu-bar v-if="menubarVisible" />
-        <portal-target name="context-menu" />
 
         <transition
             name="fade-slow"

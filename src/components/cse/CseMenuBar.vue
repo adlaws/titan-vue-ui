@@ -145,7 +145,36 @@ export default {
                 this.contextMenu.x = bounds.x;
                 this.contextMenu.y = bounds.bottom-4;
                 // there must be a better way to do this and still support internationalization [adlaws]...
-                this.contextMenu.items = [];
+                this.contextMenu.items = [
+                    { id:'file', text:'File', items:
+                        [
+                            { id:'load', text:'Load', icon: 'file-document 24px', },
+                            { id:'save', text:'Save...', icon: 'floppy 24px', },
+                            { id:'preview-stop', text:'Preview', icon:'play 24px', },
+                        ]
+                    },
+                    { id:'terrain', text:'Terrain', items:
+                        [
+                            { id:'roads', text:'Roads', icon:'road-variant 24px', },
+                            { id:'scenery', text:'Scenery', icon:'pine-tree 24px', },
+                            { id:'terrain-packs', text:'Terrain Packs', icon:'package-variant 24px', },
+                            { id:'terrain-connect', text:'Terrain Connect', icon:'server-network 24px', },
+                        ]
+                    },
+                    { id:'locations', text:'Locations', },
+                    { id:'network', text:'Network', items:
+                        [
+                            { id:'sim-client-profiles', text:'Sim Client Profiles', icon:'desktop-classic 24px', },
+                            { id:'lvc-settings', text:'LVC Settings', icon:'cogs 24px', },
+                        ]
+                    },
+                    { id:'settings', text:'Settings', items:
+                        [
+                            { id:'engine-settings', text:'Engine Settings', icon:'engine 24px', },
+                            { id:'input-controls', text:'Input Controls', icon:'google-controller 24px', },
+                        ]
+                    },
+                ];
                 this.contextMenu.items.push({id:'scenario-constructor', text:this.$t('Scenario Constructor', this.language.id), icon:'map-marker-path 24px'});
                 this.contextMenu.items.push({id:'scenario-lobby', text:this.$t('Scenario Lobby', this.language.id), icon:'account-group-outline 24px'});
                 this.contextMenu.items.push({id:'scenario-aar', text:this.$t('After Action Review', this.language.id), icon:'clipboard-edit-outline 24px'});
